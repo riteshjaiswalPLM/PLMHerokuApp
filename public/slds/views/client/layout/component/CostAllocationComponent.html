@@ -1,0 +1,60 @@
+<div block-ui = "CostAllocationComponentBlock" style="min-height: 100px;">
+    <table class="table table-spriped table-condensed" style="width: 100%;">
+        <tbody  ng-if="type !=='detail' && !section.readonly">
+            <tr>
+                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields">
+                    <div ng-if="field.rendered">{{ field.label }}</div>
+                </td>
+                <td style="border-top: 0px;"></td>
+            </tr>
+            <tr ng-repeat="dataModel in dataModelList | filter: {isDeleted: false} track by $index">
+                <td class="{{ 'td-'+field.SObjectField.type }} sobject-layout-field" style="border-top: 0px;" ng-repeat="field in section.Component.fields">
+                    <div field-readonly="field.readonly" sobject-component-field field="field" parent-ctrl="ctrl" model="dataModel" index="$index" criteria="field.criteria"></div>
+                </td>
+                <td style="text-align: right;border-top: 0px">
+                    <button class    = "btn btn-xs btn-danger"
+                            type     = "button"
+                            ng-click = "dataModel['isDeleted'] = true">
+                            <!--ng-if	 = "section.type=='EDIT'">-->
+                        <i class="pficon-delete"></i>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="{{ section.Component.fields.length + 1 }}" style="text-align: center;border-top: 0px;">
+                    <button type     = "button" 
+                            class    = "btn btn-small btn-mini"
+                            ng-click = "addItems();">
+                        <i class="icon-plus-sign"></i>&nbsp;Add more
+                    </button>
+                    <button type    = "button" 
+                            ng-if   = "dataModelList.length>0"
+                            class   = "btn btn-small btn-primary btn-mini"
+                            ng-click= "save()">
+                        <i class="icon-ok"></i>&nbsp;Save
+                    </button>
+                    <button type     = "button" 
+                            class    = "btn btn-mini btn-primary"
+                            ng-click = "init()">
+                        <i class="icon-refresh"></i>&nbsp;Reload
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-if="type ==='detail' || section.readonly" >
+            <tr>
+                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields">
+                   <div ng-if="field.rendered">{{ field.label }}</div>
+                </td>
+                <td style="border-top: 0px;"></td>
+            </tr>
+            <tr ng-repeat="dataModel in dataModelList | filter: {isDeleted: false} track by $index">
+                <td  style="border-top: 0px" ng-repeat="field in section.Component.fields">
+                    <div field-readonly="true" sobject-component-field field="field" parent-ctrl="ctrl" model="dataModel" index="$index" criteria="field.criteria"></div>
+                    <!--{{ (field.SObjectField.relationshipName !== null) ? dataModel[field.SObjectField.relationshipName].Name : dataModel[field.SObjectField.name]}}-->
+                </td>
+            </tr>
+         </tbody>
+    </table>
+       
+</div>

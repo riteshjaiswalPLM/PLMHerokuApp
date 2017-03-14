@@ -1,0 +1,58 @@
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right dropdown">
+            <!--<button class="btn btn-primary dropdown-toggle" type="button" id="createComponent" data-toggle="dropdown">
+                <i class="fa fa-plus"></i> Create Component
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="createComponent">
+                <li role="presentation"><a href="#" role="menuitem" tabindex="-1" ng-click="create('UploadAttachment')">Upload Attachment Component</a></li>
+            </ul>-->
+        </div>
+        <h1><i class="fa fa-cubes"></i> {{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-cubes"></i> Static Components
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="componentsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body" block-ui="loadComponents" style="height:400px;overflow: auto;padding:0px;">
+            <table class="table table-striped table-hover table-bordered" ng-if="components.length > 0" style="margin-bottom:0px;">
+                <thead>
+                    <tr>
+                        <th>Component Title</th>
+                        <th>Description</th>
+                        <th>SObject</th>
+                        <th>Name</th>
+                        <th style="text-align: center;width: 50px;">Active</th>
+                        <th style="text-align: center;width: 150px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="component in components | filter: componentsFilter | orderBy:'name'" ng-dblclick="edit(component)">
+                        <td>{{ component.title }}</td>
+                        <td>{{ component.desc }}</td>
+                        <td>{{ component.parent.label }}</td>
+                        <th>{{ component.name }}</th>
+                        <td style="text-align: center;"><i ng-class="{'fa fa-check' : component.active }"></i></td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-info" type="button" ng-click="edit(component)"><i class="pficon-edit"></i> Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="components.length === 0" style="margin-bottom: 0px;height: 100%">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No Component configured.</h1>
+                <p>Click <strong>Create Component</strong> to configure new <strong>Component</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>

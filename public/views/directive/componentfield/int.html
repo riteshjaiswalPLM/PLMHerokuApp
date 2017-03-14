@@ -1,0 +1,12 @@
+<div ng-if="field.rendered">
+        <input  class="bootstrap-touchspin" 
+                id="{{ field.SObjectField.name + index }}" 
+                type="text" 
+                pf-touch-spin 
+                ng-model="model[field.SObjectField.name]" 
+                name="{{ field.SObjectField.name + index }}" 
+                ng-required="field.required"
+                ng-if="!readonly"
+                readonly>
+        <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | number: 0"></span>
+</div>

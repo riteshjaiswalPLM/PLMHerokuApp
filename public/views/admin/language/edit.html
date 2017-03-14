@@ -1,0 +1,83 @@
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+        </div>
+        <h1>Edit {{ $root.title() }}</h1>
+    </div>
+
+    <form class="form-horizontal" block-ui="saveLanguage">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputLanguage">Language</label>
+            <div class="input-group col-md-3">
+                <input type="hidden" ng-model="language">
+                <input type="text" id="inputLanguage" class="form-control" ng-model="language.name" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputLanguageCodeLabel">Language Code</label>
+            <div class="col-md-3">
+                <input type="text" id="inputLanguageCodeLabel" class="form-control" ng-model="language.code" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputSObject">SObject</label>
+            <div class="input-group col-md-3">
+                <input type="hidden" ng-model="language.SObject">
+                <input type="text" id="inputSObject" class="form-control" ng-model="language.SObject.label" readonly>
+                <div class="input-group-btn" ng-if="language.aspect !== 'Fixed Label' ? true : language.SObject = undefined">
+                    <button type="button" class="btn btn-default" ng-click="openSObjectsLookup()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputAspect">Aspect</label>
+            <div class="input-group col-md-3">
+                <select id="inputAspect" class="form-control" ng-model="language.aspect">
+                    <option value="" selected>None</option>
+                    <option value="Field Label">Field Label</option>
+                    <option value="Layout Sections">Layout Sections</option>
+                    <option value="Fixed Label">Fixed Label</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <button ng-disabled="(language.aspect !== 'Fixed Label' && !language.SObject.label) || !language.aspect" class="btn btn-primary" type="button" ng-click="viewLanguageDetails()"><i class="fa fa-eye"></i> View</button>
+                <button ng-disabled="(language.aspect !== 'Fixed Label' && !language.SObject.label) || !language.aspect" class="btn btn-primary" type="button" ng-click="exportLanguageTranslation()"><i class="fa fa-upload"></i> Export</button>
+                <file-field ng-disabled="(language.aspect !== 'Fixed Label' && !language.SObject.label) || !language.aspect" class="btn btn-primary" callback="importLanguageTranslation" allowed-ext="'.csv'" ng-model="language.translationMappingFile"><i class="fa fa-download"></i> Import</file-field>
+                <button ng-disabled="(language.aspect !== 'Fixed Label' && !language.SObject.label) || !language.aspect || language.code == 'eng' || (language.code == 'eng' && language.aspect === 'Fixed Label')" class="btn btn-primary" type="button" ng-click="automateLanguageTranslation()"><i class="fa pficon-running"></i> Auto Translate</button>
+                <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </form>
+    <div class="panel panel-success" ng-if="language.translations !== undefined">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{language.aspect}} {{language.aspect !== 'Fixed Label' ? language.SObject.label : ''}}</h3>
+        </div>
+        <div class="panel-body" style="padding: 0px;min-height:200px;">
+            <table class="table table-striped table-hover table-bordered" style="margin-bottom:0px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: right;">#</th>
+                        <th>Label</th>
+                        <th>Translation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="language.translations && language.translations.length > 0" 
+                        ng-repeat="translation in language.translations">
+                        <td style="text-align: right;">{{ $index + 1 }}</td>
+                        <td><strong>{{ translation.label }}</strong></td>
+                        <td>{{ translation.translation }}</td>
+                    </tr>
+                    <tr ng-if="!language.translations || language.translations.length == 0">
+                        <td colspan="3" style="text-align: center;">No translation available.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

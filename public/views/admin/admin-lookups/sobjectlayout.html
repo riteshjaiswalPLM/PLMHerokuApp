@@ -1,0 +1,42 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sObjectLayoutLookupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="sObjectLayoutLookupModalLabel">{{ title }}</h4>
+            </div>
+            <div class="modal-body" block-ui="loadSObjectLayouts" style="height:300px;overflow: auto;padding:0px;">
+                <table class="table table-striped table-hover table-bordered" ng-if="sObjectLayouts.length > 0" style="margin-bottom:0px;">
+                    <thead>
+                        <tr>
+                            <th>SObject</th>
+                            <th>Layout type</th>
+                            <th style="text-align: center;width: 100px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr ng-repeat="layout in sObjectLayouts">
+                            <td><strong>{{ layout.SObject.label }}<strong></td>
+                            <td>{{ layout.type }}</td>
+                            <td style="text-align: center;width: 80px;">
+                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(layout)"><i class="fa fa-check"></i> Select</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="blank-slate-pf" ng-if="sObjectLayouts.length === 0" style="margin-bottom: 0px;height: 100%">
+                    <div class="blank-slate-pf-icon">
+                        <span class="pficon pficon-add-circle-o"></span>
+                    </div>
+                    <h1>No layout added for sObject.</h1>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <!--<button type="button" class="btn btn-default" ng-click="selectAndClose()">None</button>-->
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

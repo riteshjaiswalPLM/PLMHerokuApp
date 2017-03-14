@@ -1,0 +1,99 @@
+<div ng-controller="AdminLayoutsEditListController">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <a href ng-click="returnToList()"><span class="fa fa-chevron-circle-left"></span> Back to layouts</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" type="button" ng-click="saveLayout()"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <h1>Edit Layout {{ ' - ' + layout.SObject.label + ' ' + layout.type }}</h1>
+    </div>
+    <div block-ui="editListLayout" style="overflow-x: auto;">
+         
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-desktop"></i> Search Criteria Fields <span class="pull-right badge badge-info">{{ searchCriteriaFields.length }}</span>
+                </h3>
+            </div>
+            <div class="panel-body" style="height:200px;overflow: auto;padding:0px;">
+                <table class="table table-striped table-hover" style="margin-bottom:0px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Label</th>
+                            <th>Display Label</th>
+                            <th>Reference</th>
+                            <th style="width: 200px;">Type</th>
+                            <th style="text-align: center; width: 50px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody dnd-drop="searchCriteriaFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchCriteriaFields" dnd-allowed-types="['sObjectField','searchCriteriaField']" id="searchCriteriaFieldsContainer">
+                        <tr class="dndPlaceholder" style="display: table-row !important"><td colspan="6" style="background: #1294D5" ></td></tr>
+                        <tr ng-if="searchCriteriaFields.length === 0"><td colspan="5" style="text-align: center;">No Criteria field added.</td></tr>
+                        <tr ng-repeat="field in searchCriteriaFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchCriteriaFields.splice($index,1)" dnd-type="'searchCriteriaField'">
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ field.SObjectField.label }}</td>
+                            <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
+                            <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                            <td>{{ field.SObjectField.type }}</td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-xs btn-danger" type="button" ng-click="removeAndReorder(searchCriteriaFields,field,$index)"><i class="pficon-delete"></i> Delete</button>
+                                <!--<button class="btn btn-xs btn-danger" type="button" ng-click="field.deleted = true"><i class="pficon-delete"></i> Delete</button>-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-desktop"></i> Search Result Fields <span class="pull-right badge badge-info">{{ searchResultFields.length }}</span>
+                </h3>
+            </div>
+            <div class="panel-body" style="height:200px;overflow: auto;padding:0px;">
+                <table class="table table-striped table-hover" style="margin-bottom:0px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Label</th>
+                            <th>Display Label</th>
+                            <th>Reference</th>
+                            <th style="width: 200px;">Type</th>
+                            <th style="text-align: center; width: 50px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody dnd-drop="searchResultFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchResultFields" dnd-allowed-types="['sObjectField','searchResultField']" id="searchResultFieldsContainer">
+                        <tr class="dndPlaceholder" style="display: table-row !important"><td colspan="6" style="background: #1294D5" ></td></tr>
+                        <tr ng-if="searchResultFields.length === 0"><td colspan="6" style="text-align: center;">No Result field added.</td></tr>
+                        <tr ng-repeat="field in searchResultFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchResultFields.splice($index,1)" dnd-type="'searchResultField'">
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ field.SObjectField.label }}</td>
+                            <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
+                            <td reference-field-selector field="field" ref-sobjects="refSObjects"> 
+                            </td>
+                            <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-xs btn-danger" type="button" ng-click="removeAndReorder(searchResultFields,field,$index)"><i class="pficon-delete"></i> Delete</button>
+                                <!--<button class="btn btn-xs btn-danger" type="button" ng-click="field.deleted = true"><i class="pficon-delete"></i> Delete</button>-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-cogs"></i> Action Button Criteria Configuration
+                </h3>
+            </div>
+            <div class="panel-body" align="center" >
+                <button class="btn btn-primary" type="button" ng-click="openActionButtonCriteriaModal(editActionButton)"><i class="fa fa-pencil"></i> Edit <i class="fa fa-cogs"></i></button>
+                <button class="btn btn-default" type="button" ng-click="openActionButtonCriteriaModal(detailActionButton)"><i class="fa fa-eye"></i> Detail <i class="fa fa-cogs"></i></button>
+            </div>
+        </div>
+        <!--<div>
+            <pre>searchCriteriaFields:</br>{{searchCriteriaFields | json}}</pre>
+        </div>-->
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="alert alert-warning alert-group">
+    <div class="form-inline">
+        <select ng-options="o.value as o.label for o in operators" ng-model="group.operator" class="form-control"></select>
+        <button style="margin-left: 5px" ng-click="addRule()" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Rule</button>
+        <button style="margin-left: 5px" ng-click="addGroup()" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Group</button>
+        <button style="margin-left: 5px" ng-click="removeGroup()" class="btn btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Remove Group</button>
+    </div>
+    <div class="group-conditions">
+        <div ng-repeat="rule in group.rules | orderBy:'index'" class="condition">
+            <div ng-switch="rule.hasOwnProperty('group')">
+                <div ng-switch-when="true">
+                    <criteria-builder group="rule.group" fields="ruleFields"></criteria-builder>
+                </div>
+                <div ng-switch-default="ng-switch-default">
+                    <form class="form-inline">
+                        <select ng-options="f as f.label for f in fields | orderBy:'label' track by f.SObjectField.name" ng-model="rule.field" class="form-control">
+                            <option value="">-- None --</option>
+                        </select>
+                        <select style="margin-left: 5px" ng-options="c.value as c.value for c in conditions | filter: rule.field.SObjectField.type" ng-model="rule.condition" class="form-control">
+                            <option value="" selected>-- None --</option>
+                        </select>
+                        <select ng-if="rule.field && rule.field.SObjectField.type==='reference' && rule.field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1"  ng-options="f as f.label for f in userDataField | orderBy:'label' track by f.fieldname"  ng-model="rule.data" class="form-control" ng-change="updateRef(rule);">
+                            <option value="">-- None --</option>
+                        </select>
+                        <div style="margin-left: 5px; display: inline-block;" field-readonly="'false'" ng-if="rule.field && (rule.field.SObjectField.type!=='reference' || (rule.field.SObjectField.type==='reference' && rule.field.SObjectField.referenceTo.indexOf(userMasterObjName)===-1))" sobject-layout-field field="rule.field" model="rule.data"></div>
+                        <button style="margin-left: 5px" ng-click="removeRule($index)" class="btn btn-danger"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

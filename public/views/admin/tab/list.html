@@ -1,0 +1,71 @@
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <button class="btn btn-primary" type="button" ng-click="edit()"><i class="fa fa-plus"></i> Create Tab</button>
+        </div>
+        <h1><i class="fa fa-folder"></i> {{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-folder"></i> Tabs
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="tabsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body" block-ui="loadTabs" style="height:400px;overflow: auto;padding:0px;">
+            <table class="table table-striped table-hover table-bordered table-treegrid" ng-if="tabs.length > 0" style="margin-bottom:0px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;width: 50px;">Order</th>
+                        <th>SObject</th>
+                        <th style="text-align: center;width: 50px;">Icon</th>
+                        <th>Tab Label</th>
+                        <th style="text-align: center;width: 50px;">Active</th>
+                        <th style="text-align: center;width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="tab in tabs | filter: tabsFilter" ng-dblclick="edit(tab)">
+                        <td style="text-align: center;">{{ tab.order }}</td>
+                        <td>{{ tab.SObject.label }}</td>
+                        <td style="text-align: center;"><i ng-class="tab.Icon.class"></i></td>
+                        <td><strong>{{ tab.label }}</strong></td>
+                        <td style="text-align: center;"><i ng-class="{'fa fa-check' : tab.active }"></i></td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-info" type="button" ng-click="edit(tab)"><i class="pficon-edit"></i> Edit</button>
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteTab(tab)"><i class="pficon-delete"></i> Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <!--<tbody ng-repeat="(key, value) in tabs | groupBy: 'SObject.label'">
+                    <tr id="{{ 'sobject' + $index }}" class="collapsed">
+                        <th class="treegrid-node" colspan="3">
+                            <i class="fa fa-database"></i> {{ key }}
+                        </th>
+                    </tr>
+                    <tr data-parent="{{ '#sobject' + $parent.$index }}" ng-repeat="tab in value">
+                        <td class="treegrid-node">
+                            <i ng-class="tab.Icon.class"></i> {{ tab.label }}
+                        </td>
+                        <td style="text-align: center;"><i class="{{ (tab.active) ? 'fa fa-check' : '' }}"></i></td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-info" type="button" ng-click="edit(tab)"><i class="pficon-edit"></i> Edit</button>
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteTab(tab)"><i class="pficon-delete"></i> Delete</button>
+                        </td>
+                    </tr>
+                </tbody>-->
+            </table>
+            <div class="blank-slate-pf" ng-if="tabs.length === 0" style="margin-bottom: 0px;height: 100%">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No Tab added.</h1>
+                <p>Click <a href="" ng-click="edit()"><strong>Create Tab</strong></a> to add new <strong>Tab</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>

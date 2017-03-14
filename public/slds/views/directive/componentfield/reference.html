@@ -1,0 +1,16 @@
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+    <div class="input-group" ng-if="!readonly">
+        <input  type="hidden" 
+                ng-model="model[field.SObjectField.name]">
+        <input  type="text" 
+                id="{{ field.SObjectField.name + index}}" 
+                class="form-control" 
+                ng-model="model[field.SObjectField.relationshipName][field.reference]" readonly>
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="openLookup()">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <span ng-if="readonly" ng-bind="model[field.SObjectField.relationshipName][field.reference]"></span>
+</div>

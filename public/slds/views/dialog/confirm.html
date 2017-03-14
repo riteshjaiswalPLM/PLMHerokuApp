@@ -1,0 +1,26 @@
+<div role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" data-backdrop="static" aria-describedby="prompt-message-wrapper" class="slds-modal slds-modal--prompt">
+  <div class="slds-modal__container">
+    <div class="slds-modal__header" ng-class="headerClass">
+      <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="confirm(false)">
+        <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+          <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+        </svg>
+        <span class="slds-assistive-text">Close</span>
+      </button>
+      <h2 class="slds-text-heading--medium" id="prompt-heading-id" translate>{{ title }}</h2>
+    </div>
+    <div class="slds-modal__content slds-p-around--medium slds-grid">
+        <span class="slds-icon_container">
+            <svg class="slds-icon slds-icon-text-default" aria-hidden="true">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#question"></use>
+            </svg>
+        </span>
+        <p style="margin-left: 10px;font-weight: 600;" translate>{{ message }}</p>
+    </div>
+    <div class="slds-modal__footer slds-theme--default">
+      <button class="slds-button slds-button--neutral" ng-click="confirm(false)" translate>{{ noLabel }}</button>
+      <button class="slds-button" ng-class="btnClass" ng-click="confirm(true)" translate>{{ yesLabel }}</button>
+    </div>
+  </div>
+</div>
+<div class="slds-backdrop"></div>

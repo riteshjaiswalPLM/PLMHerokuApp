@@ -1,0 +1,72 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sObjectLookupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="sObjectLookupModalLabel" ng-bind-template="{{ metadata.title | translate}}" translate>Loading...</h4>
+            </div>
+            <div class="modal-body" block-ui="loadSObjectLookup" style="height:327px;overflow: auto;padding:0px;">
+                <table fixed-header class="table table-striped table-hover table-bordered" ng-if="metadata !== undefined" style="height:300px; margin-bottom:0px;">
+                    <thead>
+                        <tr>
+                            <th class="th-sortable {{ 'th-' + field.SObjectField.type }}" 
+                                ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                                ng-click="applyOrderBy(field)" 
+                                ng-repeat="field in metadata.SObjectLayoutFields" translate>
+                                {{ field.label }} 
+                                <i ng-class="{'fa fa-angle-down': !reverse,'fa fa-angle-up': reverse}" 
+                                ng-if="predicate === field.SObjectField.name"></i>
+                            </th>
+                            <th class="th-actions" style="width: 80px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="result in searchResult" ng-dblclick="selectAndClose(result)" class="search-result-tr" style="cursor: pointer;}}">
+                            <td class="{{ 'td-' + field.SObjectField.type }}" 
+                                ng-repeat="field in metadata.SObjectLayoutFields">
+                                {{ (field.SObjectField.type === 'reference') 
+                                    ? result[field.SObjectField.relationshipName][field.reference] 
+                                    : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                        ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                        : (field.SObjectField.type === 'date') 
+                                            ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                            : (field.SObjectField.type === 'datetime')
+                                                ? (result[field.SObjectField.name] | date: 'medium')
+                                                : result[field.SObjectField.name] }}</td>
+                            <td class="td-actions" style="width: 80px;">
+                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(result)" translate><i class="fa fa-check"></i> Select</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="actions pull-left" style="padding-left: 0px;">
+                            <select pf-select data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="loadLookupData(1,pageSize)" ng-options="size as size for size in pageSizes" id="pageSize">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="loadLookupData(currentPage - 1, pageSize)" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)" translate><i class="fa fa-angle-left"></i> Previous</button>
+                            </span>
+                            <input type="text" readonly class="form-control" style="text-align: center;" ng-model="currentPage">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="loadLookupData(currentPage + 1, pageSize)" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize" translate>Next <i class="fa fa-angle-right"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 pull-right">
+                        <button type="button" class="btn btn-default" ng-click="selectAndClose()" translate>None</button>
+                        <button type="button" class="btn btn-default" ng-click="close()" translate>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

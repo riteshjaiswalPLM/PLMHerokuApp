@@ -1,0 +1,115 @@
+<div class="slds-col slds-size--1-of-1"  block-ui="saveTab">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#tabset"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() }}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{stateAction + ' ' + $root.title()}}">{{stateAction + ' ' + $root.title()}}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--neutral" ng-click="cancel()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                        </svg>
+                        Back to list
+                    </button>
+                    <button class="slds-button slds-button--brand" ng-click="saveTab()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                        </svg>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y" style="height: calc(100vh - 200px);">
+        <div class="slds-size--1-of-3 slds-panel__section">
+            <fieldset class="slds-form--compound">
+                <legend class="slds-form-element__label slds-text-title--caps">SObject Information</legend>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="inputSObject">SObject</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input readonly type="text" id="inputSObject" class="slds-lookup__search-input slds-input--bare" ng-model="tab.SObject.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                    <button ng-click="openSObjectsLookup()" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for SObjects</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <!--<div class="slds-size--2-of-3 slds-panel__section"></div>-->
+        <div class="slds-size--1-of-3 slds-panel__section">
+            <fieldset class="slds-form--compound">
+                <legend class="slds-form-element__label slds-text-title--caps">Tab Information</legend>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="inputTabLabel">Label</label>
+                            <input type="text" id="inputTabLabel" class="slds-input" ng-model="tab.label" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="inputTabIcon">Icon</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <input type="hidden" ng-model="tab.Icon">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input readonly type="text" id="inputTabIcon" class="slds-lookup__search-input slds-input--bare" ng-model="tab.Icon.class" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                    <button ng-click="openIconsLookup()" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for Icons">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for Icons</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="inputTabOrder">Order</label>
+                            <slds-touch-spin id="inputTabOrder" ng-model="tab.order" min="0" max="5" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="inputTabActiveStatus">Active status</label>
+                            <slds-switch id="inputTabActiveStatus" ng-model="tab.active" on-text="Active" off-text="Inactive"/>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

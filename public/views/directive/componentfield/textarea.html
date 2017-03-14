@@ -1,0 +1,19 @@
+<div ng-if="field.rendered">
+    <textarea   id="{{ field.SObjectField.name + index}}"
+                ng-model="model[field.SObjectField.name]"
+                class="form-control"
+                style="resize: none;"
+                rows="3"
+                ng-required="field.required"
+                ng-if="!readonly">
+    </textarea>
+    <textarea   id="{{ field.SObjectField.name + index}}"
+                ng-model="model[field.SObjectField.name]"
+                class="form-control"
+                style="resize: none;border: none;margin-top: -3px; -webkit-box-shadow: none;box-shadow: none;"
+                rows="3"
+                ng-required="field.required"
+                readonly="readonly"
+                ng-if="readonly">
+    </textarea>
+</div>

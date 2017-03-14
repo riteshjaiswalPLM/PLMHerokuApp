@@ -1,0 +1,77 @@
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <h1><i class="fa fa-user"></i> {{ $root.title() }}</h1>
+    </div>
+    <div class="panel panel-default" block-ui="loadSObjects">
+        <div class="panel-heading">
+            <h3 class="panel-title">Configure New User Action</h3>
+        </div>
+        <div class="panel-body"  >
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Sobject</label>
+                    <div class="col-sm-2" style="padding:0px">
+                        <select pf-select="{size:10}" class="form-control" ng-model="data.SObject" ng-change="onSobjectChange(data.SObject)" ng-options="sObj as sObj.label for sObj in sObjects | orderBy:'label'">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label">Sobject Fields</label>
+                    <div class="col-sm-2" style="padding:0px">
+                        <select pf-select="{size:10}" class="form-control" ng-model="data.SObjectField" ng-change="onSobjectFieldChange(data.SObjectField)" ng-options="field as field.label  for field in sObjectFields | orderBy:'label'">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-1 control-label" >Value</label>
+                    <div class="col-sm-2" style="padding:0px">
+                        <select pf-select="{size:10}" class="form-control" ng-model="data.SObjectFieldValue" ng-options="field.value as field.label for field in sObjectFieldsValue | orderBy:'label'">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2" align="center">
+                        <button type="submit" class="btn btn-primary" ng-click="addItem()" ><i class="fa fa-plus"></i>Add</button>
+                        <!--<button type="submit" class="btn btn-default">Reset</button>-->
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-success" block-ui="useraction" style="min-height:100px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-database"></i> Configured Actions
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="sObjectsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body"  style="padding:0px;" >
+            <table fixed-header class="table table-striped table-hover table-bordered" style="height: {{ (userActions.length===0) ? 0 : 300 }}px;">
+                <thead>
+                    <tr>
+                        <th>Sobject</th>
+                        <th>User Action Value</th>
+                        <th style="text-align: center;min-width: 150px;width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr ng-repeat="sObj in userActions |filter: { actionvalue : sObjectsFilter}">
+                        <td> <strong>{{ sObj.SObject.label }}<strong></td>
+                        <td>{{ sObj.actionvalue }}</td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-primary" type="button" ng-click="manageSObjectFields(sObj)"><i class="fa fa-cogs"></i> Manage Fields</button>
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteUserAction(sObj)"><i class="pficon-delete"></i> Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="userActions.length === 0" style="margin-bottom: 0px;height: 373px;">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No User Action Configure added.</h1>
+                
+            </div>
+        </div>
+    </div>
+</div>

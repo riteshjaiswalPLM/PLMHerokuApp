@@ -1,0 +1,22 @@
+<div ng-if="field.rendered">
+        <input  type="checkbox" 
+                bs-switch 
+                class="bootstrap-switch" 
+                switch-size="small" 
+                switch-on-text="True" 
+                switch-off-text="False" 
+                id="{{ field.SObjectField.name + index}}" 
+                ng-model="model[field.SObjectField.name]"
+                ng-required="field.required"
+                ng-if="!field.readonly && (!field.criteriaField ||field.criteriaField === false)">
+        <input  type="checkbox" 
+                bs-switch 
+                class="bootstrap-switch" 
+                switch-on-text="True" 
+                switch-off-text="False" 
+                id="{{ field.SObjectField.name + index}}" 
+                ng-model="model[field.SObjectField.name]"
+                ng-required="field.required"
+                ng-if="!field.readonly && field.criteriaField === true">
+        <span ng-if="field.readonly" ng-bind="model[field.SObjectField.name] "></span>
+</div>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html lang="en-us" ng-app="app" ng-class="{'ie9': true, 'login-pf': $root.isLoginPage()}"><![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en-us" ng-app="App" ng-class="{'login-pf': $root.isLoginPage()}">
+<!--<![endif]-->
+
+<head>
+    <base href="/">
+    <title ng-bind-template="{{ $root.title() }}">Loading...</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../dist/img/favicon.ico">
+    <!-- iPad retina icon -->
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-152.png">
+    <!-- iPad retina icon (iOS < 7) -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-144.png">
+    <!-- iPad non-retina icon -->
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-76.png">
+    <!-- iPad non-retina icon (iOS < 7) -->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-72.png">
+    <!-- iPhone 6 Plus icon -->
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-180.png">
+    <!-- iPhone retina icon (iOS < 7) -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-114.png">
+    <!-- iPhone non-retina icon (iOS < 7) -->
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="bower_components/patternfly/dist/img/apple-touch-icon-precomposed-57.png">
+
+    <link rel="stylesheet" href="slds221/assets/styles/salesforce-lightning-design-system.min.css">
+    <!--<link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.min.css">
+    <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.min.css">
+    <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.min.css">-->
+    <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="bower_components/json-formatter/dist/json-formatter.min.css">
+    <!--<link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">-->
+    <style>
+        [ng/:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+        .block-ui-container{
+            z-index: 1000;
+        }
+        .form-signin .greenBtn{
+            background:  #64c550 !important;
+            border:0px !important;
+        }
+        .form-signin {
+            background: #ececec none repeat scroll 0 0;
+            border: 0 solid #cccccc;
+            border-radius: 10px;
+            box-shadow: 0 0 5px #000000;
+            left: 0;
+            margin: 0 auto;
+            opacity: 1;
+            padding: 30px 30px 15px;
+            transition: all 0.2s ease-in-out 0s;
+            z-index: 90;
+            width: 400px !important;
+        }
+        .login-pf body {
+            background-size: 100% auto;
+            background: rgba(0, 0, 0, 0) url("/resources/images/bg-login-new.jpg") no-repeat scroll 0 0 / 100% auto!important;
+        }
+        .login-pf .container {
+            color: #333333 !important;
+            bottom: 0 !important;
+            padding-left: 0px !important;
+            position: relative !important;
+            margin-top: 180px; 
+        }
+        .login-pf .container .help-block {
+            color: #333333 !important;
+        }
+        .tblheader {
+            color: #56c240;
+            font-size: 26px !important;
+            font-weight: bold;
+            letter-spacing: -1px;
+            margin: 0 0 12px;
+            text-align: right;
+        }
+        .page-header {
+            margin-top: 20px;
+        }
+        .form-control[readonly] {
+            background-color: #fff;
+            border-color: #BABABA!important;
+            color: #333;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        }
+        .input-group[class*=col-]{
+            padding-left: 20px;
+        }
+        .form-actions, .form-actions-bottom {
+            background-color: #FAFAFA;
+            border-top: 1px solid #ddd;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-actions-top {
+            background-color: #FAFAFA;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-actions-sm {
+            padding: 10px 20px;
+        }
+        [dnd-list] .dndPlaceholder {
+            display: block;
+            background-color: #1294D5;
+            min-height: 5px;
+            position: relative;
+        }
+        [fixed-header] {
+            margin-bottom:0px;
+            border: none;
+            /*height: 400px;*/
+        }
+        .th-sortable {
+           cursor: pointer !important;
+        }
+        .th-sorted {
+            border-bottom: 2px solid #1294D5 !important;
+        }
+        /*  DRAG AND DROP ELEMENT */
+        .layout-section-container{
+            border: dotted 1px #1294D5; 
+            margin-bottom: 10px;
+            min-height: 40px;
+            padding: 5px;
+        }
+        .layout-section-container > .panel{
+            margin-bottom: 5px;
+        }
+        .layout-section-container > .panel > .panel-heading,
+        .edit-layout > .panel > .panel-heading{
+            padding: 7px 10px;
+        }
+        .sobject-layout-field{
+            margin-bottom: 7px;
+        }
+        .sobject-layout-field > .control-label{
+            padding-right: 0px;
+        }
+        .sobject-layout-field > div[field-readonly="true"] {
+            padding-top: 3px;
+        }
+        .edit-layout > .panel > .panel-body{
+            padding: 7px;
+            padding-bottom: 0px;
+        }
+        .layout-section-container > .panel > .panel-body{
+            padding: 8px;
+        }
+        .layout-component-container{
+            border: dotted 1px #1294D5; 
+            margin-bottom: 10px;
+            min-height: 40px;
+            padding: 5px;
+        }
+        [dnd-list] > .panel > .panel-heading{
+            cursor: move;
+        }
+        [dnd-list] > .form-group{
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            margin-bottom: 1px;
+            margin: 0px;
+        }
+        [dnd-list] > .panel > .panel-heading > h3 > .pull-right,
+        [dnd-list] > .form-group > div > .pull-right{
+            display: none;
+        }
+        [dnd-list] > .panel:hover > .panel-heading > h3 > .pull-right,
+        [dnd-list] > .form-group:hover > div > .pull-right{
+            display: block;
+        }
+        [dnd-list] > .form-group > label{
+            padding: 0px;
+        }
+        [dnd-list] > .form-group:hover{
+            background-color: #d5ecf9;
+            border-bottom: 1px dotted #a7cadf;
+            border-top: 1px dotted #a7cadf;
+            cursor: move;
+        }
+        [dnd-list] > .form-group:hover > label{
+            cursor: move;
+        }
+        .draggable-item > i{
+            border: 2px solid #1294D5; 
+            margin-right: 5px;
+        }
+        .draggable-item > small{
+            color: #1294D5;
+        }
+        .input-xs{
+            height: 22px;
+        }
+        .th-double, .th-currency , .td-double, .td-currency{
+            text-align: right;   
+        }
+        .th-actions, .td-actions{
+            text-align: center;
+        }
+        
+
+        .group-conditions{
+            margin-left: 20px;
+        }
+        .alert-group{
+            padding: 8px;
+            margin-bottom: 0px;
+        }
+        .condition, .group{
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .ng-invalid-val, button.ng-invalid, input.ng-invalid, select.ng-invalid, textarea.ng-invalid, input.formElement.ng-invalid {
+            border-left: solid 5pt red;
+        } 
+    </style>
+    <style>
+        .slds-blank-slate{
+            text-align: center;
+            /*background:rgba(250, 255, 189, 0.8);*/
+            background: #faffbd;
+        }
+        button.slds-util-button{
+            background: #f7f9fb;
+        }
+        .slds-modal.in{
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.1s linear;
+        }
+        .slds-backdrop.in{
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.4s linear;
+        }
+        .slds-action-button{
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .slds-accordion-item{
+            border-left: 3px solid #1589ee;
+        }
+        .slds-accordion-header{
+            cursor: pointer;
+        }
+        .slds-accordion-header.slds-theme--shade{
+            border-top: 1px solid #1589ee;
+        }
+    </style>
+</head>
+<body>
+    <div class="slds-grid slds-wrap" ui-view></div>
+    
+    <!--Angular-->
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/jquery.js" ></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js" ></script>
+    <script>
+        $(function () {
+            Object.defineProperty(console, '_commandLineAPI', { get : function() { throw 'Nooo!' } })
+        })
+    </script>
+    <script src="bower_components/moment/min/moment.min.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/bootstrap.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/bootstrap-combobox.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/bootstrap-datepicker.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/bootstrap-select.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/bootstrap-treeview.js" ></script>
+    <script src="bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" ></script>
+    <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/c3.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/d3.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/patternfly.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/angular.js" ></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js" ></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/angular-sanitize.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/angular-animate.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/ui-bootstrap-tpls.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/angular-bootstrap-prettify.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/lodash.min.js" ></script>
+    <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/angular-patternfly.js" ></script>
+    <script src="bower_components/angular-block-ui/dist/angular-block-ui.min.js" ></script>
+    <script src="bower_components/angular-modal-service/dst/angular-modal-service.min.js" ></script>
+    <script src="bower_components/angular-filter/dist/angular-filter.min.js" ></script>
+    <script src="bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js" ></script>
+    <script src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js" ></script>
+    <script src="bower_components/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js" ></script>
+    <script src="bower_components/angular-bootstrap-datetimepicker-directive/angular-bootstrap-datetimepicker-directive.min.js" ></script>
+    <script src="bower_components/angu-fixed-header-table/angu-fixed-header-table.js" ></script>
+    <script src="bower_components/angular-translate/angular-translate.js" ></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.js" ></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload-all.js" ></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload-shim.js" ></script>
+    <!--<script src="bower_components/angular-translate-loader-url/angular-translate-loader-url.js" ></script>-->
+    <script src="bower_components/ngstorage/ngStorage.min.js" ></script>
+    <script src="bower_components/json-formatter/dist/json-formatter.min.js" ></script>
+    
+    
+    <!--App Modules-->
+    <!--App.Dialog Module-->
+    <script src="slds/src/modules/dialog/dialog.js" ></script>
+    <script src="slds/src/modules/dialog/dialog.controllers.js" ></script>
+    <script src="slds/src/modules/dialog/dialog.services.js" ></script>
+    
+    <!--App.Directive Module-->
+    <script src="slds/src/modules/directive/directive.js" ></script>
+    <script src="slds/src/modules/directive/control.js" ></script>
+    <script src="slds/src/modules/directive/validation.js" ></script>
+
+    <!--App.Language Module-->
+    <script src="slds/src/modules/language/language.js" ></script>
+    <script src="slds/src/modules/language/language.config.js" ></script>
+
+    <!--App.Auth Module-->
+    <script src="slds/src/modules/auth/auth.js" ></script>
+    <script src="slds/src/modules/auth/auth.config.js" ></script>
+    <script src="slds/src/modules/auth/auth.controllers.js" ></script>
+    <script src="slds/src/modules/auth/auth.interceptors.js" ></script>
+    <script src="slds/src/modules/auth/auth.services.js" ></script>
+    
+    <!--App.Client Module-->
+    <script src="slds/src/modules/client/client.js" ></script>
+    <script src="slds/src/modules/client/client.config.js" ></script>
+    <script src="slds/src/modules/client/client.lookups.js" ></script>
+    <script src="slds/src/modules/client/client.controllers.js" ></script>
+    <script src="slds/src/modules/client/layout/controllers.js" ></script>
+    <script src="slds/src/modules/client/profile/controllers.js" ></script>
+    <script src="slds/src/modules/client/layout/components/uploadattachment/controller.js" ></script>
+    <script src="slds/src/modules/client/layout/components/costalloactioncomponent/controller.js" ></script>
+    <script src="slds/src/modules/client/layout/components/otherchargecomponent/controller.js" ></script>
+    <script src="slds/src/modules/client/layout/components/changerequestcomponent/controller.js" ></script>
+    <script src="slds/src/modules/client/profile/services.js" ></script>
+    <script src="slds/src/modules/client/layout/services.js" ></script>
+    <script src="slds/src/modules/client/sobject/services.js" ></script>
+    <script src="slds/src/modules/client/lookup/controllers.js" ></script>
+    <script src="slds/src/modules/client/lookup/services.js" ></script>
+    
+    <!--App.Admin Module-->
+    <script src="slds/src/modules/admin/admin.lookups.js" ></script>
+    <script src="slds/src/modules/admin/admin.modals.js" ></script>
+    <script src="slds/src/modules/admin/admin.js" ></script>
+    <script src="slds/src/modules/admin/admin.config.js" ></script>
+    <script src="slds/src/modules/admin/admin.controllers.js" ></script>
+    <script src="slds/src/modules/admin/admin.services.js" ></script>
+                                                                         
+    <script src="slds/src/modules/admin/dashboard/controllers.js"></script>
+    <script src="slds/src/modules/admin/tabs/controllers.js"></script>
+    <script src="slds/src/modules/admin/layouts/controllers.js"></script>
+    <script src="slds/src/modules/admin/lookups/controllers.js"></script>
+    <script src="slds/src/modules/admin/setup/controllers.js"></script>
+    <script src="slds/src/modules/admin/setup/sobjects/controllers.js"></script>
+    <script src="slds/src/modules/admin/setup/usermapping/controllers.js"></script>
+    <script src="slds/src/modules/admin/usermanagement/roles/controllers.js"></script>
+    <script src="slds/src/modules/admin/usermanagement/users/controllers.js"></script>
+    <script src="slds/src/modules/admin/usermanagement/profile/controllers.js"></script>
+    <script src="slds/src/modules/admin/languages/controllers.js"></script>
+    <script src="slds/src/modules/admin/components/generic-components/controllers.js"></script>
+    <script src="slds/src/modules/admin/components/static-components/controllers.js"></script>
+    <script src="slds/src/modules/admin/components/dashboard-components/controllers.js"></script>
+    <script src="slds/src/modules/admin/clientdashboard/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/governfields/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/layout/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/useraction/controllers.js"></script>
+    
+    <script src="slds/src/modules/admin/dashboard/services.js"></script>
+    <script src="slds/src/modules/admin/tabs/services.js"></script>
+    <script src="slds/src/modules/admin/layouts/services.js"></script>
+    <script src="slds/src/modules/admin/lookups/services.js"></script>
+    <script src="slds/src/modules/admin/setup/services.js"></script>
+    <script src="slds/src/modules/admin/setup/sobjects/services.js"></script>
+    <script src="slds/src/modules/admin/setup/usermapping/services.js"></script>
+    <script src="slds/src/modules/admin/usermanagement/roles/services.js"></script>
+    <script src="slds/src/modules/admin/usermanagement/users/services.js"></script>
+    <script src="slds/src/modules/admin/languages/services.js"></script>
+    <script src="slds/src/modules/admin/components/generic-components/services.js"></script>
+    <script src="slds/src/modules/admin/components/static-components/services.js"></script>
+    <script src="slds/src/modules/admin/clientdashboard/services.js"></script>
+    <script src="slds/src/modules/admin/mobile/services.js"></script>
+    <script src="slds/src/modules/admin/mobile/governfields/services.js"></script>
+    <script src="slds/src/modules/admin/mobile/layout/services.js"></script>
+    <script src="slds/src/modules/admin/mobile/useraction/services.js"></script>
+    
+    <!--Angular Application Module-->
+    <script src="slds/src/app.js" ></script>
+    <script src="slds/src/app.config.js" ></script>
+    <script src="slds/src/app.controllers.js" ></script>
+    <script src="slds/src/app.directives.js" ></script>
+    <script src="slds/src/app.factories.js" ></script>
+</body>
+
+</html>

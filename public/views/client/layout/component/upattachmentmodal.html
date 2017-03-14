@@ -1,0 +1,121 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog" block-ui="AttachmentModalBlock">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="modalTitle">Attachment</h4>
+            </div>
+            <div class="modal-body" style="height:250px;overflow: auto;">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <form class="form-horizontal">
+                            <div class="form-group" style="margin-bottom: -8px;">
+                                <label class="col-md-6 control-label" for="selectFile">Select the File to be attached</label>
+                                <div class="input-group col-md-6">
+                                    <span 	id 				="selectFile"
+                                            data-ng-show	= "!data.primaryDocument"
+                                            class		    = "btn btn-primary fileinput-button dz-clickable" 
+                                            name		    = "file"
+                                            enctype		    = "multipart/form-data"
+                                            data-ngf-select	= "data.selectFile($files, $invalidFiles)"
+                                            ngf-max-size    = "{{data.allowedSize}}MB"
+                                            accept		    = "{{data.allowedExt}}"
+                                            multiple>
+                                            <span>Add </span><i class="pficon-file"></i> 
+                                    </span>
+                                    <span 	id 				="selectFile" 	
+                                            data-ng-show	= "data.primaryDocument"
+                                            class		    = "btn btn-primary fileinput-button dz-clickable" 
+                                            name		    = "file"
+                                            enctype		    = "multipart/form-data"
+                                            data-ngf-select	= "data.selectFile($files, $invalidFiles)"
+                                            ngf-max-size    = "{{data.allowedSize}}MB"
+                                            accept		    = "{{data.allowedExtForPrime}}"
+                                            single>
+                                            <span>Add </span><i class="pficon-file"></i>
+                                    </span> 
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label data-ng-show="false" class="col-md-5 control-label" for="uploadPrimary">Upload Primary Document</label>
+                                <div class="input-group col-md-7">
+                                    <input id="uploadPrimary" data-ng-show="false" type="checkbox" ng-model="data.primaryDocument" data-ng-click="data.primaryDocumentClicked(data.primaryDocument);" data-ng-disabled="data.disablePrimaryDocuent" tooltip="Primary Document">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <form class="form-horizontal">
+                        <div class="form-group" style="margin-bottom: 5px;text-align: left;color:red;">
+                            <label style="text-align: center;" data-ng-show="!data.primaryDocument" class="col-md-11 control-label">{{ data.allowedExt }} format are sported.</label>
+                            <label style="text-align: center;" data-ng-show="data.primaryDocument" class="col-md-11 control-label">{{ data.allowedExtForPrime }} format are sported.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label style="text-align: center;" class="col-md-11 control-label">Note : Please limit your files to a maximum of {{data.allowedSize}}MB in size.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="panel panel-default" style="margin-bottom: -8px;">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Attachment Section</h3>
+                                </div>
+                                <div class="panel-body row" ng-if="data.files" data-ng-show="data.files.length > 0">
+                                    <div class="col-md-12">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label style="text-align: center;" class="col-md-2 panel-title"></label>
+                                                <label style="text-align: center;" class="col-md-4 panel-title">File</label>
+                                                <label style="text-align: center;" class="col-md-4 panel-title">Size in Bytes</label>
+                                                <label style="text-align: center;" class="col-md-2 panel-title">Upload</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div data-ng-model="data.files" class="col-md-12" data-ng-repeat="file in data.files">
+                                        <form class="form-horizontal">
+                                            <div class="form-group" style="margin-bottom: 0px;">
+                                                <label style="text-align: center;" class="col-md-2"><a href="" data-ng-click="data.deleteFile(file)">delete</a></label>
+                                                <label style="text-align: center;" class="col-md-4">{{file.name}}</label>
+                                                <label style="text-align: center;" class="col-md-4">{{file.size}}</label>
+                                                <label style="text-align: center;" class="col-md-2">
+                                                    <a href="" ng-show="!file.isPersisted" data-ng-click="data.attachFiles(file)" class ="btn btn-success fileinput-button dz-clickable">Upload</a> 
+                                                    <label data-ng-if="data.primaryFileName == file.name" style="margin-bottom: 0;">Primary Document</label>
+                                                </label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="panel-body row" ng-if="data.files" data-ng-show="data.files.length == 0">
+                                    <div class="col-md-12">
+                                        <form class="form-horizontal">
+                                            <div class="form-group" style="margin-bottom: 0px;margin-top: -10px;">
+                                                <label style="text-align: center;" class="col-md-11 control-label">No attachment found.</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>

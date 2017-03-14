@@ -1,0 +1,58 @@
+<div class="col-md-12" block-ui="ChangeRequestComponentBlock" style="min-height: 100px;">
+	<table class="table table-spriped table-condensed">
+		<tbody ng-if="type !=='detail' && !section.readonly">
+			<tr>
+				<td style="font-weight: 700;border-top: 0px">Request Field</td>
+				<td style="font-weight: 700;border-top: 0px">Current Value</td>
+				<td style="font-weight: 700;border-top: 0px">Proposed Value</td>
+				<td style="font-weight: 700;border-top: 0px" ng-if="type !=='detail'"></td>
+			</tr>
+			<tr ng-repeat="item in items" ng-init="item.currentVal='';">
+				<td style="border-top: 0px">
+					<select pf-select ng-model="item.selected_value" ng-change="changeItem(item.selected_value, item);" style="margin-bottom:0px">
+							<option value="">--None--</option>
+							<option ng-repeat	="pickListValue in changeRequestFieldsDetail" 
+									value		="{{pickListValue.Name}}"
+									ng-selected ="item.selected_val == pickListValue.Name">
+									{{pickListValue.label}}
+							</option>
+					</select>
+				</td>
+				<td style="border-top: 0px" class="esm-input">{{item.current_Field__Value}}</td>
+				<td style="border-top: 0px" class="{{ 'td-'+fields[item.selected_value].SObjectField.type }} sobject-layout-field">
+					<div sobject-component-field field="fields[item.selected_value]" model="item" index="$index"></div>
+				</td>
+				
+				<td style="border-top: 0px">
+					<button class    = "btn btn-xs btn-danger"
+							type     = "button"
+							ng-click = "removeItem(item);">
+						<i class="pficon-delete"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td  colspan="4" style="text-align: center;border-top: 0px">
+					<button type		="button" 
+							class		="btn btn-small" 
+							ng-click	="validateSupplierProfileSelection();" style="margin-bottom:0px"><i class="icon-plus-sign"></i>
+							&nbsp;Add more
+					</button>
+				</td>
+			</tr>
+		</tbody>
+		
+		<tbody ng-if="type ==='detail' || section.readonly">
+			<tr>
+				<td style="font-weight: 700;border-top: 0px">Request Field</td>
+				<td style="font-weight: 700;border-top: 0px">Current Value</td>
+				<td style="font-weight: 700;border-top: 0px">Proposed Value</td>
+			</tr>
+			<tr  ng-if="supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c] && supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c]!=''"  ng-repeat="changeReqDetail in changeRequestFieldsDetail" >
+				<td style="border-top: 0px"> {{changeReqDetail.label}} </td>
+				<td style="border-top: 0px"> {{supplierProfileDetail[changeReqDetail.Name]}} </td>
+				<td style="border-top: 0px"> {{supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c]}} </td>
+			</tr>
+		</tbody>
+	</table>
+</div>

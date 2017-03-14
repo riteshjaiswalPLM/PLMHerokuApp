@@ -1,0 +1,73 @@
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <button class="btn btn-primary" ng-click="syncUsers()" ><i class="fa fa-refresh"></i> Sync</button>
+        </div>
+        <h1><i class="fa fa-users"></i> {{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-users"></i> Users
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="usersFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body" block-ui="loadUsers" style="padding:0px;height: 427px;overflow: auto;">
+            <table fixed-header class="table table-striped table-hover table-bordered" style="height: {{ (users.length===0) ? 0 : 400 }}px;">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th style="text-align: center;width: 50px;">Active</th>
+                        <th style="text-align: center;width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr ng-repeat="user in users | filter: usersFilter">
+                        <td><strong>{{ user.username }}<strong></td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.email }}</td>
+                        <td><strong>{{ user.Role.name }}</strong></td>
+                        <td style="text-align: center;"><i class="{{ (user.active) ? 'fa fa-check' : '' }}"></i></td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteUser(user)"><i class="pficon-delete"></i> Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="!users || users.length === 0" style="margin-bottom: 0px;height: 373px;">
+                <div class="blank-slate-pf-icon">
+                    <span class="fa fa-users"></span>
+                </div>
+                <h1>No user found.</h1>
+            </div>
+        </div>
+        <!--<div class="panel-footer">
+            <div class="row">
+                <div class="col-lg-10">
+                    <label for="pageSize" style="margin-right: 5px;">Page size</label>
+                    <select pf-select ng-disabled="searchCriteriaFields.length === 0" data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in pageSizes" id="pageSize">
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="search(currentPage - 1, pageSize)" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)"><i class="fa fa-angle-left"></i> Previous</button>
+                        </span>
+                        <input type="text" readonly class="form-control" style="text-align: center;" ng-model="currentPage">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="search(currentPage + 1, pageSize)" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize">Next <i class="fa fa-angle-right"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </div>
+</div>

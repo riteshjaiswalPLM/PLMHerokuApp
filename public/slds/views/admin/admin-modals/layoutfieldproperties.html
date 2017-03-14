@@ -1,0 +1,84 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="fieldPropertiesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="fieldPropertiesModalLabel">{{ title }}</h4>
+            </div>
+            <div class="modal-body" style="height:300px;overflow: auto;">
+                <div class="col-md-12">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="fieldLabel">Label</label>
+                            <div class="col-md-9">
+                                <input type="text" id="fieldLabel" class="form-control" placeholder="{{field.SObjectField.label}}" ng-model="field.label">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="fieldRequired">Required ?</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" switch-change="onChangeRequired()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldRequired" ng-model="field.required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="fieldReadonly">Readonly ?</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" switch-change="onChangeReadonly()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldReadonly" ng-model="field.readonly">
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="field.SObjectField.type === 'boolean' || field.SObjectField.type === 'picklist' || field.SObjectField.type === 'multipicklist'">
+                            <label class="col-md-3 control-label" for="fieldDefaultValue">Default Value</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="True" switch-off-text="False" id="fieldDefaultValue" ng-model="field.defaultValue" ng-if="field.SObjectField.type === 'boolean'">
+                                <select class="form-control" ng-model="field.defaultValue" ng-options="pValue.value as pValue.label for pValue in field.SObjectField.picklistValues" ng-if="field.SObjectField.type === 'picklist'">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <select class="form-control" multiple="multiple" ng-model="field.defaultValue" ng-options="pValue.value as pValue.label for pValue in field.SObjectField.picklistValues" ng-if="field.SObjectField.type === 'multipicklist'" style="margin-bottom: 3px;"></select>
+                                <span ng-if="field.SObjectField.type === 'multipicklist'" class="label label-info">{{ (field.defaultValue) ? field.defaultValue.length : 0 }} items selected.</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="field.SObjectField.type === 'reference'">
+                            <label class="col-md-3 control-label" for="fieldReadonly">Reference</label>
+                            <div class="col-md-9" style="padding-top: 3px;" reference-field-selector field="field" ref-sobjects="refSObjects"></div>
+                        </div>
+                        <div class="form-group" ng-if="field.SObjectField.type === 'reference'">
+                            <label class="col-md-3 control-label" for="fieldLookup">Lookup</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input  type="hidden" 
+                                            ng-model="field.lookup.value">
+                                    <input  type="text" 
+                                            id="fieldLookup" 
+                                            class="form-control"
+                                            placeholder="Default lookup" 
+                                            ng-model="field.lookup.labelValue" readonly>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="openLookupsModal()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="eventFields.indexOf(field.SObjectField.type) !== -1">
+                            <label class="col-md-3 control-label" for="event_onchange">OnChange</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <select id="event_onchange" ng-model="field.event.onChange" ng-options="event as event.name for event in layout.events | filter: eventFilter | filter: {type: 'change'} track by event.name">
+                                        <option value="">-- None --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <button class="btn btn-primary" type="button" ng-click="manage()"><i class="fa fa-cogs"></i> Manage sObjects</button>
+        </div>
+        <h1><i class="fa fa-database"></i> {{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-database"></i> Mobile sObjects
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="sObjectsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body" block-ui="loadSObjects" style="padding:0px;">
+            <table fixed-header class="table table-striped table-hover table-bordered" style="height: {{ (sObjects.length===0) ? 0 : 400 }}px;">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Label Plural</th>
+                        <th>Api Name</th>
+                        <th style="text-align: center;width: 50px;">Custom</th>
+                        <th style="text-align: center;min-width: 280px;width: 280px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr ng-repeat="sObj in sObjects | filter: { label : sObjectsFilter}">
+                        <td><strong>{{ sObj.label }}<strong></td>
+                        <td>{{ sObj.labelPlural }}</td>
+                        <td>{{ sObj.name }}</td>
+                        <td style="text-align: center;"><i class="{{ (sObj.custom) ? 'fa fa-check' : '' }}"></i></td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-primary" type="button" ng-click="manageSObjectFields(sObj)"><i class="fa fa-cogs"></i> Manage Fields</button>
+                            <button class="btn btn-xs btn-default" type="button" ng-click="viewSObject(sObj)"><i class="fa fa-eye"></i> View</button>
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteSObject(sObj)"><i class="pficon-delete"></i> Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="sObjects.length === 0" style="margin-bottom: 0px;height: 373px;">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No sObject added.</h1>
+                <p> Go to <a href="" ng-click="manage()"><strong>Manage sObjects</strong></a> to add new <strong>Salesforce sObjects</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>

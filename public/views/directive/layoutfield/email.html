@@ -1,0 +1,9 @@
+<div ng-if="field.rendered">
+        <input  type="email" 
+                id="{{ field.SObjectField.name + index}}"
+                ng-model="field.value" 
+                class="form-control"
+                ng-required="{{field.required}}"
+                ng-if="!field.readonly">
+        <span ng-if="field.readonly" ng-bind="field.value"></span>
+</div>

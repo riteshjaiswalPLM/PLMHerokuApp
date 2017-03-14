@@ -1,0 +1,9 @@
+<div ng-if="field.rendered">
+        <input  id="{{ field.SObjectField.name + index}}"
+                ng-model="model[field.SObjectField.name]"
+                is-currency
+                ng-if="!readonly"
+                ng-required="field.required" 
+                class="form-control" />
+        <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | number: 2"></span>
+</div>

@@ -1,0 +1,46 @@
+<div class="page-header page-header-bleed-right" ng-if="!hideHeader">
+    <div class="actions pull-right">
+        <a href ng-click="back.go()" ng-if="back.allow"><span class="fa fa-chevron-circle-left"></span> {{'Back to List' | translate}}</a>&nbsp;&nbsp;
+    </div>
+    <h1 translate>{{ $root.title() }}</h1>
+</div>
+
+<div class="edit-layout" block-ui="layoutBlock" style="min-height: 300px;">
+    <div class="form-actions-top">
+        <div style="font-size: 15px" class="pull-left"><b>{{dataModel.Name}}</b></div>
+        <button class="btn btn-primary" ng-if="dataModel.hasOwnProperty('Id')" type="button" ng-click="save()" ><i class="fa fa-check"></i> {{'Save' | translate}}</button>
+        <button class="btn btn-default" type="button" ng-click="back.go()" translate>Cancel</button>
+    </div>
+    <sobject-layout-section ng-repeat="section in metadata.layoutSections" section="section" section-index="$index" model="dataModel" layout-block-ui-instance="blockUI.layoutBlock" type="edit" base-ctrl="baseCtrl">
+        <!--<div class="panel-heading">
+            <h3 class="panel-title" translate>{{ section.title }}</h3>
+        </div>
+        <div class="panel-body row">
+            <div ng-if="section.isComponent" class="col-xs-12 col-sm-12 col-md-12" type="detail" component section="section" ctrl="baseCtrl">
+            </div>
+            <div ng-if="!section.isComponent" ng-repeat="fields in section.columns" class="col-xs-{{12/section.columns.length}} col-sm-{{12/section.columns.length}} col-md-{{12/section.columns.length}}">
+                <form class="form-horizontal">
+                    <div class="form-group sobject-layout-field" ng-repeat="field in fields">
+                        <label class="col-sm-5 control-label" for="{{field.SObjectField.name + $index}}" translate>{{ field.label }}</label>
+                        <div class="col-sm-7" field-readonly="{{field.readonly}}" sobject-layout-field field="field" model="dataModel" index="$index"></div>
+                    </div>
+                </form>
+            </div>
+        </div>-->
+    </sobject-layout-section>
+    <div ng-if="metadata.relatedLists && (metadata.relatedLists | filter: {dispaySection :'2'}).length > 0"  class="edit-layout">
+        <!--<h2 class="h2" translate>Related lists</h2>
+        <hr>-->
+        <div layout-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.record" ng-repeat="relatedList in metadata.relatedLists |  filter: {dispaySection :'2'}"></div>
+    </div>
+    <div class="form-actions-bottom">
+        <button class="btn btn-primary" ng-if="dataModel.hasOwnProperty('Id')" type="button" ng-click="save()"><i class="fa fa-check"></i> {{'Save' | translate}}</button>
+        <button class="btn btn-default" type="button" ng-click="back.go()" translate>Cancel</button>
+    </div>
+</div>
+
+<div ng-if="metadata.relatedLists && (metadata.relatedLists | filter: {dispaySection :'1'}).length > 0"  class="edit-layout">
+    <!--<h2 class="h2" translate>Related lists</h2>
+    <hr>-->
+    <div layout-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.record" ng-repeat="relatedList in metadata.relatedLists |  filter: {dispaySection :'1'}"></div>
+</div>

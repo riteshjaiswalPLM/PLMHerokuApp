@@ -1,0 +1,152 @@
+'use strict';
+
+auth.controller('LoginController',[
+            '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout',
+    function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout){
+        $scope.login = function(){
+            console.log($scope.credentials);
+            var loggingIn = blockUI.instances.get('loggingIn');
+            loggingIn.start('Logging In ...');
+            $scope.loggingIn = true;
+            // $timeout(function(){
+                loginService.login($scope.credentials)
+                    .success(function(response){
+                        loggingIn.stop();
+                        $scope.loggingIn = false;
+                        if(!response.success){
+                            Notifications.error(response.message);
+                        }else{
+                            $rootScope.redirectTo();
+                        }
+                    })
+                    .error(function(response){
+                        // console.error(response);
+                        loggingIn.stop();
+                        $scope.loggingIn = false;
+                    });
+            // },3000);  
+        };
+        $scope.onClickResetPassLink =function(){
+            $state.go('resetpasswordlink');
+        };
+        $scope.init = function(){
+            console.log('LoginController loaded!');
+            $scope.credentials = {
+                username: null,
+                password: null
+            }
+        };
+        $scope.init();
+}]);
+
+auth.controller('ResetPasswordLinkController',[
+            '$scope','$rootScope','$state','resetPasswordService','blockUI','Notifications','$timeout',
+    function($scope , $rootScope , $state , resetPasswordService , blockUI , Notifications , $timeout){
+        $scope.resetpassword = function(){
+            console.log($scope.credentials);
+            var loggingIn = blockUI.instances.get('resetPWD');
+            loggingIn.start('Reseting Password In ...');
+            $scope.resetpass = true;
+            
+            resetPasswordService.mailresetpasswordlink($scope.credentials)
+                .success(function(response){
+                    loggingIn.stop();
+                    $scope.resetpass = false;
+                    if(!response.success){
+                        Notifications.error(response.message);
+                    }else{
+                        Notifications.success(response.message);
+                        $rootScope.redirectTo();
+                    }
+                })
+                .error(function(response){
+                    // console.error(response);
+                    loggingIn.stop();
+                    $scope.resetpass = false;
+                });
+           
+        };
+        $scope.onCancel =function(){
+            $state.go('login');
+        };
+        $scope.init = function(){
+            console.log('ResetPasswordLinkController loaded!');
+            $scope.credentials={
+                username:null
+            }
+        };
+        $scope.init();
+}]);
+auth.controller('ResetPasswordController',[
+            '$scope','$rootScope','$state','resetPasswordService','blockUI','Notifications','$timeout','$stateParams',
+    function($scope , $rootScope , $state , resetPasswordService , blockUI , Notifications , $timeout,$stateParams){
+        $scope.newPassword = function(){
+
+            console.log($stateParams);
+            console.log($scope.credentials);
+            if($scope.credentials.password === undefined || $scope.credentials.password ===null || $scope.credentials.password === ''
+                || $scope.credentials.repassword === undefined || $scope.credentials.repassword ===null || $scope.credentials.repassword === ''  ){
+                Notifications.error('Password field must not be blank');
+                return
+            }
+            if(!(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+.]{5,19}$/).test($scope.credentials.password)){ 
+                Notifications.error('Password format is invalid');
+                return
+            }
+            if($scope.credentials.password !== $scope.credentials.repassword)
+            {
+                Notifications.error('Password Does not Match');
+                return;
+            }
+
+            var data={
+                id:$stateParams.data,
+                password:$scope.credentials.password
+            }
+            var loggingIn = blockUI.instances.get('resetPWD');
+            loggingIn.start('Reseting Password In ...');
+            $scope.resetpass = true;
+            
+            resetPasswordService.resetpassword(data)
+                .success(function(response){
+                    loggingIn.stop();
+                    $scope.resetpass = false;
+                    if(!response.success){
+                        Notifications.error(response.message);
+                    }else{
+                        Notifications.success(response.message);
+                        $rootScope.redirectTo();
+                    }
+                })
+                .error(function(response){
+                    // console.error(response);
+                    loggingIn.stop();
+                    $scope.resetpass = false;
+                });
+           
+        };
+       
+        $scope.init = function(){
+            console.log('ResetPasswordController loaded!');
+            $scope.resetpass = false;
+            $scope.credentials={
+                password    :null,
+                repassword  :null
+            }
+            
+            console.log($stateParams);
+            var data={
+                id:$stateParams.data
+            }
+            resetPasswordService.checkresetpasswordlinkexpired(data)
+            .success(function(response){
+                if(!response.success){
+                    Notifications.error(response.message);
+                    $rootScope.redirectTo();
+                }
+            })
+            .error(function(response){
+            });
+        };
+        $scope.init();
+}]);

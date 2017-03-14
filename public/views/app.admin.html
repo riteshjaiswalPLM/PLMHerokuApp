@@ -1,0 +1,75 @@
+<nav class="navbar navbar-default navbar-pf" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">
+            <!--<img src="../images/logo/application.png" alt="Enterprise Application" />-->
+            <img src="../resources/images/brand.svg" alt="Enterprise Application" />
+        </a>
+    </div>
+    <div class="collapse navbar-collapse navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-utility">
+            <li>
+                <a href="#">Setup</a>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="pficon pficon-user"></span> {{ $root.user().firstname + ' ' + $root.user().lastname }} <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#"><i class="fa fa-trophy"></i>&nbsp;&nbsp;Profile</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-gear"></i>&nbsp;&nbsp;Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#" ng-click="$root.logout()"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-primary">
+            <!--<li ui-sref-active="active">
+                <a ui-sref="admin.dashboard" href><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Dashboard</a>
+            </li>-->
+            <li ui-sref-active="active">
+                <a ui-sref="admin.tabs" href><i class="fa fa-folder"></i>&nbsp;&nbsp;Tabs</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.layouts" href><i class="fa fa-desktop"></i>&nbsp;&nbsp;Layouts</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.lookups" href><i class="fa fa-search"></i>&nbsp;&nbsp;Lookups</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.components" href><i class="fa fa-cubes"></i>&nbsp;&nbsp;Components</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.usermanagement" href><i class="fa fa-users"></i>&nbsp;&nbsp;User Management</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.setup" href><i class="fa fa-wrench"></i>&nbsp;&nbsp;Setup</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.languages" href><i class="fa fa-language"></i>&nbsp;&nbsp;Languages</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.clientdashboard" href><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Configure Dashboard</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="admin.mobile" href><i class="fa fa-mobile" ></i>&nbsp;&nbsp;Mobile</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container-fluid" ui-view>
+    <!--<div class="row">-->
+        <!--<div class="col-md-12" ui-view></div>-->
+    <!--</div>-->
+</div>

@@ -1,0 +1,38 @@
+<!--<div    pf-datetimepicker 
+        datetime="field.value"
+        id="{{ field.SObjectField.name + index}}" 
+        options="{}"></div>-->
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">            
+    <div    pf-datepicker 
+            date="field.value"
+            id="{{ field.SObjectField.name + index}}" 
+            options="{autoclose: true, todayBtn: 'linked', todayHighlight: true}"
+            ng-if="!field.readonly"></div>
+    <span ng-if="field.readonly" ng-bind="field.value | date: 'medium'">--</span>
+</div>
+<!--REPLACE WITH FOLLOWING WHILE USING DATETIME-->
+
+<!--<div class="input-group date">
+    <input  type="text" 
+        class="form-control"
+        datetimepicker
+        datetimepicker-options = "{icons:{next:'fa fa-angle-double-right',previous:'fa fa-angle-double-left',up:'fa fa-chevron-up',down:'fa fa-chevron-down'}}"
+        id="{{ field.SObjectField.name + index}}"
+        ng-model="field.value" />
+    <span class="input-group-addon">
+        <span class="fa fa-calendar"></span>
+    </span>
+</div>        -->
+        
+<!--<div class="input-group date">
+    <input  type="hidden" 
+            ng-model="field.value">
+    <input  type="text" 
+            id="{{ field.SObjectField.name + index}}" 
+            class="form-control"
+            datetimepicker 
+            ng-model="field.label">
+    <span class="input-group-addon">
+        <span class="fa fa-calendar"></span>
+    </span>
+</div>-->

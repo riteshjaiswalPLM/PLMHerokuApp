@@ -1,0 +1,40 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="referenceFieldLookupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="referenceFieldLookupModalLabel">{{ title }}</h4>
+            </div>
+            <div class="modal-body" style="height:300px;overflow: auto;padding:0px;">
+                <table class="table table-striped table-hover table-bordered" style="margin-bottom:0px;">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Api name</th>
+                            <th>Data Type</th>
+                            <th style="text-align: center;width: 80px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr ng-repeat="refField in refSObject.SObjectFields | filter: referenceFieldFilter">
+                            <td>{{ refField.label }}</td>
+                            <td>{{ refField.name }}</td>
+                            <td>{{ refField.type }}</td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(refField.name)"><i class="fa fa-check"></i> Select</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <div class="actions pull-left col-md-6" style="padding-left: 0px;">
+                    <input type="text" class="form-control " ng-model="referenceFieldFilter" placeholder="Search ..." style="float: left;" />
+                </div>
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

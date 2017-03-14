@@ -1,0 +1,8 @@
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+        <div    pf-datepicker 
+                date="model[field.SObjectField.name]"
+                id="{{ field.SObjectField.name + index}}" 
+                options="{autoclose: true, todayBtn: 'linked', todayHighlight: true}"
+                ng-if="!readonly"></div>
+        <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | date: 'medium'">--</span>
+</div>

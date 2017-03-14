@@ -1,0 +1,101 @@
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <a href ng-click="cancel()"><span class="fa fa-chevron-circle-left"></span> Back to layouts</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" type="button" ng-click="saveLookup()"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <h1>{{ stateAction + ' ' + $root.title() }}</h1>
+    </div>
+</div>
+
+<div class="col-md-12" block-ui="saveLookup">
+    <div class="col-md-6">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="lookupSObject">SObject</label>
+                <div class="input-group col-md-7">
+                    <input type="hidden" ng-model="tab.SObject">
+                    <input type="text" id="lookupSObject" class="form-control" ng-model="lookup.SObject.label" readonly>
+                    <div class="input-group-btn" ng-if="stateAction === 'Create'">
+                        <button type="button" class="btn btn-default" ng-click="openSObjectsLookup()">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="lookupTitle">Title</label>
+                <div class="input-group col-md-7">
+                    <input type="text" id="lookupTitle" class="form-control" ng-model="lookup.title">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="lookupActive">Active ?</label>
+                <div class="input-group col-md-7">
+                    <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="lookupActive" ng-model="lookup.active">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="lookupDescription">Description</label>
+                <div class="input-group col-md-7">
+                    <input type="text" id="lookupDescription" class="form-control" ng-model="lookup.description">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-12" style="padding: 0px;">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Lookup fields<span class="pull-right badge badge-info">{{ lookup.fields.length }}</span></h3>
+            </div>
+            <div class="panel-body" style="padding: 0px;">
+                <table class="table table-striped table-hover" style="margin-bottom:0px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Label</th>
+                            <th>Display Label</th>
+                            <th>Reference</th>
+                            <th style="width: 200px;">Type</th>
+                            <th style="text-align: center; width: 50px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody dnd-list="lookup.SObjectLayoutFields" dnd-allowed-types="['sObjectLayoutFields']">
+                        <tr ng-if="lookup.SObjectLayoutFields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
+                        <tr ng-repeat="field in lookup.SObjectLayoutFields"
+                            dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="lookup.SObjectLayoutFields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ field.SObjectField.label }}</td>
+                            <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
+                            <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                            <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-xs btn-danger" type="button" ng-if="lookup.SObjectLayoutFields.length > 1" ng-click="lookup.SObjectLayoutFields.splice($index,1)"><i class="pficon-delete"></i> Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <select pf-select class="form-control" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in lookup.SObject.SObjectFields | filter: { type: '!id'}">
+                                <option value="">-- None --</option>
+                            </select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" ng-disabled="!fieldToAdd" ng-click="addToLookupFields(fieldToAdd)">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

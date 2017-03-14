@@ -1,0 +1,52 @@
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <button class="btn btn-primary" type="button" ng-click="edit()"><i class="fa fa-plus"></i> Create Lookup</button>
+        </div>
+        <h1><i class="fa fa-search"></i> {{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-search"></i> Lookups
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="lookupsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body" block-ui="loadLookups" style="height:400px;overflow: auto;padding:0px;">
+            <table class="table table-striped table-hover table-bordered" ng-if="lookups.length > 0" style="margin-bottom:0px;">
+                <thead>
+                    <tr>
+                        <th>SObject</th>
+                        <th>Lookup Title</th>
+                        <th>Description</th>
+                        <th style="text-align: center;width: 50px;">Active</th>
+                        <th style="text-align: center;width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="lookup in lookups | filter: lookupsFilter" ng-dblclick="edit(lookup)">
+                        <td>{{ lookup.SObject.label }}</td>
+                        <td>{{ lookup.title }}</td>
+                        <td>{{ lookup.description }}</td>
+                        <td style="text-align: center;"><i ng-class="{'fa fa-check' : lookup.active }"></i></td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-info" type="button" ng-click="edit(lookup)"><i class="pficon-edit"></i> Edit</button>
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteLookup(lookup)"><i class="pficon-delete"></i> Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="lookups.length === 0" style="margin-bottom: 0px;height: 100%">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No Lookup configured.</h1>
+                <p>Click <a href="" ng-click="edit()"><strong>Create Lookup</strong></a> to configure new <strong>Lookup</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>

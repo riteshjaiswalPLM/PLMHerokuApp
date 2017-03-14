@@ -1,0 +1,62 @@
+<div class="panel panel-default" block-ui="relatedList_{{ model.id }}_{{index}}" ng-if="rendered">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ model.title }}</h3>
+    </div>
+    <div class="panel-body" style="padding:0px;">
+        <table fixed-header class="table table-striped table-hover table-bordered" >
+            <thead>
+                <tr>
+                    <th class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
+                        ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                        ng-click="applyOrderBy(field)" 
+                        ng-repeat="field in model.SObjectLayoutFields">
+                        {{ field.label }} 
+                        <i ng-class="{'fa fa-angle-down': !reverse,'fa fa-angle-up': reverse}" 
+                        ng-if="predicate === field.SObjectField.name"></i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="result in searchResult" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                    <td class="{{ 'td-'+field.SObjectField.type }}"  ng-repeat="field in model.SObjectLayoutFields">
+                        {{ (field.SObjectField.type === 'reference') 
+                            ? result[field.SObjectField.relationshipName][field.reference] 
+                            : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                : (field.SObjectField.type === 'date') 
+                                    ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                    : (field.SObjectField.type === 'datetime')
+                                        ? (result[field.SObjectField.name] | date: 'medium')
+                                        : result[field.SObjectField.name] }}
+                    </td>                            
+                </tr>
+            </tbody>
+        </table>
+        <div class="blank-slate-pf" ng-if="!searchResult || searchResult.length === 0" style="margin-bottom: 0px;padding: 10px 60px;">
+            <div class="blank-slate-pf-icon">
+                <span class="fa fa-search"></span>
+            </div>
+            <h1>No {{model.title}} found.</h1>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-lg-10">
+                <label for="pageSize" style="margin-right: 5px;">Page size</label>
+                <select pf-select data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in [25,50,100,200]" id="pageSize">
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="search(currentPage - 1, pageSize)" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)"><i class="fa fa-angle-left"></i> Previous</button>
+                    </span>
+                    <input type="text" readonly class="form-control" style="text-align: center;" ng-model="currentPage">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="search(currentPage + 1, pageSize)" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize">Next <i class="fa fa-angle-right"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+        <select pf-select="{size:10,noneSelectedText:'-- None --'}"
+                id="{{field.SObjectField.name + index}}"
+                ng-model="model[field.SObjectField.name]" 
+                multiple="multiple"
+                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
+                ng-if="!readonly">
+        </select>
+        <span ng-if="readonly" ng-bind="model[field.SObjectField.name]"></span>
+</div>

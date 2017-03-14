@@ -1,0 +1,98 @@
+<!--<div class="col-sm-8 col-md-9 col-sm-push-4 col-md-push-3" ui-view></div>-->
+<div class="col-sm-8 col-md-9 col-sm-push-4 col-md-push-3" ng-include="templateUrl"></div>
+<div class="col-sm-4 col-md-3 col-sm-pull-8 col-md-pull-9 sidebar-pf sidebar-pf-left">
+    <div class="panel-group" id="accordion-markup" >
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-markup" href="#layoutFields">
+                        {{layout.SObject.label}} Fields 
+                        <span class="pull-right badge badge-info ng-binding">{{ layout.SObject.fields.length - 1 }}</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="layoutFields" class="panel-collapse collapse in" block-ui="sObjectFields" >
+                <div align="right" >
+                    <input class="form-control" ng-model="search.key" placeholder="Search" style="font-weight: normal;width: 50%"></input>
+                    <!--<input type="text" ng-model="search.key" placeholder="Search fields">-->
+                </div>
+                <div class="panel-body" style="min-height: 400px;max-height: 400px;overflow-x: auto;background-color: white;">
+                    <ul class="nav nav-pills nav-stacked" id="sObjectFieldsListContainer">
+                        <li dnd-draggable="field" dnd-effect-allowed="copy" draggable="true" dnd-type="'sObjectField'" ng-repeat="field in layout.SObject.fields | filter: { recordid: false,SObjectField :{label :search.key} } | orderBy: 'label'">
+                            <a href="" class="draggable-item" pf-tooltip title="{{field.SObjectField.name}}"><i></i>{{ field.SObjectField.label }} <small class="pull-right">{{ field.SObjectField.type + ' ' + ((field.SObjectField.calculated) ? '| formula' : '') }}</small></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-if="components()">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-markup" href="#layoutComponents" class="collapsed">
+                        Components
+                    </a>
+                </h4>
+            </div>
+            <div id="layoutComponents" class="panel-collapse collapse">
+                <div class="panel-body" style="max-height: 400px;overflow-x: auto;background-color: white;">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li dnd-draggable="component" 
+                            dnd-effect-allowed="copy" 
+                            draggable="true" 
+                            dnd-type="'layoutSection'" 
+                            ng-repeat="component in components()">
+                            <a href="" class="draggable-item"><i></i>{{ component.title }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-if="layout.type === 'Edit' || layout.type === 'Details'">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-markup" href="#layoutRelatedLists" class="collapsed">
+                        Related Lists
+                    </a>
+                </h4>
+            </div>
+            <div id="layoutRelatedLists" class="panel-collapse collapse" block-ui="childSObjects">
+                <div class="panel-body" style="max-height: 400px; overflow-x: auto; background-color: white;">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ng-repeat="relatedList in layoutRelatedLists"
+                            dnd-draggable="relatedList"
+                            dnd-effect-allowed="copy"
+                            draggable="true"
+                            dnd-type="'relatedList'">
+                            <a href="" class="draggable-item"><i></i>{{ relatedList.title }}</a>
+                        </li>
+                    </ul>
+                    <span ng-if="layoutRelatedLists.length === 0" style="color: red;">No Related list found!</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-if="widgetsValues" block-ui="widgets">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-markup" href="#layoutWidgets" class="collapsed">
+                        Widgets
+                    </a>
+                </h4>
+            </div>
+            <div id="layoutWidgets" class="panel-collapse collapse">
+                <div class="panel-body" style="max-height: 400px;overflow-x: auto;background-color: white;">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ng-repeat="widgetValue in widgetsValues"
+                            dnd-draggable="widgetValue"
+                            dnd-effect-allowed="copy"
+                            draggable="true"
+                            dnd-type="'layoutSection'">
+                            <a href="" class="draggable-item"><i></i>{{ widgetValue.title }}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(window).trigger('resize');
+</script>

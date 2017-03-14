@@ -1,0 +1,26 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="AdminUserManagementRoleEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="AdminUserManagementRoleEditModalLabel" ng-bind-template="{{ title }}">Loading...</h4>
+            </div>
+            <div class="modal-body" style="height:80px;overflow: auto;" block-ui="editRole">
+                <form class="form-horizontal col-md-12">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Role name</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="role.name" class="col-sm-8 form-control"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>

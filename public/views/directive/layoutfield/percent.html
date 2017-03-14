@@ -1,0 +1,10 @@
+<div ng-if="field.rendered">
+        <input  id="{{ field.SObjectField.name + index }}"
+                type="number"
+                ng-model="field.value"
+                is-double 
+                class="form-control" 
+                ng-required="{{field.required}}"
+                ng-if="!field.readonly"/>
+        <span ng-if="field.readonly" ng-bind="field.value | number: 2"></span>
+</div>

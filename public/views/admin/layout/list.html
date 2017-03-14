@@ -1,0 +1,65 @@
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <button class="btn btn-primary" type="button" ng-click="openSObjectLayoutsLookup()"><i class="fa fa-plus"></i> Create Layout</button>
+        </div>
+        <h1><i class="fa fa-desktop"></i> {{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-desktop"></i> Layouts
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="layoutsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body" block-ui="loadLayouts" style="height:400px;overflow: auto;padding:0px;">
+            <table class="table table-striped table-hover table-bordered table-treegrid" ng-if="layouts.length > 0" style="margin-bottom:0px;">
+                <thead>
+                    <tr>
+                        <th>SObject</th>
+                        <th>Layout type</th>
+                        <th style="text-align: center;width: 50px;">Active</th>
+                        <th style="text-align: center;width: 50px;">Default</th>
+                        <th style="text-align: center;width: 80px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="layout in layouts | filter: layoutsFilter">
+                        <td>{{ layout.SObject.label }}</td>
+                        <td>{{ layout.type }}</td>
+                        <td style="text-align: center;">
+                            <input type="checkbox" bs-switch class="bootstrap-switch" switch-change="changeActive(layout)" switch-size="mini" switch-on-text="True" switch-off-text="False" ng-model="layout.active">
+                        </td>
+                        <td style="text-align: center;"><i ng-class="{'fa fa-check' : layout.default }"></i></td>
+                        <td style="text-align: center;">
+                            <div class="dropdown">
+                                <button class="btn btn-xs btn-primary dropdown-toggle" type="button" id="actionMenu_{{layout.SObject.name}}_{{$index}}" data-toggle="dropdown">
+                                    Actions <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="actionMenu_{{layout.SObject.name}}_{{$index}}">
+                                    <li role="presentation"><a href="#" role="menuitem" tabindex="-1" ng-click="edit(layout)"><i class="pficon-edit"></i> Edit</a></li>
+                                    <li role="presentation"><a href="#" role="menuitem" tabindex="-1" ng-click="deleteLayout(layout)"><i class="pficon-delete"></i> Delete</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li role="presentation" ng-class="{'disabled': layout.type === 'Details' || layout.type === 'Edit'}"><a href="#" role="menuitem" tabindex="-1" ng-disabled="layout.type === 'Details' || layout.type === 'Edit'" ng-click="markAsDefault(layout)" >
+                                        <i ng-class="{'fa fa-check': (layout.default)}" ></i> Mark as default</a></li>
+                                </ul>
+                            </div>
+                            <!--<button class="btn btn-xs btn-info" type="button" ng-click="edit(layout)"><i class="pficon-edit"></i> Edit</button>
+                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteLayout(layout)"><i class="pficon-delete"></i> Delete</button>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="layouts.length === 0" style="margin-bottom: 0px;height: 100%">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No Layout added.</h1>
+                <p>Click <a href="" ng-click="openSObjectLayoutsLookup()"><strong>Create Layout</strong></a> to add new <strong>Layout</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>

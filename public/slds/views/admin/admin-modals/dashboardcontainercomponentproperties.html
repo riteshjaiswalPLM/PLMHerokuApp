@@ -1,0 +1,44 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="adminClientDashboardContainerComponentPropertiesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="fieldPropertiesModalLabel">{{ title }}</h4>
+            </div>
+            <div class="modal-body" style="height:300px;overflow: auto;">
+                <div class="col-md-12">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="componentLabel">Label</label>
+                            <div class="col-md-9">
+                                <input type="text" id="componentLabel" class="form-control" placeholder="{{component.title}} name" ng-model="component.label">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="isComponentActive">Active ?</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" switch-change="onChangeReadonly()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isComponentActive" ng-model="component.active">
+                            </div>
+                        </div>
+                        <!--<div class="form-group">
+                            <label class="col-md-3 control-label" for="isComponentActive">Active ?</label>
+                            <div class="col-md-9">
+                                <select class="form-control" 
+                                        style="padding: 5px; font-size: 14px; width: 100%; height: 100%;"
+                                        ng-options="value for value in [1,2,3,4,5,6,7,8,9,10,11,12]" 
+                                        ng-model="component.columns">
+                                </select>
+                            </div>
+                        </div>-->
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>

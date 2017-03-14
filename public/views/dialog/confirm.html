@@ -1,0 +1,19 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="confirmModalLabel" translate>{{ title }}</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <span class="pficon pficon-help" style="font-size: 40px;"></span>
+                </div>
+                <div class="col-xs-11 col-sm-11 col-md-11" style="font-weight: 600; white-space: pre-line;word-wrap: break-word;" translate>{{ message }}</div>
+            </div>
+            <div class="modal-footer" style="margin-top: 0px;">
+                <button type="button" class="btn btn-default" ng-click="confirm(false)" translate>{{ noLabel }}</button>
+                <button type="button" class="btn" ng-class="btnClass" ng-click="confirm(true)" translate>{{ yesLabel }}</button>
+            </div>
+        </div>
+    </div>
+</div>

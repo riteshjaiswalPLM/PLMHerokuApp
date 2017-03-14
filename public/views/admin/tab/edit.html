@@ -1,0 +1,62 @@
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+        </div>
+        <h1>{{ stateAction + ' ' + $root.title() }}</h1>
+    </div>
+
+    <form class="form-horizontal" block-ui="saveTab">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputSObject">SObject</label>
+            <div class="input-group col-md-3">
+                <input type="hidden" ng-model="tab.SObject">
+                <input type="text" id="inputSObject" class="form-control" ng-model="tab.SObject.label" readonly>
+                <div class="input-group-btn" ng-if="stateAction === 'Create'">
+                    <button type="button" class="btn btn-default" ng-click="openSObjectsLookup()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputTabLabel">Tab Label</label>
+            <div class="col-md-3">
+                <input type="text" id="inputTabLabel" class="form-control" ng-model="tab.label">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputTabIcon">Tab Icon</label>
+            <div class="input-group col-md-3">
+                <input type="hidden" ng-model="tab.Icon">
+                <span class="input-group-addon" ng-if="tab.Icon">
+                    <i ng-class="tab.Icon.class"></i> 
+                </span>
+                <input type="text" id="inputTabIcon" class="form-control" ng-model="tab.Icon.class" readonly>
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openIconsLookup()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputTabOrder">Order</label>
+            <div class="col-md-3">
+                <input class="bootstrap-touchspin" id="inputTabOrder" type="text" pf-touch-spin ng-model="tab.order" name="inputTabOrder" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="inputTabActive">Active ?</label>
+            <div class="col-md-3">
+                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="inputTabActive" ng-model="tab.active">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <button class="btn btn-primary" type="button" ng-click="saveTab()"><i class="fa fa-check"></i> Save</button>          
+                <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>          
+            </div>
+        </div>
+    </form>
+</div>

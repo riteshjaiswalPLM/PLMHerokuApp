@@ -1,0 +1,65 @@
+<div>
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <button class="btn btn-primary" type="button" ng-click="saveDashboardConfiguration()"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <h1>Client Dashboard</h1>
+    </div>
+    <div block-ui="editEditLayout" style="overflow-y: auto;height: 500px;">
+        <h3>Container</h3>
+        <div class="layout-component-container" 
+            dnd-drop="containerDropCallBack(event, index, item, external, type)" 
+            dnd-list="dashboardContainers" 
+            dnd-allowed-types="['ClientDashbordContainer']">
+            <div class="panel panel-default" 
+                ng-repeat="container in dashboardContainers | filter: {deleted: false }"
+                dnd-draggable="container"
+                dnd-effect-allowed="move" 
+                dnd-moved="dashboardContainers.splice($index,1)"
+                dnd-type="'ClientDashbordContainer'"
+                ng-init="containerIndex = $index">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ container.label === undefined ? container.title : container.label}}
+                        <span class="pull-right">
+                            <a href pf-tooltip data-placement="left" title="Remove" ng-click="removeAndReorder(dashboardContainers,container,$index)" style="color: red;"><i class="fa fa-minus-circle"></i></a>
+                            <!--<a href pf-tooltip data-placement="left" title="Criteria" ng-click="openSectionCriteriaModal(section,$index)"><i class="fa fa-cogs"></i></a>-->
+                            <a href pf-tooltip data-placement="left" title="Properties" ng-click="dashboardContainerPropertiesModal(container,$index)"><i class="fa fa-wrench"></i></a>
+                        </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div dnd-list="container.components"
+                        dnd-drop="componentDropCallBack(event, index, item, external, type, container, containerIndex, $index+1)"
+                        dnd-allowed-types="['{{container.allowedType}}']"
+                        style="min-height: 5px;">
+                        <div class="dndPlaceholder" style="float: left"></div>
+                        <div ng-repeat="component in container.components | filter: {deleted: false }" style="float: left" ng-init="columnIndex = $index" class="col-md-12" >
+                        <!--style="padding-left: 10px;">-->
+                            <div class="panel panel-default"
+                                pf-tooltip title="{{ component.title }}" data-placement="top" class="form-group" 
+                                dnd-draggable="component" 
+                                dnd-effect-allowed="move" 
+                                dnd-moved="container.components.splice($index,1)" 
+                                dnd-horizontal-list="true"
+                                dnd-type="'{{container.allowedType}}'"
+                                ng-init="componentIndex = $index">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        {{ component.label === undefined ? component.title : component.label}}
+                                        <span class="pull-right">
+                                            <a href pf-tooltip data-placement="left" title="Remove" ng-click="removeAndReorder(container.components, component, $index)" style="color: red;"><i class="fa fa-minus-circle"></i></a>
+                                            <!--<a href pf-tooltip data-placement="left" title="Criteria" ng-click="openSectionCriteriaModal(section,$index)"><i class="fa fa-cogs"></i></a>-->
+                                            <a href pf-tooltip data-placement="left" title="Properties" ng-click="dashboardContainerComponentPropertiesModal(containerIndex, component, $index)"><i class="fa fa-wrench"></i></a>
+                                        </span>
+                                    </h3>
+                                </div>
+                                <!--<div class="panel-body"></div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+</div>
