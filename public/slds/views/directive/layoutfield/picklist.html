@@ -1,5 +1,6 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
     <select pf-select="{size:10}"
+            class="slds-select"
             id="{{field.SObjectField.name + index}}"
             ng-model="field.value" 
             ng-disabled="{{ field.disabled }}"
@@ -12,7 +13,7 @@
             ng-disabled="{{ field.disabled }}"
             ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
             ng-if="!field.readonly && field.criteriaField"
-            class="form-control">
+            class="slds-select">
         <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
     </select>
     <span ng-if="field.readonly" ng-bind="field.value"></span>

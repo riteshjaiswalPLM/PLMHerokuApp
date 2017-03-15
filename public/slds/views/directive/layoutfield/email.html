@@ -2,7 +2,7 @@
         <input  type="email" 
                 id="{{ field.SObjectField.name + index}}"
                 ng-model="field.value" 
-                class="form-control"
+                class="slds-input"
                 ng-required="{{field.required}}"
                 ng-if="!field.readonly">
         <span ng-if="field.readonly" ng-bind="field.value"></span>

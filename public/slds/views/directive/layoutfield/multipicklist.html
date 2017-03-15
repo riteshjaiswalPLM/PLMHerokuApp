@@ -1,5 +1,6 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
         <select pf-select="{size:10,noneSelectedText:'-- None --'}"
+                class="slds-select"
                 id="{{field.SObjectField.name + index}}"
                 ng-model="field.value" 
                 multiple="multiple"

@@ -1,7 +1,7 @@
 <div ng-if="field.rendered">
     <textarea   id="{{ field.SObjectField.name + index}}"
                 ng-model="field.value"
-                class="form-control"
+                class="slds-textarea"
                 style="resize: none;"
                 rows="3"
                 ng-required="{{field.required}}"
@@ -9,7 +9,7 @@
     </textarea>
     <textarea   id="{{ field.SObjectField.name + index}}"
                 ng-model="field.value"
-                class="form-control"
+                class="slds-textarea"
                 style="resize: none;border: none;margin-top: -3px; -webkit-box-shadow: none;box-shadow: none;"
                 rows="3"
                 readonly="readonly"
