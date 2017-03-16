@@ -29,12 +29,13 @@ app.directive('sldsSwitch',['$rootScope', function($rootScope){
             onText: "@",
             offText: "@",
             switchChange: "&",
-            showTexts: "="
+            showTexts: "=",
+            switchReadonly: "="
         },
         replace: true,
         template: `
             <label class="slds-checkbox--toggle slds-grid">
-                <input id="{{id}}" type="checkbox" name="checkbox" aria-describedby="{{descId}}" ng-model="value" />
+                <input id="{{id}}" type="checkbox" name="checkbox" aria-describedby="{{descId}}" ng-model="value" ng-disabled="switchReadonly" />
                 <span id="{{descId}}" class="slds-checkbox--faux_container" aria-live="assertive">
                     <span class="slds-checkbox--faux"></span>
                     <span class="slds-checkbox--on">{{onText}}</span>
