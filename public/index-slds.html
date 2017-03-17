@@ -264,6 +264,38 @@
         .slds-lookup-field{
             display: inline-flex !important;
         }
+        .slds-table--compaq td{
+            padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+        }
+        .slds-table--compaq td.slds-blank-slate{
+            padding: .5rem;
+        }
+
+        /* LAYOUT EDIT / LIST*/
+        .slds-form-element--draggable{
+            padding-bottom: 3px;
+            margin-top: 0 !important;
+            border: 1px dotted transparent;
+        }
+        .slds-form-element--draggable,
+        .slds-form-element--draggable > label,
+        .slds-form-element--draggable > div > div > div > label {
+            cursor: move;
+        }
+        .slds-form-element--draggable:hover {
+            border-bottom: 1px dotted blue;
+            border-top: 1px dotted blue;
+            background: rgba(225, 217, 81, 0.4);
+        }
+        [dnd-list] .dndPlaceholder{
+            text-align: center;
+            padding: 2px;
+            border-top: 1px dotted white;
+            border-bottom: 1px dotted white;
+            color: white;
+            text-transform: uppercase;
+        }
+        /* LAYOUT EDIT / LIST*/
     </style>
 </head>
 <body>

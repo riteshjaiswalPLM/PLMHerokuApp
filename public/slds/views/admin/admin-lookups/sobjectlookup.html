@@ -1,42 +1,58 @@
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sObjectLookupLookupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
-                </button>
-                <h4 class="modal-title" id="sObjectLookupLookupModalLabel">{{ title }}</h4>
-            </div>
-            <div class="modal-body" block-ui="loadSObjectLookups" style="height:300px;overflow: auto;padding:0px;">
-                <table class="table table-striped table-hover table-bordered" ng-if="sObjectLookups.length > 0" style="margin-bottom:0px;">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th style="text-align: center;width: 100px;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody >
-                        <tr ng-repeat="lookup in sObjectLookups">
-                            <td><strong>{{ lookup.title }}<strong></td>
-                            <td>{{ lookup.description }}</td>
-                            <td style="text-align: center;width: 80px;">
-                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(lookup)"><i class="fa fa-check"></i> Select</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="blank-slate-pf" ng-if="sObjectLookups.length === 0" style="margin-bottom: 0px;height: 100%">
-                    <div class="blank-slate-pf-icon">
-                        <span class="pficon pficon-add-circle-o"></span>
-                    </div>
-                    <h1>No lookup added for sObject.</h1>
-                </div>
-            </div>
-            <div class="modal-footer" style="margin-top: 0px;">
-                <button type="button" class="btn btn-default" ng-click="selectAndClose()">Default</button>
-                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
-            </div>
-        </div>  
+<div role="dialog" tabindex="-1" aria-labelledby="sObjectLookupLookupModalLabel" data-backdrop="static" class="slds-modal slds-modal--large">
+  <div class="slds-modal__container">
+    <div class="slds-modal__header">
+      <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+        <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+        </svg>
+        <span class="slds-assistive-text">Close</span>
+      </button>
+      <h2 id="sObjectLookupLookupModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
     </div>
+    <div class="slds-modal__content slds-p-around--medium" block-ui="loadSObjectLookups" style="min-height: 200px;padding:0px;">
+        <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Title">Title</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Description">Description</div>
+                    </th>
+                    <th scope="col" style="text-align: center;width: 150px">
+                        <div class="slds-truncate" title="Action">Action</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="sObjectLookups.length == 0">
+                    <td colspan="3" class="slds-blank-slate">
+                        <h1>No lookup added for sObject.</h1>
+                    </td>
+                </tr>
+                <tr ng-repeat="lookup in sObjectLookups">
+                    <td data-label="Label">
+                        <strong>{{ lookup.title }}<strong>
+                    </td>
+                    <td data-label="Description">{{ lookup.description }}</td>
+                    <td data-label="Action" style="text-align: center;">
+                        <div class="slds-truncate" >
+                            <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(lookup)">
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Select</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button--neutral" ng-click="selectAndClose()" translate>Default</button>
+        <button class="slds-button slds-button--neutral" ng-click="close()" translate>Close</button>
+    </div>
+  </div>
 </div>
+<div class="slds-backdrop"></div>

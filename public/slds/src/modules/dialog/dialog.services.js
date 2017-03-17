@@ -10,7 +10,6 @@ dialogs.factory('$dialog',['ModalService',function(ModalService){
                     data: data  
                 } 
             }).then(function(modal){
-                // modal.element.modal();
                 modal.element.modal({backdrop: 'static', keyboard: false});
                 modal.close.then(function(confirm){
                     callback && callback(confirm);
@@ -29,7 +28,6 @@ dialogs.factory('$dialog',['ModalService',function(ModalService){
                     }  
                 }
             }).then(function(modal){
-                // modal.element.modal();
                 modal.element.modal({backdrop: 'static', keyboard: false});
                 modal.close.then(function(result){
                     callback && callback();

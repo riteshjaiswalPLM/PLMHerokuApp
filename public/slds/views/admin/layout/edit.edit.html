@@ -1,46 +1,12 @@
 <div ng-controller="AdminLayoutsEditEditController" block-ui="editEditLayout">
-    <style>
-        .slds-form-element--draggable{
-            padding-bottom: 3px;
-            margin-top: 0 !important;
-            border: 1px dotted transparent;
-        }
-        .slds-form-element--draggable,
-        .slds-form-element--draggable > label,
-        .slds-form-element--draggable > div > div > div > label {
-            cursor: move;
-        }
-        .slds-form-element--draggable:hover {
-            border-bottom: 1px dotted blue;
-            border-top: 1px dotted blue;
-            background: rgba(225, 217, 81, 0.4);
-        }
-        .dndPlaceholder{
-            text-align: center;
-            padding: 2px;
-            border-top: 1px dotted white;
-            border-bottom: 1px dotted white;
-            color: white;
-            text-transform: uppercase;
-        }
-        .dndPlaceholder:after{
-            content: "Drop here";
-        }
-        [dnd-list="fields"] > .dndPlaceholder{
-            background-color: #e1d951 !important;
-        }
-        [dnd-list="layoutSections"] > .dndPlaceholder{
-            background-color: #6a89e5 !important;
-        }
-        [dnd-list="relatedLists"] > .dndPlaceholder{
-            background-color: #f59f71 !important;
-        }
-    </style>
     <h3 class="slds-section__title">Layout Sections</h3>
     <div class="layout-section-container" 
             dnd-drop="sectionsDropCallBack(event, index, item, external, type)" 
             dnd-list="layoutSections" 
             dnd-allowed-types="['layoutSection']">
+        <div class="dndPlaceholder" style="background-color: #6a89e5 !important;">
+            Drop section here
+        </div>
         <div    class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small"
                 ng-repeat="section in layoutSections | filter: {deleted: false }"
                 dnd-draggable="section"
@@ -75,7 +41,7 @@
                         </span>
                     </h3>
                 </div>
-                <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none">
+                <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
                     <div ng-if="section.isComponent" class="slds-align--absolute-center">
                         {{section.Component.desc}}
                     </div>
@@ -88,6 +54,9 @@
                                 dnd-drop="fieldsDropCallBack(event, index, item, external, type, section, $index+1)"
                                 dnd-allowed-types="['sObjectField']"
                                 style="min-height: 20px;" >
+                            <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
+                                Drop field here
+                            </div>
                             <div    class="slds-form-element slds-form-element--draggable"
                                     ng-repeat="field in fields | filter: {deleted: false }" 
                                     dnd-draggable="field" 
@@ -143,5 +112,134 @@
             dnd-drop="relatedListsDropCallBack(event, index, item, external, type,'2')" 
             dnd-list="relatedLists"
             dnd-allowed-types="['relatedList']">
+        <div class="dndPlaceholder" style="background-color: #f59f71 !important;">
+            Drop related list here
+        </div>
+        <div    class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small"
+                ng-repeat="relatedList in relatedLists | filter: {deleted: false,dispaySection :'2'}"
+                dnd-draggable="relatedList"
+                dnd-effect-allowed="move" 
+                dnd-moved="relatedLists.splice(relatedLists.indexOf(relatedList),1)"
+                dnd-type="'relatedList'"
+                ng-init="relatedListIndex = relatedLists.indexOf(relatedList)">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+                    <h3>{{ relatedList.title }}
+                        <span class="slds-float--right">
+                            <div class="slds-button-group" role="group">
+                                <button ng-click="removeAndReorder(relatedLists,relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                                <button ng-click="openRelatedListCriteriaModal(relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Criteria</span>
+                                </button>
+                                <button ng-click="openRelatedListPropertiesModal(relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Properties</span>
+                                </button>
+                            </div>
+                        </span>
+                    </h3>
+                </div>
+                <div class="slds-panel__section slds-grid slds-p-vertical--none slds-p-horizontal--none slds-border--top slds-border--left slds-border--right slds-border--bottom">
+                    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" ng-repeat="field in relatedList.SObjectLayoutFields">
+                                    <div class="slds-truncate">{{ field.label }}</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="i in [1,2,3,4,5]">
+                                <td ng-repeat="field in relatedList.SObjectLayoutFields">
+                                    <div class="slds-truncate" title="{{ field.label + ' - ' + i }}">
+                                        {{ field.label + ' - ' + i }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slds-box slds-theme--default slds-theme--alert-texture slds-m-vertical--medium">
+        <p><h3 class="slds-section__title slds-text-title--caps slds-align--absolute-center">Action Buttons</h3></p>
+    </div>
+
+    <h3 class="slds-section__title" ng-if="layout.type !== 'Create'">Related Lists</h3>
+    <div class="layout-section-container" ng-if="layout.type !== 'Create'"
+            dnd-drop="relatedListsDropCallBack(event, index, item, external, type,'1')" 
+            dnd-list="relatedLists"
+            dnd-allowed-types="['relatedList']">
+        <div class="dndPlaceholder" style="background-color: #f59f71 !important;">
+            Drop related list here
+        </div>
+        <div    class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small"
+                ng-repeat="relatedList in relatedLists | filter: {deleted: false,dispaySection :'1'}"
+                dnd-draggable="relatedList"
+                dnd-effect-allowed="move" 
+                dnd-moved="relatedLists.splice(relatedLists.indexOf(relatedList),1)"
+                dnd-type="'relatedList'"
+                ng-init="relatedListIndex = relatedLists.indexOf(relatedList)">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+                    <h3>{{ relatedList.title }}
+                        <span class="slds-float--right">
+                            <div class="slds-button-group" role="group">
+                                <button ng-click="removeAndReorder(relatedLists,relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                                <button ng-click="openRelatedListCriteriaModal(relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Criteria</span>
+                                </button>
+                                <button ng-click="openRelatedListPropertiesModal(relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Properties</span>
+                                </button>
+                            </div>
+                        </span>
+                    </h3>
+                </div>
+                <div class="slds-panel__section slds-grid slds-p-vertical--none slds-p-horizontal--none slds-border--top slds-border--left slds-border--right slds-border--bottom">
+                    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" ng-repeat="field in relatedList.SObjectLayoutFields">
+                                    <div class="slds-truncate">{{ field.label }}</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="i in [1,2,3,4,5]">
+                                <td ng-repeat="field in relatedList.SObjectLayoutFields">
+                                    <div class="slds-truncate" title="{{ field.label + ' - ' + i }}">
+                                        {{ field.label + ' - ' + i }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,3 +1,128 @@
+<div role="dialog" tabindex="-1" aria-labelledby="relatedListPropertiesModalLabel" data-backdrop="static" class="slds-modal slds-modal--large">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="relatedListPropertiesModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--none" style="height: 400px;">
+            <div class="slds-form--horizontal slds-p-around--medium" >
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="relatedListTitle">Title</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="relatedListTitle" class="slds-input" placeholder="{{relatedListTitle}}" ng-model="relatedList.title">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="relatedListActive">Active ?</label>
+                    <div class="slds-form-element__control">
+                        <slds-switch id="relatedListActive" ng-model="relatedList.active" on-text="Yes" off-text="No"/>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="relatedListRelativeField">Relative field</label>
+                    <div class="slds-form-element__control">
+                        <select class="slds-select" ng-model="relatedList.SObjectField" ng-options="field as field.label for field in relativeFields track by field.id"></select>
+                    </div>
+                </div>
+            </div>
+            <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col" style="width: 50px;">
+                            <div class="slds-truncate">#</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Label">Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Display Label">Display Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Reference">Reference</div>
+                        </th>
+                        <th scope="col" style="width: 150px;">
+                            <div class="slds-truncate" title="Type">Type</div>
+                        </th>
+                        <th scope="col" style="text-align: center;width: 100px">
+                            <div class="slds-truncate" title="Action">Action</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody dnd-list="relatedListFields" dnd-allowed-types="['relatedListField']">
+                    <tr ng-if="relatedListFields.length === 0">
+                        <td colspan="6" class="slds-blank-slate">No field added.</td>
+                    </tr>
+                    <tr class="dndPlaceholder" style="display: table-row !important">
+                        <th colspan="6" style="background: #e1d951; text-align: center;" >
+                            Move here
+                        </th>
+                    </tr>
+                    <tr ng-repeat="field in relatedListFields | filter: {deleted: false }"
+                        dnd-draggable="field" 
+                        dnd-effect-allowed="move" 
+                        dnd-moved="relatedListFields.splice($index,1)" 
+                        dnd-type="'relatedListField'">
+                        <td>{{ $index + 1 }}</td>
+                        <td data-label="Label">{{ field.SObjectField.label }}</td>
+                        <td data-label="Display Label">
+                            <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                        </td>
+                        <td data-label="Reference" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                        <td data-label="Type">
+                            <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
+                        </td>
+                        <td data-label="Action" style="text-align: center;">
+                            <div class="slds-truncate" >
+                                <button title="Delete" class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--destructive" ng-click="relatedListFields.splice($index,1)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-modal__footer">
+            <div style="padding-left: 0px; float: left;">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                            <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in relatedList.SObject.SObjectFields | filter: { type: '!id'}">
+                                <option value="">-- None --</option>
+                            </select>
+                        </span>
+                        <span class="slds-form-element__addon">
+                            <button class="slds-button slds-button--brand" ng-click="addToRelatedListFields(fieldToAdd)">
+                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                </svg>
+                                Add
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop"></div>
+
+<!--
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="relatedListPropertiesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" block-ui="relatedListPropertiesModalBlockUi">
@@ -83,3 +208,4 @@
         </div>
     </div>
 </div>
+-->

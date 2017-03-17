@@ -9,13 +9,13 @@
             </button>
             <h2 id="referenceFieldLookupModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
         </div>
-        <div class="slds-modal__content slds-p-around--medium" style="height:350px;overflow: auto;padding:0px;">
+        <div class="slds-modal__content slds-p-around--medium" style="height:400px;padding:0px;">
             <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table--striped">
                 <thead>
                     <tr class="slds-text-title--caps">
                         <th scope="col"><div class="slds-truncate" title="Label">Label</div></th>
                         <th scope="col"><div class="slds-truncate" title="Api name">Api name</div></th>
-                        <th scope="col"><div class="slds-truncate" title="Data Type">Data Type</div></th>
+                        <th scope="col" style="width: 150px;"><div class="slds-truncate" title="Data Type">Data Type</div></th>
                         <th scope="col" style="text-align: center;width: 80px;"><div class="slds-truncate" title="Action">Action</div></th>
                     </tr>
                 </thead>
@@ -28,7 +28,7 @@
                     <tr ng-repeat="refField in filteredRefFields = (refSObject.SObjectFields | filter: referenceFieldFilter)">
                         <td data-label="Label"><div class="slds-truncate" title="{{ refField.label }}" >{{ refField.label }}</div></td>
                         <td data-label="Api name"><div class="slds-truncate" title="{{ refField.name }}" >{{ refField.name }}</div></td>
-                        <td data-label="Data Type"><div class="slds-truncate" title="{{ refField.type }}" >{{ refField.type }}</div></td>
+                        <td data-label="Data Type"><div class="slds-truncate" title="{{ refField.type }}" ><span class="slds-badge">{{ refField.type }}</span></div></td>
                         <td data-label="Action" style="text-align: center;">
                             <div class="slds-truncate" >
                                 <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(refField.name)">

@@ -438,7 +438,7 @@ ng.directive('referenceFieldSelector',['ModalService','$dialog', function(ModalS
             $scope.field.reference = ($scope.field.reference) ? $scope.field.reference : 'Name';
             $scope.openReferenceFieldLookup = function(){
                 if($scope.field.SObjectField.custom === false){
-                    $dialog.alert('Reference field can not be changed for Salesforce standard fields!','Warning','pficon pficon-warning-triangle-o');
+                    $dialog.alert('Reference field can not be changed for Salesforce standard fields!','Warning','warning');
                     return;
                 }
                 if($scope.refSobjects !== undefined && $scope.refSobjects[$scope.field.SObjectField.referenceTo[0]] !== undefined){

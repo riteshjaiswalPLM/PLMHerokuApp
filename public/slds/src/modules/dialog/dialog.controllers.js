@@ -21,7 +21,8 @@ dialogs.controller('AlertDialogController',[
     function($scope , $rootScope , $element , data , close){
         $scope.message = (data.message) ? data.message : '';
         $scope.title = (data.title) ? data.title : 'Alert' ;
-        $scope.icon = (data.icon) ? data.icon : 'pficon pficon-info';
+        $scope.icon = (data.icon) ? data.icon : 'info_alt';
+        $scope.headerClass = ($scope.title.toLowerCase() === 'warning') ? 'slds-theme--warning' : 'slds-theme--shade';
         $scope.close = function(){
             $element.modal('hide');
             close({}, 500);
