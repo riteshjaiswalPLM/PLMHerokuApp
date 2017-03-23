@@ -10,7 +10,7 @@ client.controller('ClientController',[
         $scope.configureStateProviderStates = function(states){
             angular.forEach(states,function(state){
                 if(state.tab != undefined){
-                    $scope.tabs.push(state);
+                    $scope.tabs.push(angular.copy(state));
                 }
             });
             

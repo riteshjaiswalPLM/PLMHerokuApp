@@ -8,6 +8,7 @@ auth.factory('authService',[
                 return $http.post('/api/auth/authenticate', credentials);
             },
             loadstates: function(data){
+                data.viewPrefix = 'slds/';
                 return $http.post('/api/auth/states', data);
             },
             mailresetpasswordlink: function(credentials){

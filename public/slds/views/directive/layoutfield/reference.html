@@ -12,5 +12,6 @@
             </button>
         </div>
     </div>
-    <span ng-if="field.readonly" ng-bind="field.labelValue"></span>
+    <!--<span ng-if="field.readonly" ng-bind="field.labelValue"></span>-->
+    <label ng-if="field.readonly" class="slds-form-element__label slds-p-left--small" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="field.labelValue"></label>
 </div>

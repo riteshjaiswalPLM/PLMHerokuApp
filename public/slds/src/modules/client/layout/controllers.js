@@ -16,6 +16,7 @@ client.controller('ClientLayoutController',[
             if($scope.stateParamMetaData !== null && $scope.stateParamMetaData.redirectTo !== undefined){
                 $state.go($scope.stateParamMetaData.redirectTo);
             }
+            $scope.tab = $state.current.tab;
         };
         $scope.init();
     }
@@ -319,7 +320,6 @@ client.controller('ClientListLayoutController',[
             $scope.currentPage = 0;
             $scope.stateCache = $appCache.get($state.current.name);
             console.log('ClientListLayoutController loaded!');
-            // console.log($state.current);
             $scope.stateParamMetaData = $state.current.params.metadata;
             $scope.initBlockUiBlocks();
             $scope.loadLayoutMetadata();

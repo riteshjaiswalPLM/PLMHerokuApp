@@ -38,8 +38,8 @@ app.directive('sldsSwitch',['$rootScope', function($rootScope){
                 <input id="{{id}}" type="checkbox" name="checkbox" aria-describedby="{{descId}}" ng-model="value" ng-disabled="switchReadonly" />
                 <span id="{{descId}}" class="slds-checkbox--faux_container" aria-live="assertive">
                     <span class="slds-checkbox--faux"></span>
-                    <span class="slds-checkbox--on">{{onText}}</span>
-                    <span class="slds-checkbox--off">{{offText}}</span>
+                    <span class="slds-checkbox--on" ng-if="showTexts">{{onText}}</span>
+                    <span class="slds-checkbox--off" ng-if="showTexts">{{offText}}</span>
                 </span>
             </label>`,
         link: function(scope, el, attrs, ngModel){

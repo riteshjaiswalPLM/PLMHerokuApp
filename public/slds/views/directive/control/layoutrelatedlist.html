@@ -1,4 +1,41 @@
-<div class="panel panel-default" block-ui="relatedList_{{ model.id }}_{{index}}" ng-if="rendered">
+<div class="slds-form--stacked slds-grow" ng-if="rendered">
+    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+        <h3 translate>{{ model.title }}</h3>
+    </div>
+    <div class="slds-panel__section slds-grid slds-p-around--none slds-border--bottom" block-ui="relatedList_{{ model.id }}_{{index}}">
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
+                        ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                        ng-click="applyOrderBy(field)" 
+                        ng-repeat="field in model.SObjectLayoutFields">
+                        {{ field.label }} 
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="result in searchResult" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                    <td class="{{ 'td-'+field.SObjectField.type }}"  ng-repeat="field in model.SObjectLayoutFields">
+                        <div class="slds-truncate">
+                        {{ (field.SObjectField.type === 'reference') 
+                            ? result[field.SObjectField.relationshipName][field.reference] 
+                            : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                : (field.SObjectField.type === 'date') 
+                                    ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                    : (field.SObjectField.type === 'datetime')
+                                        ? (result[field.SObjectField.name] | date: 'medium')
+                                        : result[field.SObjectField.name] }}
+                        </div>
+                    </td>                            
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default" block-ui="relatedList_{{ model.id }}_{{index}}" ng-if="rendered == !rendered">
     <div class="panel-heading">
         <h3 class="panel-title">{{ model.title }}</h3>
     </div>

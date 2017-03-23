@@ -32,7 +32,8 @@ admin.controller('AdminLookupsListController',[
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
                 message: 'Are you sure to delete lookup for "'+ lookup.title +'" ?',
-                class:'danger'
+                class:'destructive',
+                headerClass: 'error'
             },function(confirm){
                 if(confirm){
                     $scope.blockUI.loadLookups.start('Deleting "'+lookup.title+'" lookup...');
@@ -143,8 +144,9 @@ admin.controller('AdminLookupsEditController',[
                                 $dialog.confirm({
                                     title: 'Create more ?',
                                     yes: 'Yes', no: 'No, Thanks',
-                                    message: 'Lookup created successfully? \nCreate more lookup ?',
-                                    class:'primary'
+                                    message: 'Lookup created successfully. \nCreate more lookup ?',
+                                    class:'success',
+                                    headerClass: 'success'
                                 },function(confirm){
                                     if(confirm){
                                         // CREATE MORE

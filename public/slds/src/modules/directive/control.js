@@ -183,7 +183,8 @@ ng.directive('sobjectLayoutSection', ['$compile','$http','blockUI','$log','$time
                         model					:'=',
                         layoutBlockUiInstance	:'=',
                         type                    :'@',
-                        baseCtrl                :'='    
+                        baseCtrl                :'=',
+                        slds                    :'@'
                      },
         templateUrl	:"slds/views/directive/layout/layoutsection.html",
         controller	:function($scope){

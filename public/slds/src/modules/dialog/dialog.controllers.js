@@ -22,7 +22,7 @@ dialogs.controller('AlertDialogController',[
         $scope.message = (data.message) ? data.message : '';
         $scope.title = (data.title) ? data.title : 'Alert' ;
         $scope.icon = (data.icon) ? data.icon : 'info_alt';
-        $scope.headerClass = ($scope.title.toLowerCase() === 'warning') ? 'slds-theme--warning' : 'slds-theme--shade';
+        $scope.headerClass = ($scope.title.toLowerCase() === 'warning') ? 'slds-theme--warning' : ($scope.title.toLowerCase() === 'error') ? 'slds-theme--error' :'slds-theme--shade';
         $scope.close = function(){
             $element.modal('hide');
             close({}, 500);

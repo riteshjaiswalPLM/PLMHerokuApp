@@ -1,101 +1,180 @@
-<div class="col-md-12">
-    <div class="page-header page-header-bleed-right">
-        <div class="actions pull-right">
-            <a href ng-click="cancel()"><span class="fa fa-chevron-circle-left"></span> Back to layouts</a>&nbsp;&nbsp;
-            <button class="btn btn-primary" type="button" ng-click="saveLookup()"><i class="fa fa-check"></i> Save</button>
-        </div>
-        <h1>{{ stateAction + ' ' + $root.title() }}</h1>
-    </div>
-</div>
-
-<div class="col-md-12" block-ui="saveLookup">
-    <div class="col-md-6">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="lookupSObject">SObject</label>
-                <div class="input-group col-md-7">
-                    <input type="hidden" ng-model="tab.SObject">
-                    <input type="text" id="lookupSObject" class="form-control" ng-model="lookup.SObject.label" readonly>
-                    <div class="input-group-btn" ng-if="stateAction === 'Create'">
-                        <button type="button" class="btn btn-default" ng-click="openSObjectsLookup()">
-                            <i class="fa fa-search"></i>
-                        </button>
+<div class="slds-col slds-size--1-of-1"  block-ui="saveLookup">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() }}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{stateAction + ' ' + $root.title()}}">{{stateAction + ' ' + $root.title()}}</h1>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="lookupTitle">Title</label>
-                <div class="input-group col-md-7">
-                    <input type="text" id="lookupTitle" class="form-control" ng-model="lookup.title">
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--neutral" ng-click="cancel()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                        </svg>
+                        Back to list
+                    </button>
+                    <button class="slds-button slds-button--brand" ng-click="saveLookup()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                        </svg>
+                        Save
+                    </button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-    <div class="col-md-6">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="lookupActive">Active ?</label>
-                <div class="input-group col-md-7">
-                    <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="lookupActive" ng-model="lookup.active">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="lookupDescription">Description</label>
-                <div class="input-group col-md-7">
-                    <input type="text" id="lookupDescription" class="form-control" ng-model="lookup.description">
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-12" style="padding: 0px;">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Lookup fields<span class="pull-right badge badge-info">{{ lookup.fields.length }}</span></h3>
-            </div>
-            <div class="panel-body" style="padding: 0px;">
-                <table class="table table-striped table-hover" style="margin-bottom:0px;">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">#</th>
-                            <th>Label</th>
-                            <th>Display Label</th>
-                            <th>Reference</th>
-                            <th style="width: 200px;">Type</th>
-                            <th style="text-align: center; width: 50px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody dnd-list="lookup.SObjectLayoutFields" dnd-allowed-types="['sObjectLayoutFields']">
-                        <tr ng-if="lookup.SObjectLayoutFields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
-                        <tr ng-repeat="field in lookup.SObjectLayoutFields"
-                            dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="lookup.SObjectLayoutFields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ field.SObjectField.label }}</td>
-                            <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
-                            <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
-                            <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
-                            <td style="text-align: center;">
-                                <button class="btn btn-xs btn-danger" type="button" ng-if="lookup.SObjectLayoutFields.length > 1" ng-click="lookup.SObjectLayoutFields.splice($index,1)"><i class="pficon-delete"></i> Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="panel-footer">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <select pf-select class="form-control" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in lookup.SObject.SObjectFields | filter: { type: '!id'}">
-                                <option value="">-- None --</option>
-                            </select>
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" ng-disabled="!fieldToAdd" ng-click="addToLookupFields(fieldToAdd)">
-                                    <i class="fa fa-plus"></i> Add
-                                </button>
-                            </span>
+    <div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" style="height: calc(100vh - 200px);">
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-2 slds-p-around--medium">
+                <fieldset class="slds-form--compound">
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                                <label class="slds-form-element__label" for="lookupSObject">SObject</label>
+                                <div class="slds-form-element__control slds-grid slds-box--border">
+                                    <div class="slds-input-has-icon slds-grow">
+                                        <input type="hidden" ng-model="lookup.SObject">
+                                        <input readonly type="text" id="lookupSObject" class="slds-lookup__search-input slds-input--bare" ng-model="lookup.SObject.label" />
+                                    </div>
+                                    <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none" ng-if="stateAction === 'Create'">
+                                        <button ng-click="openSObjectsLookup()" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Open lookup modal for SObjects</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-1">
+                                <label class="slds-form-element__label" for="lookupTitle">Title</label>
+                                <input type="text" id="lookupTitle" class="slds-input" ng-model="lookup.title" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
+            <div class="slds-size--1-of-2 slds-p-around--medium">
+                <fieldset class="slds-form--compound">
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;">
+                                <label class="slds-form-element__label" for="lookupActive">Active ?</label>
+                                <slds-switch id="lookupActive" ng-model="lookup.active" on-text="Yes" off-text="No" show-texts="false"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-1">
+                                <label class="slds-form-element__label" for="lookupDescription">Description</label>
+                                <input type="text" id="lookupDescription" class="slds-input" ng-model="lookup.description" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 ">
+            <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col" style="width: 50px;">
+                            <div class="slds-truncate">#</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Label">Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Display Label">Display Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Reference">Reference</div>
+                        </th>
+                        <th scope="col" style="width: 150px;">
+                            <div class="slds-truncate" title="Type">Type</div>
+                        </th>
+                        <th scope="col" style="text-align: center;width: 100px">
+                            <div class="slds-truncate" title="Action">Action</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody dnd-list="lookup.SObjectLayoutFields" dnd-allowed-types="['sObjectLayoutFields']">
+                    <tr ng-if="lookup.SObjectLayoutFields.length === 0">
+                        <td colspan="6" class="slds-blank-slate">No field added.</td>
+                    </tr>
+                    <tr class="dndPlaceholder" style="display: table-row !important">
+                        <th colspan="6" style="background: #e1d951; text-align: center;" >
+                            Move here
+                        </th>
+                    </tr>
+                    <tr ng-repeat="field in lookup.SObjectLayoutFields"
+                        dnd-draggable="field" 
+                        dnd-effect-allowed="move" 
+                        dnd-moved="lookup.SObjectLayoutFields.splice($index,1)" 
+                        dnd-type="'sObjectLayoutFields'">
+                        <td>{{ $index + 1 }}</td>
+                        <td data-label="Label">{{ field.SObjectField.label }}</td>
+                        <td data-label="Display Label">
+                            <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                        </td>
+                        <td data-label="Reference" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                        <td data-label="Type">
+                            <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
+                        </td>
+                        <td data-label="Action" style="text-align: center;">
+                            <div class="slds-truncate" >
+                                <button title="Delete" ng-if="lookup.SObjectLayoutFields.length > 1" class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--destructive" ng-click="lookup.SObjectLayoutFields.splice($index,1)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot ng-if="lookup.SObject">
+                    <tr>
+                        <td colspan="6" style="border-top: 2px solid #d8dde6">
+                            <div style="padding-left: 0px; float: left;">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <span class="slds-form-element__static">
+                                            <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in lookup.SObject.SObjectFields | filter: { type: '!id'}">
+                                                <option value="">-- None --</option>
+                                            </select>
+                                        </span>
+                                        <span class="slds-form-element__addon">
+                                            <button class="slds-button slds-button--brand" ng-disabled="!fieldToAdd" ng-click="addToLookupFields(fieldToAdd)">
+                                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                                </svg>
+                                                Add
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td> 
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 </div>

@@ -219,6 +219,7 @@ authRouter.post('/authenticate', function(req, res){
 
 authRouter.post('/states', function(req, res){
     var user = req.body;
+    var viewPrefix = (user.viewPrefix != null && user.viewPrefix != undefined && user.viewPrefix.trim() != '') ? user.viewPrefix : '';
     console.log(user);
     
     var User = db.User.findOne({
@@ -293,7 +294,7 @@ authRouter.post('/states', function(req, res){
                                         dynamic: true,
                                         name: 'client.' + tab.SObject.keyPrefix,
                                         controller: 'ClientLayoutController',
-                                        templateUrl: 'views/client/layout/index.html',
+                                        templateUrl: viewPrefix + 'views/client/layout/index.html',
                                         params:{
                                             metadata: {
                                                 redirectTo: stateName
@@ -311,7 +312,13 @@ authRouter.post('/states', function(req, res){
                                     dynamic: true,
                                     name: stateName,
                                     controller: controllerName,
-                                    templateUrl: 'views/client/layout/'+layout.type.toLowerCase()+'.html',
+                                    templateUrl: viewPrefix + 'views/client/layout/'+layout.type.toLowerCase()+'.html',
+                                    parentTab:{
+                                        label: tab.label,
+                                        icon: (tab.Icon) ? tab.Icon.class : null,
+                                        keyPrefix: tab.SObject.keyPrefix,
+                                        id: tab.id
+                                    },
                                     params:{
                                         metadata: {
                                             sobject: {
@@ -372,7 +379,7 @@ authRouter.post('/states', function(req, res){
                                         dynamic: true,
                                         name: 'client.profile',
                                         controller: 'ClientProfileController',
-                                        templateUrl: 'views/client/profile/index.html',
+                                        templateUrl: viewPrefix + 'views/client/profile/index.html',
                                         params:{
                                             metadata: {
                                                 sobject: {

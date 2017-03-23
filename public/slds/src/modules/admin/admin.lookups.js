@@ -186,7 +186,7 @@ adminLookup.controller('IconLookupController',[
             var blockUi = blockUI.instances.get('loadIcons');
             if(!blockUi.state().blocking){
                 blockUi.start('Loading icons...');
-                $http.post('/api/admin/icon/list',{})
+                $http.post('/api/admin/icon/list',{slds: true})
                     .success(function(response){
                         blockUi.stop();
                         if(response.success){

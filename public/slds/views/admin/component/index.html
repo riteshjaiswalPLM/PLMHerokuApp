@@ -1,6 +1,14 @@
-<ul class="nav nav-tabs nav-tabs-pf">
-    <li ui-sref-active="active"><a ui-sref="admin.components.generic" href><i class="fa fa-cubes"></i>Generic Components</a></li>
-    <li ui-sref-active="active"><a ui-sref="admin.components.static" href><i class="fa fa-database"></i>&nbsp;&nbsp;Static Components</a></li>
-    <li ui-sref-active="active"><a ui-sref="admin.components.dashboard" href><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Dashboard Components</a></li>
-</ul>
+<div class="slds-tabs--default">
+    <ul class="slds-tabs--default__nav" role="tablist">
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Generic Components" role="presentation">
+            <a ui-sref="admin.components.generic" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Generic Components</a>
+        </li>
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Static Components" role="presentation">
+            <a ui-sref="admin.components.static" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Static Components</a>
+        </li>
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Dashboard Components" role="presentation">
+            <a ui-sref="admin.components.dashboard" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Dashboard Components</a>
+        </li>
+    </ul>
+</div>
 <div ui-view></div>

@@ -87,7 +87,11 @@
                         <div class="slds-truncate" title="{{ tab.SObject.label }}">{{ tab.SObject.label }}</div>
                     </td>
                     <td data-label="Icon">
-                        <div class="slds-truncate" title="{{tab.Icon.class}}">{{tab.Icon.class}}</div>
+                        <div class="slds-truncate" title="{{ tab.SObject.label }} Icon">
+                            <svg class="slds-icon slds-icon--x-small slds-icon-text-default" aria-hidden="true" >
+                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+tab.Icon.class}}"></use>
+                            </svg>
+                        </div>
                     </td>
                     <td data-label="Tab Label">
                         <div class="slds-truncate" title="{{ tab.label }}">{{ tab.label }}</div>

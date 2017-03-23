@@ -4,7 +4,7 @@ var path = require('path');
 var fs = require('fs');
 
 layoutRouter.post('/metadata', function(req, res){
-    
+    var slds = req.body && req.body.slds === true;
     var layout = req.body.layout;
     var sObject = req.body.sobject;
     console.log(layout);
@@ -202,15 +202,15 @@ layoutRouter.post('/metadata', function(req, res){
                                 var action = {
                                     type: 'record',
                                     label: _sObjLayout.type,
-                                    icon: (_sObjLayout.type === 'Edit') ? 'pficon-edit' : 'fa fa-eye',
+                                    icon: (_sObjLayout.type === 'Edit') ? (slds) ? 'edit' : 'pficon-edit' : (slds) ? 'preview' : 'fa fa-eye',
                                     state: 'client.' + _sObjectDetails.keyPrefix + '.' + _sObjLayout.type.toLowerCase(),
                                     btnClass: (_sObjLayout.type === 'Edit') ? 'btn btn-xs btn-primary' : 'btn btn-xs btn-default'
                                 }
                                 if(_sObjLayout.type === 'Create'){
                                     action.type = 'navbar',
                                     action.label = 'Create ' + _sObjectDetails.label,
-                                    action.icon = 'fa fa-plus',
-                                    action.btnClass = 'btn btn-primary'
+                                    action.icon = (slds) ? 'add' : 'fa fa-plus',
+                                    action.btnClass = (slds) ? 'slds-button--brand' :'btn btn-primary'
                                     
                                     resultMetadata.navbaractions.push(action);
                                 }else{

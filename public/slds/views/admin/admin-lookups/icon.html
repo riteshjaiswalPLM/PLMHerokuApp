@@ -32,7 +32,11 @@
                     </tr>
                     <tr ng-repeat="icon in icons | filter: iconsFilter">
                         <td data-label="Icon">
-                            <strong>{{ icon.class }}<strong>
+                            <div class="slds-truncate" title="{{icon.class}}">
+                                <svg class="slds-icon slds-icon--x-small slds-icon-text-default" aria-hidden="true" >
+                                    <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+icon.class}}"></use>
+                                </svg>
+                            </div>
                         </td>
                         <td data-label="Icon Name">{{ icon.class }}</td>
                         <td data-label="Action" style="text-align: center;">

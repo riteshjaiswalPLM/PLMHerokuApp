@@ -78,7 +78,10 @@
                             <label class="slds-form-element__label" for="inputTabIcon">Icon</label>
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <input type="hidden" ng-model="tab.Icon">
-                                <div class="slds-input-has-icon slds-grow">
+                                <div class="slds-input-has-icon slds-input-has-icon--left slds-grow">
+                                    <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true" >
+                                        <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+tab.Icon.class}}"></use>
+                                    </svg>
                                     <input readonly type="text" id="inputTabIcon" class="slds-lookup__search-input slds-input--bare" ng-model="tab.Icon.class" />
                                 </div>
                                 <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">

@@ -8,7 +8,7 @@ if(!global.hasOwnProperty('config')){
         },
         sfdc: {
             username: 'mekyush.jariwala@esmdev.com',
-            password: 'akritiv*1234',
+            password: 'akritiv@123',
             token: 'pz7obelVbXKHo7qrH1xsJYaC',
             environment: 'PRODUCTION'
         },
