@@ -7,7 +7,7 @@ client.controller('ClientProfileManageController',[
             console.log('ClientProfileManageController loaded!');
             $stateParams.data = {}; $state.current.params={};
             $state.current.params.metadata = $stateParams.metadata;
-            $scope.template = 'views/client/layout/edit.html';
+            $scope.template = 'slds/views/client/layout/edit.html';
             $stateParams.data['record'] = {
                 Id: $rootScope.user().userdata.Id,
                 Name: $rootScope.user().userdata.Name,

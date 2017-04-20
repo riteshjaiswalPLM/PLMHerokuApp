@@ -1,17 +1,22 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
-    <div class="input-group" ng-if="!field.readonly">
-        <input  type="hidden" 
-                ng-model="field.value">
-        <input  type="text" 
-                id="{{ field.SObjectField.name + index}}" 
-                class="form-control" 
-                ng-model="field.labelValue" readonly>
-        <div class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="openLookup()">
-                <i class="fa fa-search"></i>
+    <div class="slds-grid slds-box--border" ng-if="!field.readonly">
+        <div class="slds-input-has-icon slds-grow">
+            <input type="hidden" ng-model="field.value">
+            <input readonly type="text" id="{{ field.SObjectField.name + index}}" 
+                class="slds-lookup__search-input slds-input--bare" 
+                ng-model="field.labelValue" />
+        </div>
+        <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+            <button ng-click="openLookup()" 
+                class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
+                aria-haspopup="true" 
+                title="Open lookup">
+                <svg class="slds-button__icon" aria-hidden="true">
+                    <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                </svg>
+                <span class="slds-assistive-text">Open lookup</span>
             </button>
         </div>
     </div>
-    <!--<span ng-if="field.readonly" ng-bind="field.labelValue"></span>-->
-    <label ng-if="field.readonly" class="slds-form-element__label slds-p-left--small" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="field.labelValue"></label>
+    <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="field.labelValue"></label>
 </div>

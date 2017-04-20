@@ -7,7 +7,7 @@
                 ng-required="{{field.required}}" 
                 ng-if="!field.readonly">
     </textarea>
-    <label ng-if="field.readonly" class="slds-form-element__label slds-p-left--small" style="white-space: pre-line; margin-top:.2rem;margin-bottom: 0;" ng-bind-html="field.value"></label>
+    <label ng-if="field.readonly" class="slds-form-element__label" style="white-space: pre-line; margin-top:.2rem;margin-bottom: 0;" ng-bind-html="field.value"></label>
     <!--<textarea   id="{{ field.SObjectField.name + index}}"
                 ng-model="field.value"
                 class="slds-textarea"

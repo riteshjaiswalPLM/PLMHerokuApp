@@ -12,6 +12,12 @@ if(!global.hasOwnProperty('config')){
             token: 'pz7obelVbXKHo7qrH1xsJYaC',
             environment: 'PRODUCTION'
         },
+        demo_sfdc: {
+            username: 'admin@esm.demo3',
+            password: 'akritiv*1234',
+            token: 'q5HveDEOSkyobijMVunvpEoE',
+            environment: 'PRODUCTION'
+        },
         smtpconfig :{
                 host: 'smtp.gmail.com',
                 port: 587,

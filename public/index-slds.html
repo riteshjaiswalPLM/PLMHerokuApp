@@ -296,6 +296,16 @@
             text-transform: uppercase;
         }
         /* LAYOUT EDIT / LIST*/
+
+        .slds-control > .ng-invalid-val,
+        .slds-control > button.ng-invalid,
+        .slds-control > input.ng-invalid,
+        .slds-control > select.ng-invalid,
+        .slds-control > textarea.ng-invalid,
+        .slds-control > input.formElement.ng-invalid {
+            border-left: solid 2px red;
+            border-radius: 3px;
+        } 
     </style>
 </head>
 <body>
@@ -375,6 +385,8 @@
     <script src="slds/src/modules/client/client.controllers.js" ></script>
     <script src="slds/src/modules/client/layout/controllers.js" ></script>
     <script src="slds/src/modules/client/profile/controllers.js" ></script>
+    <!--<script src="src/modules/client/lookup/controllers.js" ></script>
+    <script src="src/modules/client/dashboard/controllers.js" ></script>-->
     <script src="slds/src/modules/client/layout/components/uploadattachment/controller.js" ></script>
     <script src="slds/src/modules/client/layout/components/costalloactioncomponent/controller.js" ></script>
     <script src="slds/src/modules/client/layout/components/otherchargecomponent/controller.js" ></script>
@@ -384,6 +396,7 @@
     <script src="slds/src/modules/client/sobject/services.js" ></script>
     <script src="slds/src/modules/client/lookup/controllers.js" ></script>
     <script src="slds/src/modules/client/lookup/services.js" ></script>
+    <!--<script src="src/modules/client/dashboard/services.js" ></script>-->
     
     <!--App.Admin Module-->
     <script src="slds/src/modules/admin/admin.lookups.js" ></script>

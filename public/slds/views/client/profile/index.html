@@ -1,6 +1,14 @@
-<ul class="nav nav-tabs nav-tabs-pf">
-    <li ui-sref-active="active"><a ui-sref="client.profile.manage" href><i class="fa fa-user-secret"></i>&nbsp;&nbsp;Manage Profile</a></li>
-    <li ui-sref-active="active"><a ui-sref="client.profile.changepassword" href><i class="fa fa-users"></i>&nbsp;&nbsp;Change Password</a></li>
-    <li ui-sref-active="active"><a ui-sref="client.profile.other" href><i class="fa fa-trophy"></i>&nbsp;&nbsp;Other Settings</a></li>
-</ul>
-<div ui-view></div>
+<div class="slds-tabs--default">
+    <ul class="slds-tabs--default__nav" role="tablist">
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Manage Profile" role="presentation">
+            <a ui-sref="client.profile.manage" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Manage Profile</a>
+        </li>
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Change Password" role="presentation">
+            <a ui-sref="client.profile.changepassword" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Change Password</a>
+        </li>
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Other Settings" role="presentation">
+            <a ui-sref="client.profile.other" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Other Settings</a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-wrap" style="width: 100%;" ui-view></div>

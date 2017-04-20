@@ -194,6 +194,28 @@ app.directive('sldsTouchSpin',['$rootScope', function($rootScope){
     };
 }]);
 
+app.directive('sldsDropdownMenu',['$rootScope', function($rootScope){
+    return {
+        restrict: 'A',
+        link: function(scope, el, attrs){
+            console.log(el);
+            $(el).each(function(){
+                var self = this;
+                var handler = $(this).find(".slds-button");
+
+                if($(this).hasClass("slds-dropdown-trigger--click")){
+                    $(handler).on("click",function(event){
+                        $(self).toggleClass("slds-is-open");
+                        event.stopPropagation();
+                    });
+                }
+            });
+            $(document).click(function(event){
+                $(el).removeClass("slds-is-open");
+            });
+        }
+    };
+}]);
 app.directive('sldsAccordionItem',['$rootScope', function($rootScope){
     return {
         transclude: true,

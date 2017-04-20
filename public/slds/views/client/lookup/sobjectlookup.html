@@ -1,4 +1,91 @@
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sObjectLookupModalLabel" aria-hidden="true">
+<div role="dialog" tabindex="-1" aria-labelledby="sObjectLookupModalLabel" data-backdrop="static" class="slds-modal slds-modal--large">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="sObjectLookupModalLabel" class="slds-text-heading--medium" ng-bind-template="{{ metadata.title | translate}}" translate>Loading...</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium" block-ui="loadSObjectLookup" style="padding:0px;min-height: 295px;">
+            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" ng-if="metadata !== undefined" style="height:300px; margin-bottom:0px;">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col" class="th-sortable {{ 'th-' + field.SObjectField.type }}" 
+                            ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                            ng-click="applyOrderBy(field)" 
+                            ng-repeat="field in metadata.SObjectLayoutFields" translate>
+                            <div class="slds-truncate" title="{{ field.label }}">{{ field.label }} </div>
+                        </th>
+                        <th scope="col" class="th-actions" style="width: 80px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="result in searchResult" ng-dblclick="selectAndClose(result)" class="search-result-tr" style="cursor: pointer;">
+                        <td class="{{ 'td-' + field.SObjectField.type }}" 
+                            ng-repeat="field in metadata.SObjectLayoutFields"
+                            data-label="{{field.label}}">
+                            <div class="slds-truncate" >{{ (field.SObjectField.type === 'reference') 
+                                                        ? result[field.SObjectField.relationshipName][field.reference] 
+                                                        : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                                            ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                                            : (field.SObjectField.type === 'date') 
+                                                                ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                                                : (field.SObjectField.type === 'datetime')
+                                                                    ? (result[field.SObjectField.name] | date: 'medium')
+                                                                    : result[field.SObjectField.name] }}</div>
+                        </td>
+                        <td class="td-actions" data-label="Action" style="text-align: center;width: 80px;">
+                            <div class="slds-truncate" >
+                                <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(result)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text" translate>Select</span>
+                                </button>
+                            </div>
+                            <!--<button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(result)" translate><i class="fa fa-check"></i> Select</button>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-modal__footer">
+            <div style="padding-left: 0px; float: left;display: flex;">
+                <div class="slds-form-element" style="margin-right: 15px;">
+                    <div class="slds-form-element">
+                        <select class="slds-select" ng-model="pageSize" 
+                            ng-change="loadLookupData(1,pageSize)" 
+                            ng-options="size as size for size in pageSizes" 
+                            id="pageSize"></select>
+                    </div>
+                </div>
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--neutral" ng-click="loadLookupData(currentPage - 1, pageSize)" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                        </svg>
+                        {{'Previous' | translate}}
+                    </button>
+                    <button class="slds-button slds-p-horizontal--medium">{{currentPage}}</button>
+                    <button class="slds-button slds-button--neutral" ng-click="loadLookupData(currentPage + 1, pageSize)" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize">
+                        {{'Next' | translate}}
+                        <svg class="slds-button__icon slds-button__icon--right" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button class="slds-button slds-button--neutral" ng-click="selectAndClose()" translate>None</button>
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Close</button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop"></div>
+
+<!--<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sObjectLookupModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -69,4 +156,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->

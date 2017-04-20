@@ -1,4 +1,210 @@
-<div block-ui="saveDashoardComponent">
+<div class="slds-page-header slds-page-header--object-home">
+    <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-user">
+                        <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#apps"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <p class="slds-text-title--caps slds-line-height--reset">Components</p>
+                    <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="All tabs">{{ stateAction + ' ' + $root.title() }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" ng-click="cancel()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                    </svg>
+                    Back to components
+                </button>
+                <button class="slds-button slds-button--brand" ng-click="saveComponent()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                    </svg>
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" block-ui="saveDashoardComponent" style="height: calc(100vh - 237px);">
+    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large">
+        <div class="slds-size--1-of-2 slds-p-around--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="componentSObject">SObject</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.SObject">
+                                    <input readonly type="text" id="componentSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.SObject.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                    <button ng-click="openSObjectsLookup()" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for SObjects</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="componentTitle">Title</label>
+                            <input type="text" id="componentTitle" class="slds-input" ng-model="component.title" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="whereClause">Where Clause</label>
+                            <textarea ng-model="component.ComponentDetails[0].configuration.whereClause" style="resize: none;" class="slds-textarea" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="slds-size--1-of-2 slds-p-around--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;">
+                            <label class="slds-form-element__label" for="componentActive">Active ?</label>
+                            <slds-switch id="componentActive" ng-model="component.active" on-text="Yes" off-text="No" show-texts="false"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="componentDescription">Description</label>
+                            <input type="text" id="componentDescription" class="slds-input" ng-model="component.desc" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="componentCatagory">Type</label>
+                            <input type="text" id="componentCatagory" ng-disabled="true" class="slds-input" ng-model="component.catagory" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="slds-size--1-of-1 slds-p-horizontal--medium">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading--small">Component Fields</span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate" title="#">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Label">Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display Label">Display Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Reference">Reference</div>
+                                </th>
+                                <th scope="col" style="width: 200px;">
+                                    <div class="slds-truncate" title="Type">Type</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 50px;">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dnd-list="component.fields" dnd-allowed-types="['DashboardMyTaskFields']">
+                            <tr ng-if="!component.ComponentDetails[0].configuration.fields || component.ComponentDetails[0].configuration.fields.length === 0">
+                                <td colspan="8" class="slds-blank-slate"><div class="slds-truncate slds-align--absolute-center">No field added.</div></td>
+                            </tr>
+                            <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
+                                <th colspan="6" style="background: #e1d951;" ><div class="slds-truncate slds-align--absolute-center">Drop field here</div></th>
+                            </tr>
+                            <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" dnd-type="'DashboardMyTaskFields'">
+                                <td data-label="#">
+                                    <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
+                                </td>
+                                <td data-label="Label">
+                                    <div class="slds-truncate" title="{{ field.SObjectField.label }}">{{ field.SObjectField.label }}</div>
+                                </td>
+                                <td data-label="Display Label">
+                                    <div class="slds-truncate" title="{{field.label}}">
+                                        <input type="text" class="slds-input input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                                    </div>
+                                </td>
+                                <th data-label="Reference" scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                                <td data-label="Type">
+                                    <div class="slds-truncate" title="{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}">
+                                        {{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}
+                                    </div>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <div class="slds-button-group" role="group">
+                                            <button ng-if="component.ComponentDetails[0].configuration.fields.length > 1" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-card__footer">
+                    <form class="slds-form--inline" ng-if="component.SObject">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="lineItemFields">{{component.SObject.label}} Fields</label>
+                            <div class="slds-form-element__control">
+                                <select id="lineItemFields" class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in sObjectFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <button type="button" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)" class="slds-button slds-button--brand">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+<!--<div block-ui="saveDashoardComponent">
     <div class="col-md-12">
         <div class="page-header page-header-bleed-right">
             <div class="actions pull-right">
@@ -113,4 +319,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->

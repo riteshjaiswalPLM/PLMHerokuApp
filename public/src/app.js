@@ -54,7 +54,8 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
         // });
         // console.log(clientTemplateUrls);
         
-        location.reload(true);
+        location.replace('/');
+        //location.reload(true);
         //$rootScope.redirectTo();
     };
     

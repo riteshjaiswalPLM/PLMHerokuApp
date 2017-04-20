@@ -18,16 +18,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', require('./apis'));
 
 // set start page for angularjs application
-app.get('/slds',function(req,res){
-    res.sendFile('./public/index-slds.html', {root: path.join(__dirname)});
+app.get('/pf',function(req,res){
+    res.sendFile('./public/index-pf.html', {root: path.join(__dirname)});
 });
 app.get('/',function(req,res){
-    // console.error('req.query',req.query);
-    // if(req.query.ds === 'slds'){
-    //   res.sendFile('./public/index-slds.html', {root: path.join(__dirname)});
-    // }else{
-      res.sendFile('./public/index.html', {root: path.join(__dirname)});
-    // }
+    //res.sendFile('./public/index.html', {root: path.join(__dirname)});
+    res.sendFile('./public/index-slds.html', {root: path.join(__dirname)});
 });
 
 // catch 404 and forward to error handler

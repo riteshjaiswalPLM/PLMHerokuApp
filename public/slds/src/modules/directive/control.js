@@ -10,7 +10,7 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
             criteria: "=",
             baseCtrl: "="
         },
-        template: '<div ng-include="getTemplateUrl()"></div>',
+        template: '<div class="slds-control" ng-include="getTemplateUrl()"></div>',
         replace: true,
         controller: function($scope,$dialog,ModalService){
             $scope.getTemplateUrl = function(){

@@ -1,222 +1,394 @@
-<div class="col-md-12">
-    <div class="page-header page-header-bleed-right">
-        <div class="actions pull-right">
-            <a href ng-click="cancel()"><span class="fa fa-chevron-circle-left"></span> Back to components</a>&nbsp;&nbsp;
-            <button class="btn btn-primary" type="button" ng-click="saveComponent()"><i class="fa fa-check"></i> Save</button>
+<div class="slds-page-header slds-page-header--object-home">
+    <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-user">
+                        <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#apps"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <p class="slds-text-title--caps slds-line-height--reset">Components</p>
+                    <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="All tabs">{{ stateAction + ' ' + $root.title() }}</h1>
+                </div>
+            </div>
         </div>
-        <h1>{{ stateAction + ' ' + $root.title() }}</h1>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" ng-click="cancel()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                    </svg>
+                    Back to components
+                </button>
+                <button class="slds-button slds-button--brand" ng-click="saveComponent()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                    </svg>
+                    Save
+                </button>
+            </div>
+        </div>
     </div>
 </div>
-
-<div block-ui="saveComponent">
-    <div class="col-md-12">
-        <div class="col-md-6">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-md-5 control-label" for="componentSObject">Dependent Layout SObject</label>
-                    <div class="input-group col-md-7">
-                        <!--<input type="hidden" ng-model="tab.SObject">-->
-                        <input type="text" id="componentSObject" class="form-control" ng-model="component.parent.label" readonly>
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openSObjectsLookup(true)">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 control-label" for="componentTitle">Title</label>
-                    <div class="input-group col-md-7">
-                        <input type="text" id="componentTitle" class="form-control" ng-model="component.title">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 control-label" for="componentCatagory">Name</label>
-                    <div class="input-group col-md-7">
-                        <input type="text" id="componentCatagory" ng-disabled="true" class="form-control" ng-model="component.name">
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-md-5 control-label" for="componentActive">Active ?</label>
-                    <div class="input-group col-md-7">
-                        <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="componentActive" ng-model="component.active">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-5 control-label" for="componentDescription">Description</label>
-                    <div class="input-group col-md-7">
-                        <input type="text" id="componentDescription" class="form-control" ng-model="component.desc">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div ng-if="component.name == 'Cost Allocation Component'">
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-md-5 control-label" for="componentChildSObject">Line Item SObject</label>
-                        <div class="input-group col-md-7">
-                            <!--<input type="hidden" ng-model="tab.SObject">-->
-                            <input type="text" id="componentChildSObject" class="form-control" ng-model="component.child.label" readonly>
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openSObjectsLookup(false)">
-                                    <i class="fa fa-search"></i>
-                                </button>
+<div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" block-ui="saveComponent" style="height: calc(100vh - 237px);">
+    <div class="slds-size--1-of-1 slds-grid slds-wrap">
+        <div class="slds-size--1-of-2 slds-p-around--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="componentSObject">SObject</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.parent">
+                                    <input readonly type="text" id="componentSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.parent.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                    <button ng-click="openSObjectsLookup(true)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for SObjects</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-12" style="padding: 0px;">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Lookup fields<span class="pull-right badge badge-info">{{ component.fields.length }}</span></h3>
                 </div>
-                <div class="panel-body" style="padding: 0px;">
-                    <table class="table table-striped table-hover" style="margin-bottom:0px;">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="componentTitle">Title</label>
+                            <input type="text" id="componentTitle" class="slds-input" ng-model="component.title" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="componentCatagory">Name</label>
+                            <input type="text" id="componentCatagory" ng-disabled="true" class="slds-input" ng-model="component.name" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="slds-size--1-of-2 slds-p-around--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;">
+                            <label class="slds-form-element__label" for="componentActive">Active ?</label>
+                            <slds-switch id="componentActive" ng-model="component.active" on-text="Yes" off-text="No" show-texts="false"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="componentDescription">Description</label>
+                            <input type="text" id="componentDescription" class="slds-input" ng-model="component.desc" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large" ng-if="component.name == 'Cost Allocation Component'">
+        <div class="slds-size--1-of-2 slds-p-horizontal--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="componentChildSObject">Line Item SObject</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.child">
+                                    <input readonly type="text" id="componentChildSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.child.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                    <button ng-click="openSObjectsLookup(false)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for SObjects</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="slds-size--1-of-1 slds-p-horizontal--medium">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading--small">Cost Allocation Component Fields</span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
                         <thead>
-                            <tr>
-                                <th style="width: 50px;">#</th>
-                                <th>Label</th>
-                                <th>Display Label</th>
-                                <th>Reference</th>
-                                <th style="width: 200px;">Type</th>
-                                <th>Read Only</th>
-                                <th>Required</th>
-                                <th style="text-align: center; width: 50px;">Actions</th>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate" title="#">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Label">Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display Label">Display Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Reference">Reference</div>
+                                </th>
+                                <th scope="col" style="width: 200px;">
+                                    <div class="slds-truncate" title="Type">Type</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Read Only">Read Only</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Required">Required</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 50px;">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody dnd-list="component.fields" dnd-allowed-types="['sObjectLayoutFields']">
-                            <tr ng-if="component.fields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
-                            <tr ng-repeat="field in component.fields"
-                                dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.fields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ field.SObjectField.label }}</td>
-                                <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
-                                <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
-                                <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
-                                <td>
-                                    <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly">
+                            <tr ng-if="component.fields.length === 0">
+                                <td colspan="8" class="slds-blank-slate"><div class="slds-truncate slds-align--absolute-center">No field added.</div></td>
+                            </tr>
+                            <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
+                                <th colspan="6" style="background: #e1d951;" ><div class="slds-truncate slds-align--absolute-center">Drop field here</div></th>
+                            </tr>
+                            <tr ng-repeat="field in component.fields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.fields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
+                                <td data-label="#">
+                                    <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
                                 </td>
-                                 <td>
-                                    <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required">
+                                <td data-label="Label">
+                                    <div class="slds-truncate" title="{{ field.SObjectField.label }}">{{ field.SObjectField.label }}</div>
                                 </td>
-                                <td style="text-align: center;">
-                                    <span class="pull-right">
-                                        <button pf-tooltip title="Delete" class="btn btn-xs btn-danger" type="button" ng-if="component.fields.length > 1" ng-click="component.fields.splice($index,1)"><i class="pficon-delete"></i></button>
-                                        <a href pf-tooltip data-placement="left" title="Criteria" ng-click="openFieldCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
-                                    </span>
+                                <td data-label="Display Label">
+                                    <div class="slds-truncate" title="{{field.label}}">
+                                        <input type="text" class="slds-input input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                                    </div>
+                                </td>
+                                <th data-label="Reference" scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                                <td data-label="Type">
+                                    <div class="slds-truncate" title="{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}">
+                                        {{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}
+                                    </div>
+                                </td>
+                                <td data-label="Read Only">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <slds-switch ng-model="field.readonly" switch-change="onChangeReadonly(field);" show-texts="false"/>
+                                    </div>
+                                </td>
+                                <td data-label="required">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <slds-switch ng-model="field.required" switch-change="onChangeRequired(field);" show-texts="false"/>
+                                    </div>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <div class="slds-button-group" role="group">
+                                            <button ng-if="component.fields.length > 1" ng-click="component.fields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Delete</span>
+                                            </button>
+                                            <button ng-click="openFieldCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Criteria</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select pf-select class="form-control" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in sObjectFields | orderBy:'label'">
+                <div class="slds-card__footer">
+                    <form class="slds-form--inline" ng-if="component.child">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="lineItemFields">{{component.child.label}} Fields</label>
+                            <div class="slds-form-element__control">
+                                <select id="lineItemFields" class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in sObjectFields | orderBy:'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)">
-                                        <i class="fa fa-plus"></i> Add
-                                    </button>
-                                </span>
                             </div>
                         </div>
-                    </div>
+                        <div class="slds-form-element">
+                            <button type="button" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)" class="slds-button slds-button--brand">Add</button>
+                        </div>
+                    </form>
                 </div>
-            </div>
+            </article>
         </div>
     </div>
-    <div ng-if="component.name == 'Other Charge Component'">
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-md-5 control-label" for="componentChildSObject">Line Item SObject</label>
-                        <div class="input-group col-md-7">
-                            <!--<input type="hidden" ng-model="tab.SObject">-->
-                            <input type="text" id="componentChildSObject" class="form-control" ng-model="component.child.label" readonly>
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openSObjectsLookup(false)">
-                                    <i class="fa fa-search"></i>
-                                </button>
+    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large" ng-if="component.name == 'Other Charge Component'">
+        <div class="slds-size--1-of-2 slds-p-horizontal--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="componentChildSObject">Line Item SObject</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.child">
+                                    <input readonly type="text" id="componentChildSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.child.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                    <button ng-click="openSObjectsLookup(false)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for SObjects</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-12" style="padding: 0px;">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Lookup fields<span class="pull-right badge badge-info">{{ component.fields.length }}</span></h3>
                 </div>
-                <div class="panel-body" style="padding: 0px;">
-                    <table class="table table-striped table-hover" style="margin-bottom:0px;">
+            </fieldset>
+        </div>
+        <div class="slds-size--1-of-1 slds-p-horizontal--medium">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading--small">Other Charges Component Fields</span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
                         <thead>
-                            <tr>
-                                <th style="width: 50px;">#</th>
-                                <th>Label</th>
-                                <th>Display Label</th>
-                                <th>Reference</th>
-                                <th style="width: 200px;">Type</th>
-                                <th>Read Only</th>
-                                <th>Required</th>
-                                <th style="text-align: center; width: 50px;">Actions</th>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate" title="#">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Label">Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display Label">Display Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Reference">Reference</div>
+                                </th>
+                                <th scope="col" style="width: 200px;">
+                                    <div class="slds-truncate" title="Type">Type</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Read Only">Read Only</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Required">Required</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 50px;">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody dnd-list="component.fields" dnd-allowed-types="['sObjectLayoutFields']">
-                            <tr ng-if="component.fields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
-                            <tr ng-repeat="field in component.fields"
-                                dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.fields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ field.SObjectField.label }}</td>
-                                <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
-                                <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
-                                <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
-                                <td>
-                                    <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly">
+                            <tr ng-if="component.fields.length === 0">
+                                <td colspan="8" class="slds-blank-slate"><div class="slds-truncate slds-align--absolute-center">No field added.</div></td>
+                            </tr>
+                            <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
+                                <th colspan="6" style="background: #e1d951;" ><div class="slds-truncate slds-align--absolute-center">Drop field here</div></th>
+                            </tr>
+                            <tr ng-repeat="field in component.fields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.fields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
+                                <td data-label="#">
+                                    <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
                                 </td>
-                                <td>
-                                    <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required">
+                                <td data-label="Label">
+                                    <div class="slds-truncate" title="{{ field.SObjectField.label }}">{{ field.SObjectField.label }}</div>
                                 </td>
-                                <td style="text-align: center;">
-                                    <span class="pull-right">
-                                        <button pf-tooltip title="Delete" class="btn btn-xs btn-danger" type="button" ng-if="component.fields.length > 1" ng-click="component.fields.splice($index,1)"><i class="pficon-delete"></i></button>
-                                        <a href pf-tooltip data-placement="left" title="Criteria" ng-click="openFieldCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
-                                    </span>
+                                <td data-label="Display Label">
+                                    <div class="slds-truncate" title="{{field.label}}">
+                                        <input type="text" class="slds-input input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                                    </div>
+                                </td>
+                                <th data-label="Reference" scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                                <td data-label="Type">
+                                    <div class="slds-truncate" title="{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}">
+                                        {{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}
+                                    </div>
+                                </td>
+                                <td data-label="Read Only">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <slds-switch ng-model="field.readonly" switch-change="onChangeReadonly(field);" show-texts="false"/>
+                                    </div>
+                                </td>
+                                <td data-label="required">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <slds-switch ng-model="field.required" switch-change="onChangeRequired(field);" show-texts="false"/>
+                                    </div>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <div class="slds-button-group" role="group">
+                                            <button ng-if="component.fields.length > 1" ng-click="component.fields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Delete</span>
+                                            </button>
+                                            <button ng-click="openFieldCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Criteria</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select pf-select class="form-control" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in sObjectFields | orderBy:'label'">
+                <div class="slds-card__footer">
+                    <form class="slds-form--inline" ng-if="component.child">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="lineItemFields">{{component.child.label}} Fields</label>
+                            <div class="slds-form-element__control">
+                                <select id="lineItemFields" class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in sObjectFields | orderBy:'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)">
-                                        <i class="fa fa-plus"></i> Add
-                                    </button>
-                                </span>
                             </div>
                         </div>
-                    </div>
+                        <div class="slds-form-element">
+                            <button type="button" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)" class="slds-button slds-button--brand">Add</button>
+                        </div>
+                    </form>
                 </div>
-            </div>
+            </article>
         </div>
     </div>
 </div>

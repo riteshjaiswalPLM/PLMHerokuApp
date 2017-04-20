@@ -92,7 +92,7 @@
                                     ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
                                     ng-click="applyOrderBy(field)" 
                                     ng-repeat="field in searchResultFields" >
-                                    {{ field.label | translate}}
+                                    <div class="slds-truncate" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                                 </th>
                                 <th scope="col" ng-if="recordActions && recordActions.length > 0" style="width:150px;" class="th-actions"></th>
                             </tr>

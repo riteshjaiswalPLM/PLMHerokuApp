@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-if="section.rendered && !slds">
+<!--<div class="panel panel-default" ng-if="section.rendered && !slds">
     <div class="panel-heading">
         <h3 class="panel-title" translate>{{ section.title}}</h3>
     </div>
@@ -14,7 +14,7 @@
             </form>
         </div>
     </div>
-</div>
+</div>-->
 
 <div class="slds-form--stacked slds-grow" ng-if="section.rendered">
     <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
@@ -26,7 +26,7 @@
             <div class="slds-form--horizontal slds-p-horizontal--x-small">
                 <div class="slds-form-element" ng-repeat="field in fields">
                     <label class="slds-form-element__label" style="font-weight: 600;float: none;" ng-if="field.rendered" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
-                    <div class="slds-form-element__control">
+                    <div class="slds-form-element__control slds-p-left--small">
                         <div  field-readonly="{{field.readonly}}" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div>
                     </div>
                 </div>
