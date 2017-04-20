@@ -37,7 +37,7 @@ function($scope , $rootScope , $state , roleService , $dialog , blockUI , ModalS
     };
     $scope.edit = function(role){
         ModalService.showModal({
-            templateUrl: 'views/admin/usermanagement/roles/edit.html',
+            templateUrl: 'slds/views/admin/usermanagement/roles/edit.html',
             controller:'AdminUserManagementRolesEditController',
             inputs:{
                 data: {
@@ -46,7 +46,7 @@ function($scope , $rootScope , $state , roleService , $dialog , blockUI , ModalS
                 }
             }
         }).then(function(modal){
-            modal.element.modal();
+            modal.element.modal({backdrop: 'static', keyboard: false});
             modal.close.then(function(role){
                 $scope.loadUserRoles();
             });
@@ -57,7 +57,8 @@ function($scope , $rootScope , $state , roleService , $dialog , blockUI , ModalS
             title: 'Confirm delete ?',
             yes: 'Yes, Delete', no: 'Cancel',
             message: 'By deleting "' + role.name + '" role, all users with this role will be updated.\n Are you sure ?',
-            class:'danger'
+            class:'destructive',
+            headerClass:'error'
         },function(confirm){
             if(confirm){
                 $scope.blockUI.loadUserRoles.start('Deleting '+ role.name +'...');

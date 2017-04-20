@@ -1,6 +1,14 @@
-<ul class="nav nav-tabs nav-tabs-pf">
-    <li ui-sref-active="active"><a ui-sref="admin.usermanagement.roles" href><i class="fa fa-user-secret"></i>&nbsp;&nbsp;Roles</a></li>
-    <li ui-sref-active="active"><a ui-sref="admin.usermanagement.users" href><i class="fa fa-users"></i>&nbsp;&nbsp;Users</a></li>
-    <li ui-sref-active="active"><a ui-sref="admin.usermanagement.profile" href><i class="fa fa-trophy"></i>&nbsp;&nbsp;Profile Layout</a></li>
-</ul>
-<div ui-view class="row"></div>
+<div class="slds-tabs--default">
+    <ul class="slds-tabs--default__nav" role="tablist">
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Roles" role="presentation">
+            <a ui-sref="admin.usermanagement.roles" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Roles</a>
+        </li>
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Users" role="presentation">
+            <a ui-sref="admin.usermanagement.users" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Users</a>
+        </li>
+        <li class="slds-tabs--default__item" ui-sref-active="slds-active" title="Profile Layout" role="presentation">
+            <a ui-sref="admin.usermanagement.profile" class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0">Profile Layout</a>
+        </li>
+    </ul>
+    <div ui-view class="slds-grid"></div>
+</div>
