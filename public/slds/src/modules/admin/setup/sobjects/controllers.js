@@ -41,7 +41,8 @@ admin.controller('AdminSetupSObjectsListController',[
             title: 'Confirm delete ?',
             yes: 'Yes, Delete', no: 'Cancel',
             message: 'All information related to '+ sObject.label +' will be deleted. \nAre you sure ?',
-            class:'danger'
+            class:'destructive',
+            headerClass:'error'
         },function(confirm){
             if(confirm){
                 $scope.blockUI.loadSObjects.start('Deleting '+ sObject.label +'...');

@@ -1,4 +1,56 @@
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="AdminSetupSfdcEditModalLabel" aria-hidden="true">
+<div role="dialog" tabindex="-1" aria-labelledby="AdminSetupSfdcEditModalLabel" data-backdrop="static" class="slds-modal">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header slds-theme--inverse-text slds-notify">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="AdminSetupSfdcEditModalLabel" class="slds-text-heading--medium" ng-bind-template="{{ title }}">Edit Salesforce Org Configuration</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium" block-ui="editSalesforceConfiguration">
+            <div class="slds-form--horizontal" >
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="roleName">Username</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="roleName" class="slds-input" placeholder="Username" ng-model="sfdc.username">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="roleName">Password</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="roleName" class="slds-input" placeholder="Password" ng-model="sfdc.password">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="roleName">Token</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="roleName" class="slds-input" placeholder="Token" ng-model="sfdc.token">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="roleName">Environment</label>
+                    <div class="slds-form-element__control">
+                        <select class="slds-select slds-p-horizontal--x-small" ng-model="sfdc.environment" ng-options="env.value as env.label for env in sfdcEnvs"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop"></div>
+
+<!--<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="AdminSetupSfdcEditModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -41,4 +93,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->

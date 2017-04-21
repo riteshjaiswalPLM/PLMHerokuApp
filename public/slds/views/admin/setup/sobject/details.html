@@ -1,4 +1,101 @@
-<style>
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#setup"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{$root.title()}}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ sObject.label }}">{{ sObject.label }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--neutral" ng-click="returnToList()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                        </svg>
+                        Back to list
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="height: calc(100vh - 237px);">
+        <article class="slds-card slds-size--1-of-1">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-datadotcom slds-p-around--xx-small" title="description of icon when needed">
+                            <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#description"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2><span class="slds-text-heading--small">Header Information</span></h2>
+                    </div>
+                </header>
+            </div>
+            <style>.slds-form-element > .slds-form-element__label{font-weight: 600;}</style>
+            <div class="slds-card__body slds-border--top slds-border--bottom" style="background: white;">
+                <div class="slds-size--1-of-1 slds-panel__section" block-ui="sObjectDetails">
+                    <div class="slds-size--1-of-2">
+                        <div class="slds-form--horizontal">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Label</label>
+                                <div class="slds-form-element__control">
+                                    <label class="slds-form-element__label">{{ sObject.label }}</label>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Api name</label>
+                                <div class="slds-form-element__control">
+                                    <label class="slds-form-element__label">{{ sObject.name }}</label>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Custom</label>
+                                <div class="slds-form-element__control">
+                                    <svg class="slds-button__icon slds-button__icon--left" ng-if="sObject.custom" aria-hidden="true">
+                                        <use  xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Deletable</label>
+                                <div class="slds-form-element__control">
+                                    <svg class="slds-button__icon slds-button__icon--left" ng-if="sObject.deletable" aria-hidden="true">
+                                        <use  xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Queryable</label>
+                                <div class="slds-form-element__control">
+                                    <svg class="slds-button__icon slds-button__icon--left" ng-if="sObject.updateable" aria-hidden="true">
+                                        <use  xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-card__footer slds-clearfix"></div>
+        </article>
+    </div>
+</div>
+
+
+<!--<style>
     .col-left {
         text-align: right;
         font-weight: 600;
@@ -192,4 +289,4 @@
             </table>
         </div>
     </div>
-</div>
+</div>-->

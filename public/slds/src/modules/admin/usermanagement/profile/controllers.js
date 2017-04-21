@@ -7,7 +7,7 @@ admin.controller('AdminUserManagementUsersProfileController',['$scope','$rootSco
             .success(function(response){
                 if(response.success){
                     $stateParams.layout = response.data.layouts;
-                    $scope.editTemplateUrl = 'views/admin/layout/edit.html';
+                    $scope.editTemplateUrl = 'slds/views/admin/layout/edit.html';
                     angular.extend(thisCtrl, $controller('AdminLayoutsEditController',{ $scope: $scope, $stateParams:$stateParams}))
                     $scope.returnToListEnable = "";
                 }

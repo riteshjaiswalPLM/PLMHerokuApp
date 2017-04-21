@@ -1,58 +1,83 @@
-<div class="col-md-12" block-ui="loadSalesforceConfiguration">
-    
-    <div class="page-header page-header-bleed-right">
-        <div class="actions pull-right">
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#setup"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">Setup</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ $root.title() }}">{{ $root.title() }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top"></div>
         </div>
-        <h1>{{ $root.title() }}</h1>
     </div>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="height: calc(100vh - 237px);">
+        <article class="slds-card slds-size--1-of-1">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-datadotcom slds-p-around--xx-small" title="description of icon when needed">
+                            <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#salesforce1"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2><span class="slds-text-heading--small">Salesforce Org Configuration</span></h2>
+                    </div>
+                </header>
+                <div class="slds-no-flex">
+                    <button type="submit" class="slds-button slds-button--neutral" ng-click="edit()" ng-bind-template="{{ (sfdc.username) ? 'Edit' : 'Configure' }}">Loading...</button>
+                </div>
+            </div>
+            <div class="slds-card__body slds-border--top slds-border--bottom" style="background: white;">
+                <div class="slds-size--1-of-1 slds-panel__section">
+                    <div class="slds-form--horizontal">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Username</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-input">{{ sfdc.username }}</label>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Password</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-input">{{ sfdc.password }}</label>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Token</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-input">{{ sfdc.token }}</label>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Environment</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-input">{{ sfdc.environment }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-card__footer slds-clearfix">
+                <span ng-if="sfdcOrgId" class="slds-badge slds-theme--success slds-float--left">
+                    <svg class="slds-icon slds-icon--x-small slds-icon-text-inverse" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#connected_apps"></use>
+                    </svg>Connected
+                </span>
+                <span ng-if="!sfdcOrgId" class="slds-badge slds-theme--error slds-float--left">Not connected</span>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Salesforce Org Configuration</h3>
-        </div>
-        <div class="panel-body">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Username</label>
-                    <div class="col-sm-4">
-                        <label class="col-sm-10 form-control">{{ sfdc.username }}</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Password</label>
-                    <div class="col-sm-4">
-                        <label class="col-sm-10 form-control">{{ sfdc.password }}</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Token</label>
-                    <div class="col-sm-4">
-                        <label class="col-sm-10 form-control">{{ sfdc.token }}</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Environment</label>
-                    <div class="col-sm-4">
-                        <label class="col-sm-10 form-control">{{ sfdc.environment }}</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary" ng-click="edit()" ng-bind-template="{{ (sfdc.username) ? 'Edit' : 'Configure' }}">Loading...</button>
-                        <!--<button type="submit" class="btn btn-default">Reset</button>-->
-                    </div>
-                </div>
-            </form>
-        </div>
+                <button ng-if="sfdcOrgId" type="submit" class="slds-button slds-button--destructive slds-section__title slds-float--right" ng-click="removeOrg()">Remove Salesforce Org</button>
+            </div>
+        </article>
     </div>
-    <div class="panel panel-danger" ng-if="sfdcOrgId">
-        <div class="panel-heading">
-            <h3 class="panel-title">Remove Salesforce Org Configuration</h3>
-        </div>
-        <div class="panel-body">
-            <strong>Removing salesforce configurations will erase all the configured data.</strong> <br/><br/>
-            <button type="submit" class="btn btn-danger btn-lg" ng-click="removeOrg()">Remove Salesforce Org</button>
-        </div>
-    </div>
-
 </div>

@@ -18,7 +18,7 @@
             </div>
             <div class="slds-col slds-no-flex slds-grid slds-align-top">
                 <div class="slds-button-group" role="group">
-                    <button class="slds-button slds-button--neutral" ng-click="returnToList()">
+                    <button ng-if="returnToListEnable === undefined" class="slds-button slds-button--neutral" ng-click="returnToList()">
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
                         </svg>
@@ -36,7 +36,7 @@
     </div>
 </div>
 <div class="slds-grid">
-    <div class="slds-col slds-size--3-of-12 slds-scrollable--y slds-border--right" style="height: calc(100vh - 200px);">
+    <div class="slds-col slds-size--3-of-12 slds-scrollable--y slds-border--right" style="height: calc(100vh - {{ (returnToListEnable === undefined) ? '200px' : '241px' }});">
         <slds-accordion>
             <h3 class="slds-align-middle slds-text-heading--small slds-border--top slds-p-horizontal--large slds-p-vertical--x-small slds-accordion-header slds-text-title--caps">
                 <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small" aria-hidden="true">
@@ -181,5 +181,5 @@
             </div>
         </slds-accordion>
     </div>
-    <div class="slds-col slds-size--9-of-12 slds-scrollable--y slds-p-around--small" style="height: calc(100vh - 200px);" ng-include="templateUrl"></div>
+    <div class="slds-col slds-size--9-of-12 slds-scrollable--y slds-p-around--small" style="height: calc(100vh - {{ (returnToListEnable === undefined) ? '200px' : '241px' }});" ng-include="templateUrl"></div>
 </div>

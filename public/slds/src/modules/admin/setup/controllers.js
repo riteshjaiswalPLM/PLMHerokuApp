@@ -30,7 +30,7 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
     };
     $scope.edit = function(){
         ModalService.showModal({
-            templateUrl: 'views/admin/setup/sfdc/edit.html',
+            templateUrl: 'slds/views/admin/setup/sfdc/edit.html',
             controller:'AdminSetupSfdcEditModalController',
             inputs:{
                 data: {
@@ -39,7 +39,7 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
                 }
             }
         }).then(function(modal){
-            modal.element.modal();
+            modal.element.modal({keyboard: false});
             modal.close.then(function(sfdc){
                 $scope.sfdc = sfdc;
                 location.reload(true);
@@ -52,7 +52,8 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
                 message: 'All information related to configured org will be deleted. \nAre you sure ?',
-                class:'danger'
+                class:'destructive',
+                headerClass: 'error'
             },function(confirm){
                 if(confirm){
                     $scope.blockUI.loadSalesforceConfiguration.start('Removing salesforce configuration...');
