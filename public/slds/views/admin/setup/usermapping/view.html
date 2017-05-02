@@ -1,160 +1,189 @@
-<style>
-    label.form-control {
-        margin-bottom: 0px;
-    }
-    .form-group > span,
-    .input-group > span{
-        margin-bottom: 0px;
-        padding-top: 3px;
-    }
-</style>
-<div class="col-md-12">
-    
-    <div class="page-header page-header-bleed-right">
-        <div class="actions pull-right">
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#user"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">Setup</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ $root.title() }}">{{ $root.title() }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <button ng-if="enableEdit === false" type="submit" class="slds-button slds-button--neutral" ng-click="edit(true)" ng-bind-template="{{ (usermapping.SObject) ? 'Edit' : 'Configure' }}">Loading...</button>
+                <button ng-if="enableEdit === true" type="submit" class="slds-button slds-button--neutral" ng-click="edit(false)" class="btn btn-default">Cancel</button>
+                <button ng-if="enableEdit === true" type="submit" class="slds-button slds-button--brand" ng-click="save()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"/>
+                    </svg>
+                    Save
+                </button>
+            </div>
         </div>
-        <h1>{{ $root.title() }}</h1>
     </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">User Mapping Configuration</h3>
-        </div>
-        <div class="panel-body" block-ui="loadSalesforceConfiguration">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">User SObject</label>
-                    <div class="input-group col-sm-3">
-                        <span ng-if="enableEdit === false">{{ usermapping.SObject.label }}</span>
-                        <input type="hidden" ng-model="usermapping.SObject">
-                        <input ng-if="enableEdit === true" type="text" class="col-sm-10 form-control" ng-model="usermapping.SObject.label" readonly />
-                        <div ng-if="enableEdit === true" class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openSObjectsLookup()">
-                                <i class="fa fa-search"></i>
-                            </button>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="height: calc(100vh - 237px);">
+        <article class="slds-card slds-size--1-of-1">
+            <div class=" slds-border--top slds-border--bottom" style="background: white;">
+                <div class="slds-size--1-of-1 slds-panel__section">
+                    <div class="slds-form--horizontal">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">User SObject</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.SObject.label }}</label>
+                                <input type="hidden" ng-model="usermapping.SObject">
+                                <div class="slds-grid slds-box--border"  ng-if="enableEdit === true"  >
+                                    <div class="slds-input-has-icon slds-grow">
+                                        <input readonly type="text" 
+                                            class="slds-lookup__search-input slds-input--bare" 
+                                            ng-model="usermapping.SObject.label" />
+                                    </div>
+                                    <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                        <button ng-click="openSObjectsLookup()" 
+                                            class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
+                                            aria-haspopup="true" 
+                                            title="Open lookup">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Open lookup</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Username field</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.UsernameField.label }}</label>
+                                <select ng-if="enableEdit === true && usermapping.UsernameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <select ng-if="enableEdit === true && !usermapping.UsernameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Firstname field</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.FirstnameField.label }}</label>
+                                <select ng-if="enableEdit === true && usermapping.FirstnameField.id" class="slds-select slds-p-horizontal--x-small"  ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <select ng-if="enableEdit === true && !usermapping.FirstnameField.id" class="slds-select slds-p-horizontal--x-small"  ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Lastname field</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.LastnameField.label }}</label>
+                                <select ng-if="enableEdit === true && usermapping.LastnameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <select ng-if="enableEdit === true && !usermapping.LastnameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Email field</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.EmailField.label }}</label>
+                                <select ng-if="enableEdit === true && usermapping.EmailField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <select ng-if="enableEdit === true && !usermapping.EmailField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'}">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Default role</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-text-body--regular" ng-if="enableEdit === false">{{ usermapping.DefaultRole.name }}</label>
+                                <div class="slds-grid slds-box--border"  ng-if="enableEdit === true"  >
+                                    <div class="slds-input-has-icon slds-grow">
+                                        <input readonly type="text" 
+                                            class="slds-lookup__search-input slds-input--bare" 
+                                            ng-model="usermapping.SObject.label" />
+                                    </div>
+                                    <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                        <button ng-click="openRolesLookup()" 
+                                            class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
+                                            aria-haspopup="true" 
+                                            title="Open lookup">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Open lookup</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Active criteria</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-text-body--regular" ng-if="enableEdit === false"><strong>{{ usermapping.activeCriteria.when.label + ' ' + usermapping.activeCriteria.operator + ' ' + usermapping.activeCriteria.value }}</strong></label>
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <!--<select ng-if="enableEdit === true && !usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                    <option value="">-- None --</option>
+                                </select>-->
+                                <span>&nbsp;</span>
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.operator" ng-options="opr.value as opr.label for opr in [{label: 'Equel to',value: '==='},{label: 'Not Equel to',value: '!=='}]">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <span>&nbsp;</span>
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when && usermapping.activeCriteria.when.type ==='picklist'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.value" 
+                                        ng-options="field.value as field.label for field in usermapping.activeCriteria.when.picklistValues">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <!--<select ng-if="enableEdit === true && usermapping.activeCriteria.when && usermapping.activeCriteria.when.type ==='boolean'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.value" 
+                                        ng-options="val.value as val.label for val in [{label: 'True',value: true},{label: 'False',value: false}]">
+                                    <option value="">-- None --</option>
+                                </select>-->
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Sync criteria</label>
+                            <div class="slds-form-element__control">
+                                <label class="slds-text-body--regular"  ng-if="enableEdit === false"><strong>{{ usermapping.syncCriteria.when.label + ' ' + usermapping.syncCriteria.operator + ' ' + usermapping.syncCriteria.value }}</strong></label>
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <!--<select ng-if="enableEdit === true && !usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                    <option value="">-- None --</option>
+                                </select>-->
+                                <span>&nbsp;</span>
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.operator" ng-options="opr.value as opr.label for opr in [{label: 'Equel to',value: '==='},{label: 'Not Equel to',value: '!=='}]">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <span>&nbsp;</span>
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when && usermapping.syncCriteria.when.type ==='picklist'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.value" 
+                                        ng-options="field.value as field.label for field in usermapping.syncCriteria.when.picklistValues">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <!--<select ng-if="enableEdit === true && usermapping.syncCriteria.when && usermapping.syncCriteria.when.type ==='boolean'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.value" 
+                                        ng-options="val.value as val.label for val in [{label: 'True',value: true},{label: 'False',value: false}]">
+                                    <option value="">-- None --</option>
+                                </select>-->
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Username field</label>
-                    <div class="col-sm-4">
-                        <span ng-if="enableEdit === false">{{ usermapping.UsernameField.label }}</span>
-                        <select ng-if="enableEdit === true && usermapping.UsernameField.id" pf-select ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && !usermapping.UsernameField.id" pf-select ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Firstname field</label>
-                    <div class="col-sm-4">
-                        <span ng-if="enableEdit === false">{{ usermapping.FirstnameField.label }}</span>
-                        <select ng-if="enableEdit === true && usermapping.FirstnameField.id" pf-select ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && !usermapping.FirstnameField.id" pf-select ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Lastname field</label>
-                    <div class="col-sm-4">
-                        <span ng-if="enableEdit === false">{{ usermapping.LastnameField.label }}</span>
-                        <select ng-if="enableEdit === true && usermapping.LastnameField.id" pf-select ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && !usermapping.LastnameField.id" pf-select ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Email field</label>
-                    <div class="col-sm-4">
-                        <span ng-if="enableEdit === false">{{ usermapping.EmailField.label }}</span>
-                        <select ng-if="enableEdit === true && usermapping.EmailField.id" pf-select ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'}">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && !usermapping.EmailField.id" pf-select ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'}">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Default role</label>
-                    <div class="input-group col-sm-3">
-                        <span ng-if="enableEdit === false">{{ usermapping.DefaultRole.name }}</span>
-                        <input type="hidden" ng-model="usermapping.DefaultRole">
-                        <input ng-if="enableEdit === true" type="text" class="col-sm-10 form-control" ng-model="usermapping.DefaultRole.name" readonly />
-                        <div ng-if="enableEdit === true" class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openRolesLookup()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Active criteria</label>
-                    <div class="col-sm-10">
-                        <span ng-if="enableEdit === false"><strong>{{ usermapping.activeCriteria.when.label + ' ' + usermapping.activeCriteria.operator + ' ' + usermapping.activeCriteria.value }}</strong></span>
-                        <select ng-if="enableEdit === true && usermapping.activeCriteria.when.id" pf-select ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && !usermapping.activeCriteria.when.id" pf-select ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
-                            <option value="">-- None --</option>
-                        </select>
-                        <span>&nbsp;</span>
-                        <select ng-if="enableEdit === true && usermapping.activeCriteria.when" pf-select ng-model="usermapping.activeCriteria.operator" ng-options="opr.value as opr.label for opr in [{label: 'Equel to',value: '==='},{label: 'Not Equel to',value: '!=='}]">
-                            <option value="">-- None --</option>
-                        </select>
-                        <span>&nbsp;</span>
-                        <select ng-if="enableEdit === true && usermapping.activeCriteria.when && usermapping.activeCriteria.when.type ==='picklist'" pf-select ng-model="usermapping.activeCriteria.value" 
-                                ng-options="field.value as field.label for field in usermapping.activeCriteria.when.picklistValues">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && usermapping.activeCriteria.when && usermapping.activeCriteria.when.type ==='boolean'" pf-select ng-model="usermapping.activeCriteria.value" 
-                                ng-options="val.value as val.label for val in [{label: 'True',value: true},{label: 'False',value: false}]">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Sync criteria</label>
-                    <div class="col-sm-10">
-                        <span ng-if="enableEdit === false"><strong>{{ usermapping.syncCriteria.when.label + ' ' + usermapping.syncCriteria.operator + ' ' + usermapping.syncCriteria.value }}</strong></span>
-                        <select ng-if="enableEdit === true && usermapping.syncCriteria.when.id" pf-select ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && !usermapping.syncCriteria.when.id" pf-select ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
-                            <option value="">-- None --</option>
-                        </select>
-                        <span>&nbsp;</span>
-                        <select ng-if="enableEdit === true && usermapping.syncCriteria.when" pf-select ng-model="usermapping.syncCriteria.operator" ng-options="opr.value as opr.label for opr in [{label: 'Equel to',value: '==='},{label: 'Not Equel to',value: '!=='}]">
-                            <option value="">-- None --</option>
-                        </select>
-                        <span>&nbsp;</span>
-                        <select ng-if="enableEdit === true && usermapping.syncCriteria.when && usermapping.syncCriteria.when.type ==='picklist'" pf-select ng-model="usermapping.syncCriteria.value" 
-                                ng-options="field.value as field.label for field in usermapping.syncCriteria.when.picklistValues">
-                            <option value="">-- None --</option>
-                        </select>
-                        <select ng-if="enableEdit === true && usermapping.syncCriteria.when && usermapping.syncCriteria.when.type ==='boolean'" pf-select ng-model="usermapping.syncCriteria.value" 
-                                ng-options="val.value as val.label for val in [{label: 'True',value: true},{label: 'False',value: false}]">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button ng-if="enableEdit === false" type="submit" class="btn btn-primary" ng-click="edit(true)" ng-bind-template="{{ (usermapping.SObject) ? 'Edit' : 'Configure' }}">Loading...</button>
-                        <button ng-if="enableEdit === true" type="submit" class="btn btn-primary" ng-click="save()">Save</button>
-                        <button ng-if="enableEdit === true" type="submit" ng-click="edit(false)" class="btn btn-default">Cancel</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+            </div>
+            
+        </article>
     </div>
-
 </div>

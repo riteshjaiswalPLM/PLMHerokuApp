@@ -3,7 +3,7 @@
                 type="number"
                 ng-model="model[field.SObjectField.name]"
                 is-double 
-                class="form-control" 
+                class="slds-input" 
                 ng-required="field.required"
                 ng-if="!readonly"/>
         <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | number: 2"></span>

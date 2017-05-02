@@ -1,63 +1,127 @@
-<div class="col-md-12">
-    
-    <div class="page-header page-header-bleed-right">
-        <div class="actions pull-right">
-            <button class="btn btn-primary" type="button" ng-click="openLanguagesLookup();"><i class="fa fa-plus"></i> Create Language</button>
-        </div>
-        <h1><i class="fa fa-language"></i> {{ $root.title() }}</h1>
-    </div>
-
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <i class="fa fa-language"></i> Languages
-                <div class="actions pull-right">
-                    <input class="form-control" ng-model="languagesFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#world"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() }}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="All Languages">All Languages</h1>
+                    </div>
                 </div>
-            </h3>
-        </div>
-        <div class="panel-body" block-ui="loadLanguages" style="height:400px;overflow: auto;padding:0px;">
-            <table class="table table-striped table-hover table-bordered" ng-if="languages.length > 0" style="margin-bottom:0px;">
-                <thead>
-                    <tr>
-                        <th>Language Name</th>
-                        <th>Language Code</th>
-                        <th>Default</th>
-                        <th style="text-align: center;width: 50px;">Active</th>
-                        <th style="text-align: center;width: 150px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="language in languages | filter: languagesFilter" ng-dblclick="edit(language)">
-                        <td>{{ language.name }}</td>
-                        <td>{{ language.code }}</td>
-                        <td style="text-align: center;"><i ng-class="{'fa fa-check' : language.default }"></i></td>
-                        <td style="text-align: center;">
-                            <input type="checkbox" bs-switch class="bootstrap-switch" switch-change="changeActive(language)" switch-size="mini" switch-on-text="True" switch-off-text="False" ng-model="language.active">
-                        </td>
-                        <td style="text-align: center;">
-                            <div class="dropdown">
-                                <button class="btn btn-xs btn-primary dropdown-toggle" type="button" id="actionMenu_{{layout.SObject.name}}_{{$index}}" data-toggle="dropdown">
-                                    Actions <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="actionMenu_{{language.name}}_{{$index}}">
-                                    <li role="presentation"><a href="#" role="menuitem" tabindex="-1" ng-click="edit(language)"><i class="pficon-edit"></i> Edit</a></li>
-                                    <li role="presentation"><a href="#" role="menuitem" tabindex="-1" ng-if="language.code !== 'en'" ng-click="deleteLanguage(language)"><i class="pficon-delete"></i> Delete</a></li>
-                                    <li role="presentation" class="divider"></li>
-                                    <li role="presentation" ng-class="{'disabled': language.default}"><a href="#" role="menuitem" tabindex="-1" ng-click="markAsDefault(language)" ><i class="fa fa-check"></i> Mark as default</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="blank-slate-pf" ng-if="languages.length === 0" style="margin-bottom: 0px;height: 100%">
-                <div class="blank-slate-pf-icon">
-                    <span class="pficon pficon-add-circle-o"></span>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand" ng-click="openLanguagesLookup()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                        </svg>
+                        Create Language
+                    </button>
                 </div>
-                <h1>No language configured.</h1>
-                <p>Click <a href="" ng-click="edit()"><strong>Create language</strong></a> to configure new <strong>language</strong>.</p>
             </div>
         </div>
+        <div class="slds-grid">
+            <div class="slds-col slds-align-bottom">
+                <p class="slds-text-body--small">Total <span ng-bind-template="{{$root.filteredLanguages.length}}">0</span> item(s).</p>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-bottom">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        <input type="text" class="slds-input" placeholder="Search languages..." ng-model="languagesFilter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-scrollable--y" block-ui="loadLanguages" style="height: calc(100vh - 228px);">
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: calc(100vh - 260px);">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Language Name">Language Name</div>
+                    </th>
+                    <th scope="col" style="width: 150px;">
+                        <div class="slds-truncate" title="Language Code">Language Code</div>
+                    </th>
+                    <th scope="col" style="text-align: center; width: 50px;">
+                        <div class="slds-truncate" title="Default">Default</div>
+                    </th>
+                    <th scope="col" style="text-align: center; width: 50px;">
+                        <div class="slds-truncate" title="Active">Active</div>
+                    </th>
+                   
+                    <th scope="col" style="text-align: center;width: 100px;">
+                        <div class="slds-truncate" title="Actions">Actions</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="$root.filteredLanguages.length === 0 && layouts.length > 0 && languagesFilter">
+                    <td colspan="6" class="slds-blank-slate">
+                        <h1>No Layout found for search criteria.</h1>
+                    </td>
+                </tr>
+                <tr ng-if="layouts.length === 0">
+                    <td colspan="6" class="slds-blank-slate">
+                        <h1>No Language configured.</h1>
+                        <p>Click <a href="" ng-click="openLanguagesLookup()"><strong>Create Language</strong></a> to configured new <strong>Language</strong>.</p>
+                    </td>
+                </tr>
+                <tr ng-repeat="language in $root.filteredLanguages = (languages | filter: languagesFilter)">
+                    <td data-label="Language Name">
+                        <div class="slds-truncate" title="{{ language.name }}">{{ language.name }}</div>
+                    </td>
+                    <td data-label="Language Code">
+                        <div class="slds-truncate" title="{{ language.code }}">{{ language.code }}</div>
+                    </td>
+                    <td data-label="Default" style="text-align: center;">
+                        <div class="slds-truncate">
+                            <svg class="slds-button__icon slds-button__icon--left" ng-if="language.default" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                        </div>
+                    </td>
+                    <td data-label="Active">
+                        <div class="slds-truncate slds-align--absolute-center">
+                            <slds-switch ng-model="language.active" switch-change="changeActive(language)" show-texts="false"/>
+                        </div>
+                    </td>
+                    <td data-label="Actions">
+                        <div class="slds-truncate slds-align--absolute-center" >
+                            <div class="slds-button-group" role="group">
+                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="edit(language)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#edit"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Edit</span>
+                                </button>
+                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-if="language.code !== 'en'" ng-click="deleteLanguage(language)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="markAsDefault(language)" ng-disabled="layout.default">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Mark as default</span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

@@ -1,108 +1,80 @@
-<div class="panel-group" id="accordion-markup" >
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion-markup" href="#dashboardComponentContainers">
-                    Containers 
-                </a>
-            </h4>
-        </div>
-        <div id="dashboardComponentContainers" class="panel-collapse collapse in">
-            <div class="panel-body" style="overflow-x: auto;background-color: white;">
-                <ul class="nav nav-pills nav-stacked">
-                    <li dnd-draggable="container" dnd-effect-allowed="copy" draggable="true" dnd-type="'ClientDashbordContainer'" ng-repeat="container in containers | orderBy: 'label'">
-                        <a href="" class="draggable-item"><i></i>{{ container.title }}</a>
-                    </li>
-                </ul>
+<slds-accordion>
+    <h3 class="slds-align-middle slds-text-heading--small slds-border--top slds-p-horizontal--large slds-p-vertical--x-small slds-accordion-header slds-text-title--caps">
+        <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small" aria-hidden="true">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#builder"></use>
+        </svg>
+        Containers
+    </h3>
+    <div class="slds-grid slds-grid--vertical slds-accordion-item" >
+        <div class="slds-p-left--x-small slds-p-right--x-small slds-p-bottom--x-small slds-p-top--xx-small slds-shrink-none slds-theme--shade slds-has-divider--bottom">
+            <div class="slds-form-element__control">
+                <div class="slds-input-has-icon slds-input-has-icon--left">
+                    <svg class="slds-input__icon" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                    </svg>
+                    <input id="fieldSearch" type="text" class="slds-lookup__search-input slds-input" placeholder="Search..." ng-model="containerFilter">
+                </div>
             </div>
+        </div>
+        <div class="slds-p-horizontal--xx-small slds-scrollable-y">
+            <ul>
+                <li ng-repeat="container in filteredLayoutSObjectFields = (containers | filter:{title:containerFilter} |orderBy: 'label')">
+                    <a href="javascript:void(0);" dnd-draggable="container" dnd-effect-allowed="copy" draggable="true" dnd-type="'ClientDashbordContainer'" class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                        <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
+                            <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-4">
+                                <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#builder"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-app-launcher__tile-body">
+                            <span class="slds-text-link">{{ container.title }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="slds-blank-slate slds-p-around--x-small slds-m-top--xx-small" ng-if="filteredLayoutSObjectFields.length === 0" >
+                    No container exist.
+                </li>
+            </ul>
         </div>
     </div>
-    <div class="panel panel-default" ng-if="components">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion-markup" href="#clientDashboardMyTaskComponents" class="collapsed">
-                    My Task Components
-                </a>
-            </h4>
-        </div>
-        <div id="clientDashboardMyTaskComponents" class="panel-collapse collapse">
-            <div class="panel-body" style="max-height: 400px;overflow-x: auto;background-color: white;">
-                <ul class="nav nav-pills nav-stacked">
-                    <li dnd-draggable="component" 
-                        dnd-effect-allowed="copy" 
-                        draggable="true" 
-                        dnd-type="'ClientDashbordMyTaskContainerComponent'" 
-                        ng-repeat="component in components | filter: { catagory : 'DashboardMyTask'} ">
-                        <a href="" class="draggable-item"><i></i>{{ component.title }}</a>
-                    </li>
-                </ul>
+    <h3 ng-if="components" class="slds-align-middle slds-text-heading--small slds-border--top slds-p-horizontal--large slds-p-vertical--x-small slds-accordion-header slds-text-title--caps">
+        <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small" aria-hidden="true">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#apps"></use>
+        </svg>
+        My Task Components
+    </h3>
+    <div ng-if="components" class="slds-grid slds-grid--vertical slds-accordion-item">
+        <div class="slds-p-left--x-small slds-p-right--x-small slds-p-bottom--x-small slds-p-top--xx-small slds-shrink-none slds-theme--shade slds-has-divider--bottom">
+            <div class="slds-form-element__control">
+                <div class="slds-input-has-icon slds-input-has-icon--left">
+                    <svg class="slds-input__icon" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                    </svg>
+                    <input type="text" class="slds-lookup__search-input slds-input" placeholder="Search..." ng-model="componentFilter">
+                </div>
             </div>
+        </div>
+        <div class="slds-p-horizontal--xx-small slds-scrollable-y">
+            <ul>
+                <li ng-repeat="component in filteredComponents = (components |filter: { catagory : 'DashboardMyTask',title:componentFilter})">
+                    <a href="javascript:void(0);" dnd-draggable="component" dnd-effect-allowed="copy" draggable="true" dnd-type="'ClientDashbordMyTaskContainerComponent'" class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                        <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
+                            <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-7">
+                                <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#apps"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-app-launcher__tile-body">
+                            <span class="slds-text-link">{{ component.title }}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="slds-blank-slate slds-p-around--x-small slds-m-top--xx-small" ng-if="filteredComponents.length === 0" >
+                    No component found .
+                </li>
+            </ul>
         </div>
     </div>
-    <!--<div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion-markup" href="#clientDashboardChartComponents" class="collapsed">
-                    Chart Components
-                </a>
-            </h4>
-        </div>
-        <div id="clientDashboardChartComponents" class="panel-collapse collapse">
-            <div class="panel-body" style="max-height: 400px;overflow-x: auto;background-color: white;">
-                <ul class="nav nav-pills nav-stacked">
-                    <li dnd-draggable="component" 
-                        dnd-effect-allowed="copy" 
-                        draggable="true" 
-                        dnd-type="'layoutSection'" 
-                        ng-repeat="component in components()">
-                        <a href="" class="draggable-item"><i></i>{{ 'component.title' }}</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>-->
-    <!--<div class="panel panel-default" ng-if="layout.type === 'Edit' || layout.type === 'Details'">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion-markup" href="#layoutRelatedLists" class="collapsed">
-                    Related Lists
-                </a>
-            </h4>
-        </div>
-        <div id="layoutRelatedLists" class="panel-collapse collapse" block-ui="childSObjects">
-            <div class="panel-body" style="max-height: 400px; overflow-x: auto; background-color: white;">
-                <ul class="nav nav-pills nav-stacked">
-                    <li ng-repeat="relatedList in layoutRelatedLists"
-                        dnd-draggable="relatedList"
-                        dnd-effect-allowed="copy"
-                        draggable="true"
-                        dnd-type="'relatedList'">
-                        <a href="" class="draggable-item"><i></i>{{ relatedList.title }}</a>
-                    </li>
-                </ul>
-                <span ng-if="layoutRelatedLists.length === 0" style="color: red;">No Related list found!</span>
-            </div>
-        </div>
-    </div>-->
-    <!--<div class="panel panel-default" ng-if="widgetsValues" block-ui="widgets">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion-markup" href="#layoutWidgets" class="collapsed">
-                    Widgets
-                </a>
-            </h4>
-        </div>
-        <div id="layoutWidgets" class="panel-collapse collapse">
-            <div class="panel-body" style="max-height: 400px;overflow-x: auto;background-color: white;">
-                <ul class="nav nav-pills nav-stacked">
-                    <li ng-repeat="widgetValue in widgetsValues"
-                        dnd-draggable="widgetValue"
-                        dnd-effect-allowed="copy"
-                        draggable="true"
-                        dnd-type="'layoutSection'">
-                        <a href="" class="draggable-item"><i></i>{{ widgetValue.title }}</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>-->
-</div>
+<slds-accordion>

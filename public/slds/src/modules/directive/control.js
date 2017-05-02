@@ -797,7 +797,7 @@ ng.directive('component', function($controller){
             ctrl: "=",
             type: "@"
         },
-        template: '<div ng-include="getTemplateURL()"></div>',
+        template: '<div class="slds-size--1-of-1" ng-include="getTemplateURL()"></div>',
         controller: function($scope){
             if($scope.section.Component.catagory){
                 if($scope.section.Component.catagory == 'UploadAttachment'){

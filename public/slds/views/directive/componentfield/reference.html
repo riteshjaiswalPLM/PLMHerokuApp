@@ -1,4 +1,4 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+<!--<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
     <div class="input-group" ng-if="!readonly">
         <input  type="hidden" 
                 ng-model="model[field.SObjectField.name]">
@@ -13,4 +13,26 @@
         </div>
     </div>
     <span ng-if="readonly" ng-bind="model[field.SObjectField.relationshipName][field.reference]"></span>
+</div>-->
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+    <div class="slds-grid slds-box--border" ng-if="!readonly">
+        <div class="slds-input-has-icon slds-grow">
+            <input type="hidden" ng-model="model[field.SObjectField.name]">
+            <input readonly type="text" id="{{ field.SObjectField.name + index}}" 
+                class="slds-lookup__search-input slds-input--bare" 
+                ng-model="model[field.SObjectField.relationshipName][field.reference]" />
+        </div>
+        <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+            <button ng-click="openLookup()" 
+                class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
+                aria-haspopup="true" 
+                title="Open lookup">
+                <svg class="slds-button__icon" aria-hidden="true">
+                    <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                </svg>
+                <span class="slds-assistive-text">Open lookup</span>
+            </button>
+        </div>
+    </div>
+    <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="model[field.SObjectField.relationshipName][field.reference]"></label>
 </div>

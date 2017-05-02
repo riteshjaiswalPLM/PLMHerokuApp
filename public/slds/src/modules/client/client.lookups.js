@@ -83,7 +83,7 @@ clientLookup.factory('$clientLookups',['ModalService',function(ModalService){
     return {
         attachment: function(data, callback){
             ModalService.showModal({
-                templateUrl: 'views/client/layout/component/upattachmentmodal.html',
+                templateUrl: 'slds/views/client/layout/component/upattachmentmodal.html',
                 controller:'UploadAttachmentModalController',
                 inputs:{
                     data: data  

@@ -1,30 +1,32 @@
 <div ng-if="type === 'create'">
-	<div class="col-md-12" block-ui="AttachmentBlock"> 
-	<div class="col-md-12" >
-		<div class="col-md-{{allowAttachPrime ? 6 : 12}}">
-			<form class="form-horizontal">
-				<div class="form-group" style="margin-bottom: -8px;">
-					<label class="col-md-{{allowAttachPrime ? 5 : 6}} control-label" for="selectFile">Select the File to be attached</label>
-					<div class="input-group col-md-{{allowAttachPrime ? 7 : 6}}">
+	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:150px"> 
+	<div class="slds-grid" >
+		<div class="slds-size--1-of-{{allowAttachPrime ? 2 : 1}}">
+			<form class="slds-form--horizontal slds-p-horizontal--x-small">
+				<div class="slds-form-element" >
+					<label class="slds-form-element__label slds-form-element__label" style="font-weight: 600;float: none;" for="selectFile">Select the File to be attached</label>
+					<div class="slds-form-element__control slds-p-left--small">
 						<span 	id 				="selectFile"
 								data-ng-show	= "!primaryDoc.primaryDocument"
-								class		    = "btn btn-primary fileinput-button dz-clickable" 
+								class		    = "slds-button slds-button--brand" 
 								name		    = "file"
 								enctype		    = "multipart/form-data"
 								data-ngf-select	= "selectFile($files, $invalidFiles)"
 								ngf-max-size    = "{{allowedSize}}MB"
 								accept		    = "{{allowedExt}}"
+								style="cursor: pointer;"
 								multiple>
 								<span>Add </span><i class="pficon-file"></i> 
 						</span>
 						<span 	id 				="selectFile" 	
 								data-ng-show	= "primaryDoc.primaryDocument"
-								class		    = "btn btn-primary fileinput-button dz-clickable" 
+								class		    = "slds-button slds-button--brand" 
 								name		    = "file"
 								enctype		    = "multipart/form-data"
 								data-ngf-select	= "selectFile($files, $invalidFiles)"
 								ngf-max-size    = "{{allowedSize}}MB"
 								accept		    = "{{allowedExtForPrime}}"
+								style="cursor: pointer;    margin-left: 0px;"
 								single>
 								<span>Add </span><i class="pficon-file"></i>
 						</span> 
@@ -32,72 +34,82 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-md-6">
-			<form class="form-horizontal">
-				<div class="form-group">
-					<label data-ng-show="allowAttachPrime" class="col-md-5 control-label" for="uploadPrimary">Upload Primary Document</label>
-					<div class="input-group col-md-7">
-						<input id="uploadPrimary" data-ng-show="allowAttachPrime" type="checkbox" ng-model="primaryDoc.primaryDocument" data-ng-click="primaryDocumentClicked(primaryDoc.primaryDocument);" data-ng-disabled="disablePrimaryDocuent" tooltip="Primary Document">
+		<div class="slds-size--1-of-{{allowAttachPrime ? 2 : 1}}">
+			<form class="slds-form--horizontal slds-p-horizontal--x-small">
+				<div class="slds-form-element">
+					<label data-ng-show="allowAttachPrime" class="slds-form-element__label " style="font-weight: 600;float: none;" for="uploadPrimary">Upload Primary Document</label>
+					<div class="slds-form-element__control slds-p-left--small" data-ng-show="allowAttachPrime" >
+						<!--<span class="slds-checkbox">
+							<input type="checkbox" data-ng-show="allowAttachPrime"  id="uploadPrimary" ng-model="primaryDoc.primaryDocument" data-ng-click="primaryDocumentClicked(primaryDoc.primaryDocument);" data-ng-disabled="disablePrimaryDocuent"/>
+						</span>-->
+						<span class="slds-checkbox">
+							<input type="checkbox" name="options" id="uploadPrimary" ng-model="primaryDoc.primaryDocument" data-ng-click="primaryDocumentClicked(primaryDoc.primaryDocument);" data-ng-disabled="disablePrimaryDocuent" />
+							<label class="slds-checkbox__label" for="uploadPrimary" style="width: 0px;height:0px;">
+								<span class="slds-checkbox--faux" style="margin:0px"></span>
+								<span class="slds-form-element__label"></span>
+							</label>
+						</span>
+						<!--<input id="uploadPrimary" data-ng-show="allowAttachPrime" type="checkbox" ng-model="primaryDoc.primaryDocument" data-ng-click="primaryDocumentClicked(primaryDoc.primaryDocument);" data-ng-disabled="disablePrimaryDocuent" tooltip="Primary Document">-->
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
-	<div class="col-md-12">
-		<form class="form-horizontal">
-			<div class="form-group" style="margin-bottom: 5px;text-align: left;color:red;">
-				<label style="text-align: center;" data-ng-show="!primaryDoc.primaryDocument" class="col-md-11 control-label">{{ allowedExt }} format are supported.</label>
-				<label style="text-align: center;" data-ng-show="primaryDoc.primaryDocument" class="col-md-11 control-label">{{ allowedExtForPrime }} format are supported.</label>
+	<div class="slds-col slds-size--1-of-1">
+		<form class="slds-form--horizontal">
+			<div class="slds-form-element" style="margin-bottom: 5px;text-align: center;color:red;">
+				<label style="text-align: center;" data-ng-show="!primaryDoc.primaryDocument" class="">{{ allowedExt }} format are supported.</label>
+				<label style="text-align: center;" data-ng-show="primaryDoc.primaryDocument" class="">{{ allowedExtForPrime }} format are supported.</label>
 			</div>
 		</form>
 	</div>
-	<div class="col-md-12">
-		<form class="form-horizontal">
-			<div class="form-group">
-				<label style="text-align: center;" class="col-md-11 control-label">Note : Please limit your files to a maximum of {{allowedSize}}MB in size.</label>
+	<div class="slds-col slds-size--1-of-1">
+		<form class="slds-form--horizontal">
+			<div style="text-align: center;">
+				<label  class="">Note : Please limit your files to a maximum of {{allowedSize}}MB in size.</label>
 			</div>
 		</form>
 	</div>
-	<div class="col-md-12">
-		<form class="form-horizontal">
-			<div class="form-group">
+	<div class="slds-col slds-size--1-of-1">
+		<form class="">
+			<div class="">
 				<div class="panel panel-default" style="margin-bottom: -8px;">
-					<div class="panel-heading">
-						<h3 class="panel-title">Attachment Section</h3>
+					<div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+						<h3 class="">Attachment Section</h3>
 					</div>
-					<div class="panel-body row" ng-if="files" data-ng-show="files.length > 0">
-						<div class="col-md-12">
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label style="text-align: center;" class="col-md-2 panel-title"></label>
-									<label style="text-align: center;" class="col-md-4 panel-title">File</label>
-									<label style="text-align: center;" class="col-md-4 panel-title">Size in Bytes</label>
-									<label style="text-align: center;" class="col-md-2 panel-title">Upload</label>
-								</div>
-							</form>
-						</div>
-						<div data-ng-model="files" class="col-md-12" data-ng-repeat="file in files">
-							<form class="form-horizontal">
-								<div class="form-group" style="margin-bottom: 0px;">
-									<label style="text-align: center;" class="col-md-2"><a href="" data-ng-click="deleteFile(file)">delete</a></label>
-									<label style="text-align: center;" class="col-md-4">{{file.name}}</label>
-									<label style="text-align: center;" class="col-md-4">{{file.size}}</label>
-									<label style="text-align: center;" class="col-md-2">
-										<a href="" ng-show="!file.isPersisted" data-ng-click="attachFiles(file)" class ="btn btn-success fileinput-button dz-clickable">Upload</a> 
-										<label data-ng-if="primaryFileName == file.name" style="margin-bottom: 0;">Primary Document</label>
-									</label>
-								</div>
-							</form>
-						</div>
+					<div class="slds-panel__section slds-grid slds-border--bottom" ng-if="files" data-ng-show="files.length > 0">
+						<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
+							<thead>
+								<tr class="slds-text-title--caps">
+									<th  title=""></th>
+									<th  title="File">File</th>
+									<th  title="Size in Bytes">Size in Bytes</th>
+									<th  title="Upload">Upload</th>
+								</tr>
+							</thead>
+							<tbody >
+								<tr ng-repeat="file in files ">
+									<td class="slds-truncate" data-label="Delete"  title=""><a href="" data-ng-click="deleteFile(file)">delete</a></td>
+									<td class="slds-truncate" data-label="File"  title="{{file.name}}"><strong>{{ file.name }}</strong></td>
+									<td class="slds-truncate" data-label="Size in Bytes"   title="{{ file.size }}">{{file.size}}</td>
+									<td data-label="Upload" >
+										<!--<a href="" ng-show="!file.isPersisted" data-ng-click="attachFiles(file)" class ="btn btn-success fileinput-button dz-clickable">Upload</a> 
+										<label data-ng-if="primaryFileName == file.name" style="margin-bottom: 0;">Primary Document</label>-->
+										<button ng-show="!file.isPersisted"  class="slds-button slds-button--brand" type="button" ng-click="attachFiles(file)">
+											<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+												<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"/>
+											</svg>
+											Upload
+										</button>
+										<label class="slds-form-element__label " data-ng-if="primaryFileName == file.name" style="margin-bottom: 0;font-weight: 600;float: none;">Primary Document</label>
+										<!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<div class="panel-body row" ng-if="files" data-ng-show="files.length == 0">
-						<div class="col-md-12">
-							<form class="form-horizontal">
-								<div class="form-group" style="margin-bottom: -10px;margin-top: 0px;">
-									<label style="text-align: center;" class="col-md-11 control-label">No attachment found.</label>
-								</div>
-							</form>
-						</div>
+					<div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="files" data-ng-show="files.length == 0">
+							<strong>No attachment found.</strong>
 					</div>
 				</div>
 			</div>
@@ -106,95 +118,68 @@
 	</div>
 </div>
 <div ng-if="type !== 'create'" >
-	<div class="col-md-12" block-ui="AttachmentBlock"> 
-	<div class="col-md-9" >
-		<form class="form-horizontal">
-			<div class="form-group">
-					<center>
-						<button type="button" class="btn btn-primary" ng-disabled="type === 'detail'" ng-click="openAttachmentLookup()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>
-					</center>
-				<!--<button type="button" class="btn btn-primary" ng-show="allowAddAttach == 'true'" ng-click="showUploadAttachmentModal()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
-			</div>
-		</form>
-	</div>
-	<div class="col-md-12">
-		<form class="form-horizontal">
-			<div class="form-group">
-				<div class="panel panel-default" style="margin-bottom: -8px;">
-					<div class="panel-heading">
-						<h3 class="panel-title">Attachments</h3>
-					</div>
-					<div class="panel-body row" ng-if="attachments" data-ng-show="attachments.length > 0">
-						<div class="col-md-12">
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label style="text-align: center;" class="col-md-2 panel-title">Title</label>
-									<label style="text-align: center;" class="col-md-4 panel-title">Size</label>
-									<label style="text-align: center;" class="col-md-4 panel-title">Description</label>
-									<label style="text-align: center;" class="col-md-2 panel-title">Download</label>
-								</div>
-							</form>
+	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:150px"> 
+		<div class="slds-col slds-size--1-of-1" >
+			<form class="slds-form--horizontal">
+				<div class="slds-form-element">
+						<center>
+							<!--<button type="button" class="btn btn-primary" ng-disabled="type === 'detail'" ng-click="openAttachmentLookup()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
+							<button class="slds-button slds-button--brand" ng-if="type !== 'detail'" type="button" ng-click="openAttachmentLookup()">
+								<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#file"/>
+								</svg>
+								Attach File
+							</button>
+						</center>
+					<!--<button type="button" class="btn btn-primary" ng-show="allowAddAttach == 'true'" ng-click="showUploadAttachmentModal()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
+				</div>
+			</form>
+		</div>
+		<div class="slds-col slds-size--1-of-1">
+			<form class="slds-form--horizontal">
+				<div class="slds-form-element">
+					<div class="panel panel-default" style="margin-bottom: -8px;">
+						<!--<div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+							<h3 >Attachments</h3>
+						</div>-->
+						<div class="slds-panel__section slds-grid slds-border--bottom" ng-if="attachments" data-ng-show="attachments.length > 0">
+							<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
+								<thead>
+									<tr class="slds-text-title--caps">
+										<th  title="Title">Title</th>
+										<th  title="Size">Size</th>
+										<th  title="Description">Description</th>
+										<th style="text-align:center;width:100px;"  title="Download">Download</th>
+									</tr>
+								</thead>
+								<tbody >
+									<tr ng-repeat="attachment in attachments ">
+										<td class="slds-truncate" data-label="Title"  title="{{attachment.Name}}"><strong>{{ attachment.Name }}</strong></td>
+										<td class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.BodyLength/1024 | number : 2}} KB</td>
+										<td class="slds-truncate" data-label="Description"   title="{{ sObj.name }}">{{attachment.Description}}</td>
+										<td data-label="Download" >
+											<div class="slds-truncate slds-align--absolute-center" >
+												<div class="slds-button-group" role="group">
+													<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="getFileData($root.encodeURI(attachment.Name),attachment.Body)" >
+														<svg class="slds-button__icon" aria-hidden="true">
+															<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
+														</svg>
+														<span class="slds-assistive-text">Download</span>
+													</button>
+												</div>
+											</div>
+											<!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
-						<div data-ng-model="attachments" class="col-md-12" data-ng-repeat="attachment in attachments">
-							<form class="form-horizontal">
-								<div class="form-group" style="margin-bottom: 0px;">
-									<label style="text-align: center;" class="col-md-2">{{attachment.Name}}</label>
-									<label style="text-align: center;" class="col-md-4">{{attachment.BodyLength/1024 | number : 2}} KB</label>
-									<label style="text-align: center;" class="col-md-4">{{attachment.Description}}</label>
-									<label style="text-align: center;" class="col-md-2">
-										<a class="btn btn-primary" ng-click="getFileData($root.encodeURI(attachment.Name),attachment.Body)">
-											<i class="icon-large pficon-save"></i>
-										</a>
-									</label>
-								</div>
-							</form>
-						</div>
-					</div>
-					<div class="panel-body row" ng-if="attachments" data-ng-show="attachments.length == 0">
-						<div class="col-md-12">
-							<form class="form-horizontal">
-								<div class="form-group" style="margin-bottom: 0px;margin-top: -10px;">
-									<label style="text-align: center;" class="col-md-11 control-label">No attachment found.</label>
-								</div>
-							</form>
+						<div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="attachments" data-ng-show="attachments.length == 0">
+								<strong>No attachment found.</strong>
 						</div>
 					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
-	</div>
-	<!--<table class="table table-spriped table-condensed">
-		<tr>
-			<th>Title</th>
-			<th>Size</th>
-			<th>Description</th>
-			<th style="text-align: center;">Download</th>
-
-		</tr>
-		<tr ng-repeat="note in model.notesDetails">
-			<td>{{ $root.showValue(note.allFields.Title) }}</td>
-			<td>-</td>
-			<td>-</td>
-			<td style="text-align: center;"><button type="button"
-					ng-click="showNoteModal(note.id.idStr)" class="btn btn-primary">
-					<i class="icon icon-eye-open"></i>
-				</button></td>
-
-
-		</tr>
-		<tr ng-repeat="attachment in model.attachmentsDetails">
-			<td>{{ $root.showValue(attachment.allFields.Name) }}</td>
-			<td>{{ $root.showValue(attachment.allFields.BodyLength/1024) |
-				number : 2}} KB</td>
-			<td>{{ $root.showValue(attachment.allFields.Description) }}</td>
-			<td style="text-align: center;"><a class="btn btn-primary"
-				href="rest/notesAndAttachments/viewAttachment?name={{$root.encodeURI(attachment.allFields.Name)}}&body={{attachment.allFields.Body}}">
-					<i class="icon-large icon-download-alt"></i>
-			</a></td>
-
-
-		</tr>
-
-	</table>-->
 </div>

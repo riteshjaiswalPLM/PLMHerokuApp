@@ -28,8 +28,8 @@
             </div>
         </div>
     </div>
-    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y" style="height: calc(100vh - 156px);">
-        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small">
+    <div class="slds-grid slds-panel slds-wrap " style="height: calc(100vh - 156px);">
+        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y">
             <div class="slds-form--stacked slds-grow">
                 <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
                     <h3>{{'Search Criteria' | translate}}</h3>
@@ -84,51 +84,62 @@
                         </button>
                     </div>
                 </div>
-                <div block-ui="searchResultBlock" style="min-height: 200px;">
-                    <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
-                        <thead>
-                            <tr class="slds-text-title--caps">
-                                <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
-                                    ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
-                                    ng-click="applyOrderBy(field)" 
-                                    ng-repeat="field in searchResultFields" >
-                                    <div class="slds-truncate" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
-                                </th>
-                                <th scope="col" ng-if="recordActions && recordActions.length > 0" style="width:150px;" class="th-actions"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                                <td class="{{ 'td-'+field.SObjectField.type }}" 
-                                    ng-repeat="field in searchResultFields">
-                                    <div class="slds-truncate">
-                                    {{ (field.SObjectField.type === 'reference') 
-                                        ? result[field.SObjectField.relationshipName][field.reference] 
-                                        : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
-                                            ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
-                                            : (field.SObjectField.type === 'date') 
-                                                ? (result[field.SObjectField.name] | date: 'mediumDate')
-                                                : (field.SObjectField.type === 'datetime')
-                                                    ? (result[field.SObjectField.name] | date: 'medium')
-                                                    : result[field.SObjectField.name] }}</div></td>
-                                <td ng-if="recordActions && recordActions.length > 0" class="td-actions" >
-                                    <div class="slds-truncate slds-align--absolute-center" >
-                                        <div class="slds-button-group" role="group">
-                                            <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
-                                                <svg class="slds-button__icon" aria-hidden="true">
-                                                    <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
-                                                </svg>
-                                                <span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>      
-                </div>              
+                            
             </div>
         </div>
+        <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="min-height: 200px;">
+            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th style="max-width:200px"  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
+                            ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                            ng-click="applyOrderBy(field)" 
+                            ng-repeat="field in searchResultFields" >
+                            <div class="slds-truncate" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
+                        </th>
+                        <th scope="col" ng-if="recordActions && recordActions.length > 0" style="min-width:150px;" class="th-actions"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                        <td style="max-width:200px" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                            title="{{ (field.SObjectField.type === 'reference') 
+                                ? result[field.SObjectField.relationshipName][field.reference] 
+                                : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                    ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                    : (field.SObjectField.type === 'date') 
+                                        ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                        : (field.SObjectField.type === 'datetime')
+                                            ? (result[field.SObjectField.name] | date: 'medium')
+                                            : result[field.SObjectField.name] }}" 
+                             class="{{ 'td-'+field.SObjectField.type }}" 
+                            ng-repeat="field in searchResultFields">
+                            <div class="slds-truncate">
+                            {{ (field.SObjectField.type === 'reference') 
+                                ? result[field.SObjectField.relationshipName][field.reference] 
+                                : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                    ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                    : (field.SObjectField.type === 'date') 
+                                        ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                        : (field.SObjectField.type === 'datetime')
+                                            ? (result[field.SObjectField.name] | date: 'medium')
+                                            : result[field.SObjectField.name] }}</div></td>
+                        <td ng-if="recordActions && recordActions.length > 0" class="td-actions" >
+                            <div class="slds-truncate slds-align--absolute-center" >
+                                <div class="slds-button-group" role="group">
+                                    <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>      
+        </div>  
         
     </div>
 </div>

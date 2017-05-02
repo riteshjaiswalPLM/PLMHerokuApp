@@ -1,44 +1,39 @@
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="adminClientDashboardContainerComponentPropertiesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
-                </button>
-                <h4 class="modal-title" id="fieldPropertiesModalLabel">{{ title }}</h4>
-            </div>
-            <div class="modal-body" style="height:300px;overflow: auto;">
-                <div class="col-md-12">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" for="componentLabel">Label</label>
-                            <div class="col-md-9">
-                                <input type="text" id="componentLabel" class="form-control" placeholder="{{component.title}} name" ng-model="component.label">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" for="isComponentActive">Active ?</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" switch-change="onChangeReadonly()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isComponentActive" ng-model="component.active">
-                            </div>
-                        </div>
-                        <!--<div class="form-group">
-                            <label class="col-md-3 control-label" for="isComponentActive">Active ?</label>
-                            <div class="col-md-9">
-                                <select class="form-control" 
-                                        style="padding: 5px; font-size: 14px; width: 100%; height: 100%;"
-                                        ng-options="value for value in [1,2,3,4,5,6,7,8,9,10,11,12]" 
-                                        ng-model="component.columns">
-                                </select>
-                            </div>
-                        </div>-->
-                    </form>
+<div role="dialog" tabindex="-1" aria-labelledby="adminClientDashboardContainerComponentPropertiesModalLabel" data-backdrop="static" class="slds-modal">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="fieldPropertiesModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-form--horizontal" >
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="componentLabel">Label</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="componentLabel" class="slds-input" placeholder="{{component.title}} name" ng-model="component.label">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="isComponentActive">Active ?</label>
+                    <div class="slds-form-element__control">
+                        <slds-switch id="isComponentActive" ng-model="component.active" on-text="Yes" off-text="No"/>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer" style="margin-top: 0px;">
-                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
-                <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i> Save</button>
-            </div>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                Save
+            </button>
         </div>
     </div>
 </div>
+<div class="slds-backdrop"></div>

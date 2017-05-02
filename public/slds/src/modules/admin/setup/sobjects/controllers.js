@@ -246,6 +246,9 @@ admin.controller('AdminSetupSObjectsManageController',[
             $scope.loadSObjects();
         }
     };
+    $scope.returnToList = function(){
+        $state.go('admin.setup.sobjects.list');  
+    };
     $scope.initBlockUiBlocks = function(){
         $scope.blockUI = {
             sObjectActions: blockUI.instances.get('sObjectActions'),

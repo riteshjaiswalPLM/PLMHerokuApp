@@ -134,8 +134,8 @@ admin.controller('AdminClientDashboardDesignController',[
         };
         $scope.init = ()=>{
             console.log('AdminClientDashboardDesignController loaded!');
-            $scope.sidePanel = 'views/admin/clientdashboard/side-panel.html';
-            $scope.dropZone = 'views/admin/clientdashboard/drop-zone.html';
+            $scope.sidePanel = 'slds/views/admin/clientdashboard/side-panel.html';
+            $scope.dropZone = 'slds/views/admin/clientdashboard/drop-zone.html';
             $scope.dashboardContainers = [];
             $scope.containers = [{
                     title: 'My Task Container',

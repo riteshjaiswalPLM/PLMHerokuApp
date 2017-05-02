@@ -2,8 +2,9 @@
         <input  type="text" 
                 id="{{ field.SObjectField.name + index}}"
                 ng-model="model[field.SObjectField.name]" 
-                class="form-control"
+                class="slds-input"
                 ng-required="field.required"
                 ng-if="!readonly">
-        <span ng-if="readonly" ng-bind="model[field.SObjectField.name]"></span>
+        <!--<span ng-if="readonly" ng-bind="model[field.SObjectField.name]"></span>-->
+        <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="model[field.SObjectField.name]"></label>
 </div>

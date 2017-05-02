@@ -1,65 +1,96 @@
-<div>
-    <div class="page-header page-header-bleed-right">
-        <div class="actions pull-right">
-            <button class="btn btn-primary" type="button" ng-click="saveDashboardConfiguration()"><i class="fa fa-check"></i> Save</button>
-        </div>
-        <h1>Client Dashboard</h1>
-    </div>
-    <div block-ui="editEditLayout" style="overflow-y: auto;height: 500px;">
-        <h3>Container</h3>
-        <div class="layout-component-container" 
+<div  block-ui="editEditLayout">
+    <h3 class="slds-section__title">Container</h3>
+    <div class="layout-section-container" 
             dnd-drop="containerDropCallBack(event, index, item, external, type)" 
             dnd-list="dashboardContainers" 
             dnd-allowed-types="['ClientDashbordContainer']">
-            <div class="panel panel-default" 
+        <div class="dndPlaceholder" style="background-color:  #e1d951!important;">
+            Drop container here
+        </div>
+        <div    class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small"
                 ng-repeat="container in dashboardContainers | filter: {deleted: false }"
                 dnd-draggable="container"
                 dnd-effect-allowed="move" 
                 dnd-moved="dashboardContainers.splice($index,1)"
                 dnd-type="'ClientDashbordContainer'"
                 ng-init="containerIndex = $index">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        {{ container.label === undefined ? container.title : container.label}}
-                        <span class="pull-right">
-                            <a href pf-tooltip data-placement="left" title="Remove" ng-click="removeAndReorder(dashboardContainers,container,$index)" style="color: red;"><i class="fa fa-minus-circle"></i></a>
-                            <!--<a href pf-tooltip data-placement="left" title="Criteria" ng-click="openSectionCriteriaModal(section,$index)"><i class="fa fa-cogs"></i></a>-->
-                            <a href pf-tooltip data-placement="left" title="Properties" ng-click="dashboardContainerPropertiesModal(container,$index)"><i class="fa fa-wrench"></i></a>
+            <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+                    <h3>{{ container.label === undefined ? container.title : container.label}}
+                        <span class="slds-float--right">
+                            <div class="slds-button-group" role="group">
+                                <button ng-click="removeAndReorder(dashboardContainers,container,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                                <button ng-click="dashboardContainerPropertiesModal(container,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Properties</span>
+                                </button>
+                            </div>
                         </span>
                     </h3>
                 </div>
-                <div class="panel-body">
-                    <div dnd-list="container.components"
-                        dnd-drop="componentDropCallBack(event, index, item, external, type, container, containerIndex, $index+1)"
-                        dnd-allowed-types="['{{container.allowedType}}']"
-                        style="min-height: 5px;">
-                        <div class="dndPlaceholder" style="float: left"></div>
-                        <div ng-repeat="component in container.components | filter: {deleted: false }" style="float: left" ng-init="columnIndex = $index" class="col-md-12" >
-                        <!--style="padding-left: 10px;">-->
-                            <div class="panel panel-default"
-                                pf-tooltip title="{{ component.title }}" data-placement="top" class="form-group" 
+                <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
+                    <div class="slds-form--horizontal slds-col slds-size--1-of-1" 
+                            dnd-list="container.components" 
+                            dnd-drop="componentDropCallBack(event, index, item, external, type, container, containerIndex, $index+1)"
+                            dnd-allowed-types="['{{container.allowedType}}']"
+                            style="min-height: 20px;" >
+                        <div class="dndPlaceholder" style="background-color: #6a89e5 !important;">
+                            Drop field here
+                        </div>
+                        <div    class="slds-form-element slds-form-element--draggable"
+                                ng-repeat="component in container.components | filter: {deleted: false }" 
                                 dnd-draggable="component" 
                                 dnd-effect-allowed="move" 
                                 dnd-moved="container.components.splice($index,1)" 
                                 dnd-horizontal-list="true"
                                 dnd-type="'{{container.allowedType}}'"
                                 ng-init="componentIndex = $index">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        {{ component.label === undefined ? component.title : component.label}}
-                                        <span class="pull-right">
-                                            <a href pf-tooltip data-placement="left" title="Remove" ng-click="removeAndReorder(container.components, component, $index)" style="color: red;"><i class="fa fa-minus-circle"></i></a>
-                                            <!--<a href pf-tooltip data-placement="left" title="Criteria" ng-click="openSectionCriteriaModal(section,$index)"><i class="fa fa-cogs"></i></a>-->
-                                            <a href pf-tooltip data-placement="left" title="Properties" ng-click="dashboardContainerComponentPropertiesModal(containerIndex, component, $index)"><i class="fa fa-wrench"></i></a>
-                                        </span>
-                                    </h3>
+                            <!--<label class="slds-form-element__label" style="font-weight: 600;float: none;">
+                                <a href pf-tooltip data-placement="{{(section.columns.length === 1) ? 'top' : (columnIndex === 0) ? 'right' :'left'}}" ng-if="field.error" style="color: red;" title="{{field.error}}"><i class="fa fa-exclamation-circle"></i></a>
+                                {{ field.label }}
+                            </label>-->
+                            <div class="slds-form-element__control">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-has-flexi-truncate">
+                                        <label class="slds-form-element__label slds-p-left--small" style="margin-top:.2rem;margin-bottom: 0;">
+                                            {{ component.label === undefined ? component.title : component.label}}
+                                        </label>
+                                    </div>
+                                    <div class="slds-col slds-no-flex slds-grid slds-align-middle">
+                                        <div class="slds-button-group slds-field-actions" role="group">
+                                            <button ng-click="removeAndReorder(container.components, component, $index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Delete</span>
+                                            </button>
+                                            <!--<button ng-click="openFieldCriteriaModal(field)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Criteria</span>
+                                            </button>-->
+                                            <button ng-click="dashboardContainerComponentPropertiesModal(containerIndex, component, $index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Properties</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!--<div class="panel-body"></div>-->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>    
+            </div>
         </div>
     </div>
 </div>
