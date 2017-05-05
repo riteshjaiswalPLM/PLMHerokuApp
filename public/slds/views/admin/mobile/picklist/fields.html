@@ -1,0 +1,72 @@
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <a href ng-click="returnToList()"><span class="fa fa-chevron-circle-left"></span> Back to layouts</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" type="button" ng-click="saveChildPicklistDetail()"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <h1>Picklist Detail</h1>
+    </div>
+    <div class="panel panel-default" block-ui="loadSObjects">
+        <div class="panel-heading">
+            <h3 class="panel-title">Configuration Detail </h3>
+        </div>
+        <div class="panel-body"  >
+            <form class="form-horizontal">
+                <div>
+                    <label class="col-sm-2 control-label">Sobject</label>
+                    <div class="col-sm-4" style="padding-top:3px;padding-bottom:7px">
+                        {{picklistDetail.sobject}}
+                    </div>
+                    <label class="col-sm-2 control-label">Parent Sobject Fields</label>
+                    <div class="col-sm-4" style="padding-top:3px;padding-bottom:7px">
+                        {{picklistDetail.sobjectParentField}}
+                    </div>
+                    <label class="col-sm-2 control-label">Child Sobject Fields</label>
+                    <div class="col-sm-4" style="padding-top:3px;padding-bottom:7px">
+                        {{picklistDetail.sobjectChildField.label}}
+                    </div>
+                    <label class="col-sm-2 control-label" >Parent Value</label>
+                    <div class="col-sm-4" style="padding-top:3px;padding-bottom:7px">
+                        {{picklistDetail.sobjectParentValue}}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-success" block-ui="picklistchildfieldvalue" style="min-height:100px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-database"></i> Configured Picklist Child Detail
+                <div class="actions pull-right">
+                    <input class="form-control" ng-model="sObjectsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body"  style="padding:0px;">
+            <table fixed-header class="table table-striped table-hover table-bordered" style="height: {{ (userActions.length===0) ? 0 : 300 }}px;">
+                <thead>
+                    <tr>
+                        <th>User Type</th>
+                        <th>Child Field Values</th>
+                        <th style="text-align: center;min-width: 150px;width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr ng-repeat="field in picklistChildDetail |filter: { userTypeValue : sObjectsFilter} | orderBy: 'userTypeValue'">
+                        <td> <strong>{{ field.userType }}<strong></td>
+                        <td>{{ field.dependentValue }}</td>
+                        <td style="text-align: center;">
+                            <button class="btn btn-xs btn-primary" type="button" ng-click="manageChildFieldValue(field)"><i class="fa fa-cogs"></i> Manage Child Value</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blank-slate-pf" ng-if="layout.SObject.fields.length === 0" style="margin-bottom: 0px;height: 373px;">
+                <div class="blank-slate-pf-icon">
+                    <span class="pficon pficon-add-circle-o"></span>
+                </div>
+                <h1>No Mobile field Configured .</h1>
+            </div>
+        </div>
+    </div>
+</div>

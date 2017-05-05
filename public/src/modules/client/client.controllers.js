@@ -47,17 +47,6 @@ client.controller('ClientController',[
     }
 ]);
 
-client.controller('ClientDashboardController',[
-            '$scope','$rootScope','$state',
-    function($scope , $rootScope , $state){
-        $scope.init = function(){
-            console.log('ClientDashboardController loaded!');
-            // console.log($state.get());
-        };
-        $scope.init();
-    }
-]);
-
 client.controller('ClientProfileController',[
             '$scope','$rootScope','$controller','$state',
     function($scope , $rootScope , $controller , $state){

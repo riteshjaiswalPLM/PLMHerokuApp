@@ -19,6 +19,9 @@ admin.factory('mobileSobjectService',['$http',function($http){
         },
         loadMobileConfig: function(){
             return $http.post('/api/admin/mobileconfig/configJSON',null);
+        },
+        syncWithMiddleware: function(){
+            return $http.post('/api/admin/mobileconfig/syncwithmiddleware');
         }
     };
 }]);

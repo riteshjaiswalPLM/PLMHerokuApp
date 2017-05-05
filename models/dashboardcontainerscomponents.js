@@ -1,10 +1,7 @@
 module.exports = function(sequelize, DataTypes){
     var DashboardContainersComponents = sequelize.define("DashboardContainersComponents",{
         label: {
-            type: DataTypes.STRING,
-            defaultValue: function(){
-                return 'Undefined';   
-            }  
+            type: DataTypes.STRING, 
         },
         deleted: {
             type: DataTypes.BOOLEAN,
@@ -35,8 +32,8 @@ module.exports = function(sequelize, DataTypes){
     },{
         classMethods: {
             associate: function(models){
-                DashboardContainersComponents.belongsTo(models.DashboarContainer);
-                DashboardContainersComponents.belongsTo(models.Components);
+                DashboardContainersComponents.belongsTo(models.DashboarContainer, {onDelete: 'CASCADE'});
+                DashboardContainersComponents.belongsTo(models.Components, {onDelete: 'CASCADE'});
             }
         }
     });

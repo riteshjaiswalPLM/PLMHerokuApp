@@ -1,5 +1,5 @@
 <div ng-if="field.rendered">
-        <input  type="checkbox" 
+        <!--<input  type="checkbox" 
                 bs-switch 
                 class="bootstrap-switch" 
                 switch-size="small" 
@@ -17,6 +17,14 @@
                 id="{{ field.SObjectField.name + index}}" 
                 ng-model="model[field.SObjectField.name]"
                 ng-required="field.required"
-                ng-if="!field.readonly && field.criteriaField === true">
+                ng-if="!field.readonly && field.criteriaField === true">-->
+        <slds-switch id="{{ field.SObjectField.name + index}}" ng-model="model[field.SObjectField.name]" on-text="True" off-text="False" 
+                show-texts="False"
+                ng-required="field.required"
+                ng-if="!field.readonly && (!field.criteriaField || field.criteriaField === false)"/>
+        <slds-switch id="{{ field.SObjectField.name + index}}" ng-model="model[field.SObjectField.name]" on-text="True" off-text="False" 
+                show-texts="False"
+                ng-required="field.required"
+                ng-if="!field.readonly && field.criteriaField === true"/>
         <span ng-if="field.readonly" ng-bind="model[field.SObjectField.name] "></span>
 </div>

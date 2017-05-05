@@ -254,6 +254,9 @@ admin.controller('AdminMobileSObjectsManageController',[
             
         }
     };
+    $scope.returnToList = function(){
+        $state.go('admin.mobile.sobjects.list');  
+    };
     $scope.initBlockUiBlocks = function(){
         $scope.blockUI = {
             sObjectActions: blockUI.instances.get('sObjectActions'),
@@ -457,6 +460,9 @@ admin.controller('AdminMobileSObjectsFieldsManageController',[
             
         }
     };
+    $scope.returnToList = function(){
+        $state.go('admin.mobile.sobjects.list');  
+    };
     $scope.initBlockUiBlocks = function(){
         $scope.blockUI = {
             sObjectActions: blockUI.instances.get('sObjectActions'),
@@ -474,9 +480,30 @@ admin.controller('AdminMobileSObjectsFieldsManageController',[
 admin.controller('AdminMobileConfigController',[
             '$scope','$state','mobileSobjectService','blockUI','$dialog','$filter',
     function($scope , $state , mobileSobjectService , blockUI , $dialog,$filter){
-    
+    $scope.syncWithMiddleware = function(){
+        $scope.blockUI.MobileConfigBlockUI.start('Synchronizing with middleware...');
+        mobileSobjectService.syncWithMiddleware()
+            .success(function(response){
+                $scope.blockUI.MobileConfigBlockUI.stop();
+                if(response.success){
+                    $dialog.alert(response.message,'Success','');
+                }else{
+                    $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                }
+            })
+            .error(function(response){
+                $scope.blockUI.MobileConfigBlockUI.stop();
+                $dialog.alert('Error occured while deleting sObject.','Error','pficon pficon-error-circle-o');
+            });
+    };
+    $scope.initBlockUiBlocks = function(){
+        $scope.blockUI = {
+            MobileConfigBlockUI : blockUI.instances.get('MobileConfigBlockUI')
+        }
+    }
     $scope.init = function(){
         console.log('AdminMobileSObjectsListController loaded!');
+        $scope.initBlockUiBlocks();
         $scope.MobileConfig={};
         mobileSobjectService.loadMobileConfig()
             .success(function(response){

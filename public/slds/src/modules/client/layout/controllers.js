@@ -16,7 +16,6 @@ client.controller('ClientLayoutController',[
             if($scope.stateParamMetaData !== null && $scope.stateParamMetaData.redirectTo !== undefined){
                 $state.go($scope.stateParamMetaData.redirectTo);
             }
-            $scope.tab = $state.current.tab;
         };
         $scope.init();
     }
@@ -82,6 +81,7 @@ client.controller('ClientListLayoutController',[
                             }else{
                                 $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                             }
+                            console.log('$scope.searchCriteriaFields:-',$scope.searchCriteriaFields);
                         })
                         .error(function(response){
                             $dialog.alert('Server error occured while loading layout metadata.','Error','pficon pficon-error-circle-o');
@@ -96,19 +96,19 @@ client.controller('ClientListLayoutController',[
                 $scope.recordActions = metadata.recordActions;
                 $scope.navBarActions = metadata.navBarActions;
                 
-                // if($scope.stateCache.searchResult === undefined){
+                if($scope.stateCache.searchResult === undefined || $scope.stateCache.btnClick === "save"){
                     $timeout(function(){
                         $scope.search(1, $scope.pageSize);
                     },100);
-                // }else{
-                //     $scope.searchResult = $scope.stateCache.searchResult;
-                //     $scope.currentPage = $scope.stateCache.currentPage;
-                //     $scope.pageSize = $scope.stateCache.pageSize;
-                //     // console.error($scope.pageSize + ' == ' + $scope.stateCache.pageSize);
-                //     if($scope.stateCache.orderByField){
-                //         $scope.applyOrderBy($scope.stateCache.orderByField);
-                //     }
-                // }
+                }else{
+                    $scope.searchResult = $scope.stateCache.searchResult;
+                    $scope.currentPage = $scope.stateCache.currentPage;
+                    $scope.pageSize = $scope.stateCache.pageSize;
+                    // console.error($scope.pageSize + ' == ' + $scope.stateCache.pageSize);
+                    if($scope.stateCache.orderByField){
+                        $scope.applyOrderBy($scope.stateCache.orderByField);
+                    }
+                }
             }
             
         };
@@ -121,6 +121,7 @@ client.controller('ClientListLayoutController',[
             });
         };
         $scope.search = function(page,pageSize){
+            $scope.pageSize=pageSize;
             if(!$scope.blockUI.searchResultBlock.state().blocking && $scope.stateParamMetaData !== undefined){
                 var selectFields = [];
                 angular.forEach($scope.searchResultFields,function(field,index){
@@ -320,6 +321,7 @@ client.controller('ClientListLayoutController',[
             $scope.currentPage = 0;
             $scope.stateCache = $appCache.get($state.current.name);
             console.log('ClientListLayoutController loaded!');
+            // console.log($state.current);
             $scope.stateParamMetaData = $state.current.params.metadata;
             $scope.initBlockUiBlocks();
             $scope.loadLayoutMetadata();
@@ -367,8 +369,8 @@ client.controller('ClientDetailsLayoutController',[
 
 // client.controller('ClientEditLayoutController',[
 client.controller('ClientSectionLayoutController',[
-            '$scope','$rootScope','$state','$stateParams','$dialog','$controller','$timeout','$filter','blockUI','clientLayoutService','clientSObjectService','CriteriaHelper',
-    function($scope , $rootScope , $state , $stateParams , $dialog , $controller , $timeout , $filter , blockUI , clientLayoutService , clientSObjectService,CriteriaHelper){
+            '$scope','$rootScope','$state','$stateParams','$dialog','$controller','$appCache','$timeout','$filter','blockUI','clientLayoutService','clientSObjectService','CriteriaHelper',
+    function($scope , $rootScope , $state , $stateParams , $dialog , $controller ,$appCache, $timeout , $filter , blockUI , clientLayoutService , clientSObjectService,CriteriaHelper){
         var orderBy = $filter('orderBy');
         $scope.loadLayoutMetadata = function(){
             // Load layout metadata. (For example, layout sections, layout section fields, layout actions etc...)
@@ -459,7 +461,22 @@ client.controller('ClientSectionLayoutController',[
         $scope.back = {
             allow: false,
             go: function(){
-                $state.go($stateParams.metadata.redirectTo);
+            	var stateName = ($stateParams.data !== undefined && $stateParams.data !== null && $stateParams.data.isFromDashboard && $stateParams.data.isFromDashboard === true) ? 'client.dashboard' : $stateParams.metadata.redirectTo; 
+            	var stateCache = $appCache.get(stateName);
+            	if(stateCache!= undefined){
+            		stateCache.btnClick="cancel";
+            	}
+            	$appCache.put(stateName, stateCache);
+            	$state.go(stateName);
+            }, 
+            saveGo: function(){
+            	var stateName = ($stateParams.data !== undefined && $stateParams.data !== null && $stateParams.data.isFromDashboard && $stateParams.data.isFromDashboard === true) ? 'client.dashboard' : $stateParams.metadata.redirectTo; 
+            	var stateCache = $appCache.get(stateName);
+            	if(stateCache!= undefined){
+            		stateCache.btnClick="save";
+            	}
+            	$appCache.put(stateName, stateCache);
+            	$state.go(stateName);
             }  
         };
         $scope.initBlockUiBlocks = function(){
@@ -546,7 +563,7 @@ client.controller('ClientSectionLayoutController',[
                     }
                 }
                 if(section.isComponent){
-                    if(section.readonly === false){
+                    if(section.readonly === false && section.rendered === true){
                         angular.forEach($scope.dataModel.sObjectData,function(fields, key){
                             if(key.includes("__c")|| key.includes("__r"))
                             {
@@ -590,7 +607,7 @@ client.controller('ClientSectionLayoutController',[
                         .success(function(response){
                             $scope.blockUI.layoutBlock.stop();
                             if(response.success){
-                                $scope.back.go();
+                                $scope.back.saveGo();
                             }else{
                                 $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                             }
@@ -608,6 +625,111 @@ client.controller('ClientSectionLayoutController',[
                 }
             });
             
+        }
+        $scope.saveValidation = function(callback){
+            // $dialog.alert('Save button clicked!');
+            var componentSaveCall=[];
+            var queryObject = {
+                operation: null,
+                sObject: {
+                    name: $scope.stateParamData ? $scope.stateParamData.record.attributes.type : $scope.stateParamMetaData.sobject.name,
+                    data: null
+                }
+            }
+            if($scope.stateParamMetaData.layout.type === 'Create'){
+                queryObject.operation = 'CREATE';
+                // $dialog.alert('This functionality is pending to implement.');
+                // return;
+            }else if($scope.stateParamMetaData.layout.type === 'Edit'){
+                queryObject.operation = 'UPDATE';
+            }else{
+                return {};
+            }
+            
+            var sObjectData = {
+                Id: $scope.dataModel.Id
+            };
+            var dataFields=[] ;
+            var validationMessage="";
+            angular.forEach($scope.metadata.layoutSections,function(section,sectionIndex){
+                if(!section.isComponent){
+                    if(section.readonly === false && section.rendered === true){
+                        angular.forEach(section.columns,function(fields, columnIndex){
+                            angular.forEach(fields,function(field,fieldIndex){
+                                if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
+                                    sObjectData[field.SObjectField.name] = field.value;
+                                    dataFields.push(field);
+                                }
+                            });
+                        });
+                    }
+                }
+                if(section.isComponent){
+                    if(section.readonly === false  && section.rendered === true ){
+                        angular.forEach($scope.dataModel.sObjectData,function(fields, key){
+                            if(key.includes("__c")|| key.includes("__r"))
+                            {
+                                sObjectData[key] = fields;
+                            }
+                        });
+                        if(section.Component.name && $scope[section.Component.name.replace(/\s/g,"")+'Validate']){
+                            $scope[section.Component.name.replace(/\s/g,"")+'Validate'](function(result){
+                                console.log('result');
+                                if(!result.success){
+                                    validationMessage+=result.message;
+                                }
+                            });
+                        }
+                        if(section.Component.name && $scope[section.Component.name.replace(/\s/g,"")+'Save']){
+                            componentSaveCall.push(section.Component.name.replace(/\s/g,"")+'Save');
+                        }
+                    }
+                    
+          
+                }
+            });
+            queryObject.sObject.data = sObjectData;
+          
+            if($scope.files && $scope.files.length > 0){
+                queryObject.files = $scope.files;
+            }
+            
+            
+            clientSObjectService.isRequireValidation({sObjectData:sObjectData,fields:dataFields},function(result){
+                if(!result.success){
+                    validationMessage=result.message+validationMessage
+                }
+                var rtnResult={
+                    result:result,
+                    message:validationMessage,
+                    componentSaveCall:componentSaveCall,
+                    queryObject:queryObject
+                }
+                callback(rtnResult)
+                
+                
+            });
+            
+        }
+        
+        $scope.finalSave = function(rtn){
+            $scope.blockUI.layoutBlock.start('Saving values...');
+            angular.forEach(rtn.componentSaveCall,function(saveCall){
+                $scope[saveCall]();
+            });
+            clientSObjectService.save(rtn.queryObject)
+            .success(function(response){
+                $scope.blockUI.layoutBlock.stop();
+                if(response.success){
+                    $scope.back.saveGo();
+                }else{
+                    $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                }
+            })
+            .error(function(response){
+                $dialog.alert('Server error occured while saving details.','Error','pficon pficon-error-circle-o');
+                $scope.blockUI.layoutBlock.stop();
+            });
         }
 
 

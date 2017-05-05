@@ -1,4 +1,4 @@
-<div class="slds-col slds-size--1-of-1">
+<div class="slds-col slds-size--1-of-1" block-ui="synchronizeSobject">
     <div class="slds-page-header slds-page-header--object-home">
         <div class="slds-grid">
             <div class="slds-col slds-has-flexi-truncate">
@@ -17,14 +17,18 @@
                 </div>
             </div>
             <div class="slds-col slds-no-flex slds-grid slds-align-top">
-                <div class="slds-button-group" role="group">
-                    <button class="slds-button slds-button--brand" ng-click="manage()">
-                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#replace"></use>
-                        </svg>
-                        Manage sObjects
-                    </button>
-                </div>
+                <button class="slds-button slds-button--brand" ng-click="syncronize()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
+                    </svg>
+                    Synchronize sObjects
+                </button>
+                <button class="slds-button slds-button--brand" ng-click="manage()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#replace"></use>
+                    </svg>
+                    Manage sObjects
+                </button>
             </div>
         </div>
         <div class="slds-grid">

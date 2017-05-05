@@ -124,33 +124,40 @@
 					<div class="panel-heading">
 						<h3 class="panel-title">Attachments</h3>
 					</div>
-					<div class="panel-body row" ng-if="attachments" data-ng-show="attachments.length > 0">
+					<div class="panel-body row" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length > 0">
 						<div class="col-md-12">
 							<form class="form-horizontal">
 								<div class="form-group">
+									<label style="text-align: center;" class="col-md-2 panel-title" ng-if="type !== 'detail'">Delete</label>
+									<label style="text-align: center;" class="col-md-1 panel-title" ng-if="type == 'detail'"></label>
 									<label style="text-align: center;" class="col-md-2 panel-title">Title</label>
 									<label style="text-align: center;" class="col-md-4 panel-title">Size</label>
-									<label style="text-align: center;" class="col-md-4 panel-title">Description</label>
+									<label style="text-align: center;" class="col-md-2 panel-title">ContentType</label>
 									<label style="text-align: center;" class="col-md-2 panel-title">Download</label>
+									<label style="text-align: center;" class="col-md-1 panel-title" ng-if="type == 'detail'"></label>
 								</div>
 							</form>
 						</div>
-						<div data-ng-model="attachments" class="col-md-12" data-ng-repeat="attachment in attachments">
+						<div data-ng-model="attachments" class="col-md-12" data-ng-repeat="attachment in attachments | filter: {IsDeleted: false}">
 							<form class="form-horizontal">
 								<div class="form-group" style="margin-bottom: 0px;">
+									<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
+									<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
+									<label style="text-align: center;" class="col-md-1 " ng-if="type == 'detail'"></label>
 									<label style="text-align: center;" class="col-md-2">{{attachment.Name}}</label>
 									<label style="text-align: center;" class="col-md-4">{{attachment.BodyLength/1024 | number : 2}} KB</label>
-									<label style="text-align: center;" class="col-md-4">{{attachment.Description}}</label>
+									<label style="text-align: center;" class="col-md-2">{{attachment.ContentType}}</label>
 									<label style="text-align: center;" class="col-md-2">
 										<a class="btn btn-primary" ng-click="getFileData($root.encodeURI(attachment.Name),attachment.Body)">
 											<i class="icon-large pficon-save"></i>
 										</a>
 									</label>
+									<label style="text-align: center;" class="col-md-1 " ng-if="type == 'detail'"></label>
 								</div>
 							</form>
 						</div>
 					</div>
-					<div class="panel-body row" ng-if="attachments" data-ng-show="attachments.length == 0">
+					<div class="panel-body row" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
 						<div class="col-md-12">
 							<form class="form-horizontal">
 								<div class="form-group" style="margin-bottom: 0px;margin-top: -10px;">

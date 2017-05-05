@@ -48,7 +48,7 @@
 				<td style="font-weight: 700;border-top: 0px">Current Value</td>
 				<td style="font-weight: 700;border-top: 0px">Proposed Value</td>
 			</tr>
-			<tr  ng-if="supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c] && supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c]!=''"  ng-repeat="changeReqDetail in changeRequestFieldsDetail" >
+			<tr  ng-if="supplierMaintenanceDetail[changeReqDetail.Current_Field__c] != supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c]"  ng-repeat="changeReqDetail in changeRequestFieldsDetail" >
 				<td style="border-top: 0px"> {{changeReqDetail.label}} </td>
 				<td style="border-top: 0px"> {{supplierProfileDetail[changeReqDetail.Name]}} </td>
 				<td style="border-top: 0px"> {{supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c]}} </td>

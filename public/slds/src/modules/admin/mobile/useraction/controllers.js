@@ -113,7 +113,7 @@ admin.controller('AdminMobileUserActionListController', [
             else if ($scope.data.SObjectField == undefined || $scope.data.SObjectField == null || $scope.data.SObjectField == "") {
                 $dialog.alert("Please Select Sobject Field", 'Error', 'pficon pficon-error-circle-o');
             }
-            else if ($scope.data.SObjectFieldValue == undefined || $scope.data.SObjectField == null || $scope.data.SObjectFieldValue == "") {
+            else if ($scope.data.SObjectFieldValue == undefined || $scope.data.SObjectFieldValue == null || $scope.data.SObjectFieldValue == "") {
                 $dialog.alert("Please Select Value", 'Error', 'pficon pficon-error-circle-o');
             }
             else {
@@ -189,9 +189,9 @@ admin.controller('AdminMobileUserActionFieldController', [
                                             var SObjectLayoutField = {
                                                 SObjectField: field,
                                                 label: field.label,
-                                                readonly: field.readonly,
-                                                required: field.required,
-                                                optional: field.optional,
+                                                readonly: field.readonly === undefined?false:field.readonly,
+                                                required: field.required === undefined?false:field.required,
+                                                optional: field.optional === undefined?false:field.optional,
                                             };
 
                                             $scope.layout.SObject.fields.push(SObjectLayoutField);
@@ -199,6 +199,7 @@ admin.controller('AdminMobileUserActionFieldController', [
                                     } else {
                                         $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                                     }
+                                    $scope.blockUI.userActionField.stop();
                                 })
                                 .error(function (response) {
                                     $dialog.alert('Error occured while loading sobject fields.', 'Error', 'pficon pficon-error-circle-o');
@@ -206,8 +207,9 @@ admin.controller('AdminMobileUserActionFieldController', [
                                 });
                         } else {
                             $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                            $scope.blockUI.userActionField.stop();
                         }
-                        $scope.blockUI.userActionField.stop();
+                        
                     })
                     .error(function (response) {
                         $dialog.alert('Error occured while loading sobject fields.', 'Error', 'pficon pficon-error-circle-o');
@@ -245,7 +247,7 @@ admin.controller('AdminMobileUserActionFieldController', [
                     .success(function (response) {
                         $scope.blockUI.userActionField.stop();
                         if (response.success === true) {
-                            $scope.loadUserActionFields();
+                            // $scope.loadSObjectFields();
                         } else {
                             $dialog.alert('Error occured while saving layout.', 'Error', 'pficon pficon-error-circle-o');
                         }

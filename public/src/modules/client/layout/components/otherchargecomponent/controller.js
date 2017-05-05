@@ -209,7 +209,7 @@ client.controller('OtherChargeComponentController',[
 		var errorMessages = {};
 			var fieldRequire=false;
 			angular.forEach($scope.dataModelList,function(model){
-				if($scope.dataModelList.isDeleted == false){
+				if(model.isDeleted == false){
 					angular.forEach($scope.section.Component.fields,function(sObject){
 						if(sObject.rendered && sObject.required && (model[sObject.SObjectField.name] == null || model[sObject.SObjectField.name] == '' )){
 							errorMessages[sObject.label]=sObject.label +" must be required.";

@@ -28,7 +28,7 @@
                                 <input type="checkbox" switch-change="onChangeReadonly()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldReadonly" ng-model="field.readonly">
                             </div>
                         </div>
-                        <div class="form-group" ng-if="field.SObjectField.type === 'boolean' || field.SObjectField.type === 'picklist' || field.SObjectField.type === 'multipicklist'">
+                        <div class="form-group" ng-if="(field.SObjectField.type === 'boolean' || field.SObjectField.type === 'picklist' || field.SObjectField.type === 'multipicklist') && forMobile === false">
                             <label class="col-md-3 control-label" for="fieldDefaultValue">Default Value</label>
                             <div class="col-md-9">
                                 <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="True" switch-off-text="False" id="fieldDefaultValue" ng-model="field.defaultValue" ng-if="field.SObjectField.type === 'boolean'">
@@ -39,11 +39,11 @@
                                 <span ng-if="field.SObjectField.type === 'multipicklist'" class="label label-info">{{ (field.defaultValue) ? field.defaultValue.length : 0 }} items selected.</span>
                             </div>
                         </div>
-                        <div class="form-group" ng-if="field.SObjectField.type === 'reference'">
+                        <div class="form-group" ng-if="field.SObjectField.type === 'reference' && forMobile === false">
                             <label class="col-md-3 control-label" for="fieldReadonly">Reference</label>
                             <div class="col-md-9" style="padding-top: 3px;" reference-field-selector field="field" ref-sobjects="refSObjects"></div>
                         </div>
-                        <div class="form-group" ng-if="field.SObjectField.type === 'reference'">
+                        <div class="form-group" ng-if="field.SObjectField.type === 'reference' && forMobile === false">
                             <label class="col-md-3 control-label" for="fieldLookup">Lookup</label>
                             <div class="col-md-9">
                                 <div class="input-group">
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" ng-if="eventFields.indexOf(field.SObjectField.type) !== -1">
+                        <div class="form-group" ng-if="eventFields.indexOf(field.SObjectField.type) !== -1 && forMobile === false">
                             <label class="col-md-3 control-label" for="event_onchange">OnChange</label>
                             <div class="col-md-9">
                                 <div class="input-group">
@@ -70,6 +70,16 @@
                                         <option value="">-- None --</option>
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="field.SObjectField.type === 'reference' && forMobile === false && field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1">
+                            <label class="col-md-3 control-label" for="fieldUserSelected">Current User Selected?</label>
+                            <div class="col-md-3" >
+                                  <input type="checkbox" switch-change="onChangeCurrentUserSelect()"  bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldUserSelected" ng-model="field.currentUserSelected">
+                            </div>
+                            <label class="col-md-3 control-label" for="fieldExcludeUser">Exclude Current User?</label>
+                            <div class="col-md-3" >
+                                  <input type="checkbox" switch-change="onChangeExcludeUser()"  bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldExcludeUser" ng-model="field.excludeCurrentUser">
                             </div>
                         </div>
                     </form>

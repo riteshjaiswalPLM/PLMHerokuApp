@@ -49,6 +49,12 @@ module.exports = function(sequelize, DataTypes){
                 else
                     this.getDataValue('criteria');
             }
+        },
+        requireAddMore: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function(){
+                return false;
+            }
         }
     },{
         classMethods: {
@@ -58,6 +64,11 @@ module.exports = function(sequelize, DataTypes){
                 
                 SObjectLayoutRelatedList.hasMany(models.SObjectLayoutField, {
                     onDelete: 'CASCADE',
+                    hooks: true
+                });
+
+                SObjectLayoutRelatedList.belongsTo(models.MobileEditLayoutConfig, {
+                    onDelete: 'CASCADE', 
                     hooks: true
                 });
             }

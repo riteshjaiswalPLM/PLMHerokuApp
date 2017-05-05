@@ -15,6 +15,83 @@ var getEnumForCatagoryValue = ()=>{
     return enumValue;
 };
 
+componentRouter.post('/getusersobject', (req, res)=>{
+	var UserMapping = db.UserMapping.findAll({
+        attributes: {
+            include: ['SObjectId']
+        },
+    });
+    UserMapping.then(function(userMapping){
+        if(userMapping && userMapping.length > 0){
+            var SObject = db.SObject.findOne({
+                include: {
+                    model: db.SObjectField,
+                    attributes: {
+                        exclude: ['createdAt','updatedAt']
+                    }
+                },
+            	attributes: {
+                    exclude: ['createdAt','updatedAt']
+                },
+                where: {
+                	id: userMapping[0].SObjectId
+                }
+            });
+            SObject.then(function(sObject) {
+                if(sObject === undefined || sObject === null || sObject.length === 0){
+                    return res.json({
+                        success: false,
+                        message: "Error occured while get user Mapping."
+                    });
+                }else{
+                    return res.json({
+                        success: true,
+                        data: {
+                            userSObject: sObject
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            return res.json({
+                success: false,
+                message: "User Mapping Not Configured,Please configured it."
+            });
+        }
+    });
+});
+
+componentRouter.post('/loadrefsobject', (req, res)=>{
+	var referenceSObjects = db.SObject.findAll({
+        attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        include: {
+            model: db.SObjectField,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            }
+        },
+        where: {
+            name: {
+                $in: req.body.referenceSObjectNames
+            }
+        }
+    });
+    referenceSObjects.then(function(refSObjects){
+        var _refSObjects = {};
+        refSObjects.forEach(function(refSObject){
+            _refSObjects[refSObject.name] = refSObject;
+        });
+        return res.json({
+            success: true,
+            data: {
+                refSObjects: _refSObjects                           
+            }
+        });
+    });
+});
 componentRouter.post('/list', function(req, res){
     var notIn = getEnumForCatagoryValue();
     var Components = db.Components.findAll({
@@ -74,7 +151,8 @@ componentRouter.post('/getcomponentsforsobject', function(req, res){
         },
         where: {
             SObjectId: sObject.id,
-            active: true
+            active: true,
+            catagory: {$notIn: ['DashboardMyTask','DashboardChart']} 
         }
     });
     components.then(function(components) {
@@ -97,25 +175,61 @@ componentRouter.post('/getcomponentsforsobject', function(req, res){
 
 componentRouter.post('/delete', function(req, res){
     var component = req.body;
-    global.db.Components.destroy({
+    db.Components.findOne({
+        include : [{
+            model: db.DashboardContainersComponents,
+        },{
+            model: db.SObjectLayoutField,
+        },{
+            model: db.SObjectLayoutSection,
+            attributes: ['id']
+        }],
         where: {
             id: component.id
         }
-    }).then(function(deletedCount){
-        if(deletedCount === 0){
-            return res.json({
-                success: false,
-                message: 'Error occured while deleting component.'
-            });
-        }else{
-            return res.json({
-                success: true,
-                data: {
-                    deletedCount: deletedCount
-                }
-            });
+    }).then((componentFromDB)=>{
+        if(componentFromDB != null && componentFromDB != undefined){
+            var dashboardContainersComponents = [], sObjectLayoutFields = [], sObjectLayoutSections = []
+            if(componentFromDB.DashboardContainersComponents != null && componentFromDB.DashboardContainersComponents.length > 0){
+                componentFromDB.DashboardContainersComponents.forEach((dashboardContainersComponent)=>{
+                    dashboardContainersComponents.push(dashboardContainersComponent.id);
+                });
+                global.db.DashboardContainersComponents.destroy({where: { id: {$in: dashboardContainersComponents}}});
+            }
+            if(componentFromDB.SObjectLayoutFields != null && componentFromDB.SObjectLayoutFields.length > 0){
+                componentFromDB.SObjectLayoutFields.forEach((sObjectLayoutField)=>{
+                    sObjectLayoutFields.push(sObjectLayoutField.id);
+                });
+                global.db.SObjectLayoutField.destroy({where: { id: {$in: sObjectLayoutFields}}});
+            }
+            if(componentFromDB.SObjectLayoutSections != null && componentFromDB.SObjectLayoutSections.length > 0){
+                componentFromDB.SObjectLayoutSections.forEach((sObjectLayoutSection)=>{
+                    sObjectLayoutSections.push(sObjectLayoutSection.id);
+                });
+                global.db.SObjectLayoutSection({where: { id: {$in: sObjectLayoutSections}}});
+            }
         }
-    });
+        
+        db.Components.destroy({
+            where: {
+                id: component.id
+            }
+        }).then(function(deletedCount){
+            if(deletedCount === 0){
+                return res.json({
+                    success: false,
+                    message: 'Error occured while deleting component.'
+                });
+            }else{
+                return res.json({
+                    success: true,
+                    data: {
+                        deletedCount: deletedCount
+                    }
+                });
+            }
+        });
+    })
 });
 
 componentRouter.post('/details', function(req, res){
@@ -123,6 +237,30 @@ componentRouter.post('/details', function(req, res){
     var loadComponentDetails = db.Components.findOne({
         include: [{
             model: db.SObject,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            },
+            include: {
+                model: db.SObjectField,
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                }
+            }
+        },{
+            model: db.SObject,
+            as: 'approvalDetailSObject',
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            },
+            include: {
+                model: db.SObjectField,
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                }
+            }
+        },{
+            model: db.SObject,
+            as: 'detailSObject',
             attributes: {
                 exclude: ['createdAt','updatedAt']
             },
@@ -153,11 +291,40 @@ componentRouter.post('/details', function(req, res){
                 message: 'Error occured while loading component details.'
             });
         }else{
-            return res.json({
-                success: true,
-                data: {
-                    component: component,
+            var referenceSObjectNames = [];
+            component.SObject.SObjectFields.forEach(function(field){
+                if(field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1){
+                    referenceSObjectNames.push(field.referenceTo[0]);
                 }
+            });
+            var referenceSObjects = db.SObject.findAll({
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                },
+                include: {
+                    model: db.SObjectField,
+                    attributes: {
+                        exclude: ['createdAt','updatedAt']
+                    }
+                },
+                where: {
+                    name: {
+                        $in: referenceSObjectNames
+                    }
+                }
+            });
+            referenceSObjects.then(function(refSObjects){
+                var _refSObjects = {};
+                refSObjects.forEach(function(refSObject){
+                    _refSObjects[refSObject.name] = refSObject;
+                });
+                return res.json({
+                    success: true,
+                    data: {
+                        component: component,
+                        refSObjects: _refSObjects
+                    }
+                });
             });
         }
     });
@@ -179,6 +346,9 @@ componentRouter.post('/save', function(req, res){
                     catagory: component.catagory,
                     sobjectname: component.sobjectname,
                     SObjectId: component.SObjectId,
+                    detailSObjectId: component.detailSObjectId,
+                    forMobile: componentModel.forMobile,
+                    approvalDetailSObjectId: componentModel.approvalDetailSObjectId
                 })
                 .save()
                 .then(function(newComponent){
@@ -192,7 +362,10 @@ componentRouter.post('/save', function(req, res){
                     title: component.title,
                     desc: component.desc,
                     active: component.active,
-                    SObjectId: component.SObjectId
+                    SObjectId: component.SObjectId,
+                    detailSObjectId: component.detailSObjectId,
+                    forMobile: componentModel.forMobile,
+                    approvalDetailSObjectId: componentModel.approvalDetailSObjectId
                 },{
                     where: {
                         id: component.id
@@ -367,7 +540,7 @@ componentRouter.post('/static/save', function(req, res){
 
 componentRouter.post('/dashboard/list', function(req, res){
     var inClause = getEnumForCatagoryValue(); 
-    var where = {catagory: {$in: inClause}}
+    var where = {catagory: {$in: inClause}};
     for(keys in req.body){
         where[keys] = req.body[keys];
     }

@@ -1,0 +1,90 @@
+<style>
+    label.form-control {
+        margin-bottom: 0px;
+    }
+    .form-group > span,
+    .input-group > span{
+        margin-bottom: 0px;
+        padding-top: 3px;
+    }
+</style>
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+        </div>
+        <h1>{{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Org Detail Configuration</h3>
+        </div>
+        <div class="panel-body" block-ui="loadOrgDetail">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Name</label>
+                    <div class="input-group col-sm-4">
+                        <span ng-if="enableEdit === false">{{ orgDetailConfig.name }}</span>
+                         <input  type="text" 
+                                id="OrgName"
+                                ng-model="orgDetailConfig.name" 
+                                class="form-control"
+                                ng-required="true" 
+                                ng-if="enableEdit === true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">sysAdminId</label>
+                    <div class="input-group col-sm-4">
+                        <span ng-if="enableEdit === false">{{ orgDetailConfig.sysAdminId }}</span>
+                         <input  type="text" 
+                                id="OrgSysAdmin"
+                                ng-model="orgDetailConfig.sysAdminId" 
+                                class="form-control"
+                                ng-required="true" 
+                                ng-if="enableEdit === true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">logo</label>
+                    <div class="input-group col-sm-4">
+                        <div  ng-if="enableEdit === false && orgDetailConfig.logo !== '' " >
+                            <img data-ng-src="data:image/png;base64,{{orgDetailConfig.logo }}" data-err-src="resources/images/No Logo.gif" style="max-width: 200px;max-height: 200px;width: auto;height: :auto"/>
+                        </div>
+                        <div  ng-if="enableEdit === false && orgDetailConfig.logo =='' ">
+                            <img src="resources/images/No Logo.gif" style="width: 200px;height: 200px"/>
+                        </div>
+                        <!--<span  ng-if="enableEdit === false && orgDetailConfig.logo =='' "> No Logo Uploaded.</span>-->
+                        
+                        <label ng-if="enableEdit === true" class="col-md-6 control-label" for="selectFile"> {{logofile ? logofile.name : 'Select file to upload as logo'}}</label>
+                         <div class="input-group col-md-6" ng-if="enableEdit === true">
+                            <span 	id 				="selectFile"
+                                            class		    = "btn btn-primary fileinput-button dz-clickable" 
+                                            name		    = "file"
+                                            enctype		    = "multipart/form-data"
+                                            data-ngf-select	= "selectFile($files, $invalidFiles)"
+                                            >
+                                            <span>Add </span><i class="pficon-file"></i> 
+                                    </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button ng-if="enableEdit === false" type="submit" class="btn btn-primary" ng-click="edit(true)" ng-bind-template="{{ (orgDetailConfig.name ) ? 'Edit' : 'Configure' }}">Loading...</button>
+                        <button ng-if="enableEdit === true" type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+                        <button ng-if="enableEdit === true" type="submit" ng-click="edit(false)" class="btn btn-default">Cancel</button>
+                    </div>
+                </div>
+                <div  ng-if="enableEdit === true">
+                    <div class="col-sm-offset-2 col-sm-10" style="color: red">
+                        Note : Only {{allowedExtList}} file format supported.
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+</div>

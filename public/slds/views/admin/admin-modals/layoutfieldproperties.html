@@ -29,7 +29,7 @@
                         <slds-switch id="fieldReadonly" switch-change="onChangeReadonly()" ng-model="field.readonly" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || section.readonly"/>
                     </div>
                 </div>
-                <div class="slds-form-element" ng-if="field.SObjectField.type === 'boolean' || field.SObjectField.type === 'picklist' || field.SObjectField.type === 'multipicklist'">
+                <div class="slds-form-element" ng-if="(field.SObjectField.type === 'boolean' || field.SObjectField.type === 'picklist' || field.SObjectField.type === 'multipicklist') && forMobile === false">
                     <label class="slds-form-element__label" for="fieldDefaultValue">Default Value</label>
                     <div class="slds-form-element__control">
                         <div ng-if="field.SObjectField.type === 'boolean'">
@@ -42,13 +42,13 @@
                         <span ng-if="field.SObjectField.type === 'multipicklist'" class="slds-badge">{{ (field.defaultValue) ? field.defaultValue.length : 0 }} items selected.</span>
                     </div>
                 </div>
-                <div class="slds-form-element" ng-if="field.SObjectField.type === 'reference'">
+                <div class="slds-form-element" ng-if="field.SObjectField.type === 'reference'  && forMobile === false">
                     <label class="slds-form-element__label">Reference</label>
                     <div class="slds-form-element__control">
                         <div style="padding-top: 3px;" reference-field-selector field="field" ref-sobjects="refSObjects"></div>
                     </div>
                 </div>
-                <div class="slds-form-element" data-select="single" ng-if="field.SObjectField.type === 'reference'">
+                <div class="slds-form-element" data-select="single" ng-if="field.SObjectField.type === 'reference'  && forMobile === false">
                     <label class="slds-form-element__label" for="fieldLookup">Lookup</label>
                     <div class="slds-form-element__control slds-grid slds-box--border slds-lookup-field">
                         <input type="hidden" ng-model="field.lookup.value">
@@ -65,12 +65,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-form-element" ng-if="eventFields.indexOf(field.SObjectField.type) !== -1">
+                <div class="slds-form-element" ng-if="eventFields.indexOf(field.SObjectField.type) !== -1  && forMobile === false">
                     <label class="slds-form-element__label" for="event_onchange">OnChange</label>
                     <div class="slds-form-element__control">
                         <select id="event_onchange" class="slds-select" ng-model="field.event.onChange" ng-options="event as event.name for event in layout.events | filter: eventFilter | filter: {type: 'change'} track by event.name">
                             <option value="">-- None --</option>
                         </select>
+                    </div>
+                </div>
+                <div class="slds-form-element" ng-if="field.SObjectField.type === 'reference' && forMobile === false && field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1">
+                    <label class="slds-form-element__label" for="fieldUserSelected">Current User Selected ?</label>
+                    <div class="slds-form-element__control">
+                        <slds-switch id="fieldUserSelected" switch-change="onChangeCurrentUserSelect()" ng-model="field.currentUserSelected" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || section.readonly"/>
+                    </div>
+                </div>
+                <div class="slds-form-element" ng-if="field.SObjectField.type === 'reference' && forMobile === false && field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1">
+                    <label class="slds-form-element__label" for="fieldExcludeUser">Exclude Current User ?</label>
+                    <div class="slds-form-element__control">
+                        <slds-switch id="fieldExcludeUser" switch-change="onChangeExcludeUser()" ng-model="field.excludeCurrentUser" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || section.readonly"/>
                     </div>
                 </div>
             </div>

@@ -53,7 +53,8 @@ componentRouter.post('/savepopupattachment', function (req, res) {
                         ParentId: attachmentDetails.id,
                         Name : fileToBeSaved.originalFileName,
                         Body: new Buffer(fileData).toString('base64'),
-                        ContentType : fileToBeSaved.fileType,  
+                        ContentType : fileToBeSaved.fileType,
+                        Description : JSON.parse(JSON.parse(req.cookies.user).userdata).Id  
                     };
                     global.sfdc.sobject('Attachment').create(fileObj, function(err, ret){
                         if(err || !ret.success){
@@ -88,7 +89,48 @@ var deleteAttachment = function(attachmentIdArray){
         global.sfdc.sobject('Attachment').destroy(attachmentId);
     });
 };
-
+componentRouter.post('/deleteexistingattachment', function (req, res) {
+    var attachment=req.body;
+    console.log('data',attachment.Id);
+    console.log('data',JSON.parse(JSON.parse(req.cookies.user).userdata).Id);
+    global.sfdc.sobject('Attachment')
+    .find({ id : attachment.Id,Description : JSON.parse(JSON.parse(req.cookies.user).userdata).Id })
+    .destroy(function(err,result){
+        if(err){
+             return res.json({
+                success: false,
+                message: "Error while deleting File.",
+                err:err
+            });
+        }
+        if(result.length>0){
+            return res.json({
+                success: true,
+                filename: attachment.Name,
+                message: "File Deleted successfully"
+            });
+        }
+        else{
+            return res.json({
+                success: false,
+                filename: attachment.Name,
+                message: "File Not Found or Already Deleted"
+            });
+        }
+        console.log(result.length>0);
+         return res.json({
+            success: true,
+            filename: attachment.Name,
+            message: message
+        });
+    }).catch(function(err){
+         return res.json({
+            success: false,
+            message: "Error while deleting File.",
+            err:err
+        });
+    });
+});
 componentRouter.post('/getfiledata', function (req, res) {
     var config = {
         method: 'GET',
@@ -97,6 +139,7 @@ componentRouter.post('/getfiledata', function (req, res) {
             "Authorization": "Bearer "+global.sfdc.accessToken
         }
     };
+    console.log('accessToken in file download :: ', global.sfdc.accessToken);
     var stream = request(config).pipe(fs.createWriteStream(os.tmpdir()+'/'+req.body.name, {autoClose: true}));
     stream.on('finish',function(){
         fs.createReadStream(stream.path, {bufferSize: 64 * 1024}).pipe(res);
@@ -404,7 +447,8 @@ componentRouter.post('/saveinvoicelineitemdata', function(req, res){
                 if(err){
                     return res.json({
                         success: false,
-                        message: 'Error occured while saving invoice line item.'
+                        message: 'Error occured while saving invoice line item.',
+                        err:err.toString()
                     });
                 }
                 deleteLineItems();
@@ -421,9 +465,14 @@ componentRouter.post('/saveinvoicelineitemdata', function(req, res){
                 if(err){
                     return res.json({
                         success: false,
-                        message: 'Error occured while saving invoice line item.'
+                        message: 'Error occured while saving invoice line item.',
+                        err:err.toString()
                     });
                 }
+                return res.json({
+                    success: true
+                });
+                
             });
         }
         else{
@@ -468,7 +517,8 @@ componentRouter.post('/saveinvoicelineitemdata', function(req, res){
             if(err){
                 return res.json({
                     success: false,
-                    message: 'Error occured while saving invoice line item.'
+                    message: 'Error occured while saving invoice line item.',
+                    err:err.toString()
                 });
             }
             updateLineItems();

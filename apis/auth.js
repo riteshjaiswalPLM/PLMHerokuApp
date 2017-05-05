@@ -2,6 +2,7 @@ var express = require('express');
 var jwt = require('jsonwebtoken');
 var CryptoJS = require('crypto-js');
 var authRouter = express.Router();
+var request = require('request');
 
 authRouter.post('/authenticate', function(req, res){
     console.log(req.body);
@@ -284,6 +285,23 @@ authRouter.post('/states', function(req, res){
                     }
                 }).then(function(tabs) {
                     var states = [], profile = [];
+                    if(global.config.dashboardConfig.active){
+                        states.push({
+                            dynamic: true,
+                            name: 'client.dashboard',
+                            controller: 'ClientDashboardController',
+                            templateUrl: viewPrefix + 'views/client/dashboard.html',
+                            title: global.config.dashboardConfig.title,
+                            params:{
+                                icon: global.config.dashboardConfig.icon,
+                                showRefreshResult: global.config.dashboardConfig.showRefreshResult
+                            },
+                            tab:{
+                                label: global.config.dashboardConfig.tabLabel,
+                                icon: (global.config.dashboardConfig.tabICON) ? global.config.dashboardConfig.tabICON : null,
+                            }
+                        });
+                    }
                     tabs.forEach(function(tab){
                         if(tab.SObject.SObjectLayouts !== null && tab.SObject.SObjectLayouts !== undefined){
                             tab.SObject.SObjectLayouts.forEach(function(layout){
@@ -338,6 +356,23 @@ authRouter.post('/states', function(req, res){
                         }
                         
                     });
+                    if(global.config.archivalConfig.active){
+                        states.push({
+                            dynamic: true,
+                            name: 'client.archival',
+                            controller: 'ClientArchivalController',
+                            templateUrl: viewPrefix + 'views/client/archival.html',
+                            title: global.config.archivalConfig.title,
+                            params:{
+                                icon: global.config.archivalConfig.icon,
+                                showRefreshResult: global.config.archivalConfig.showRefreshResult
+                            },
+                            tab:{
+                                label: global.config.archivalConfig.tabLabel,
+                                icon: (global.config.archivalConfig.tabICON) ? global.config.archivalConfig.tabICON : null,
+                            }
+                        });
+                    }
                     var where = {};
                     var UserMapping = db.UserMapping.findAll({
                         attributes: {
@@ -635,7 +670,7 @@ authRouter.post('/resetpassword', function(req, res){
     var data = req.body;
     var userId;
     var newpassword;
-
+    var baseURL = process.env.MOBILE_AUTH_INSTANCE_URL || 'https://esm-mob-auth-v3.herokuapp.com';
     var base64decode = new Buffer(data.id,'base64');
     userId=base64decode.toString('UTF-8')
 
@@ -672,7 +707,7 @@ authRouter.post('/resetpassword', function(req, res){
                         message: message.auth.error.LINK_EXPIRED
                 });
             }
-
+            
             db.User.update({
                     password        :data.password,
                     changereqdate   :null
@@ -683,6 +718,81 @@ authRouter.post('/resetpassword', function(req, res){
                         active	: true
                     }
                 }).then(function(){
+                    var UserMapping = db.UserMapping.findAll({
+                        attributes: {
+                            exclude: ['createdAt','updatedAt']
+                        },
+                        order: [
+                            ['id']
+                        ]
+                    });
+                    UserMapping.then(function(userMapping){
+                        //console.log('usermappingdata ',userMapping)
+                        if(userMapping && userMapping.length > 0){
+                            if(userMapping[0].isMobileActive === true){
+                                request({
+                                    url: baseURL + '/api/mobusers/updation',
+                                    method: 'post',
+                                    json: {
+                                        username:user.username,
+                                        password:CryptoJS.MD5(data.password).toString(),
+                                        old_username:user.username,
+                                        isEncryptionEnabled :true
+                                    }
+                                }, function(error, response, body){
+                                    console.log('res ',response);
+                                    if(error) {
+                                        console.log(error);
+                                        //rollback
+                                        // db.User.update({password: user.password},{
+                                        //     where: {
+                                        //         id: user.id,
+                                        //         username: user.username,
+                                        //     }
+                                        // });
+
+                                        res.json({
+                                            success: false,
+                                            message: 'Error occured on server while sending message.\nError: ' + error.message
+                                        });
+                                    } 
+                                    else{
+                                        if(response.statusCode === 500){
+                                            //rollback
+                                            db.User.update({password: user.password},{
+                                                where: {
+                                                    id: user.id,
+                                                    username: user.username,
+                                                }
+                                            });
+                                            res.json({
+                                                success: false,
+                                                message: "Error occured while reseting password"
+                                            }); 
+                                        }
+                                        else{
+                                            return res.json({
+                                                success: true,
+                                                message: message.auth.success.NEWPASSWORD_SUCCESS
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                            else{
+                                return res.json({
+                                    success: true,
+                                    message: message.auth.success.NEWPASSWORD_SUCCESS
+                                });
+                            }
+                        }
+                        else{
+                            return res.json({
+                                success: true,
+                                message: message.auth.success.NEWPASSWORD_SUCCESS
+                            });
+                        }
+                    });
                     return res.json({
                         success: true,
                         message: message.auth.success.NEWPASSWORD_SUCCESS
@@ -742,6 +852,86 @@ authRouter.post('/resetpasswordlinkexpired', function(req, res){
                     success: true,
                     message: 'Success'
             });
+        }
+    });
+});
+authRouter.post('/userDetail', function (req, res) {
+    console.log(req.body);
+    
+    console.log("accessToken : " + global.sfdc.accessToken);
+    console.log("instanceUrl : " + global.sfdc.instanceUrl);
+    console.log("orgId : " + global.sfdc.orgId);
+    
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    if(!username && !password){
+        return res.json({
+            success: false,
+            message: message.auth.error.USERNAME_PASSWORD_MISSING
+        });
+    }
+    
+    var ciphertext = CryptoJS.MD5(password);
+    password = ciphertext.toString();
+    
+    var User = db.User.findOne({
+        attributes: ['id','firstname','password','lastname','userdata','email','username'],
+        include: [{
+            model: db.Role,
+            attributes:['id','name']
+        },{
+            model: db.Language,
+            attributes: ['id','name','code']
+        }],
+        where: {
+            username: username,
+            active: true
+        }
+    });
+    
+    User.then(function(user){
+        if((user == null || !user) || user.password != password){
+            return res.json({
+                success: false,
+                message: message.auth.error.INVALID_CREDENTIALS
+            });
+        } else {
+            
+            var userData=JSON.parse(user.userdata);
+                return res.json({
+                    userDetails: {
+                        usertype:'HEROKU_USER',
+                        connection:{
+                            OrgId:global.sfdc.orgId,
+                            ApexServerUrl:global.sfdc.instanceUrl+'/services/Soap/s/'+global.sfdc.version,
+                            SessionId:global.sfdc.accessToken
+                        },
+                        user :{
+                            id:user.id,
+                            saleforceId:userData.Id,
+                            firstName:user.firstname,
+                            lastName:user.lastname,
+                            middleInitial:userData.akritivesm__Middle_Initial__c,
+                            enableDelegation:userData.akritivesm__Enable_Delegation__c,
+                            delegateUserId:userData.akritivesm__Delegate_User__c,
+                            supervisorId:userData.akritivesm__Supervisor__c,
+                            status:userData.akritivesm__Status__c,
+                            email:user.email,
+                            username:user.username,
+                            role :{
+                                id:user.Role.id,
+                                rolname:user.Role.name
+                            },
+                            lang_mstr :{
+                                id:user.Language.id,
+                                language_name:user.Language.name,
+                                language_code:user.Language.code
+                            },
+                            fullname:user.firstname+" "+(user.akritivesm__Middle_Initial__c ==null?'':user.akritivesm__Middle_Initial__c)+" "+user.lastname
+                        }
+                    }
+                });
         }
     });
 });

@@ -16,7 +16,14 @@ module.exports = function(sequelize, DataTypes){
         },
         catagory: {
             type: DataTypes.ENUM,
-            values: ['UploadAttachment','DashboardMyTask','DashboardChart']
+            values: ['UploadAttachment','MultiLevelApproval','DashboardMyTask','DashboardChart']
+        },
+        forMobile: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: function(){
+                return false;
+            }
         }
     },{
         classMethods: {
@@ -29,7 +36,25 @@ module.exports = function(sequelize, DataTypes){
                     onDelete: 'CASCADE', 
                     hooks: true
                 });
+                Components.hasMany(models.DashboardContainersComponents, {
+                    onDelete: 'CASCADE', 
+                    hooks: true
+                });
+                Components.hasMany(models.SObjectLayoutSection, {
+                    onDelete: 'CASCADE', 
+                    hooks: true
+                });
                 Components.belongsTo(models.SObject,{
+                    onDelete: 'CASCADE',
+                    hooks:true
+                });
+                Components.belongsTo(models.SObject,{
+                    as : 'detailSObject',
+                    onDelete: 'CASCADE',
+                    hooks:true
+                });
+                Components.belongsTo(models.SObject,{
+                    as : 'approvalDetailSObject',
                     onDelete: 'CASCADE',
                     hooks:true
                 });

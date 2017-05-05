@@ -8,12 +8,13 @@ client.controller('ClientProfileManageController',[
             $stateParams.data = {}; $state.current.params={};
             $state.current.params.metadata = $stateParams.metadata;
             $scope.template = 'views/client/layout/edit.html';
+            var rootUser= JSON.parse($rootScope.user().userdata);
             $stateParams.data['record'] = {
-                Id: $rootScope.user().userdata.Id,
-                Name: $rootScope.user().userdata.Name,
+                Id: rootUser.Id,
+                Name: rootUser.Name,
                 attributes: {
                     type: $stateParams.metadata.sobject.name,
-                    url: "/services/data/v37.0/sobjects/"+$stateParams.metadata.sobject.name+"/"+$rootScope.user().userdata.Id
+                    url: "/services/data/v37.0/sobjects/"+$stateParams.metadata.sobject.name+"/"+rootUser.Id
                 }
             };
             $scope.hideHeader = true;
@@ -25,8 +26,8 @@ client.controller('ClientProfileManageController',[
 ]);
 
 client.controller('ClientProfileChangePasswordController',[
-            '$scope','$rootScope','$dialog','ClientProfileService','blockUI',
-    function($scope , $rootScope , $dialog , ClientProfileService , blockUI){
+            '$scope','$rootScope','$dialog','ClientProfileService','blockUI','$state',
+    function($scope , $rootScope , $dialog , ClientProfileService , blockUI,$state){
 
         $scope.save = function(){
             if($scope.credentials.password === undefined || $scope.credentials.password ===null || $scope.credentials.password === ''
@@ -43,6 +44,11 @@ client.controller('ClientProfileChangePasswordController',[
                 $dialog.alert('Password Does not Match','Error','pficon pficon-error-circle-o');
                 return;
             }
+            if($scope.credentials.newPassword == $scope.credentials.password)
+            {
+                $dialog.alert('Current Password and New Password must not be same','Error','pficon pficon-error-circle-o');
+                return;
+            }
             var userObject = $rootScope.user();
             userObject.credentials = $scope.credentials;
             $scope.blockUI.changePasswordLayout.start('Changing password');
@@ -51,7 +57,7 @@ client.controller('ClientProfileChangePasswordController',[
                     $scope.blockUI.changePasswordLayout.stop();
                     if(response.success){
                         $dialog.alert(response.message,'','');
-                        $scope.init();
+                        $state.go('client.profile');
                     }else{
                         $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                     }

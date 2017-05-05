@@ -55,6 +55,18 @@ module.exports = function(sequelize, DataTypes){
                 return false;
             }
         },
+        currentUserSelected: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function(){
+                return false;
+            }
+        },
+        excludeCurrentUser: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function(){
+                return false;
+            }
+        },
         enable: {
             type: DataTypes.BOOLEAN,
             defaultValue: function(){
@@ -106,8 +118,8 @@ module.exports = function(sequelize, DataTypes){
     },{
         classMethods: {
             associate: function(models){
-                SObjectLayoutField.belongsTo(models.SObjectField);
-                SObjectLayoutField.belongsTo(models.SObjectField, {as: 'ControllerSObjectField'});
+                SObjectLayoutField.belongsTo(models.SObjectField,{ onDelete: 'CASCADE', hooks: true });
+                SObjectLayoutField.belongsTo(models.SObjectField, {as: 'ControllerSObjectField' ,onDelete: 'CASCADE', hooks: true });
                 SObjectLayoutField.belongsTo(models.SObjectLookup);
                 SObjectLayoutField.belongsTo(models.Components);
             }

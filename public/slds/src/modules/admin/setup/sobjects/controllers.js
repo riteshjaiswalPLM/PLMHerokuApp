@@ -72,9 +72,48 @@ admin.controller('AdminSetupSObjectsListController',[
     
     $scope.initBlockUiBlocks = function(){
         $scope.blockUI = {
-            loadSObjects: blockUI.instances.get('loadSObjects')
+            loadSObjects: blockUI.instances.get('loadSObjects'),
+            synchronizeSobject:blockUI.instances.get('synchronizeSobject')
         };
     };
+
+    $scope.syncronize = function(){
+        var soobjectList=[];
+        $dialog.confirm({
+                title: 'Confirm synchronization ?',
+                yes: 'Yes', no: 'No',
+                message: '<h1>Syncronaztion may affect existing configuration.</h1><br><ul><li>It may remove referrence from Layouts, My Task, Search Config, Mobile Application config, etc.. of deleted object(s)/field(s) which might be used in.</li><li>Picklist value might be modified/deleted which might be in use.</li></ul>',
+                class:'destructive',
+                headerClass:'error'
+            },function(confirm){
+                if(confirm){
+                    $scope.blockUI.synchronizeSobject.start('Synchronizing sobjects with Salesforce...');
+                    $scope.sObjects;
+                    //console.log('$scope.sObjects:-', $scope.sObjects);
+                    $scope.sObjects.forEach(function(sobject){
+                        var obj ={  name:sobject.name,
+                                    id:sobject.id
+                                };
+                        soobjectList.push(obj);
+                    });
+                    //console.log('soobjectList:-'+soobjectList);
+                    sobjectService.syncSObjects(soobjectList).
+                    success(function(response){
+                        console.log('local sobject:-', response.data);
+                        //console.log('local object:-', $scope.sObjects);
+                        $scope.blockUI.synchronizeSobject.stop();
+                    }).
+                    error(function(response){
+                        $dialog.alert('Error occured while synchronization.','Error','pficon pficon-error-circle-o');
+                        $scope.blockUI.synchronizeSobject.stop();
+                    });
+                   
+                }
+                
+            });
+    };
+
+
     $scope.init = function(){
         console.log('AdminSetupSObjectsListController loaded!');
         $scope.initBlockUiBlocks();

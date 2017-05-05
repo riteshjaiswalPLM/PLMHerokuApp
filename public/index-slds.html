@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.min.css">
     <link rel="stylesheet" href="bower_components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css">
     <link rel="stylesheet" href="bower_components/json-formatter/dist/json-formatter.min.css">
+    
     <!--<link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">-->
     <style>
         [ng/:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -45,29 +46,53 @@
             background:  #64c550 !important;
             border:0px !important;
         }
+        .login-pf {
+            height: 100%;
+        }
         .form-signin {
-            background: #ececec none repeat scroll 0 0;
-            border: 0 solid #cccccc;
-            border-radius: 10px;
-            box-shadow: 0 0 5px #000000;
-            left: 0;
-            margin: 0 auto;
+            padding: 10px 10px 15px;
+            background: #ffffff;
             opacity: 1;
-            padding: 30px 30px 15px;
-            transition: all 0.2s ease-in-out 0s;
+            margin-left:10px;
+            left: 0;
+            -webkit-border-radius: 4px;
+            border-radius: 10px;
+            border: 1px solid #CCC;
+            -webkit-box-shadow: 0 0 10px #778899;
+            box-shadow: 0 0 15px #778899;
             z-index: 90;
-            width: 400px !important;
+            -webkit-transition: all .2s ease-in-out;
+            -moz-transition: all .2s ease-in-out;
+            -ms-transition: all .2s ease-in-out;
+            -o-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+            font-family: 'Roboto',sans-serif;
+            font-size: 16px;
+        }
+        .form-signin input{
+            border-color: #ccc7c7;
+            border-style: none none solid !important;
+            border-width: 0 0 1px;
+            width: 100%;
+            line-height: initial;
+            outline: none;
+        }
+        .form-signin input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px white inset !important;
         }
         .login-pf body {
-            background-size: 100% auto;
-            background: rgba(0, 0, 0, 0) url("/resources/images/bg-login-new.jpg") no-repeat scroll 0 0 / 100% auto!important;
+            background: rgba(0, 0, 0, 0) url("/resources/images/LoginGenpact.jpg") no-repeat fixed;
+            background-size: cover; /* this will make the background-image go fullscreen, but always in Ratio */
+            background-repeat: no-repeat;
+            
         }
         .login-pf .container {
             color: #333333 !important;
             bottom: 0 !important;
             padding-left: 0px !important;
             position: relative !important;
-            margin-top: 180px; 
+            margin-top: 140px; 
+            background-color: rgba(255, 255, 255, 0) !important; 
         }
         .login-pf .container .help-block {
             color: #333333 !important;
@@ -221,7 +246,7 @@
             margin-top: 8px;
             margin-bottom: 8px;
         }
-
+        
         .ng-invalid-val, button.ng-invalid, input.ng-invalid, select.ng-invalid, textarea.ng-invalid, input.formElement.ng-invalid {
             border-left: solid 5pt red;
         } 
@@ -313,11 +338,15 @@
             padding-right: .5rem;
             padding-left: .5rem;
         }
+        .slds-lookup__search-input{
+            height: 1.87rem;
+        }
+
     </style>
 </head>
-<body>
+<body class="login-pf">
     <div class="slds-grid slds-wrap" ui-view></div>
-    
+    <!--<input slds-datepicker="" ng-model="field.value" type="text" />-->
     <!--Angular-->
     <script src="bower_components/angular-patternfly/dist/docs/grunt-scripts/jquery.js" ></script>
     <script src="bower_components/jquery-ui/jquery-ui.min.js" ></script>
@@ -361,8 +390,8 @@
     <!--<script src="bower_components/angular-translate-loader-url/angular-translate-loader-url.js" ></script>-->
     <script src="bower_components/ngstorage/ngStorage.min.js" ></script>
     <script src="bower_components/json-formatter/dist/json-formatter.min.js" ></script>
-    
-    
+
+
     <!--App Modules-->
     <!--App.Dialog Module-->
     <script src="slds/src/modules/dialog/dialog.js" ></script>
@@ -392,8 +421,9 @@
     <script src="slds/src/modules/client/client.controllers.js" ></script>
     <script src="slds/src/modules/client/layout/controllers.js" ></script>
     <script src="slds/src/modules/client/profile/controllers.js" ></script>
-    <!--<script src="src/modules/client/lookup/controllers.js" ></script>
-    <script src="src/modules/client/dashboard/controllers.js" ></script>-->
+    <script src="slds/src/modules/client/lookup/controllers.js" ></script>
+    <script src="slds/src/modules/client/dashboard/controllers.js" ></script>
+    <script src="slds/src/modules/client/archival/controllers.js" ></script>
     <script src="slds/src/modules/client/layout/components/uploadattachment/controller.js" ></script>
     <script src="slds/src/modules/client/layout/components/costalloactioncomponent/controller.js" ></script>
     <script src="slds/src/modules/client/layout/components/otherchargecomponent/controller.js" ></script>
@@ -403,7 +433,8 @@
     <script src="slds/src/modules/client/sobject/services.js" ></script>
     <script src="slds/src/modules/client/lookup/controllers.js" ></script>
     <script src="slds/src/modules/client/lookup/services.js" ></script>
-    <!--<script src="src/modules/client/dashboard/services.js" ></script>-->
+    <script src="slds/src/modules/client/dashboard/services.js" ></script>
+    <script src="slds/src/modules/client/archival/services.js" ></script>
     
     <!--App.Admin Module-->
     <script src="slds/src/modules/admin/admin.lookups.js" ></script>
@@ -423,6 +454,7 @@
     <script src="slds/src/modules/admin/usermanagement/roles/controllers.js"></script>
     <script src="slds/src/modules/admin/usermanagement/users/controllers.js"></script>
     <script src="slds/src/modules/admin/usermanagement/profile/controllers.js"></script>
+    <script src="slds/src/modules/admin/usermanagement/userlayout/controllers.js"></script>
     <script src="slds/src/modules/admin/languages/controllers.js"></script>
     <script src="slds/src/modules/admin/components/generic-components/controllers.js"></script>
     <script src="slds/src/modules/admin/components/static-components/controllers.js"></script>
@@ -432,6 +464,9 @@
     <script src="slds/src/modules/admin/mobile/governfields/controllers.js"></script>
     <script src="slds/src/modules/admin/mobile/layout/controllers.js"></script>
     <script src="slds/src/modules/admin/mobile/useraction/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/mytask/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/picklist/controllers.js"></script>
+    <script src="slds/src/modules/admin/mobile/orgdetails/controllers.js"></script>
     
     <script src="slds/src/modules/admin/dashboard/services.js"></script>
     <script src="slds/src/modules/admin/tabs/services.js"></script>
@@ -450,6 +485,8 @@
     <script src="slds/src/modules/admin/mobile/governfields/services.js"></script>
     <script src="slds/src/modules/admin/mobile/layout/services.js"></script>
     <script src="slds/src/modules/admin/mobile/useraction/services.js"></script>
+    <script src="slds/src/modules/admin/mobile/picklist/services.js"></script>
+    <script src="slds/src/modules/admin/mobile/orgdetails/services.js"></script>
     
     <!--Angular Application Module-->
     <script src="slds/src/app.js" ></script>

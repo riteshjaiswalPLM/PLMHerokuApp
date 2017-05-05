@@ -66,6 +66,7 @@ admin.factory('mobileLayoutService',['$http',function($http){
         saveEditLayout: function(editLayout){
             var sectionOrder = 0;
             angular.forEach(editLayout.layoutSections,function(section,sectionIndex){
+                section.MobileEditLayoutConfigId = editLayout.MobileEditLayoutConfigId;
                 if(!section.deleted){
                     section.order = sectionOrder;
                     sectionOrder++;
@@ -79,11 +80,6 @@ admin.factory('mobileLayoutService',['$http',function($http){
                                     delete field.ControllerSObjectField;
                                 }
                                 
-                                // if(field.lookup !== undefined && field.lookup.value !== undefined){
-                                //     field.SObjectLookupId = field.lookup.value;
-                                // }else{
-                                //     delete field.SObjectLookupId;
-                                // }
                                 field.SObjectLookupId = (field.lookup !== undefined && field.lookup.value !== undefined) ? field.lookup.value : field.SObjectLookupId; 
                                 delete field.lookup;
                                 if(!field.deleted){
@@ -98,6 +94,7 @@ admin.factory('mobileLayoutService',['$http',function($http){
                     }
                 }
             });
+            delete editLayout.MobileEditLayoutConfigId;
             return $http.post('/api/admin/sobjectlayout/saveeditlayout',editLayout);
         },
         saveLayoutRelatedLists: function(editLayout){
@@ -125,6 +122,21 @@ admin.factory('mobileLayoutService',['$http',function($http){
         },
         getuserprofilelayout: function(){
             return $http.post('/api/admin/sobjectlayout/getuserprofilelayout',{});
+        },
+        loadgoverningfields: function(data){
+            return $http.post('/api/admin/sobjectlayout/loadgoverningfields', data);
+        },
+        loadmobileeditlayoutconfig: function(data){
+            return $http.post('/api/admin/sobjectlayout/loadmobileeditlayoutconfig', data);
+        },
+        changemobileeditlayoutconfigactive: function(data){
+            return $http.post('/api/admin/sobjectlayout/changemobileeditlayoutconfigactive', data);
+        },
+        deletemobileeditlayoutconfig: function(data){
+            return $http.post('/api/admin/sobjectlayout/deletemobileeditlayoutconfig', data);
+        },
+        savemobileeditlayoutconfig: function(data){
+            return $http.post('/api/admin/sobjectlayout/savemobileeditlayoutconfig', data);            
         }
     };
 }]);

@@ -63,6 +63,20 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 });
             });
         },
+        multiObjectCriteriaModal: function(data, callback){
+            ModalService.showModal({
+                templateUrl: 'slds/views/admin/admin-modals/multiobjectcriteriamodal.html',
+                controller:'MultiObjectCriteriaModalController',
+                inputs:{
+                    data: data
+                } 
+            }).then(function(modal){
+                modal.element.modal({backdrop: 'static', keyboard: false});
+                modal.close.then(function(criteria){
+                    callback && callback(criteria);
+                });
+            });
+        },
         layoutFieldPropertiesPicklistValues: function(data, callback){
             ModalService.showModal({
                 templateUrl: 'slds/views/admin/admin-modals/layoutfieldproperties_picklistvalues.html',
@@ -77,30 +91,30 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 });
             });
         },
-        adminClientDashboardContainerProperties: (data, callback)=>{
+        adminClientDashboardContainerProperties: function(data, callback){
             ModalService.showModal({
                 templateUrl: 'slds/views/admin/admin-modals/dashboardcontainerproperties.html',
                 controller:'AdminClientDashboardContainerPropertyModelController',
                 inputs:{
                     data: data  
                 } 
-            }).then((modal)=>{
+            }).then(function(modal){
                 modal.element.modal({backdrop: 'static', keyboard: false});
-                modal.close.then((container)=>{
+                modal.close.then(function(container){
                     callback && callback(container);
                 });
             });
         },
-        adminClientDashboardContainerComponentProperties: (data, callback)=>{
+        adminClientDashboardContainerComponentProperties: function(data, callback){
             ModalService.showModal({
                 templateUrl: 'slds/views/admin/admin-modals/dashboardcontainercomponentproperties.html',
                 controller:'AdminClientDashboardContainerComponentPropertyModelController',
                 inputs:{
                     data: data  
                 } 
-            }).then((modal)=>{
+            }).then(function(modal){
                 modal.element.modal({backdrop: 'static', keyboard: false});
-                modal.close.then((container)=>{
+                modal.close.then(function(container){
                     callback && callback(container);
                 });
             });
@@ -141,6 +155,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
     function($scope , $rootScope , $element , $dialog , $timeout , blockUI , data , close , sobjectService){
         $scope.title = (data.title) ? data.title : 'Related List Properties' ;
         $scope.layout = (data.layout) ? data.layout : {};
+        $scope.forMobile = data.layout.type === 'Mobile' ? true : false;
         $scope.relatedList = (data.relatedList) ? data.relatedList : {};
         $scope.relatedList.readonly = $scope.relatedList.readonly|| $scope.layout.type === 'Details';
         $scope.relatedListTitle = $scope.relatedList.title;
@@ -159,7 +174,10 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             if(fieldToAdd){
                 var duplicate = false;
                 angular.forEach($scope.relatedListFields,function(field,fieldIndex){
-                    if(field.SObjectField.name === fieldToAdd.name && !duplicate && !field.deleted){
+                    if(field.SObjectField.type !== 'reference' && field.SObjectField.name === fieldToAdd.name && !duplicate && !field.deleted){
+                        duplicate = true;
+                    }
+                    if(field.SObjectField.type === 'reference' && fieldToAdd.id === field.SObjectField.id && ((fieldToAdd.reference === undefined && field.reference === 'Name') || (fieldToAdd.reference !== undefined && field.reference === fieldToAdd.reference)) && !duplicate && !field.deleted){
                         duplicate = true;
                     }
                 });
@@ -170,6 +188,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                         type: 'Related-List-Field',
                         hidden: false,
                         deleted: false,
+                        readonly: $scope.relatedList.readonly
                     });
                 }else{
                     $dialog.alert('Duplicate field!','Warning','pficon pficon-warning-triangle-o');
@@ -188,6 +207,10 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                         }
                     }
                 });
+                var where = { referenceSObjectNames: referenceSObjectNames };
+                if($scope.forMobile === true){
+                    where.forMobile = true;
+                }
                 sobjectService.loadSObjects({ referenceSObjectNames: referenceSObjectNames })
                 .success(function(response){
                     if(response.success === true){
@@ -207,11 +230,23 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 });
             }
         };
-        
+        $scope.onChangeReadonlySwitch = function(){
+            if($scope.relatedList.readonly === true){
+                $scope.relatedList.requireAddMore = false;
+                $scope.relatedListFields.forEach(function(field){
+                    field.readonly = true;
+                    field.required = false;
+                });
+            }
+        }
         $scope.close = function(){
             $element.modal('hide');
         };
         $scope.save = function(){
+            if($scope.forMobile === true && $scope.relatedListFields.length === 0){
+                $dialog.alert('Please add fields.\nNo fields added.','Warning','pficon pficon-warning-triangle-o');
+                return;
+            }
             $scope.relatedList.title = ($scope.relatedList.title) ? $scope.relatedList.title : $scope.relatedListTitle;
             $scope.relatedList.SObjectLayoutFields = $scope.relatedListFields;
             $scope.relatedList.SObjectFieldId = $scope.relatedList.SObjectField.id;
@@ -220,7 +255,50 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             $element.modal('hide');
             close($scope.relatedList, 500);
         }
+
+        $scope.$watch('field.readonly', function(newValue,oldValue) {
+           if(newValue)
+                $scope.field.required=false;
+        })
         
+        $scope.$watch('field.required', function(newValue,oldValue) {
+           if(newValue)
+               $scope.field.readonly=false;
+        })
+
+        $scope.onChangeReadonly = function(field){
+            if(field.readonly)
+                field.required=false;
+        }
+
+        $scope.onChangeRequired = function(field){
+            if(field.required)
+                field.readonly=false;
+        }
+        
+        $scope.relatedList.criteria = ($scope.relatedList.criteria) ? $scope.relatedList.criteria : {
+            group: {
+                operator: '&&',
+                rules: []
+            }
+        };
+        $scope.relatedList.SObject.fields = [];
+        if($scope.relatedList.SObject.SObjectFields !== undefined){
+            var allowedTypes = ['string','double','date','currency','boolean','picklist','reference'];
+            angular.forEach($scope.relatedList.SObject.SObjectFields, function(field){
+                if(field.SObjectField == undefined){
+                    field.SObjectField = angular.copy(field);
+                }
+                if(allowedTypes.indexOf(field.SObjectField.type) !== -1 
+                    && field.SObjectField.autoNumber === false 
+                    && field.SObjectField.calculated === false 
+                    && field.SObjectField.encrypted === false){
+                        field.criteriaField = true;
+                        $scope.relatedList.SObject.fields.push(field);
+                }
+            });
+        }
+
         $scope.init = function(){
             console.log('LayoutRelatedListPropertiesModalController loaded!');
             $scope.loadRefSObjects();
@@ -228,8 +306,8 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.init();
     }
 ]).controller('LayoutFieldPropertiesModalController',[
-            '$scope','$rootScope','$element','$dialog','$adminLookups','$adminModals','blockUI','data','close',
-    function($scope , $rootScope , $element , $dialog , $adminLookups , $adminModals , blockUI , data , close){
+            '$scope','$rootScope','$element','$dialog','$adminLookups','$adminModals','blockUI','data','close','$appCache','userMappingService',
+    function($scope , $rootScope , $element , $dialog , $adminLookups , $adminModals , blockUI , data , close,$appCache,userMappingService ){
         $scope.title = (data.title) ? data.title : 'Field Properties' ;
         $scope.layout = (data.layout) ? data.layout : {};
         $scope.section = (data.section) ? data.section : {};
@@ -238,6 +316,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.field.readonly = $scope.section.readonly || $scope.field.readonly;
         $scope.field.required = $scope.field.readonly==true?false:$scope.field.required;
         $scope.refSObjects = data.refSObjects;
+        $scope.forMobile = data.layout.type === 'Mobile' ? true : false;
         if($scope.field.SObjectLookup !== undefined && $scope.field.SObjectLookup !== null && $scope.field.SObjectField.type === 'reference'){
             $scope.field.lookup = {
                 labelValue: $scope.field.SObjectLookup.title + ' | ' + $scope.field.SObjectLookup.description,
@@ -268,6 +347,14 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.onChangeRequired = function(){
             if($scope.field.required)
                 $scope.field.readonly=false;
+        };
+        $scope.onChangeCurrentUserSelect = function(){
+            if($scope.field.currentUserSelected)
+                $scope.field.excludeCurrentUser=false;
+        };
+        $scope.onChangeExcludeUser = function(){
+            if($scope.field.excludeCurrentUser)
+                $scope.field.currentUserSelected=false;
         };
         $scope.openPicklistValuesModal = function(){
             $adminModals.layoutFieldPropertiesPicklistValues({
@@ -307,9 +394,38 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             $element.modal('hide');
             close($scope.field, 500);
         }
-        
+
+        $scope.userData = function(){
+            if($scope.stateCache === undefined){
+                $scope.stateCache={};
+                userMappingService.loadUserMappingConfiguration({})
+                .success(function(response){
+                    if(response.success === true){
+                        var fields=[];
+                        $scope.stateCache.userMasterObjName=response.data.userMapping.SObject.name;
+                        $scope.userMasterObjName=$scope.stateCache.userMasterObjName;
+                        $appCache.put("layoutFieldPropertiesUserObjName", $scope.stateCache);
+                    }else{
+                        $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function(response){
+                    $dialog.alert('Error occured while loading salesforce org configuration.','Error','pficon pficon-error-circle-o');
+                    $scope.blockUI.loadUserMappingConfiguration.stop();
+                });
+                
+            }
+            else{
+                $scope.userMasterObjName=$scope.stateCache.userMasterObjName;
+            }
+
+        }
+
         $scope.init = function(){
             console.log('LayoutFieldPropertiesModalController loaded!');
+            $scope.stateCache = $appCache.get("layoutFieldPropertiesUserObjName");
+            $scope.userMasterObjName="";
+            $scope.userData();
         };
         $scope.init();
     }
@@ -339,8 +455,11 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 rules: []
             }
         };
-        
+        $scope.oldFields=angular.copy($scope.fields);
+        $scope.criteria=angular.copy($scope.criteria);
         $scope.close = function(){
+            $scope.fields=$scope.oldFields;
+            $scope.criteria=$scope.criteria;
             $element.modal('hide');
         };
         $scope.save = function(){
@@ -350,6 +469,54 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         
         $scope.init = function(){
             console.log('CriteriaModalController loaded!');
+        };
+        $scope.init();
+    }
+]).controller('MultiObjectCriteriaModalController',[
+            '$scope','$rootScope','$element','$dialog','blockUI','data','close',
+    function($scope , $rootScope , $element , $dialog , blockUI , data , close){
+        $scope.title = (data.title) ? data.title : 'Criteria' ;
+        $scope.fields = {};
+        if(data.fields !== undefined){
+            var allowedTypes = ['string','double','date','currency','boolean','picklist','reference'];
+            Object.keys(data.fields).forEach(function(key){
+            	angular.forEach(data.fields[key], function(field){
+            		if(!$scope.fields[key]){
+            			$scope.fields[key] = [];
+            		}
+                    if(field.SObjectField == undefined){
+                        field.SObjectField = angular.copy(field);
+                    }
+                    if(allowedTypes.indexOf(field.SObjectField.type) !== -1 
+                        && field.SObjectField.autoNumber === false 
+                        && field.SObjectField.calculated === false 
+                        && field.SObjectField.encrypted === false){
+                            field.criteriaField = true;
+                            $scope.fields[key].push(field);
+                    }
+                });
+            });
+        }
+        $scope.criteria = (data.criteria) ? data.criteria : {
+            group: {
+                operator: '&&',
+                rules: []
+            }
+        };
+        $scope.oldFields=angular.copy($scope.fields);
+        $scope.criteria=angular.copy($scope.criteria);
+        $scope.close = function(){
+            $scope.fields=$scope.oldFields;
+            $scope.criteria=$scope.criteria;
+            $element.modal('hide');
+        };
+        $scope.save = function(){
+            $element.modal('hide');
+            close($scope.criteria, 500);
+        }
+        
+        $scope.init = function(){
+            console.log('MultiObjectCriteriaModalController loaded!');
         };
         $scope.init();
     }
@@ -380,15 +547,15 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         data.container.label = angular.isUndefined(data.container.label) ? data.container.title : data.container.label;
         $scope.container = data.container;
 
-        $scope.close = ()=>{
+        $scope.close = function(){
             $element.modal('hide');
         };
-        $scope.save = ()=>{
+        $scope.save = function(){
             $element.modal('hide');
             close($scope.container, 500);
         }
         
-        $scope.init = ()=>{
+        $scope.init = function(){
             console.log('AdminClientDashboardContainerPropertyModelController loaded!');
         };
         $scope.init();
@@ -402,15 +569,15 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             data.component.columns = 12;
         $scope.component = data.component;
 
-        $scope.close = ()=>{
+        $scope.close = function(){
             $element.modal('hide');
         };
-        $scope.save = ()=>{
+        $scope.save = function(){
             $element.modal('hide');
             close($scope.component, 500);
         }
         
-        $scope.init = ()=>{
+        $scope.init = function(){
             console.log('AdminClientDashboardContainerComponentPropertyModelController loaded!');
         };
         $scope.init();

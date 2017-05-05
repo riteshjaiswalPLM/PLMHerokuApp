@@ -51,6 +51,10 @@ client.controller('ClientSObjectLookupController',[
                 }else{
                     $timeout(function(){
                         $scope.searchResult = $scope.lookupCache.searchResult;
+                        if(data.field.excludeCurrentUser == true){
+                            var userDataId=JSON.parse($rootScope.user().userdata)['Id'];
+                            $scope.searchResult = $filter('filter')($scope.searchResult, {Id:'!'+userDataId});
+                        }
                         $scope.currentPage = $scope.lookupCache.currentPage;
                         $scope.pageSize = $scope.lookupCache.pageSize;
                         console.error($scope.pageSize + ' == ' + $scope.lookupCache.pageSize);
@@ -98,6 +102,10 @@ client.controller('ClientSObjectLookupController',[
                     .success(function(response){
                         if(response.success){
                             $scope.searchResult = response.data.searchResult;
+                            if(data.field.excludeCurrentUser == true){
+                                var userDataId=JSON.parse($rootScope.user().userdata)['Id'];
+                                $scope.searchResult = $filter('filter')($scope.searchResult, {Id:'!'+userDataId});
+                            }
                             $scope.currentPage = response.data.currentPage;
                             $scope.hasMore = response.data.hasMore;
                             

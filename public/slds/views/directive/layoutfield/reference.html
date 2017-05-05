@@ -1,5 +1,5 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
-    <div class="slds-grid slds-box--border" ng-if="!field.readonly">
+    <div class="slds-grid slds-box--border" ng-if="!field.readonly  && (field.disabled ==undefined || field.disabled==false)">
         <div class="slds-input-has-icon slds-grow">
             <input type="hidden" ng-model="field.value">
             <input readonly type="text" id="{{ field.SObjectField.name + index}}" 
@@ -18,5 +18,10 @@
             </button>
         </div>
     </div>
-    <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="field.labelValue"></label>
+    <div  ng-if="field.disabled==true">
+        <input  type="hidden" 
+                ng-model="field.value">
+        <span class="slds-form-element__label" ng-bind="field.labelValue"></span>
+    </div>
+    <span class="slds-form-element__label" ng-if="field.readonly && (field.disabled ==undefined || field.disabled==false)" ng-bind="field.labelValue "></span>
 </div>

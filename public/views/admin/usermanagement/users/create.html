@@ -1,0 +1,100 @@
+<div ng-include="template"></div>
+<!--<style>
+    label.form-control {
+        margin-bottom: 0px;
+    }
+    .form-group > span,
+    .input-group > span{
+        margin-bottom: 0px;
+        padding-top: 3px;
+    }
+</style>
+<div class="col-md-12">
+    
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <a href ng-click="goback()"><span class="fa fa-chevron-circle-left"></span> Back to Users</a>&nbsp;&nbsp;
+        </div>
+        <h1>{{ $root.title() }}</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Create New User</h3>
+        </div>
+        <div class="panel-body" block-ui="loadUsers">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">First Name</label>
+                    <div class="col-sm-4">
+                         <input  type="text" 
+                                id="OrgName"
+                                ng-model="userDetail.fname" 
+                                class="form-control"
+                                ng-required="true" >
+                    </div>
+                    <label class="col-sm-2 control-label">Last Name</label>
+                    <div class=" col-sm-4">
+                         <input  type="text" 
+                                id="OrgName"
+                                ng-model="userDetail.lname" 
+                                class="form-control"
+                                ng-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Middle initial</label>
+                    <div class="col-sm-4">
+                         <input  type="text" 
+                                id="OrgName"
+                                ng-model="userDetail.mname" 
+                                class="form-control"
+                                ng-required="true" >
+                    </div>
+                    <label class="col-sm-2 control-label">Username</label>
+                    <div class=" col-sm-4">
+                         <input  type="text" 
+                                id="OrgName"
+                                ng-model="userDetail.username" 
+                                class="form-control"
+                                ng-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-4">
+                         <input  type="text" 
+                                id="OrgName"
+                                ng-model="userDetail.email" 
+                                class="form-control"
+                                ng-required="true" >
+                    </div>
+                    <label class="col-sm-2 control-label">Status</label>
+                    <div class=" col-sm-4" >
+                        <div ng-class="{'ng-invalid-val' : (!userDetail.status || userDetail.status === undefined || userDetail.status === '')}">
+                            <select pf-select="{size:10}" class="form-control" ng-model="userDetail.status"  >
+                                <option value="" >-- None --</option>
+                                <option value="Active">Active</option>
+                                <option value="In Active">In Active</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="">
+                    <div class="col-sm-12" align="center">
+                        <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+                        <button type="button" ng-click="reset()" class="btn btn-default">Reset</button>
+                    </div>
+                </div>
+                <div  ng-if="enableEdit === true">
+                    <div class="col-sm-offset-2 col-sm-10" style="color: red">
+                        Note : Only {{allowedExtList}} file format supported.
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+</div>-->

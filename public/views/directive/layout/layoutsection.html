@@ -7,10 +7,6 @@
         </div>
         <div ng-if="!section.isComponent" ng-repeat="(fIndex, fields) in section.columns" class="col-xs-{{12/section.columns.length}} col-sm-{{12/section.columns.length}} col-md-{{12/section.columns.length}}">
             <form class="form-horizontal">
-                <!--<div class="form-group sobject-layout-field" ng-repeat="field in fields">
-                    <label class="col-sm-5 control-label" ng-if="field.rendered" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
-                    <div class="col-sm-7" field-readonly="{{field.readonly}}" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div>
-                </div>-->
                 <div class="form-group sobject-layout-field" ng-repeat="field in fields" >
                     <label class="col-sm-{{ section.columns.length > 1 ? (fIndex == 0 ? 7 : 4) : 5 }} control-label" ng-if="field.rendered" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
                     <div class="col-sm-{{ section.columns.length > 1 ? (fIndex == 0 ? 5 : 5) : 5 }}"><div  field-readonly="{{field.readonly}}" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div></div>

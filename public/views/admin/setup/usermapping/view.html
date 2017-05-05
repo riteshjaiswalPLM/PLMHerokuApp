@@ -147,6 +147,20 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for='isComponentActive' class="col-sm-2 control-label">Is Mobile Active</label>
+                    <div class="col-sm-4">
+                        <span ng-if="enableEdit === false">{{ usermapping.isMobileActive ? 'YES' : 'NO' }}</span>
+                        <input ng-if="enableEdit === true" type="checkbox"  bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isComponentActive" ng-model="usermapping.isMobileActive">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Default Password</label>
+                    <div class="col-sm-4">
+                        <span ng-if="enableEdit === false">{{ usermapping.defaultPWD }}</span>
+                        <input ng-if="enableEdit === true" type="text"  id="inputPassword" placeholder="" tabindex="2" ng-model="usermapping.defaultPWD">
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button ng-if="enableEdit === false" type="submit" class="btn btn-primary" ng-click="edit(true)" ng-bind-template="{{ (usermapping.SObject) ? 'Edit' : 'Configure' }}">Loading...</button>
                         <button ng-if="enableEdit === true" type="submit" class="btn btn-primary" ng-click="save()">Save</button>

@@ -28,6 +28,24 @@
                                 <select pf-select ng-model="relatedList.SObjectField" ng-options="field as field.label for field in relativeFields track by field.id"></select>                                
                             </div>
                         </div>
+                        <div class="form-group" ng-if="forMobile === true" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
+                            <label class="col-md-3 control-label" for="addMore">Readonly</label>
+                            <div class="col-md-9" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
+                                <input type="checkbox" switch-change="onChangeReadonlySwitch()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="relatedListActive" ng-model="relatedList.readonly">
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="forMobile === true">
+                            <label class="col-md-3 control-label" for="addMore">Allow Add More</label>
+                            <div class="col-md-9" ng-init="relatedList.requireAddMore = relatedList.requireAddMore ? relatedList.requireAddMore : false" style="{{relatedList.readonly === true ? 'pointer-events: none' : ''}}">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="relatedListActive" ng-model="relatedList.requireAddMore">
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="forMobile === true">
+                            <label class="col-md-3 control-label" for="filterCondition">Filter Condition</label>
+                            <div class="col-md-9">
+                                <criteria-builder id="filterCondition" group="relatedList.criteria.group" fields="relatedList.SObject.fields"></criteria-builder>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <table class="table table-striped table-hover" style="margin-bottom:0px;">
@@ -37,6 +55,8 @@
                             <th>Label</th>
                             <th>Display Label</th>
                             <th>Reference</th>
+                            <th ng-if="forMobile === true">Read Only</th>
+                            <th ng-if="forMobile === true">Required</th>
                             <th style="width: 200px;">Type</th>
                             <th style="text-align: center; width: 50px;">Actions</th>
                         </tr>
@@ -49,6 +69,12 @@
                             <td>{{ field.SObjectField.label }}</td>
                             <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
                             <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                            <td ng-if="forMobile === true" ng-init="field.readonly = field.readonly ? field.readonly : false" style="{{relatedList.readonly === true ? 'pointer-events: none' : ''}}">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly">
+                            </td>
+                            <td ng-if="forMobile === true" ng-init="field.required = field.required ? field.required : false" style="{{relatedList.readonly === true ? 'pointer-events: none' : ''}}">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required">
+                            </td>
                             <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
                             <td style="text-align: center;">
                                 <button class="btn btn-xs btn-danger" type="button" ng-click="relatedListFields.splice($index,1)"><i class="pficon-delete"></i> Delete</button>
@@ -57,7 +83,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" style="padding: 3px;color: green;">
+                            <td colspan="{{forMobile === true ? 8 : 6}}" style="padding: 3px;color: green;">
                                 {{ relatedListFields.length }} field(s) added.
                             </td> 
                         </tr>

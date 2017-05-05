@@ -96,8 +96,13 @@ layoutRouter.post('/fields', function(req, res){
 });
 
 layoutRouter.post('/contents', function(req, res){
-    var layout = req.body;
-    console.log(layout);
+    var layout = req.body, whereClause;
+    whereClause = {
+        SObjectLayoutId: layout.id
+    };
+    if(layout.type === 'Mobile'){
+        whereClause.MobileEditLayoutConfigId = layout.MobileEditLayoutConfigId;
+    }
     var SObjectLayoutSections = db.SObjectLayoutSection.findAll({
         include: [{
             model: db.SObjectLayoutField,
@@ -130,9 +135,7 @@ layoutRouter.post('/contents', function(req, res){
         attributes: {
             exclude: ['createdAt','updatedAt']
         },
-        where: {
-            SObjectLayoutId: layout.id
-        },
+        where: whereClause,
         order: [
             ['order'],
             [db.SObjectLayoutField, 'order']
@@ -175,6 +178,14 @@ layoutRouter.post('/contents', function(req, res){
 
 layoutRouter.post('/relatedlists', function(req, res){
     var layout = req.body;
+    var where = {}, secondryWhere = {};
+    if(layout.type === 'Mobile'){
+        where.forMobile = true;
+        secondryWhere.MobileEditLayoutConfigId = layout.MobileEditLayoutConfigId;
+    }
+    else{
+        secondryWhere.SObjectLayoutId = layout.id;
+    }
     console.log(layout);
     var SObjectLayoutRelatedLists = db.SObjectLayoutRelatedList.findAll({
         include: [{
@@ -183,7 +194,8 @@ layoutRouter.post('/relatedlists', function(req, res){
                 model: db.SObjectField,
                 attributes: {
                     exclude: ['createdAt','updatedAt']
-                }
+                },
+                where: where
             },
             attributes: {
                 exclude: ['createdAt','updatedAt']
@@ -194,23 +206,24 @@ layoutRouter.post('/relatedlists', function(req, res){
                 model: db.SObjectField,
                 attributes: {
                     exclude: ['createdAt','updatedAt']
-                }
+                },
+                where: where
             },
             attributes: {
                 exclude: ['createdAt','updatedAt']
-            }
+            },
+            where: where
         },{
             model: db.SObjectField,
             attributes: {
                 exclude: ['createdAt','updatedAt']
-            }
+            },
+            where: where
         }],
         attributes: {
             exclude: ['createdAt','updatedAt']
         },
-        where: {
-            SObjectLayoutId: layout.id
-        },
+        where: secondryWhere,
         order: [
             ['order'],
             [db.SObjectLayoutField, 'order']
@@ -402,7 +415,7 @@ layoutRouter.post('/savelistlayout', function(req, res){
                                 deleted: true
                             }
                         }).then(function(affectedRows){
-                             db.SObjectLayout.update({
+                            db.SObjectLayout.update({
                                 btnCriteria : listLayout.actionButtonCriteria
                             },{
                                 where: {
@@ -423,14 +436,23 @@ layoutRouter.post('/savelistlayout', function(req, res){
                 });
             });
         }
-        return res.json({
-            success: true,
-            data: {
-                rowsUpdated: rowsUpdated,
-                rowsDeleted: rowsUpdated,
-                rowsCreated: fieldsToCreate.length
-            }
-        });
+        else{
+            db.SObjectLayout.update({
+                btnCriteria : listLayout.actionButtonCriteria
+            },{
+                where: {
+                    id: listLayout.sObjectLayoutId
+                }
+            }).then(function(){
+                return res.json({
+                    success: true,
+                    data: {
+                        rowsUpdated: rowsUpdated,
+                        rowsCreated: fieldsToCreate.length
+                    }
+                });
+            });
+        }
     });
 });
 
@@ -454,7 +476,8 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                     SObjectLayoutId: section.SObjectLayoutId,
                     ComponentId: section.isComponent ? section.Component ? section.Component.id : null : null,
                     componentName: section.isComponent && section.Component.name ? section.Component.name : null,
-                    criteria: section.criteria ? section.criteria : undefined
+                    criteria: section.criteria ? section.criteria : undefined,
+                    MobileEditLayoutConfigId: section.MobileEditLayoutConfigId ? section.MobileEditLayoutConfigId : null
                 })
                 .save()
                 .then(function(newSection){
@@ -475,7 +498,8 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                     SObjectLayoutId: section.SObjectLayoutId,
                     ComponentId: section.isComponent ? section.Component ? section.Component.id : null : null,
                     componentName: section.isComponent && section.Component.name ? section.Component.name : null,
-                    criteria: section.criteria ? section.criteria : undefined
+                    criteria: section.criteria ? section.criteria : undefined,
+                    MobileEditLayoutConfigId: section.MobileEditLayoutConfigId ? section.MobileEditLayoutConfigId : null
                 },{
                     where: {
                         id: section.id
@@ -513,7 +537,9 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                                     ControllerSObjectFieldId: (field.ControllerSObjectFieldId) ? field.ControllerSObjectFieldId : null,
                                     event: (field.event) ? field.event : undefined,
                                     criteria: field.criteria ? field.criteria : undefined,
-                                    required: (editLayout.type === 'Details') ? false : field.required
+                                    required: (editLayout.type === 'Details') ? false : field.required,
+                                    currentUserSelected: (field.currentUserSelected)?field.currentUserSelected:false,
+                                    excludeCurrentUser: (field.excludeCurrentUser)?field.excludeCurrentUser:false
                                 });
                             }else{
                                 fieldsToUpdate.push({
@@ -536,7 +562,9 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                                     ControllerSObjectFieldId: (field.ControllerSObjectFieldId) ? field.ControllerSObjectFieldId : null,
                                     event: (field.event) ? field.event : undefined,
                                     criteria: field.criteria ? field.criteria : undefined,
-                                    required: (editLayout.type === 'Details') ? false : field.required
+                                    required: (editLayout.type === 'Details') ? false : field.required,
+                                    currentUserSelected: (field.currentUserSelected)?field.currentUserSelected:false,
+                                    excludeCurrentUser: (field.excludeCurrentUser)?field.excludeCurrentUser:false
                                 });
                             }
                         });
@@ -591,17 +619,19 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                             });
                         });
                     }
-                    return res.json({
-                        success: true,
-                        data: {
-                            fieldsUpdated: fieldsUpdated,
-                            fieldsDeleted: fieldsUpdated,
-                            fieldsCreated: fieldsToCreate.length,
-                            sectionCreated: sectionCreated,
-                            sectionUpdated: sectionUpdated,
-                            sectionDeleted: sectionDeleted
-                        }
-                    });
+                    else{
+                        return res.json({
+                            success: true,
+                            data: {
+                                fieldsUpdated: fieldsUpdated,
+                                fieldsDeleted: fieldsUpdated,
+                                fieldsCreated: fieldsToCreate.length,
+                                sectionCreated: sectionCreated,
+                                sectionUpdated: sectionUpdated,
+                                sectionDeleted: sectionDeleted
+                            }
+                        });
+                    }
                 });
             });
         }
@@ -628,7 +658,9 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                     SObjectId: relatedList.SObjectId,
                     SObjectFieldId: relatedList.SObjectFieldId,
                     dispaySection : relatedList.dispaySection,
-                    criteria: relatedList.criteria ? relatedList.criteria : undefined
+                    criteria: relatedList.criteria ? relatedList.criteria : undefined,
+                    requireAddMore: relatedList.requireAddMore,
+                    MobileEditLayoutConfigId: editLayout.MobileEditLayoutConfigId
                 })
                 .save()
                 .then(function(newRelatedList){
@@ -648,7 +680,9 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                     SObjectId: relatedList.SObjectId,
                     SObjectFieldId: relatedList.SObjectFieldId,
                     dispaySection:relatedList.dispaySection,
-                    criteria: relatedList.criteria ? relatedList.criteria : undefined
+                    criteria: relatedList.criteria ? relatedList.criteria : undefined,
+                    requireAddMore: relatedList.requireAddMore,
+                    MobileEditLayoutConfigId: editLayout.MobileEditLayoutConfigId
                 },{
                     where: {
                         id: relatedList.id
@@ -674,6 +708,7 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                             reference: (field.SObjectField.type === 'reference') ? (field.reference) ? field.reference : 'Name' : null,
                             enable: (field.enable) ? true : false,
                             readonly: (field.SObjectField.calculated || editLayout.type === 'Details') ? true : field.readonly,
+                            required: field.required,
                             active: field.active,
                             SObjectFieldId: field.SObjectField.id,
                             SObjectLayoutId: field.SObjectLayoutId,
@@ -725,6 +760,10 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
 });
 
 layoutRouter.post('/getuserprofilelayout', function(req, res){
+    var ltype="Edit";
+    if(req.body !=undefined && req.body.type !=undefined){
+        ltype=req.body.type;
+    }
     var where = {};
     var UserMapping = db.UserMapping.findAll({
         attributes: {
@@ -737,7 +776,7 @@ layoutRouter.post('/getuserprofilelayout', function(req, res){
     UserMapping.then(function(userMapping){
         if(userMapping && userMapping.length > 0){
             where.SObjectId = userMapping[0].SObjectId;
-            where.type = 'Edit';
+            where.type = ltype;
             var SObjectLayout = db.SObjectLayout.findAll({
                 include: [{
                     model: db.SObject,
@@ -776,6 +815,171 @@ layoutRouter.post('/getuserprofilelayout', function(req, res){
             });
         }
     });
+});
+
+layoutRouter.post('/loadgoverningfields', (req, res)=>{
+    var whereClause = {
+        forMobile : true,
+        isGovernField : true,
+        SObjectId : req.body.SObject.id
+    }
+    db.SObjectField.findAll({
+        attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        where: whereClause,
+    })
+    .then((governingFields)=>{
+        if(governingFields === undefined || governingFields === null){
+            return res.json({
+                success: false,
+                message: 'Please try again letter.\nSomething went wrong while fetching governing fields.'
+            });
+        }
+        return res.json({
+            success: true,
+            data: {
+                governingFields: governingFields
+            }
+        });
+    })
+    .catch(()=>{
+        return res.json({
+            success: false,
+            message: 'Please try again letter.\nSomething went wrong while fetching governing fields.'
+        });
+    });
+});
+
+layoutRouter.post('/loadmobileeditlayoutconfig', (req, res)=>{
+    var whereClause = {
+        SObjectLayoutId : req.body.id
+    }
+    db.MobileEditLayoutConfig.findAll({
+        attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        where: whereClause,
+    })
+    .then((mobileEditLayoutConfigs)=>{
+        if(mobileEditLayoutConfigs === undefined || mobileEditLayoutConfigs === null){
+            return res.json({
+                success: false,
+                message: 'Please try again letter.\nSomething went wrong while fetching governing fields.'
+            });
+        }
+        return res.json({
+            success: true,
+            data: {
+                mobileEditLayoutConfigs: mobileEditLayoutConfigs
+            }
+        });
+    })
+    .catch(()=>{
+        return res.json({
+            success: false,
+            message: 'Please try again letter.\nSomething went wrong while fetching governing fields.'
+        });
+    });
+});
+
+layoutRouter.post('/changemobileeditlayoutconfigactive', (req, res)=>{
+    db.MobileEditLayoutConfig.update({
+        active: req.body.active
+    },{
+        where: {
+            id: req.body.id
+        }
+    }).then(()=>{
+        return res.json({
+            success: true
+        });
+    });
+});
+
+layoutRouter.post('/deletemobileeditlayoutconfig', (req, res)=>{
+    var mobileEditLayoutConfig = req.body;
+    db.MobileEditLayoutConfig.destroy({
+        where: {
+            id: mobileEditLayoutConfig.id
+        },
+    }).then((affectedRows)=>{
+        return res.json({
+            success: true,
+            data: {
+                affectedRows: affectedRows
+            }
+        });
+    })
+    .catch((error)=>{
+        return res.json({
+            success: false,
+            message: 'Error occured while deleting mobile layout configuration.',
+            error: error
+        });
+    });
+});
+
+layoutRouter.post('/savemobileeditlayoutconfig', (req, res)=>{
+    var mobileEditLayoutConfig = req.body;
+    db.MobileEditLayoutConfig.findAll({where: {governingFieldValue : JSON.stringify(mobileEditLayoutConfig.governingFieldValue)}})
+        .then((mobileEditLayoutConfiguration)=>{
+            if(mobileEditLayoutConfiguration !== undefined && mobileEditLayoutConfiguration !== undefined && mobileEditLayoutConfiguration.length > 0){
+                return res.json({
+                    success: false,
+                    message: 'Mobile layout configuration for combination is already exist.',
+                });    
+            }
+            if(mobileEditLayoutConfig.id){
+                db.MobileEditLayoutConfig.update({
+                    governingFieldValue: mobileEditLayoutConfig.governingFieldValue
+                },{
+                    where: {
+                        id: mobileEditLayoutConfig.id
+                    }
+                })
+                .then((newMobileEditLayoutConfig)=>{
+                    return res.json({
+                        success: true,
+                        data: {
+                            newMobileEditLayoutConfig: newMobileEditLayoutConfig
+                        }
+                    });
+                })
+                .catch((error)=>{
+                    return res.json({
+                        success: false,
+                        message: 'Error occured while creating mobile layout configuration.',
+                        error: error
+                    });
+                });
+            }
+            else{
+                db.MobileEditLayoutConfig.create(mobileEditLayoutConfig)
+                    .then((newMobileEditLayoutConfig)=>{
+                        return res.json({
+                            success: true,
+                            data: {
+                                newMobileEditLayoutConfig: newMobileEditLayoutConfig
+                            }
+                        });
+                    })
+                    .catch((error)=>{
+                        return res.json({
+                            success: false,
+                            message: 'Error occured while creating mobile layout configuration.',
+                            error: error
+                        });
+                    });
+            }
+        })
+        .catch((error)=>{
+            return res.json({
+                success: false,
+                message: 'Error occured while creating mobile layout configuration.',
+                error: error
+            });
+        });
 });
 
 module.exports = layoutRouter;

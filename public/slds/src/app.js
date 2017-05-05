@@ -54,8 +54,7 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
         // });
         // console.log(clientTemplateUrls);
         
-        location.replace('/');
-        // location.reload(true);
+        location.reload(true);
         //$rootScope.redirectTo();
     };
     
@@ -100,6 +99,7 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
             angular.forEach(states,function(state,index){
                 // templateUrls.push(state.templateUrl);
                 if($state.get(state.name) === null){
+                    // console.log(state);
                     stateProviderRef.state(state.name,JSON.parse(JSON.stringify(state)));
                 }
                 if(state.isHomePage){

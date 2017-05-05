@@ -136,8 +136,9 @@ sobjectRouter.post('/details', function(req, res){
             if(err){
                 return res.json({
                     success: false,
-                    message: 'Error occured while loading details.',
-                    error: err
+                    message: err.toString(),
+                    error: err,
+                    err: err.toString()
                 });
             }else if(records === undefined || records === null || records.length === 0){
                 return res.json({
@@ -180,7 +181,30 @@ sobjectRouter.post('/save', function(req, res){
             }
         });
         sObject.then(function(sObjectDetail){
-            if(sObjectDetail != null && sObjectDetail != undefined){
+            if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0] != undefined && sObjectDetail[0].config != null && sObjectDetail[0].config.sobjectconfig !=undefined){
+                var configuration=sObjectDetail[0].config.sobjectconfig;
+                Object.keys(configuration).forEach((key)=>{
+                    if(key==="fieldToMap"){
+                        Object.keys(configuration[key]).forEach((fieldToMapkey)=>{
+                            if(queryObject.sObject.data[configuration[key][fieldToMapkey]]!==undefined){
+                                queryObject.sObject.data[fieldToMapkey]=queryObject.sObject.data[configuration[key][fieldToMapkey]];
+                            }
+                        });
+                    }
+                    else if(key==="dataToMap"){
+                        Object.keys(configuration[key]).forEach((fieldToMapkey)=>{
+                            if(configuration[key][fieldToMapkey]==="LOGIN_USER_ID"){
+                                queryObject.sObject.data[fieldToMapkey]=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
+                            }
+                            else{
+                                queryObject.sObject.data[fieldToMapkey]=configuration[key][fieldToMapkey];
+                            }
+                        });
+                    }
+                });
+            }
+            console.log('daa',queryObject.sObject.data)
+            if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0]!=undefined && sObjectDetail[0].SObjectFields[0] != undefined){
                 // sObjectDetail[0].SObjectFields[0].name
                 var trackerData = {
                     akritivtlm__Input_Source__c: 'Manual - Buyer Portal',
@@ -220,7 +244,7 @@ sobjectRouter.post('/save', function(req, res){
         });
         sObject.then(function(sObjectDetail){
 
-            if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0].config != null && sObjectDetail[0].config.sobjectconfig !=undefined){
+            if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0] != undefined && sObjectDetail[0].config != null && sObjectDetail[0].config.sobjectconfig !=undefined){
                 var configuration=sObjectDetail[0].config.sobjectconfig;
                 Object.keys(configuration).forEach((key)=>{
                     if(key==="fieldToMap"){
@@ -247,10 +271,18 @@ sobjectRouter.post('/save', function(req, res){
             .sobject(queryObject.sObject.name)
             .update(queryObject.sObject.data, function(err, ret){
                 if(err || !ret.success){
+                    var msg="Error occured while creating new record.";
+                    try{
+                        msg=err.toString().substring(err.toString().indexOf(err['name'])+err['name'].length+1);
+                    }
+                    catch(err){
+                        console.log('eer',err)
+                    }
                     return res.json({
                         success: false,
-                        message: 'Error occured while updating record.',
-                        error: err
+                        message: msg,
+                        error: err,
+                        errMsg:err.toString()
                     });
                 }else{
                     return res.json({
@@ -287,7 +319,8 @@ var uploadFileOnSalesforce = function(queryObject){
                         ParentId: queryObject.sObject.data.Id,
                         Name : fileToBeSaved.originalFileName,
                         Body: new Buffer(fileData).toString('base64'),
-                        ContentType : fileToBeSaved.fileType,  
+                        ContentType : fileToBeSaved.fileType,
+                        Description : queryObject.currentUserId
                     };
                     global.sfdc.sobject('Attachment').create(fileObj, function(err, ret){
                         if(err || !ret.success){
@@ -358,14 +391,23 @@ var saveSobjectDetail = function(queryObject,req,res){
             if(queryObject.trackerId != undefined && queryObject.trackerId != null){
                 global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);
             }
+            var msg="Error occured while creating new record.";
+            try{
+                msg=err.toString().substring(err.toString().indexOf(err['name'])+err['name'].length+1);
+            }
+            catch(err){
+                console.log('eer',err)
+            }
             return res.json({
                 success: false,
-                message: 'Error occured while creating new record.',
-                error: err
+                message: msg,
+                error: err,
+                errMsg:err.toString()
             });
         }else{
             if(queryObject.trackerId != undefined && queryObject.trackerId != null){
                 queryObject.sObject.data.Id = ret.id; 
+                queryObject.currentUserId=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
                 var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
                 if(!isUploadFileSuccess){
                     global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);

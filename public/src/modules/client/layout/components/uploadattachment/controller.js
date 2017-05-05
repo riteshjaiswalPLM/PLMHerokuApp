@@ -1,8 +1,8 @@
 'use strict';
 
 client.controller('UploadAttachmentController',
-		[	'$scope','$log','Upload','$http','blockUI','$stateParams','ModalService','$dialog','$clientLookups',
-	function($scope , $log , Upload , $http , blockUI , $stateParams , ModalService , $dialog , $clientLookups){
+		[	'$scope','$log','$rootScope','Upload','$http','blockUI','$stateParams','ModalService','$dialog','$clientLookups',
+	function($scope , $log ,$rootScope, Upload , $http , blockUI , $stateParams , ModalService , $dialog , $clientLookups){
 			
 		var AttachmentBlock = blockUI.instances.get('AttachmentBlock');
 		var uploadedFiles=0;
@@ -37,13 +37,17 @@ client.controller('UploadAttachmentController',
 				.success(function(response, status, headers, config){
 					AttachmentBlock.stop();
 					var objectUrl = URL.createObjectURL(new Blob([response], {type: headers()['content-type']}));
-					var a = $("<a style='display: none;'/>");
-					a.attr("href", objectUrl);
-					a.attr("download", name);
-					$("body").append(a);
-					a[0].click();
-					window.URL.revokeObjectURL(objectUrl);
-					a.remove();
+					if (navigator.appVersion.toString().indexOf('.NET') > 0 || navigator.userAgent.toString().indexOf('MSIE') != -1) { // for IE browser
+						window.navigator.msSaveBlob(new Blob([response], {type: headers()['content-type']}), decodeURI(name));
+					} else { // for other browsers
+						var a = $("<a style='display: none;'/>");
+						a.attr("href", objectUrl);
+						a.attr("download", decodeURI(name));
+						$("body").append(a);
+						a[0].click();
+						// window.URL.revokeObjectURL(objectUrl);
+						a.remove();
+					}
 				}).error(function(){AttachmentBlock.stop()});
 		};
 
@@ -65,7 +69,7 @@ client.controller('UploadAttachmentController',
 				});
 			}
 			angular.forEach(files,function(file){
-        		if(($scope.allowedExtentions.indexOf(file.name.toLowerCase().substr(file.name.indexOf("."),file.name.length - 1)) > -1) && (file.size/(1024*1024) <= $scope.allowedSize))
+        		if(($scope.allowedExtentions.indexOf(file.name.toLowerCase().substr(file.name.lastIndexOf("."),file.name.length - 1)) > -1) && (file.size/(1024*1024) <= $scope.allowedSize))
         		{
         			file.isPersisted = false;
 	        		var pushOnScope = true;
@@ -156,7 +160,30 @@ client.controller('UploadAttachmentController',
         		}
 	        });
 	    };
-	    
+	    $scope.deleteAttachment = function(attachment){
+			
+			$dialog.confirm({
+                title: 'Confirm delete ?',
+                yes: 'Yes, Delete', no: 'Cancel',
+                message: 'Are you sure to delete file  "'+ attachment.Name +'" ? This action can not be undo.',
+                class:'danger'
+            },function(confirm){
+                if(confirm){
+				AttachmentBlock.start('Deleting file...');
+				$http.post("/api/service/component/deleteexistingattachment", attachment)
+					.success(function(response){
+						if(response.success){
+							attachment.IsDeleted=true;
+							$dialog.alert(response.filename + ' deleted successfully.','','')
+						} 
+						else {
+							$dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+						}
+						AttachmentBlock.stop();
+					});
+			}});
+			
+		}
 	    $scope.deleteFile = function(file)
 	    {
 	    	var index = $scope.files.indexOf(file);
@@ -229,6 +256,7 @@ client.controller('UploadAttachmentController',
 			if($scope.files == null || angular.isUndefined($scope.files)){
 				$scope.files = [];
 			}
+			$scope.currentUser=JSON.parse($rootScope.user().userdata).Id;
 			$scope.allowedExtentions = [];
 			$scope.disablePrimaryDocuent = false;
 			$scope.primaryDoc={};

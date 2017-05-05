@@ -97,14 +97,25 @@ client.controller('ChangeRequestComponentController',
 			var RequireFields={};
 			angular.forEach($scope.changeRequestFieldsDetail, function(field){
 				if(field.Is_Required__c){
-					RequireFields[field.Current_Field__c]=field.label;
+					RequireFields[field.Current_Field__c]={label:field.label,required:true};
+				}
+				else{
+					RequireFields[field.Current_Field__c]={label:field.label,required:false};
 				}
 			});
+			if($scope.items != undefined && $scope.items.length == 0 ){
+				message="Add at least one Change Request to process <br>";
+			}
 			angular.forEach($scope.items, function(item){
 				
-				if(RequireFields[item.current_Field__c]!=undefined  && (item[item.current_Field__c]===undefined || item[item.current_Field__c]===""))
+				if(RequireFields[item.current_Field__c]!=undefined && RequireFields[item.current_Field__c].required == true && (item[item.current_Field__c]===undefined || item[item.current_Field__c]===""))
 				{
-					message+=RequireFields[item.current_Field__c] +" must be required.<br>";
+					message+=RequireFields[item.current_Field__c].label +" must be required.<br>";
+				}
+				else if(RequireFields[item.current_Field__c]!=undefined && ((item[item.current_Field__c]!==undefined && item[item.current_Field__c]=== item.current_Field__Value) 
+				||((item[item.current_Field__c]===undefined || item[item.current_Field__c]==="") && (item.current_Field__Value==null || item.current_Field__Value===""))))
+				{
+					message+="Current and Proposed values of "+RequireFields[item.current_Field__c].label+" should not be identical.<br> " ;
 				}
 			});
 			if(message===""){

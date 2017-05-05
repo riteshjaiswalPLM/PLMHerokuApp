@@ -130,7 +130,7 @@ admin.controller('AdminLayoutsListController',[
         };
         
         $scope.edit = function(layout){
-            $state.go('admin.layouts.edit',{ layout: layout });
+            $state.go('admin.layouts.edit',{layout: layout});
         };
         $scope.initBlockUiBlocks = function(){
             $scope.blockUI = {
@@ -332,7 +332,7 @@ admin.controller('AdminLayoutsEditController',[
                     title: 'Want to remove field?',
                     yes: 'Yes', no: 'No',
                     message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
-                    class:'destructive',
+                     class:'destructive',
                     headerClass: 'error'
                 },function(confirm){
                     if(confirm){
@@ -476,7 +476,7 @@ admin.controller('AdminLayoutsEditListController',[
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editListLayout.start('Saving ...');
-                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria)
+                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){

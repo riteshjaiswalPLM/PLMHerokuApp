@@ -156,7 +156,7 @@ setupRouter.post('/sfdc/save', function(req, res){
 
 setupRouter.post('/usermapping', function(req, res){
     var UserMappings = db.UserMapping.findAll({
-        attributes: ['id','activeCriteria','syncCriteria'],
+        attributes: ['id','activeCriteria','syncCriteria','isMobileActive','defaultPWD'],
         include: [{
             model: db.SObject,
             attributes: {
@@ -274,7 +274,9 @@ setupRouter.post('/usermapping/save', function(req, res){
                     LastnameFieldId: UserMapping.LastnameField.id,
                     EmailFieldId: UserMapping.EmailField.id,
                     activeCriteria: UserMapping.activeCriteria,
-                    syncCriteria: UserMapping.syncCriteria
+                    syncCriteria: UserMapping.syncCriteria,
+                    isMobileActive: UserMapping.isMobileActive,
+                    defaultPWD: UserMapping.defaultPWD
                 },{
                     individualHooks: true
                 }).then(function(newUserMapping){
@@ -313,7 +315,9 @@ setupRouter.post('/usermapping/save', function(req, res){
                     LastnameFieldId: UserMapping.LastnameField.id,
                     EmailFieldId: UserMapping.EmailField.id,
                     activeCriteria: UserMapping.activeCriteria,
-                    syncCriteria: UserMapping.syncCriteria
+                    syncCriteria: UserMapping.syncCriteria,
+                    isMobileActive: UserMapping.isMobileActive,
+                    defaultPWD: UserMapping.defaultPWD
                 },{
                     where: {
                         id: oldUserMapping.id

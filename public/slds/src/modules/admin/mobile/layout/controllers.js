@@ -141,7 +141,7 @@ admin.controller('AdminMobileLayoutsListController',[
         };
         $scope.edit = function(layout){
             layout.tempType='Edit';
-            // $state.go('admin.mobile.layout.edit',{layout: layout});
+            $state.go('admin.mobile.layout.edit',{layout: layout});
         };
         $scope.initBlockUiBlocks = function(){
             $scope.blockUI = {
@@ -209,6 +209,7 @@ admin.controller('AdminMobileLayoutsEditController',[
         $scope.loadChildSObjects = function(){
             if(($scope.layout.tempType === 'Edit' || $scope.layout.tempType === 'Details') && !$scope.blockUI.childSObjects.state().blocking && $scope.layout.SObject != null){
                 $scope.blockUI.childSObjects.start('Loading ...');
+                $scope.layout.SObject.mobile = true;
                 sobjectService.loadChildSObjects($scope.layout.SObject)
                     .success(function(response){
                         if(response.success){
@@ -236,7 +237,7 @@ admin.controller('AdminMobileLayoutsEditController',[
         $scope.components = function () {
             if($scope.layout.tempType !== 'List' && $scope.componentsValues === undefined){
                 $scope.componentsValues = [{
-                            title: 'One Column Section',
+                            title: 'Layout Section',
                             deleted: false,
                             readonly: false,
                             active: true,
@@ -245,73 +246,9 @@ admin.controller('AdminMobileLayoutsEditController',[
                             columns: [
                                 []
                             ]
-                        }, {
-                            title: 'Two Columns Section',
-                            deleted: false,
-                            readonly: false,
-                            active: true,
-                            isComponent: false,
-                            SObjectLayoutId: undefined,
-                            columns: [
-                                [],[]
-                            ]
                         }];
             }
             return $scope.componentsValues;
-        };
-        $scope.loadWidgets = function () {
-            if($scope.layout.tempType !== 'List' && $scope.widgetsValues === undefined){
-                $scope.widgetsValues = [];
-                $scope.blockUI.widgets.start('Loading ...');
-                genericComponentService.getComponentsForSObject($scope.layout.SObject)
-                    .success(function(response){
-                        if(response.success){
-                            angular.forEach(response.data.components,function(component){
-                                $scope.widgetsValues.push({
-                                    title: component.title,
-                                    deleted: false,
-                                    readonly: false,
-                                    active: true,
-                                    isComponent: true,
-                                    SObjectLayoutId: undefined,
-                                    Component: component,
-                                });
-                            });
-                        }else{
-                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                        }
-                        $scope.blockUI.widgets.stop();
-                    })
-                    .error(function(response){
-                        $dialog.alert('Error occured while loading sobject fields.','Error','pficon pficon-error-circle-o');
-                        $scope.blockUI.widgets.stop();
-                    });
-                $scope.blockUI.widgets.start('Loading ...');
-                staticComponentService.getComponentsForSObject($scope.layout.SObject)
-                    .success(function(response){
-                        if(response.success){
-                            angular.forEach(response.data.components,function(component){
-                                $scope.widgetsValues.push({
-                                    title: component.title,
-                                    deleted: false,
-                                    readonly: false,
-                                    active: true,
-                                    isComponent: true,
-                                    SObjectLayoutId: undefined,
-                                    Component: component,
-                                });
-                            });
-                        }else{
-                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                        }
-                        $scope.blockUI.widgets.stop();
-                    })
-                    .error(function(response){
-                        $dialog.alert('Error occured while loading sobject fields.','Error','pficon pficon-error-circle-o');
-                        $scope.blockUI.widgets.stop();
-                    });
-            }
-            return $scope.widgetsValues;
         };
         $scope.returnToList = function(){
             $state.go('admin.mobile.layout.list');  
@@ -368,24 +305,24 @@ admin.controller('AdminMobileLayoutsEditController',[
                 editLayout: blockUI.instances.get('editLayout'),
                 sObjectFields: blockUI.instances.get('sObjectFields'),
                 childSObjects: blockUI.instances.get('childSObjects'),
-                widgets: blockUI.instances.get('widgets')
             };
         };
         $scope.init = function(){
             console.log('AdminMobileLayoutsEditController loaded!');
             $scope.initBlockUiBlocks();
             $scope.layout = $stateParams.layout;
-            $scope.loadSObjectFields();
-            $scope.loadChildSObjects();
-            $scope.loadWidgets();
             $timeout(function(){
                 if($scope.layout.tempType === 'List'){
-                    $scope.templateUrl = 'views/admin/mobile/layout/edit.list.html';
+                    $scope.loadSObjectFields();
+                    $scope.loadChildSObjects();
+                    $scope.templateUrl = 'slds/views/admin/mobile/layout/edit.list.html';
                     $scope.controller = 'AdminMobileLayoutsEditListController';
                     angular.extend(thisCtrl, $controller($scope.controller,{ $scope: $scope}));
-                }else{
-                    $scope.templateUrl = 'views/admin/mobile/layout/edit.edit.html';
+                }
+                else{
+                    $scope.templateUrl = 'slds/views/admin/mobile/layout/edit.edit.html';
                     $scope.controller = 'AdminMobileLayoutsEditEditController';
+                    $scope.showSideBar = $scope.showSideBar ? $scope.showSideBar : false;
                     angular.extend(thisCtrl, $controller($scope.controller,{ $scope: $scope}));
                 }
             },0);
@@ -540,40 +477,169 @@ admin.controller('AdminMobileLayoutsEditListController',[
 admin.controller('AdminMobileLayoutsEditEditController',[
             '$scope','$state','$stateParams','mobileLayoutService','sobjectService','blockUI','$dialog','$timeout','$adminLookups','$adminModals',
     function($scope , $state , $stateParams , mobileLayoutService , sobjectService , blockUI , $dialog , $timeout , $adminLookups , $adminModals){
+        $scope.loadGoverningFields = function(){
+            if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
+                $scope.blockUI.editEditLayout.start('Loading governing fields...');
+                mobileLayoutService.loadgoverningfields($scope.layout)
+                    .success(function(response){
+                        $scope.blockUI.editEditLayout.stop();
+                        if(response.success){
+                            $scope.governingFields = response.data.governingFields;
+                            $scope.fieldAPIName = [];
+                            $scope.governingFields.forEach(function(field){
+                                $scope.fieldAPIName.push(field.name);
+                            });
+                        }
+                        else{
+                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                        }
+                        $scope.blockUI.editEditLayout.stop();
+                    })
+                    .error(function(){
+                        $dialog.alert('Server error occured while loading governing field lists.','Error','pficon pficon-error-circle-o');
+                        $scope.blockUI.editEditLayout.stop();        
+                    });
+            }
+        };
+        $scope.loadMobileEditLayoutConfig = function(){
+            if(!$scope.blockUI.editMobileLayoutConfig.state().blocking  && $scope.layout.SObject != null){
+                $scope.blockUI.editMobileLayoutConfig.start('Loading configured mobile layouts fields...');
+                mobileLayoutService.loadmobileeditlayoutconfig($scope.layout)
+                    .success(function(response){
+                        $scope.blockUI.editMobileLayoutConfig.stop();
+                        if(response.success){
+                            $scope.mobileEditLayoutConfigs = response.data.mobileEditLayoutConfigs;
+                        }
+                        else{
+                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                        }
+                        $scope.blockUI.editMobileLayoutConfig.stop();
+                    })
+                    .error(function(){
+                        $dialog.alert('Server error occured while loading configred layout lists.','Error','pficon pficon-error-circle-o');
+                        $scope.blockUI.editMobileLayoutConfig.stop();        
+                    });
+            }
+        };
+        $scope.getDisplayText = function(govFieldValue){
+            var displayValue = "";
+            Object.keys(govFieldValue).sort().forEach(function(key, index){
+                displayValue += govFieldValue[key];
+                if(index < Object.keys(govFieldValue).length - 1)
+                    displayValue += " + ";
+            });
+            return displayValue;
+        };
+        $scope.changeMobileEditLayoutConfigActive = function(mobileEditLayoutConfig){
+            var message = (mobileEditLayoutConfig.active) ? 'Activating' : 'Deactivating';
+            $scope.blockUI.editMobileLayoutConfig.start(message +'" configuration...');
+            mobileLayoutService.changemobileeditlayoutconfigactive(mobileEditLayoutConfig)
+                .success(function(response){
+                    if(!response.success){
+                        mobileEditLayoutConfig.active = !mobileEditLayoutConfig.active;
+                    }
+                    $scope.blockUI.editMobileLayoutConfig.stop();
+                })
+                .error(function(response){
+                    $scope.blockUI.editMobileLayoutConfig.stop();
+                    $dialog.alert('Server error occured while ' + message.toLowerCase() + ' configred layout lists','Error','pficon pficon-error-circle-o');
+                });
+        };
+        $scope.editGoverningValue = function(mobileEditLayoutConfig){
+            $scope.mobileEditLayoutConfig = mobileEditLayoutConfig;
+        };
+        $scope.deleteMobileEditLayoutConfig = function(mobileEditLayoutConfig){
+            $dialog.confirm({
+                title: 'Confirm delete ?',
+                yes: 'Yes, Delete', no: 'Cancel',
+                message: 'All information related configuration for layout for this combination will be deleted. \nAre you sure ?',
+                class: 'danger'
+            },function (confirm){
+                if (confirm) {
+                    if (!$scope.blockUI.editMobileLayoutConfig.state().blocking) {
+                        $scope.blockUI.editMobileLayoutConfig.start('Deleting User Action...');
+                        mobileLayoutService.deletemobileeditlayoutconfig({ id: mobileEditLayoutConfig.id })
+                            .success(function(response){
+                                if (response.success) {
+                                    $dialog.alert("Mobile layout configuration Deleted successfully", '', '');
+                                } else {
+                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                                }
+                                $scope.blockUI.editMobileLayoutConfig.stop();
+                                $scope.loadMobileEditLayoutConfig();
+                            })
+                            .error(function(response){
+                                $dialog.alert('Error occured while deleting configuration.', 'Error', 'pficon pficon-error-circle-o');
+                                $scope.blockUI.editMobileLayoutConfig.stop();
+                            });
+                    }
+                }
+            });
+        };
+        $scope.cancelMobileEditLayoutConfig = function(){
+            $scope.mobileEditLayoutConfig = {};
+            $scope.mobileEditLayoutConfig.governingFieldValue = {};
+        };
+        $scope.saveMobileEditLayoutConfig = function(){
+            if(Object.keys($scope.mobileEditLayoutConfig.governingFieldValue).length < $scope.governingFields.length){
+                $dialog.alert('Value for all the governing fields is mandatory.', 'Error', 'pficon pficon-error-circle-o');
+                return;
+            }
+            var newGoverningFieldValue = {};
+            var fieldAPIName = [];
+            $scope.fieldAPIName.sort().forEach(function(field){
+                newGoverningFieldValue[field] = $scope.mobileEditLayoutConfig.governingFieldValue[field];
+            });
+            delete $scope.mobileEditLayoutConfig.governingFieldValue; 
+            $scope.mobileEditLayoutConfig.governingFieldValue = angular.copy(newGoverningFieldValue);
+            $scope.mobileEditLayoutConfig.SObjectLayoutId = $scope.layout.id;
+            mobileLayoutService.savemobileeditlayoutconfig($scope.mobileEditLayoutConfig)
+                .success(function(response){
+                    if (response.success) {
+                        $scope.cancelMobileEditLayoutConfig();
+                        $scope.loadMobileEditLayoutConfig();
+                    } else {
+                        $scope.loadMobileEditLayoutConfig();
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                    $scope.blockUI.editMobileLayoutConfig.stop();
+                })
+                .error(function(){
+                    $dialog.alert('Error occured while saving configuration.', 'Error', 'pficon pficon-error-circle-o');
+                    $scope.blockUI.editMobileLayoutConfig.stop();
+                });
+        };
+        $scope.isLayoutValidOrNot = function(mobileEditLayoutConfig){
+            var isLayoutInvalid = false;
+            if(Object.keys(mobileEditLayoutConfig.governingFieldValue).length < $scope.governingFields.length){
+                isLayoutInvalid = true;
+            }
+            else if(Object.keys(mobileEditLayoutConfig.governingFieldValue).length > $scope.governingFields.length){
+                isLayoutInvalid = true;
+            }
+            else{
+                Object.keys(mobileEditLayoutConfig.governingFieldValue).sort().forEach(function(key){
+                    isLayoutInvalid = $scope.governingFields.filter(function(field){
+                        return field.name === key;
+                    }).length > 0 ? false : true; 
+                });
+            }
+            return isLayoutInvalid;
+        };
+        $scope.manageLayout = function(mobileEditLayoutConfiguration){
+            $scope.mobileEditLayoutConfig = mobileEditLayoutConfiguration;
+            $scope.loadChildSObjects();
+            $scope.showSideBar = true;
+            $scope.loadEditLayoutContents();
+            $scope.initEditLayoutBlockUiBlocks();
+            $scope.loadSObjectFields();
+        };
         $scope.openSectionPropertiesModal = function(section,index){
             $adminModals.layoutSectionProperties({
                 layout: angular.copy($scope.layout),
                 section: angular.copy(section)
             },function(newSection){
                 $scope.layoutSections[index] = newSection;
-            });
-        };
-        console.error($scope.$parent);
-        $scope.openSectionCriteriaModal = function(section,index){
-            $adminModals.criteriaModal({
-                title: 'Section Criteria | ' + section.title,
-                fields: $scope.$parent.$parent.layout.SObject.fields,
-                criteria: $scope.layoutSections[index].criteria ? $scope.layoutSections[index].criteria : null
-            },function(criteria){
-                $scope.layoutSections[index].criteria = criteria;
-            });
-        };
-        $scope.openFieldCriteriaModal = function(field){
-            $adminModals.criteriaModal({
-                title: 'Field Criteria | ' + field.label,
-                fields: $scope.$parent.$parent.layout.SObject.fields,
-                criteria: field.criteria ? field.criteria : null
-            },function(criteria){
-                field.criteria = criteria;
-            });
-        };
-        $scope.openRelatedListCriteriaModal = function(relatedList,index){
-            $adminModals.criteriaModal({
-                title: 'Related List Criteria | ' + relatedList.title,
-                fields: $scope.$parent.$parent.layout.SObject.fields,
-                criteria: relatedList.criteria ? relatedList.criteria : null
-            },function(criteria){
-                relatedList.criteria = criteria;
             });
         };
         $scope.openRelatedListPropertiesModal = function(relatedList,index){
@@ -601,14 +667,6 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             if(item.SObjectLayoutId === undefined){
                 item.SObjectLayoutId = $scope.layout.id;
                 $scope.openSectionPropertiesModal(item,index);
-            }
-            return item;
-        };
-        $scope.widgetsDropCallBack = function(event, index, item, external, type){
-            item.order = index;
-            if(item.SObjectLayoutId === undefined){
-                item.SObjectLayoutId = $scope.layout.id;
-                // $scope.openSectionPropertiesModal(item,index);
             }
             return item;
         };
@@ -697,8 +755,9 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             return duplicate;
         };
         $scope.loadEditLayoutContents = function(){
-            if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
-                $scope.blockUI.editEditLayout.start('Loading ...');
+            if(!$scope.blockUI.editEditLayoutWithSideBar.state().blocking  && $scope.layout.SObject != null){
+                $scope.blockUI.editEditLayoutWithSideBar.start('Loading ...');
+                $scope.layout.MobileEditLayoutConfigId = $scope.mobileEditLayoutConfig.id;
                 mobileLayoutService.loadEditLayoutContents($scope.layout)
                     .success(function(response){
                         if(response.success === true){
@@ -710,11 +769,11 @@ admin.controller('AdminMobileLayoutsEditEditController',[
                                     }else{
                                         $dialog.alert('Error occured while loading layout related lists.','Error','pficon pficon-error-circle-o');
                                     }
-                                    $scope.blockUI.editEditLayout.stop();
+                                    $scope.blockUI.editEditLayoutWithSideBar.stop();
                                 })
                                 .error(function(response2){
                                     $dialog.alert('Server error occured while loading layout related lists.','Error','pficon pficon-error-circle-o');
-                                    $scope.blockUI.editEditLayout.stop();        
+                                    $scope.blockUI.editEditLayoutWithSideBar.stop();        
                                 });
                         }else{
                             $dialog.alert('Error occured while loading layout contents.','Error','pficon pficon-error-circle-o');
@@ -735,7 +794,8 @@ admin.controller('AdminMobileLayoutsEditEditController',[
                     mobileLayoutService.saveLayoutRelatedLists({ 
                         relatedLists: $scope.relatedLists,
                         type: $scope.layout.type,
-                        id: $scope.layout.id
+                        id: $scope.layout.id,
+                        MobileEditLayoutConfigId: $scope.mobileEditLayoutConfig.id
                     })
                     .success(function(response){
                         $scope.blockUI.editEditLayout.stop();
@@ -794,35 +854,45 @@ admin.controller('AdminMobileLayoutsEditEditController',[
                 return;
             }
             console.info($scope.layoutSections);
-            if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
-                $scope.blockUI.editEditLayout.start('Saving layout...');
+            if(!$scope.blockUI.editEditLayoutWithSideBar.state().blocking  && $scope.layout.SObject != null){
+                $scope.blockUI.editEditLayoutWithSideBar.start('Saving layout...');
                 mobileLayoutService.saveEditLayout({ 
                     layoutSections: $scope.layoutSections,
                     type: $scope.layout.type,
-                    id: $scope.layout.id
+                    id: $scope.layout.id,
+                    MobileEditLayoutConfigId: $scope.mobileEditLayoutConfig.id
                 })
                 .success(function(response){
-                    $scope.blockUI.editEditLayout.stop();
+                    $scope.blockUI.editEditLayoutWithSideBar.stop();
                     if(response.success === true){
-                        // $scope.loadEditLayoutContents();
                         $scope.saveLayoutRelatedLists();
                     }else{
                         $dialog.alert('Error occured while saving layout.','Error','pficon pficon-error-circle-o');
                     }
                 })
                 .error(function(response){
-                    $scope.blockUI.editEditLayout.stop();
+                    $scope.blockUI.editEditLayoutWithSideBar.stop();
                     $dialog.alert('Server error occured while saving layout.','Error','pficon pficon-error-circle-o');
                 });
             }
         };
         $scope.initEditLayoutBlockUiBlocks = function(){
+            $scope.blockUI.editEditLayoutWithSideBar = blockUI.instances.get('editEditLayoutWithSideBar');
             $scope.blockUI.editEditLayout = blockUI.instances.get('editEditLayout');
+            $scope.blockUI.editMobileLayoutConfig = blockUI.instances.get('EditMobileLayoutConfigBlockUI');
+            $scope.blockUI.sObjectFields = blockUI.instances.get('sObjectFields');
+        };
+        $scope.backToLayoutConfig = function(){
+            $scope.cancelMobileEditLayoutConfig();
+            $scope.showSideBar = false;
         };
         $scope.init = function(){
             console.log('AdminMobileLayoutsEditEditController loaded!');
+            $scope.layoutSections = [];
             $scope.initEditLayoutBlockUiBlocks();
-            $scope.loadEditLayoutContents();
+            $scope.cancelMobileEditLayoutConfig();
+            $scope.loadGoverningFields();
+            $scope.loadMobileEditLayoutConfig();
         };
         $scope.init();
     }

@@ -42,15 +42,6 @@ clientDashboardRouter.post('/contents', function(req, res){
                     container.components.push(containersComponent);
                 });
                 delete container.DashboardContainersComponents;
-                // if(section.isComponent && section.Component === null && section.ComponentId === null){
-                //     var fileName=section.componentName.toLowerCase().replace(/\s/g,"-");
-                //     staticcomponentconfig.list.forEach(function (component) {
-                //         if (component.name == fileName) {
-                //             section.Component = JSON.parse(component.config);
-                //         }
-                //     });
-                   
-                // }
             });
             return res.json({
                 success: true,
@@ -93,7 +84,7 @@ clientDashboardRouter.post('/save', function(req, res){
                     label: container.label,
                     order: container.order,
                     allowedType: container.allowedType,
-                    deleted: false,
+                    deleted: container.deleted,
                     active: container.active,
                 },{
                     where: {
@@ -113,22 +104,23 @@ clientDashboardRouter.post('/save', function(req, res){
                     if(component.id === undefined && component.deleted === false){
                         componentsToCreate.push({
                             label: component.label,
-                            deleted: false,
+                            deleted: component.deleted,
                             order: component.order,
                             columns: component.columns,
                             active: component.active,
                             DashboarContainerId: updatedContainer.id,
-                            ComponentId: component.component.id
+                            ComponentId:  component.component.id
                         });
                     }else{
                         componentsToUpdate.push({
+                            id: component.id,
                             label: component.label,
-                            deleted: false,
+                            deleted: component.deleted,
                             order: component.order,
                             columns: component.columns,
                             active: component.active,
-                            DashboarContainerId: updatedContainer.DashboarContainerId,
-                            ComponentId: component.id
+                            DashboarContainerId: updatedContainer.id,
+                            ComponentId: component.ComponentId
                         });
                     }
                 });
@@ -181,17 +173,19 @@ clientDashboardRouter.post('/save', function(req, res){
                             });
                         });
                     }
-                    return res.json({
-                        success: true,
-                        data: {
-                            componentsUpdated: componentsUpdated,
-                            componentsDeleted: componentsUpdated,
-                            componentsCreated: componentsToCreate.length,
-                            containerCreated: containerCreated,
-                            containerUpdated: containerUpdated,
-                            containerDeleted: containerDeleted
-                        }
-                    });
+                    else{
+                        return res.json({
+                            success: true,
+                            data: {
+                                componentsUpdated: componentsUpdated,
+                                componentsDeleted: componentsUpdated,
+                                componentsCreated: componentsToCreate.length,
+                                containerCreated: containerCreated,
+                                containerUpdated: containerUpdated,
+                                containerDeleted: containerDeleted
+                            }
+                        });
+                    }
                 });
             });
         }

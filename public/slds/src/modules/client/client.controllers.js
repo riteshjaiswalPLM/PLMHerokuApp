@@ -10,7 +10,7 @@ client.controller('ClientController',[
         $scope.configureStateProviderStates = function(states){
             angular.forEach(states,function(state){
                 if(state.tab != undefined){
-                    $scope.tabs.push(angular.copy(state));
+                    $scope.tabs.push(state);
                 }
             });
             
@@ -42,17 +42,6 @@ client.controller('ClientController',[
         $scope.init = function(){
             console.log('ClientController loaded!');
             $scope.loadClientStates();
-        };
-        $scope.init();
-    }
-]);
-
-client.controller('ClientDashboardController',[
-            '$scope','$rootScope','$state',
-    function($scope , $rootScope , $state){
-        $scope.init = function(){
-            console.log('ClientDashboardController loaded!');
-            // console.log($state.get());
         };
         $scope.init();
     }

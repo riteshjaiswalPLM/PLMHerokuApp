@@ -1,5 +1,5 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
-    <div class="input-group" ng-if="!field.readonly">
+    <div class="input-group" ng-if="!field.readonly && (field.disabled ==undefined || field.disabled==false)">
         <input  type="hidden" 
                 ng-model="field.value">
         <input  type="text" 
@@ -12,5 +12,10 @@
             </button>
         </div>
     </div>
-    <span ng-if="field.readonly" ng-bind="field.labelValue"></span>
+    <div class="input-group" ng-if="field.disabled==true">
+        <input  type="hidden" 
+                ng-model="field.value">
+        <span ng-bind="field.labelValue"></span>
+    </div>
+    <span ng-if="field.readonly && (field.disabled ==undefined || field.disabled==false)" ng-bind="field.labelValue "></span>
 </div>

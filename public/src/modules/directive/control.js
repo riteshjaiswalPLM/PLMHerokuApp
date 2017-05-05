@@ -62,6 +62,16 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 if($scope.field.SObjectField.type === 'reference'){
                     if($scope.model && $scope.model[$scope.field.SObjectField.relationshipName] !== undefined && $scope.model[$scope.field.SObjectField.relationshipName] !== null){
                         $scope.field.labelValue = $scope.model[$scope.field.SObjectField.relationshipName][$scope.field.reference];
+                        var userData=JSON.parse($rootScope.user().userdata);
+                        if( $scope.field.currentUserSelected && $scope.field.currentUserSelected==true ){
+                            $scope.model[$scope.field.SObjectField.name] = userData['Id'];
+                            $scope.field.labelValue = userData[$scope.field.reference];
+                        }
+                        else if($scope.field.excludeCurrentUser && $scope.field.excludeCurrentUser==true ){
+                            if($scope.model[$scope.field.SObjectField.name] === userData['Id']){
+                                $scope.field.labelValue ="";
+                            }
+                        }
                     }
                 }
             });
@@ -75,6 +85,11 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 }else if(newValue === undefined){
                     if($scope.model)
                         $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
+                        if($scope.field.SObjectField.type === 'reference' && $scope.field.currentUserSelected && $scope.field.currentUserSelected==true ){
+                            var userData=JSON.parse($rootScope.user().userdata);
+                            $scope.model[$scope.field.SObjectField.name] = userData['Id'];
+                            $scope.field.labelValue = userData[$scope.field.reference];
+                        }
                 }
             });
             
@@ -428,7 +443,7 @@ ng.directive('referenceFieldSelector',['ModalService','$dialog', function(ModalS
         },
         template: "<a href ng-if='field.SObjectField.type === \"reference\"' ng-click='openReferenceFieldLookup()'><i class='fa fa-link'></i>&nbsp;{{ field.reference }}</a>",
         controller: function($scope){
-            $scope.field.reference = ($scope.field.reference) ? $scope.field.reference : 'Name';
+            $scope.field.reference = ($scope.field.reference) ? $scope.field.reference : (($scope.field.referenceRemoved !== undefined && $scope.field.referenceRemoved === true)? undefined : 'Name');
             $scope.openReferenceFieldLookup = function(){
                 if($scope.field.SObjectField.custom === false){
                     $dialog.alert('Reference field can not be changed for Salesforce standard fields!','Warning','pficon pficon-warning-triangle-o');
@@ -449,6 +464,7 @@ ng.directive('referenceFieldSelector',['ModalService','$dialog', function(ModalS
                         modal.element.modal();
                         modal.close.then(function(referenceField){
                             $scope.field.reference = referenceField;
+                            $scope.field.referenceRemoved = false;
                         });
                     });
                 }else{
@@ -579,6 +595,114 @@ ng.directive('criteriaBuilder',['$compile',function($compile){
         }
         $scope.init = function(){
             console.log('CriteriaBuilderController loaded!');
+            $scope.stateCache = $appCache.get("criteriaBuilderUserMappingFields");
+            $scope.userDataField=[];
+            $scope.userMasterObjName="";
+            $scope.userData();
+        };
+        $scope.init();
+    }
+]);
+
+ng.directive('multiObjectCriteriaBuilder',['$compile',function($compile){
+    return {
+        restrict: 'E',
+        scope: {
+            group: "=",
+            fields: "="
+        },
+        templateUrl: 'views/directive/control/multiObjectcriteriabuilder.html',
+        controller: 'MultiObjectCriteriaBuilderController',
+        compile: function(element, attrs){
+            var content, directive;
+            content = element.contents().remove();
+            return function(scope, element, attrs){
+                scope.ruleFields = angular.copy(scope.fields);
+                scope.operators = [{label: 'AND', value: '&&'},{label: 'OR', value: '||'}]
+                scope.conditions = ["==","!=",">",">=","<","<="];
+                scope.conditions = [
+                    { value: '==',   types: ['string','double','date','currency','boolean','picklist','reference']},
+                    { value: '!=',  types: ['string','double','date','currency','boolean','picklist','reference']},
+                    { value: '>',   types: ['double','date','currency']},
+                    { value: '<',   types: ['double','date','currency']},
+                    { value: '>=',  types: ['double','date','currency']},
+                    { value: '<=',  types: ['double','date','currency']}
+                ]
+                
+                scope.addRule = function(){
+                    scope.group.rules.push({
+                        condition: null,
+                        field: null,
+                        data: {}
+                    });
+                };
+                scope.removeRule = function(index){
+                    scope.group.rules.splice(index, 1);
+                };
+                scope.addGroup = function(){
+                    scope.group.rules.push({
+                        group: {
+                            operator: '&&',
+                            rules: []
+                        }
+                    });
+                };
+                scope.removeGroup = function(){
+                    "group" in scope.$parent && scope.$parent.group.rules.splice(scope.$parent.$index,1);
+                };
+                
+                directive || (directive = $compile(content));
+                
+                element.append(directive(scope, function($compile){
+                    return $compile;
+                }));
+            };
+        }
+    }
+}]).controller('MultiObjectCriteriaBuilderController',[
+            '$scope','$rootScope','userMappingService','$appCache',
+    function($scope , $rootScope,userMappingService,$appCache){
+        $scope.updateRef = function(rule){
+            console.log(rule);
+            rule.field.reference=rule.data.fieldname;
+        }
+        $scope.userData = function(){
+            if($scope.stateCache === undefined){
+                $scope.stateCache={};
+                userMappingService.loadUserMappingConfiguration({})
+                .success(function(response){
+                    if(response.success === true){
+                        var fields=[];
+                        $scope.stateCache.userMasterObjName=response.data.userMapping.SObject.name;
+                        angular.forEach(response.data.userMapping.SObject.SObjectFields,function(field){
+                           var data={ 
+                               label :field.label,
+                               fieldname:field.name
+                            }
+                           fields.push(data);
+                        });
+                        $scope.stateCache.userDataField =fields ;
+                        $scope.userMasterObjName=$scope.stateCache.userMasterObjName;
+                        $scope.userDataField = $scope.stateCache.userDataField;
+                        $appCache.put("criteriaBuilderUserMappingFields", $scope.stateCache);
+                    }else{
+                        $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function(response){
+                    $dialog.alert('Error occured while loading salesforce org configuration.','Error','pficon pficon-error-circle-o');
+                    $scope.blockUI.loadUserMappingConfiguration.stop();
+                });
+                
+            }
+            else{
+                $scope.userMasterObjName=$scope.stateCache.userMasterObjName;
+                $scope.userDataField = $scope.stateCache.userDataField;
+            }
+
+        }
+        $scope.init = function(){
+            console.log('MultiObjectCriteriaBuilderController loaded!');
             $scope.stateCache = $appCache.get("criteriaBuilderUserMappingFields");
             $scope.userDataField=[];
             $scope.userMasterObjName="";

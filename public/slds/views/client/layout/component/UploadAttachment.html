@@ -142,21 +142,26 @@
 						<!--<div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
 							<h3 >Attachments</h3>
 						</div>-->
-						<div class="slds-panel__section slds-grid slds-border--bottom" ng-if="attachments" data-ng-show="attachments.length > 0">
+						<div class="slds-panel__section slds-grid slds-border--bottom" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length > 0">
 							<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
 								<thead>
 									<tr class="slds-text-title--caps">
+										<th  title="" ng-if="type !== 'detail'">Delete</th>
 										<th  title="Title">Title</th>
 										<th  title="Size">Size</th>
-										<th  title="Description">Description</th>
+										<th  title="ContentType">ContentType</th>
 										<th style="text-align:center;width:100px;"  title="Download">Download</th>
 									</tr>
 								</thead>
 								<tbody >
-									<tr ng-repeat="attachment in attachments ">
+									<tr ng-repeat="attachment in attachments | filter: {IsDeleted: false}">
+										<td class="slds-truncate" data-label=""  title="{{attachment.Name}}" ng-if="type !== 'detail'">
+											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
+											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
+										</td>
 										<td class="slds-truncate" data-label="Title"  title="{{attachment.Name}}"><strong>{{ attachment.Name }}</strong></td>
 										<td class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.BodyLength/1024 | number : 2}} KB</td>
-										<td class="slds-truncate" data-label="Description"   title="{{ sObj.name }}">{{attachment.Description}}</td>
+										<td class="slds-truncate" data-label="ContentType"   title="{{ sObj.name }}">{{attachment.Description}}</td>
 										<td data-label="Download" >
 											<div class="slds-truncate slds-align--absolute-center" >
 												<div class="slds-button-group" role="group">
@@ -174,7 +179,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="attachments" data-ng-show="attachments.length == 0">
+						<div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
 								<strong>No attachment found.</strong>
 						</div>
 					</div>

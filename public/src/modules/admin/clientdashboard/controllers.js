@@ -1,35 +1,34 @@
 'use strict';
 
 admin.controller('AdminClientDashboardDesignController',[
-            '$scope','$rootScope','$state','$adminModals','genericComponentService','clientDashboardContainerService','$dialog',
-    function($scope , $rootScope , $state , $adminModals , genericComponentService , clientDashboardContainerService , $dialog){
-        $scope.loadDashboardContainers = ()=>{
-            // $scope.blockUI.loadComponents.start('Loading components...');
-
+            '$scope','$rootScope','$state','$adminModals','genericComponentService','clientDashboardContainerService','$dialog','blockUI',
+    function($scope , $rootScope , $state , $adminModals , genericComponentService , clientDashboardContainerService , $dialog , blockUI){
+        $scope.loadDashboardContainers = function(){
+            $scope.blockUI.ClientDashboardEditLayoutBlockUI.start('Loading components...');
             clientDashboardContainerService.loadClientDashboardContainers()
-                .success((response)=>{
+                .success(function(response){
                     if(response.success){
                         $scope.dashboardContainers = response.data.containers;
                     }else{
                         $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                     }
-                    // $scope.blockUI.loadComponents.stop();
+                    $scope.blockUI.ClientDashboardEditLayoutBlockUI.stop();
                 })
-                .error((response)=>{
+                .error(function(response){
                     $dialog.alert('Error occured while loading dashboard containers.','Error','pficon pficon-error-circle-o');
-                    // $scope.blockUI.loadComponents.stop();
+                    $scope.blockUI.ClientDashboardEditLayoutBlockUI.stop();
                 });
         };
-        $scope.saveDashboardConfiguration = ()=>{
+        $scope.saveDashboardConfiguration = function(){
             console.log($scope.dashboardContainers);
             $scope.reOrder($scope.dashboardContainers);
-            // if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
-                // $scope.blockUI.editEditLayout.start('Saving layout...');
+            if(!$scope.blockUI.ClientDashboardEditLayoutBlockUI.state().blocking){
+                $scope.blockUI.ClientDashboardEditLayoutBlockUI.start('Saving layout...');
                 clientDashboardContainerService.saveClientDashboardContainers({ 
                     containers: $scope.dashboardContainers
                 })
-                .success((response)=>{
-                    // $scope.blockUI.editEditLayout.stop();
+                .success(function(response){
+                    $scope.blockUI.ClientDashboardEditLayoutBlockUI.stop();
                     if(response.success === true){
                         // $scope.loadEditLayoutContents();
                         $scope.loadDashboardContainers();
@@ -37,26 +36,26 @@ admin.controller('AdminClientDashboardDesignController',[
                         $dialog.alert('Error occured while saving layout.','Error','pficon pficon-error-circle-o');
                     }
                 })
-                .error((response)=>{
-                    // $scope.blockUI.editEditLayout.stop();
+                .error(function(response){
+                    $scope.blockUI.ClientDashboardEditLayoutBlockUI.stop();
                     $dialog.alert('Server error occured while saving layout.','Error','pficon pficon-error-circle-o');
                 });
-            // }
+            }
         };
-        $scope.containerDropCallBack = (event, index, item, external, type)=>{
+        $scope.containerDropCallBack = function(event, index, item, external, type){
             item.order = index;
             if(angular.isUndefined(item.label))
                 $scope.dashboardContainerPropertiesModal(item, index);
             return item;
         };
-        $scope.dashboardContainerPropertiesModal = (container,index)=>{
+        $scope.dashboardContainerPropertiesModal = function(container,index){
             $adminModals.adminClientDashboardContainerProperties({
                 container: angular.copy(container),
-            },(container)=>{
+            },function(container){
                 $scope.dashboardContainers[index] = container;
             });
         };
-        $scope.componentDropCallBack = (event, index, item, external, type, container, containerIndex, columnNumber)=>{
+        $scope.componentDropCallBack = function(event, index, item, external, type, container, containerIndex, columnNumber){
             item.order = index;
             if(angular.isUndefined(item.columns))
                 item.columns = 3;
@@ -64,7 +63,7 @@ admin.controller('AdminClientDashboardDesignController',[
                 $scope.dashboardContainerComponentPropertiesModal(containerIndex, item, index);
             return item;
         };
-        $scope.dashboardContainerComponentPropertiesModal = (containerIndex, component, index)=>{
+        $scope.dashboardContainerComponentPropertiesModal = function(containerIndex, component, index){
             delete component.SObject
             component.component = angular.copy(component);
             component.deleted = component.component.deleted;
@@ -78,13 +77,13 @@ admin.controller('AdminClientDashboardDesignController',[
             delete component.component.columns;
             $adminModals.adminClientDashboardContainerComponentProperties({
                 component: angular.copy(component),
-            },(component)=>{
+            },function(component){
                 $scope.dashboardContainers[containerIndex].components[index] = component;
             });
         };
-        $scope.reOrder = (items)=>{
+        $scope.reOrder = function(items){
             var itemIndex = 0;
-            angular.forEach(items, (item)=>{
+            angular.forEach(items, function(item){
                 item.order = itemIndex;
                 itemIndex++;
                 if(item.hasOwnProperty('components') && item.components.length > 0){
@@ -92,14 +91,14 @@ admin.controller('AdminClientDashboardDesignController',[
                 }
             });
         }
-        $scope.removeAndReorder = (items,item,index)=>{
+        $scope.removeAndReorder = function(items,item,index){
             item.deleted = true;
             if(item.id === undefined){
                 items.splice(index,1);
             }
             
             var itemIndex = 0;
-            angular.forEach(items,(i, _index)=>{
+            angular.forEach(items,function(i, _index){
                 if(!i.deleted){
                     i.order = itemIndex;
                     itemIndex++;
@@ -107,18 +106,18 @@ admin.controller('AdminClientDashboardDesignController',[
             });
             
             if(item.components && item.components.length > 0){
-                angular.forEach(item.components,(component)=>{
+                angular.forEach(item.components,function(component){
                     component.deleted = true;
                 });
             }
         };
-        $scope.loadDashboardComponents = ()=>{
+        $scope.loadDashboardComponents = function(){
             // $scope.blockUI.loadComponents.start('Loading components...');
 
-            genericComponentService.loadDashboardComponent({active: true})
-                .success((response)=>{
+            genericComponentService.loadDashboardComponent({active: true, forMobile: false})
+                .success(function(response){
                     if(response.success){
-                        angular.forEach(response.data.components, (component)=>{
+                        angular.forEach(response.data.components,function (component){
                             component.deleted = false;
                         });
                         $scope.components = response.data.components;
@@ -127,12 +126,17 @@ admin.controller('AdminClientDashboardDesignController',[
                     }
                     // $scope.blockUI.loadComponents.stop();
                 })
-                .error((response)=>{
+                .error(function(response){
                     $dialog.alert('Error occured while loading components.','Error','pficon pficon-error-circle-o');
                     // $scope.blockUI.loadComponents.stop();
                 });
         };
-        $scope.init = ()=>{
+        $scope.initBlockUiBlocks = function(){
+            $scope.blockUI = {
+                ClientDashboardEditLayoutBlockUI: blockUI.instances.get('ClientDashboardEditLayoutBlockUI')
+            };
+        };
+        $scope.init = function(){
             console.log('AdminClientDashboardDesignController loaded!');
             $scope.sidePanel = 'views/admin/clientdashboard/side-panel.html';
             $scope.dropZone = 'views/admin/clientdashboard/drop-zone.html';
@@ -145,16 +149,18 @@ admin.controller('AdminClientDashboardDesignController',[
                     columns: 0,
                     components: [],
                     allowedType: 'ClientDashbordMyTaskContainerComponent'
-                },{
-                    title: 'Chart Container',
-                    type: 'container',
-                    deleted: false,
-                    active: true,
-                    columns: 0,
-                    components: [],
-                    allowedType: 'ClientDashbordChartContainerComponent'
-                }
+                },
+                // {
+                //     title: 'Chart Container',
+                //     type: 'container',
+                //     deleted: false,
+                //     active: true,
+                //     columns: 0,
+                //     components: [],
+                //     allowedType: 'ClientDashbordChartContainerComponent'
+                // }
             ];
+            $scope.initBlockUiBlocks();
             $scope.loadDashboardComponents();
             $scope.loadDashboardContainers();
         };

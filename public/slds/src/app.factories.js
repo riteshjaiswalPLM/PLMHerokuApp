@@ -30,7 +30,7 @@ app.factory('CriteriaHelper', function($filter,$rootScope){
 			var ruleValue = rule.data[rule.field.SObjectField.name];
 			var type=rule.field.SObjectField.type;
 			if(rule.data.fieldname){
-				if(model[rule.field.SObjectField.relationshipName]!==null){
+				if(model[rule.field.SObjectField.relationshipName]!==null && model[rule.field.SObjectField.relationshipName]){
 					modelValue = model[rule.field.SObjectField.relationshipName][rule.data.fieldname] ;	
 				}
 				ruleValue = JSON.parse($rootScope.user().userdata)[rule.data.fieldname];

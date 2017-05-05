@@ -2,6 +2,7 @@ var express = require('express');
 var jwt = require('jsonwebtoken');
 var apiRouter = express.Router();
 
+apiRouter.use('/salesforce', require('./getorgdetail'));
 // Authentication Apis
 apiRouter.use('/auth', require('./auth'));
 
@@ -9,7 +10,7 @@ apiRouter.use('/auth', require('./auth'));
 apiRouter.use(function(req, res, next){
     // check header parameters for token
     var token = req.headers[config.constant.X_ACCESS_TOKEN_HEADER];
-    
+
     // decode token
     if(token){
         jwt.verify(token, config.constant.SECRET_KEY, function(error, decoded){

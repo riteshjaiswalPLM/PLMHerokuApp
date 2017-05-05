@@ -88,10 +88,31 @@ admin.config(function($stateProvider) {
             controller: "AdminUserManagementUsersListController",
             title: "Manage Users"
         })
+        .state("admin.usermanagement.users.create",{
+            templateUrl: "slds/views/admin/usermanagement/users/create.html",
+            controller: "AdminUserManagementUsersCreateController",
+            params:{
+                userData: null
+            },
+            title: "Create Users"
+        })
+        .state("admin.usermanagement.users.edit",{
+            templateUrl: "slds/views/admin/usermanagement/users/edit.html",
+            controller: "AdminUserManagementUsersEditController",
+            params:{
+                userData: null
+            },
+            title: "Edit Users"
+        })
         .state("admin.usermanagement.profile",{
             templateUrl: "slds/views/admin/usermanagement/profile/userprofilelayout.html",
             controller: "AdminUserManagementUsersProfileController",
             title: "Manage Profile Layout"
+        })
+        .state("admin.usermanagement.createlayout",{
+            templateUrl: "slds/views/admin/usermanagement/userlayout/userlayout.html",
+            controller: "AdminUserManageUsersLayoutController",
+            title: "Manage User Layout"
         })
         .state("admin.usermanagement.roles",{
             templateUrl: "slds/views/admin/usermanagement/roles/index.html",
@@ -217,7 +238,8 @@ admin.config(function($stateProvider) {
             controller: "AdminDashboardComponentsEditController",
             params:{
                 component: null,
-                stateAction: null
+                stateAction: null,
+                redirectTo: null
             },
             title: "Dashboard Components"
         })
@@ -295,6 +317,25 @@ admin.config(function($stateProvider) {
             },
             title: "Edit Layout"
         })
+        .state("admin.mobile.mytask", {
+            templateUrl: "slds/views/admin/mobile/mytask/index.html",
+            controller: "AdminMobileMyTaskController",
+        })
+        .state("admin.mobile.mytask.list", {
+            templateUrl: "slds/views/admin/mobile/mytask/list.html",
+            controller: "AdminMobileMyTaskListController",
+            title: "My Task"
+        })
+        .state("admin.mobile.mytask.edit", {
+            templateUrl: "slds/views/admin/mobile/mytask/edit.html",
+            controller: "AdminMobileMyTaskEditController",
+            params:{
+                component: null,
+                stateAction: null,
+                redirectTo: null
+            },
+            title: "My Task"
+        })
         .state("admin.mobile.useraction", {
             templateUrl: "slds/views/admin/mobile/useraction/index.html",
             controller: 'AdminMobileUserActionController'
@@ -311,6 +352,28 @@ admin.config(function($stateProvider) {
                 useraction: null
             },
             title: "User Action"
+        })
+        .state("admin.mobile.picklist", {
+            templateUrl: "slds/views/admin/mobile/picklist/index.html",
+            controller: 'AdminMobilePicklistController'
+        })
+        .state("admin.mobile.picklist.list", {
+            templateUrl: "slds/views/admin/mobile/picklist/list.html",
+            controller: "AdminMobilePicklistListController",
+            title: "Picklist"
+        })
+        .state("admin.mobile.picklist.managechildfieldsvalue", {
+            templateUrl: "slds/views/admin/mobile/picklist/fields.html",
+            controller: "AdminMobilePicklistFieldController",
+            params:{
+                picklistDetail: null
+            },
+            title: "Picklist"
+        })
+        .state("admin.mobile.orgdetail", {
+            templateUrl: "slds/views/admin/mobile/orgdetails/view.html",
+            controller: "AdminMobileOrgDetailController",
+            title: "Org Details"
         })
         .state("admin.mobile.getConfig", {
             templateUrl: "slds/views/admin/mobile/mobileconfig.html",

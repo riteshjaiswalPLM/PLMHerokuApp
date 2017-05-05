@@ -67,6 +67,10 @@ module.exports = function(sequelize, DataTypes){
                     hooks: true
                 });
                 SObjectLayoutSection.belongsTo(models.Components);
+                SObjectLayoutSection.belongsTo(models.MobileEditLayoutConfig, {
+                    onDelete: 'CASCADE', 
+                    hooks: true
+                });
             }
         }
     });

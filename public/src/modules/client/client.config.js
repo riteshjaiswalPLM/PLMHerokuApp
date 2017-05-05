@@ -8,11 +8,6 @@ client.config(function($stateProvider) {
             templateUrl: 'views/app.client.html',
             controller: 'ClientController',
         })
-        .state('client.dashboard', {
-            templateUrl: 'views/client/dashboard.html',
-            controller: 'ClientDashboardController',
-            title: 'Dashboard'
-        })
         .state('client.profile.manage', {
             templateUrl: 'views/client/profile/manage.html',
             controller: 'ClientProfileManageController',

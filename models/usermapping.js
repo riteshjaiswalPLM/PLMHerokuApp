@@ -40,7 +40,17 @@ module.exports = function(sequelize, DataTypes){
             defaultValue: function(){
                 return {};
             }
-        }
+        },
+        isMobileActive: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function(){
+                return false;
+            }
+        },
+        defaultPWD: {
+            type: DataTypes.STRING,
+            alloallowNull: false,
+        },
     },{
         classMethods: {
             associate: function(models){

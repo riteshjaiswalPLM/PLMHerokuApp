@@ -3,7 +3,7 @@
 admin.controller('AdminUserManagementUsersProfileController',['$scope','$rootScope','$state','$stateParams','$controller','layoutService','$dialog',function($scope,$rootScope,$state,$stateParams,$controller,layoutService,$dialog){
     var thisCtrl = this;
     $scope.getuserprofilelayout = function(){
-        layoutService.getuserprofilelayout()
+        layoutService.getuserprofilelayout({type:'Edit'})
             .success(function(response){
                 if(response.success){
                     $stateParams.layout = response.data.layouts;

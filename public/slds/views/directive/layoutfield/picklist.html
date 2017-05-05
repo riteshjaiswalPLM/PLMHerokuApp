@@ -1,19 +1,26 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
-    <select class="slds-select slds-p-horizontal--x-small"
-            id="{{field.SObjectField.name + index}}"
-            ng-model="field.value" 
-            ng-disabled="{{ field.disabled }}"
-            ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
-            ng-if="!field.readonly && !field.criteriaField">
-        <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
-    </select>
-    <select id="{{field.SObjectField.name + index}}"
-            ng-model="field.value" 
-            ng-disabled="{{ field.disabled }}"
-            ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
-            ng-if="!field.readonly && field.criteriaField"
-            class="slds-select slds-p-horizontal--x-small">
-        <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
-    </select>
-    <span ng-if="field.readonly" ng-bind="field.value"></span>
+    <div class="input-group" ng-if="!field.readonly && (field.disabled ==undefined || field.disabled==false)">
+        <select class="slds-select slds-p-horizontal--x-small"
+                id="{{field.SObjectField.name + index}}"
+                ng-model="field.value" 
+                ng-disabled="{{ field.disabled }}"
+                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
+                ng-if="!field.readonly && !field.criteriaField">
+            <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
+        </select>
+        <select id="{{field.SObjectField.name + index}}"
+                ng-model="field.value" 
+                ng-disabled="{{ field.disabled }}"
+                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
+                ng-if="!field.readonly && field.criteriaField"
+                class="slds-select slds-p-horizontal--x-small">
+            <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
+        </select>
+    </div>
+    <div class="input-group" ng-if="field.disabled==true">
+        <input  type="hidden" 
+                ng-model="field.value">
+        <span ng-bind="field.value"></span>
+    </div>
+    <span class="slds-form-element__label" ng-if="field.readonly && (field.disabled ==undefined || field.disabled==false)" ng-bind="field.value"></span>
 </div>

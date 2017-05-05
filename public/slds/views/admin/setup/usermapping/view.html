@@ -180,6 +180,20 @@
                                 </select>-->
                             </div>
                         </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="isMobileActive">Is Mobile Active</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.isMobileActive ? 'YES' : 'NO' }}</label>
+                                <slds-switch ng-if="enableEdit === true" id="isMobileActive" ng-model="usermapping.isMobileActive" on-text="Yes" off-text="No" />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="inputPassword">Default Password</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.defaultPWD }}</label>
+                                <input ng-if="enableEdit === true" class="slds-input" type="text"  id="inputPassword" placeholder="" tabindex="2" ng-model="usermapping.defaultPWD">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

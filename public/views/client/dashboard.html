@@ -1,6 +1,85 @@
-<div class="page-header page-header-bleed-right">
-    <div class="actions pull-right">
-        <a href="#"><span class="pficon pficon-refresh"></span> {{'Refresh Results' | translate}}</a>
+<div block-ui="ClientDashboardBlockUI" style="min-height: 100px">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right" ng-if="showRefreshResult">
+            <a href="#" ng-click="refresh();"><span class="pficon pficon-refresh"></span> {{'Refresh Results' | translate}}</a>
+        </div>
+        <h1><i class="{{icon}}"></i>&nbsp;&nbsp;{{ $root.title() | translate}}</h1>
     </div>
-    <h1 translate>{{ $root.title() }}</h1>
+    <div id="accordion-markup-outer">
+        <div class="panel panel-default" ng-repeat="container in containersMetaData | orderBy: 'order'">
+            <div class="panel-heading">
+                <a data-toggle="collapse" data-parent="#accordion-markup-outer" href="#{{container.id}}">
+                    <h3 class="panel-title">
+                            {{container.label}}
+                    </h3>
+                </a>
+            </div>
+            <div class="panel-body panel-collapse collapse {{$index === 0 ? 'in' : ''}}" id="{{container.id}}">
+                <div id="accordion-markup-inner{{container.id}}">
+                    <div ng-repeat="component in container.DashboardContainersComponents | orderBy: 'order'" class="panel panel-default" >
+                        <div class="panel-heading" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType)">
+                            <a data-toggle="collapse" data-parent="#accordion-markup-inner{{container.id}}" href="#{{'collepseComponent_'+component.id}}">
+                                <h3 class="panel-title">
+                                    {{component.label}}
+                                    <!--<a ng-click="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType, true)">
+                                        <span class="pficon pficon-refresh"></span> {{'Refresh' | translate}}
+                                    </a>-->
+                                </h3>
+                            </a>
+                        </div>
+                        <div class="panel-body panel-collapse collapse {{$index === 0 ? 'in' : ''}}" style="padding:0px;height: auto;overflow: auto;max-height: 300px" id="{{'collepseComponent_'+component.id}}" block-ui="{{component.Component.catagory+component.id+'Block'}}">
+                            <table class="table table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
+                                        	ng-if="field.hidden === false"
+                                            ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                                            ng-click="applyOrderBy(field, component.Component.catagory+'Component'+component.id)" 
+                                            ng-repeat="field in component.Component.ComponentDetail.configuration.fields" >
+                                            {{ field.label | translate}}
+                                            <i ng-class="{'fa fa-angle-down': (!reverse && predicate === field.SObjectField.name),'fa fa-angle-up': (reverse && predicate === field.SObjectField.name)}" ></i>
+                                        </th>
+                                        <th ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0" style="width:150px;" class="th-actions"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!--<tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" ng-dblclick="doDefaultAction(result, component.Component.ComponentDetail.recordActions)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">-->
+                                    <tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                                        <td class="{{ 'td-'+field.SObjectField.type }}" 
+                                        	ng-if="field.hidden === false"
+                                            ng-repeat="field in component.Component.ComponentDetail.configuration.fields">
+                                            {{ (field.SObjectField.type === 'reference') 
+                                                ? result[field.SObjectField.relationshipName][field.reference] 
+                                                : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                                    ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                                    : (field.SObjectField.type === 'date') 
+                                                        ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                                        : (field.SObjectField.type === 'datetime')
+                                                            ? (result[field.SObjectField.name] | date: 'medium')
+                                                            : result[field.SObjectField.name] }}
+                                        </td>
+                                        <td ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0" class="td-actions" >
+                                            <div class="btn-group">
+                                                <button ng-repeat="action in component.Component.ComponentDetail.recordActions" ng-click="doAction(component.Component.catagory+'Component'+component.id, action,result, component.Component.ComponentDetail.recordActions, component.Component.ComponentDetail.configuration.relativeField)" class="btn-xs {{ action.btnClass }}" type="button">
+                                                    <!--<i class="{{action.icon}}"></i> -->
+                                                     <!--ng-if="criteriaValidation(action,result)"-->
+                                                    {{action.label=='Details'?'View':action.label}}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="blank-slate-pf" ng-if="!searchResult[component.Component.catagory+'Component'+component.id] || searchResult[component.Component.catagory+'Component'+component.id].length === 0">
+                                <div class="blank-slate-pf-icon">
+                                    <span class="fa fa-search"></span>
+                                </div>
+                                <h1 translate>No result found.</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

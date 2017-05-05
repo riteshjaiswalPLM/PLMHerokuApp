@@ -135,7 +135,12 @@ admin.controller('AdminMobileGovernFieldsManageController',[
     $scope.newSObjectFields = function(sObjectFields, callback){
         $scope.blockUI.sObjectActions.start('Synchronizing '+ sObjectFields.label +'...');
         // $scope.blockUI.sObjectActions.start('Saving new SObject...');
-        
+        if($scope.sObjectFields.length >= 5){
+            $dialog.alert("Maximum 5 fields are allowed in Mobile sObjects Govern Fields",'Error','pficon pficon-error-circle-o');
+            $scope.blockUI.sObjectActions.stop();
+            return;
+        }
+
         var duplicate = false;
         angular.forEach($scope.sObjectFields,function(sObjField){
             if(!duplicate && sObjField.name === sObjectFields.name){
@@ -203,6 +208,9 @@ admin.controller('AdminMobileGovernFieldsManageController',[
             $scope.loadSObjectFields();
             
         }
+    };
+    $scope.returnToList = function(){
+        $state.go('admin.mobile.governfields.list');  
     };
     $scope.initBlockUiBlocks = function(){
         $scope.blockUI = {

@@ -1,13 +1,13 @@
-<div block-ui="saveDashoardComponent">
-    <div class="col-md-12">
-        <div class="page-header page-header-bleed-right">
-            <div class="actions pull-right">
-                <a href ng-click="cancel()"><span class="fa fa-chevron-circle-left"></span> Back to components</a>&nbsp;&nbsp;
-                <button class="btn btn-primary" type="button" ng-click="saveComponent()"><i class="fa fa-check"></i> Save</button>
-            </div>
-            <h1>{{ stateAction + ' ' + $root.title() }}</h1>
+<div class="col-md-12">
+    <div class="page-header page-header-bleed-right">
+        <div class="actions pull-right">
+            <a href ng-click="cancel()"><span class="fa fa-chevron-circle-left"></span> {{forMobile ? 'Back to list' : 'Back to components'}}</a>&nbsp;&nbsp;
+            <button class="btn btn-primary" type="button" ng-click="saveComponent()"><i class="fa fa-check"></i> Save</button>
         </div>
+        <h1>{{ stateAction + ' ' + $root.title() }}</h1>
     </div>
+</div>
+<div class="col-md-12" block-ui="SaveDashoardComponentBlockUI">
     <div class="col-md-12">
         <div class="col-md-6">
             <form class="form-horizontal">
@@ -17,7 +17,7 @@
                         <input type="hidden" ng-model="tab.SObject">
                         <input type="text" id="componentSObject" class="form-control" ng-model="component.SObject.label" readonly>
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openSObjectsLookup()">
+                            <button type="button" class="btn btn-default" ng-click="openSObjectsLookup('SObject')">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
@@ -47,7 +47,7 @@
             <form class="form-horizontal">
                 <div class="form-group">
                     <label class="col-md-5 control-label" for="componentActive">Active ?</label>
-                    <div class="input-group col-md-7">
+                    <div class="input-group col-md-7" ng-init="component.active = component.active === undefined ? false : component.active">
                         <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="componentActive" ng-model="component.active">
                     </div>
                 </div>
@@ -57,10 +57,30 @@
                         <input type="text" id="componentDescription" class="form-control" ng-model="component.desc">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-5 control-label" for="detailSObject">Detail SObject</label>
+                    <div class="input-group col-md-7">
+                        <input type="hidden" ng-model="component.detailSObject">
+                        <input type="text" id="detailSObject" class="form-control" ng-model="component.detailSObject.label" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openSObjectsLookup('detailSObject')">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-5 control-label" for="relativeField">Relative field</label>
+                    <div class="input-group col-md-7">
+		                <select id="relativeField" pf-select class="form-control" ng-model="component.ComponentDetails[0].configuration.relativeField" ng-options="field.label for field in relativeFields | orderBy:'label' track by field.label">
+		                    <option value="">-- None --</option>
+		                </select>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-    <div class="col-md-12" style="padding: 0px;">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Lookup fields<span class="pull-right badge badge-info">{{ component.ComponentDetails[0].configuration.fields.length }}</span></h3>
@@ -73,18 +93,24 @@
                             <th>Label</th>
                             <th>Display Label</th>
                             <th>Reference</th>
+                            <th></th>
+                            <th>Hidden</th>
                             <th style="width: 200px;">Type</th>
                             <th style="text-align: center; width: 50px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody dnd-list="component.fields" dnd-allowed-types="['DashboardMyTaskFields']">
+                    <tbody dnd-list="component.ComponentDetails[0].configuration.fields" dnd-allowed-types="['DashboardMyTaskFields']">
                         <tr ng-if="component.ComponentDetails[0].configuration.fields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
-                        <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields"
+                        <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields" ng-init="field.referenceRemoved = field.referenceRemoved ? field.referenceRemoved : false"
                             dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" dnd-type="'DashboardMyTaskFields'">
                             <td>{{ $index + 1 }}</td>
                             <td>{{ field.SObjectField.label }}</td>
                             <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
                             <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                            <td><a pf-tooltip data-placement="left" title="Remove reference" ng-if="field.SObjectField.type === 'reference'" ng-click="field.reference = undefined; field.referenceRemoved = true" href><i class='fa fa-times'></i></a></td>
+                            <td ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.hidden">
+                            </td>
                             <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
                             <td style="text-align: center;">
                                 <span class="pull-right">

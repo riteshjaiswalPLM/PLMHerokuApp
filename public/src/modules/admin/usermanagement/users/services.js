@@ -11,5 +11,8 @@ admin.factory('userService',['$http',function($http){
         deleteUser: function(user){
             return $http.post('/api/admin/user/delete',user);
         },
+        checkUserExist: function(username){
+            return $http.post('/api/admin/user/checkusernameexist',username);
+        },
     };
 }]);

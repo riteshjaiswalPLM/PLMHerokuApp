@@ -1,23 +1,24 @@
 <div class="col-md-12">
     <div class="page-header page-header-bleed-right">
         <div class="actions pull-right">
-            <a href="#" ng-click="refreshResults()" ng-disabled="'true'"><span class="pficon pficon-refresh"></span> Refresh Results</a>
+            <a href="#" ng-click="refreshResults()" ng-disabled="'true'"><span class="pficon pficon-refresh"></span> Refresh Results</a> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href  ng-click="returnToList()"><span class="fa fa-chevron-circle-left"></span> Back to layouts</a>&nbsp;&nbsp;
         </div>
         <h1>{{ $root.title() }}</h1>
     </div>
 
     <div class="row" block-ui="sObjectActions">
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-6 col-sm-6 col-md-6" block-ui="describeSObjects" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <i class="fa fa-cloud"></i> Local sObjects
                         <div class="actions pull-right">
-                            <input class="form-control" ng-model="sfdcSObjectsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+                            <input class="form-control" ng-model="sfdcSObjectsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"/>
                         </div>
                     </h3>
                 </div>
-                <div class="panel-body" block-ui="describeSObjects" style="height:400px;overflow: auto;padding:0px;">
+                <div class="panel-body" style="height:400px;overflow: auto;padding:0px;">
                     <table class="table table-striped table-hover table-bordered" style="margin-bottom:0px;">
                         <thead>
                             <tr>
@@ -41,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-6 col-sm-6 col-md-6" block-ui="loadSObjects">
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -51,7 +52,7 @@
                         </div>
                     </h3>
                 </div>
-                <div class="panel-body" block-ui="loadSObjects" style="height:400px;overflow: auto;padding:0px;">
+                <div class="panel-body"  style="height:400px;overflow: auto;padding:0px;">
                     <table class="table table-striped table-hover table-bordered" ng-if="sObjects.length > 0" style="margin-bottom:0px;">
                         <thead>
                             <tr>

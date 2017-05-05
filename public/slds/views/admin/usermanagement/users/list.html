@@ -17,14 +17,18 @@
                 </div>
             </div>
             <div class="slds-col slds-no-flex slds-grid slds-align-top">
-                <div class="slds-button-group" role="group">
-                    <button class="slds-button slds-button--brand" ng-click="syncUsers()">
-                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#sync"></use>
-                        </svg>
-                        Sync
-                    </button>
-                </div>
+                <button class="slds-button slds-button--brand" ng-click="createUsers()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                    </svg>
+                    Create
+                </button>
+                <button class="slds-button slds-button--brand" ng-click="syncUsers()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#sync"></use>
+                    </svg>
+                    Sync
+                </button>
             </div>
         </div>
         <div class="slds-grid">
@@ -107,12 +111,18 @@
                     <td data-label="Actions" style="text-align: center;">
                         <div class="slds-truncate slds-align--absolute-center" >
                             <div class="slds-button-group" role="group">
-                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-click="deleteUser(user)">
+                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="editUser(user)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use  xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#edit"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Edit</span>
+                                </button>
+                                <!--<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-click="deleteUser(user)">
                                     <svg class="slds-button__icon" aria-hidden="true">
                                         <use  xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                     </svg>
                                     <span class="slds-assistive-text">Delete</span>
-                                </button>
+                                </button>-->
                             </div>
                         </div>
                     </td>

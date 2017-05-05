@@ -28,7 +28,7 @@
                     </thead>
                     <tbody dnd-drop="searchCriteriaFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchCriteriaFields" dnd-allowed-types="['sObjectField','searchCriteriaField']" id="searchCriteriaFieldsContainer">
                         <tr class="dndPlaceholder" style="display: table-row !important"><td colspan="6" style="background: #1294D5" ></td></tr>
-                        <tr ng-if="searchCriteriaFields.length === 0"><td colspan="6" style="text-align: center;">No Criteria field added.</td></tr>
+                        <tr ng-if="searchCriteriaFields.length === 0"><td colspan="5" style="text-align: center;">No Criteria field added.</td></tr>
                         <tr ng-repeat="field in searchCriteriaFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchCriteriaFields.splice($index,1)" dnd-type="'searchCriteriaField'">
                             <td>{{ $index + 1 }}</td>
                             <td>{{ field.SObjectField.label }}</td>

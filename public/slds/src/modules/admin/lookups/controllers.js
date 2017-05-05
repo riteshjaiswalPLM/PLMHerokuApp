@@ -144,7 +144,7 @@ admin.controller('AdminLookupsEditController',[
                                 $dialog.confirm({
                                     title: 'Create more ?',
                                     yes: 'Yes', no: 'No, Thanks',
-                                    message: 'Lookup created successfully. \nCreate more lookup ?',
+                                    message: 'Lookup created successfully? \nCreate more lookup ?',
                                     class:'success',
                                     headerClass: 'success'
                                 },function(confirm){

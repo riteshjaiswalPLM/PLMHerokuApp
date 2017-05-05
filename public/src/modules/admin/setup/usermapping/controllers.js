@@ -30,6 +30,7 @@ function($scope , $rootScope , $state , $dialog , ModalService , userMappingServ
             .success(function(response){
                 if(response.success === true){
                     $scope.usermapping = (response.data.userMapping) ? response.data.userMapping : $scope.usermapping;
+                    $scope.usermapping.isMobileActive=$scope.usermapping.isMobileActive?$scope.usermapping.isMobileActive:false
                 }else{
                     $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                 }
@@ -64,9 +65,13 @@ function($scope , $rootScope , $state , $dialog , ModalService , userMappingServ
         $scope.enableEdit = editable;
     };
     $scope.save = function() {
+        if($scope.usermapping.defaultPWD === undefined ||  $scope.usermapping.defaultPWD.trim()===""){
+            $dialog.alert("Default Password Can Not Be Blank",'Error','pficon pficon-error-circle-o');
+            return;
+        }
         $scope.enableEdit = false;
         console.log($scope.usermapping);
-        
+
         if(!$scope.blockUI.loadUserMappingConfiguration.state().blocking){
             $scope.blockUI.loadUserMappingConfiguration.start('Saving User Mapping Configuration...');
             userMappingService.saveUserMappingConfiguration($scope.usermapping)

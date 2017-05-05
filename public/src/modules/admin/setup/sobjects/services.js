@@ -18,6 +18,9 @@ admin.factory('sobjectService',['$http',function($http){
         },
         loadChildSObjects: function(sObject){
             return $http.post('/api/admin/sobject/childobjects',sObject);
+        },
+        syncSObjects: function(sobjectList){
+            return $http.post('/api/admin/sobject/sync',sobjectList);
         }
     };
 }]);

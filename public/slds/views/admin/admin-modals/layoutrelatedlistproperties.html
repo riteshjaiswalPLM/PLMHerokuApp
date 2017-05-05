@@ -29,6 +29,24 @@
                         <select class="slds-select" ng-model="relatedList.SObjectField" ng-options="field as field.label for field in relativeFields track by field.id"></select>
                     </div>
                 </div>
+                <div class="slds-form-element" ng-if="forMobile === true" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
+                    <label class="slds-form-element__label" for="readOnly">Readonly</label>
+                    <div class="slds-form-element__control" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
+                        <slds-switch id="readOnly" switch-change="onChangeReadonlySwitch()" ng-model="relatedList.readonly" on-text="Yes" off-text="No" />
+                    </div>
+                </div>
+                <div class="slds-form-element" ng-if="forMobile === true" >
+                    <label class="slds-form-element__label" for="addMore">Allow Add More</label>
+                    <div class="slds-form-element__control" ng-init="relatedList.requireAddMore = relatedList.requireAddMore ? relatedList.requireAddMore : false">
+                        <slds-switch id="addMore"  ng-model="relatedList.requireAddMore" on-text="Yes" off-text="No" />
+                    </div>
+                </div>
+                <div class="slds-form-element" ng-if="forMobile === true">
+                    <label class="slds-form-element__label" for="filterCondition">Filter Condition</label>
+                    <div class="slds-form-element__control">
+                        <criteria-builder id="filterCondition" group="relatedList.criteria.group" fields="relatedList.SObject.fields"></criteria-builder>
+                    </div>
+                </div>
             </div>
             <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
                 <thead>
@@ -44,6 +62,12 @@
                         </th>
                         <th scope="col">
                             <div class="slds-truncate" title="Reference">Reference</div>
+                        </th>
+                        <th scope="col" ng-if="forMobile === true">
+                            <div class="slds-truncate" title="Read Only">Read Only</div>
+                        </th>
+                        <th scope="col" ng-if="forMobile === true">
+                            <div class="slds-truncate" title="Required">Required</div>
                         </th>
                         <th scope="col" style="width: 150px;">
                             <div class="slds-truncate" title="Type">Type</div>
@@ -73,6 +97,12 @@
                             <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
                         </td>
                         <td data-label="Reference" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                        <td ng-if="forMobile === true" data-label="Read Only">
+                            <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly" on-text="Yes" off-text="No" />
+                        </td>
+                        <td ng-if="forMobile === true" data-label="Required">
+                            <slds-switch id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required" on-text="Yes" off-text="No" />
+                        </td>
                         <td data-label="Type">
                             <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
                         </td>

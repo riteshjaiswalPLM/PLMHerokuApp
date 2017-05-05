@@ -19,6 +19,12 @@ admin.factory('genericComponentService',['$http',function($http){
         },
         loadDashboardComponent: function(data){
             return $http.post('/api/admin/component/dashboard/list', data);
+        },
+        loadRefSObject: function(data){
+        	return $http.post('/api/admin/component/loadrefsobject', data);
+        },
+        getUserSObject: function(){
+        	return $http.post('/api/admin/component/getusersobject');
         }
     };
 }]);

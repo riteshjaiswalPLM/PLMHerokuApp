@@ -71,6 +71,12 @@ module.exports = function(sequelize, DataTypes){
                     onDelete: 'CASCADE', 
                     hooks: true
                 });
+
+                SObjectLayout.hasMany(models.MobileEditLayoutConfig, {
+                    as:'a',
+                    onDelete: 'CASCADE', 
+                    hooks: true
+                });
             }
         }
     });
