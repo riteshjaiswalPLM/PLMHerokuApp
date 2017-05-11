@@ -20,6 +20,36 @@ app.directive('pfTouchSpin', ['$rootScope',function ($rootScope) {
     };
 }]);
 
+app.directive('sldsNotification',['$rootScope', function($rootScope){
+    return {
+        restrict: 'E',
+        replace: true,
+        template: `
+            <div class="slds-notify_container"  style="width: 100%;font-size:12px">
+                <div ng-repeat="notification in notifications.data"  >
+                    <div class="slds-notify slds-notify--toast slds-theme--{{notification.type =='danger'? 'error':notification.type }}" role="alert" style="width: 100%;padding: 0.5rem 1.5rem;margin:0px;margin-bottom: .5rem">
+                        <span class="slds-assistive-text">Info</span>
+                        <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" ng-click="$parent.notifications.remove($index)">
+                        <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                            <use xlink:href="slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <div class="slds-notify__content slds-grid">
+                            <svg class="slds-icon slds-icon--small slds-m-right--small slds-col slds-no-flex" aria-hidden="true">
+                                <use xlink:href="{{notification.type =='danger'? 'slds221/assets/icons/utility-sprite/svg/symbols.svg#error':'slds221/assets/icons/utility-sprite/svg/symbols.svg#'+notification.type}}"></use>
+                            </svg>
+                            <div class="slds-col slds-align-middle">
+                                <h2 class="slds-text-heading--small "><strong>{{notification.header}}</strong> {{notification.message}}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+        link: function(scope, el, attrs, ngModel){
+        }
+    };
+}]);
 app.directive('sldsSwitch',['$rootScope', function($rootScope){
     return {
         require: 'ngModel',

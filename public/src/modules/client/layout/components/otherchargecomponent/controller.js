@@ -167,7 +167,7 @@ client.controller('OtherChargeComponentController',[
 					//invoiceLineItemTotalAmount += parseFloat(model['Amount__c']);
 					invoiceLineItemTotalAmount += parseFloat(model[$scope.childAmountFieldName]);
 			});
-			return isNaN(invoiceLineItemTotalAmount) ? 0 : (isNaN(currencyFilter(invoiceLineItemTotalAmount)) ? 0 : currencyFilter(invoiceLineItemTotalAmount));
+			return isNaN(invoiceLineItemTotalAmount) ? 0 : invoiceLineItemTotalAmount;
 		};
 		$scope.addItems = function(){	// addItem()
 			if($scope.getTotal() <  $scope.invoiceAmount){

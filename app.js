@@ -21,7 +21,7 @@ app.use('/api', require('./apis'));
 app.get('/pf',function(req,res){
     res.sendFile('./public/index-pf.html', {root: path.join(__dirname)});
 });
-app.get('/',function(req,res){
+app.get('/*',function(req,res){
     //res.sendFile('./public/index.html', {root: path.join(__dirname)});
     res.sendFile('./public/index-slds.html', {root: path.join(__dirname)});
 });
