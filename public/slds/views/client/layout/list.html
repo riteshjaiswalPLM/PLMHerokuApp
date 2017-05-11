@@ -139,6 +139,9 @@
                     </tr>
                 </tbody>
             </table>      
+            <div ng-if="searchResult.length === 0">
+                <h1 colspan="{{searchResultFields.length}}" class="slds-blank-slate"  style="padding:5px" translate>No Record found.</h1>
+            </div>
         </div>  
         
     </div>
