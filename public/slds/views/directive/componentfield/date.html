@@ -1,8 +1,17 @@
 <div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
-        <div    pf-datepicker 
+        <!--<div    pf-datepicker 
                 date="model[field.SObjectField.name]"
                 id="{{ field.SObjectField.name + index}}" 
                 options="{autoclose: true, todayBtn: 'linked', todayHighlight: true}"
-                ng-if="!readonly"></div>
+                ng-if="!readonly"></div>-->
+
+        <div class="slds-form-element__control" ng-if="!readonly">
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                <svg aria-hidden="true" class="slds-icon slds-input__icon slds-icon--x-small">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="slds221/assets/icons/utility-sprite/svg/symbols.svg#event"/>
+                </svg>
+                <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='model[field.SObjectField.name]'  li-datepicker />
+                </div>
+        </div>
         <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | date: 'mediumDate'"></span>
 </div>

@@ -12,7 +12,7 @@ var app = angular.module('App',[
     'frapontillo.bootstrap-switch',
     'datetimepicker',
     'anguFixedHeaderTable',
-    'jsonFormatter'
+    'jsonFormatter','angular-lightning.datepicker'
 ]);
 
 var stateProviderRef = null, _$translateProvider = null;

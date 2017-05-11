@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="slds-grid slds-panel slds-wrap " style="height: calc(100vh - 156px);">
-        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y">
+        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small ">
             <div class="slds-form--stacked slds-grow">
                 <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
                     <h3>{{'Search Criteria' | translate}}</h3>
@@ -97,7 +97,7 @@
                             ng-repeat="field in searchResultFields" >
                             <div class="slds-truncate" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                         </th>
-                        <th scope="col" ng-if="recordActions && recordActions.length > 0" style="min-width:150px;" class="th-actions"></th>
+                        <th scope="col"  style="min-width:150px;width:100%" class="th-actions"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -124,7 +124,7 @@
                                         : (field.SObjectField.type === 'datetime')
                                             ? (result[field.SObjectField.name] | date: 'medium')
                                             : result[field.SObjectField.name] }}</div></td>
-                        <td ng-if="recordActions && recordActions.length > 0" class="td-actions" >
+                        <td  class="td-actions" >
                             <div class="slds-truncate slds-align--absolute-center" >
                                 <div class="slds-button-group" role="group">
                                     <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
