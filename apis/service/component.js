@@ -117,12 +117,12 @@ componentRouter.post('/deleteexistingattachment', function (req, res) {
                 message: "File Not Found or Already Deleted"
             });
         }
-        console.log(result.length>0);
-         return res.json({
-            success: true,
-            filename: attachment.Name,
-            message: message
-        });
+        // console.log(result.length>0);
+        //  return res.json({
+        //     success: true,
+        //     filename: attachment.Name,
+        //     message: message
+        // });
     }).catch(function(err){
          return res.json({
             success: false,
