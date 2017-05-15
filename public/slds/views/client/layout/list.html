@@ -88,7 +88,7 @@
             </div>
         </div>
         <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="min-height: 200px;">
-            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
+            <table fixed-header-search-table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
                 <thead>
                     <tr class="slds-text-title--caps">
                         <th style="max-width:200px"  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
@@ -108,7 +108,7 @@
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
                                     ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
                                     : (field.SObjectField.type === 'date') 
-                                        ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                        ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
                                         : (field.SObjectField.type === 'datetime')
                                             ? (result[field.SObjectField.name] | date: 'medium')
                                             : result[field.SObjectField.name] }}" 
@@ -120,9 +120,9 @@
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
                                     ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
                                     : (field.SObjectField.type === 'date') 
-                                        ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                       ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
                                         : (field.SObjectField.type === 'datetime')
-                                            ? (result[field.SObjectField.name] | date: 'medium')
+                                            ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
                                             : result[field.SObjectField.name] }}</div></td>
                         <td  class="td-actions" >
                             <div class="slds-truncate slds-align--absolute-center" >

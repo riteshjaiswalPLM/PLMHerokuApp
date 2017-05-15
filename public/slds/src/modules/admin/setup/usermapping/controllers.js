@@ -70,7 +70,6 @@ function($scope , $rootScope , $state , $dialog , ModalService , userMappingServ
             return;
         }
         $scope.enableEdit = false;
-        console.log($scope.usermapping);
 
         if(!$scope.blockUI.loadUserMappingConfiguration.state().blocking){
             $scope.blockUI.loadUserMappingConfiguration.start('Saving User Mapping Configuration...');

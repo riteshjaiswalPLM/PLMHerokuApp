@@ -20,7 +20,6 @@ admin.controller('AdminClientDashboardDesignController',[
                 });
         };
         $scope.saveDashboardConfiguration = function(){
-            console.log($scope.dashboardContainers);
             $scope.reOrder($scope.dashboardContainers);
             if(!$scope.blockUI.ClientDashboardEditLayoutBlockUI.state().blocking){
                 $scope.blockUI.ClientDashboardEditLayoutBlockUI.start('Saving layout...');

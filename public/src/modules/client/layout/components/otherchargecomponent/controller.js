@@ -78,7 +78,6 @@ client.controller('OtherChargeComponentController',[
 												response.data.dataModelList[key].isPersisted = true;
 												response.data.dataModelList[key].isDeleted = false;
 											});
-											console.log(response.data.dataModelList);
 											$scope.dataModelList = response.data.dataModelList;
 											if(response.data.invoiceAmount && response.data.invoiceAmount!=null )
 											{
@@ -140,7 +139,6 @@ client.controller('OtherChargeComponentController',[
 								response.data.dataModelList[key].isPersisted = true;
 								response.data.dataModelList[key].isDeleted = false;
 							});
-							console.log(response.data.dataModelList);
 							$scope.dataModelList = response.data.dataModelList;
 							if(response.data.invoiceAmount && response.data.invoiceAmount!=null )
 							{
@@ -167,7 +165,7 @@ client.controller('OtherChargeComponentController',[
 					//invoiceLineItemTotalAmount += parseFloat(model['Amount__c']);
 					invoiceLineItemTotalAmount += parseFloat(model[$scope.childAmountFieldName]);
 			});
-			return isNaN(invoiceLineItemTotalAmount) ? 0 : invoiceLineItemTotalAmount;
+			return isNaN(invoiceLineItemTotalAmount) ? 0 :invoiceLineItemTotalAmount;
 		};
 		$scope.addItems = function(){	// addItem()
 			if($scope.getTotal() <  $scope.invoiceAmount){
@@ -197,7 +195,6 @@ client.controller('OtherChargeComponentController',[
 				$scope.newfields["isRemovable"] = true;
 				$scope.newfields["isPersisted"] = false;
 				$scope.newfields["isDeleted"] = false;
-				console.log($scope.newfields);
 				$scope.dataModelList.push($scope.newfields);
 			}
 		  	else{

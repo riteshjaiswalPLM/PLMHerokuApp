@@ -1,9 +1,15 @@
 <div class="alert alert-warning alert-group">
     <div class="form-inline">
-        <select ng-options="o.value as o.label for o in operators" ng-model="group.operator" class="form-control"></select>
-        <button style="margin-left: 5px" ng-click="addRule()" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Rule</button>
-        <button style="margin-left: 5px" ng-click="addGroup()" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Group</button>
-        <button style="margin-left: 5px" ng-click="removeGroup()" class="btn btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Remove Group</button>
+        <select ng-options="o.value as o.label for o in operators" ng-model="group.operator" class="slds-select" style="width: auto;"></select>
+         <button ng-click="addRule()" class="slds-button slds-button--success">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add Rule
+        </button>
+        <button ng-click="addGroup()" class="slds-button slds-button--success">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add Group
+        </button>
+        <button ng-click="removeGroup()" class="slds-button slds-button--destructive">
+            <span class="glyphicon glyphicon-minus-sign"></span> Remove Group
+        </button>
     </div>
     <div class="group-conditions">
         <div ng-repeat="rule in group.rules | orderBy:'index'" class="condition">
@@ -13,21 +19,26 @@
                 </div>
                 <div ng-switch-default="ng-switch-default">
                     <form class="form-inline">
-                    	<select ng-model="rule.SObjectName" class="form-control">
+                    	<select ng-model="rule.SObjectName" class="slds-select" style="width: auto;">
                     		<option value="">-- None --</option>
                     		<option ng-repeat="(key, value) in fields" value="{{key}}" ng-select="group.SObjectName === key">{{key.split('-')[1]}}</option>
                     	</select>
-                        <select ng-options="f as f.label for f in fields[rule.SObjectName] | orderBy:'label' track by f.SObjectField.name" ng-model="rule.field" class="form-control">
+                        <select ng-options="f as f.label for f in fields[rule.SObjectName] | orderBy:'label' track by f.SObjectField.name" ng-model="rule.field" class="slds-select" style="width: auto;margin-left: 5px">
                             <option value="">-- None --</option>
                         </select>
-                        <select style="margin-left: 5px" ng-options="c.value as c.value for c in conditions | filter: rule.field.SObjectField.type" ng-model="rule.condition" class="form-control">
+                        <select style="width: auto;margin-left: 5px" ng-options="c.value as c.value for c in conditions | filter: rule.field.SObjectField.type" ng-model="rule.condition" class="slds-select" >
                             <option value="" selected>-- None --</option>
                         </select>
-                        <select ng-if="rule.field && rule.field.SObjectField.type==='reference' && rule.field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1"  ng-options="f as f.label for f in userDataField | orderBy:'label' track by f.fieldname"  ng-model="rule.data" class="form-control" ng-change="updateRef(rule);">
+                        <select ng-if="rule.field && rule.field.SObjectField.type==='reference' && rule.field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1"  ng-options="f as f.label for f in userDataField | orderBy:'label' track by f.fieldname"  ng-model="rule.data" class="slds-select" ng-change="updateRef(rule);" style="width: auto;margin-left: 5px">
                             <option value="">-- None --</option>
                         </select>
                         <div style="margin-left: 5px; display: inline-block;" field-readonly="'false'" ng-if="rule.field && (rule.field.SObjectField.type!=='reference' || (rule.field.SObjectField.type==='reference' && rule.field.SObjectField.referenceTo.indexOf(userMasterObjName)===-1))" sobject-layout-field field="rule.field" model="rule.data"></div>
-                        <button style="margin-left: 5px" ng-click="removeRule($index)" class="btn btn-danger"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                        <button class="slds-button slds-button--icon-error slds-button--icon-border slds-m-left--xx-small" aria-live="assertive" title="Delete rule" ng-click="removeRule($index)">
+                            <svg class="slds-button__icon" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Delete rule</span>
+                        </button>
                     </form>
                 </div>
             </div>

@@ -78,7 +78,6 @@ client.controller('OtherChargeComponentController',[
 												response.data.dataModelList[key].isPersisted = true;
 												response.data.dataModelList[key].isDeleted = false;
 											});
-											console.log(response.data.dataModelList);
 											$scope.dataModelList = response.data.dataModelList;
 											if(response.data.invoiceAmount && response.data.invoiceAmount!=null )
 											{
@@ -140,7 +139,6 @@ client.controller('OtherChargeComponentController',[
 								response.data.dataModelList[key].isPersisted = true;
 								response.data.dataModelList[key].isDeleted = false;
 							});
-							console.log(response.data.dataModelList);
 							$scope.dataModelList = response.data.dataModelList;
 							if(response.data.invoiceAmount && response.data.invoiceAmount!=null )
 							{
@@ -197,7 +195,6 @@ client.controller('OtherChargeComponentController',[
 				$scope.newfields["isRemovable"] = true;
 				$scope.newfields["isPersisted"] = false;
 				$scope.newfields["isDeleted"] = false;
-				console.log($scope.newfields);
 				$scope.dataModelList.push($scope.newfields);
 			}
 		  	else{
@@ -263,7 +260,7 @@ client.controller('OtherChargeComponentController',[
 				return true;
 			}
 			else{
-				$dialog.alert(errorMessagesStr,'Error','pficon pficon-error-circle-o');
+				$dialog.alert(errorMessagesStr,'Validation Alert','pficon-warning-triangle-o');
 				return false;
 			}
 		}

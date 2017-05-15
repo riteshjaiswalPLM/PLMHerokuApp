@@ -95,21 +95,72 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-form-element__group" ng-if="component.catagory == 'MultiLevelApproval'">
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval'">
                     <div class="slds-form-element__row">
-                        <div class="slds-form-element slds-size--1-of-2">
-                            <label class="slds-form-element__label" for="deleteButton">Delete</label>
-                            <div class="slds-form-element__control" >
-                                <button id="deleteButton" ng-click="openDeleteCriteriaModal()" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
-                                    <svg class="slds-button__icon" aria-hidden="true">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
-                                    </svg>
-                                    <span class="slds-assistive-text">Delete Criteria</span>
-                                </button>
-                                <!--<a pf-tooltip if="deleteButton" data-placement="right" title="Delete Criteria" ng-click="openDeleteCriteriaModal()"><i class="fa fa-cogs"></i></a>-->
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="appStatusField">Approval Detail Status Field</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.ComponentDetails[0].configuration.approvalDetailStatusField">
+                                    <input readonly type="text" id="appStatusField" class="slds-lookup__search-input slds-input--bare" ng-model="component.ComponentDetails[0].configuration.approvalDetailStatusField.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none" >
+                                    <button ng-click="openApprovalDetailFieldListModel('approvalDetailStatusField',{type: 'picklist'})" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for Approval Detail">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for Approval Detail</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="slds-form-element slds-size--1-of-2">
+                    </div>
+                </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="appCycleField">Approval Detail Cycle Field</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.ComponentDetails[0].configuration.approvalDetailCycleField">
+                                    <input readonly type="text" id="appCycleField" class="slds-lookup__search-input slds-input--bare" ng-model="component.ComponentDetails[0].configuration.approvalDetailCycleField.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none" >
+                                    <button ng-click="openApprovalDetailFieldListModel('approvalDetailCycleField')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for Approval Detail">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for Approval Detail</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="cycleField">SObject Cycle Field</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.ComponentDetails[0].configuration.cycleField">
+                                    <input readonly type="text" id="cycleField" class="slds-lookup__search-input slds-input--bare" ng-model="component.ComponentDetails[0].configuration.cycleField.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none" >
+                                    <button ng-click="openCycleFieldListModel()" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for Approval Detail">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for Approval Detail</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group" ng-if="component.catagory == 'MultiLevelApproval'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
                             <label class="slds-form-element__label" for="recallButon">Recall</label>
                             <div class="slds-form-element__control" >
                                 <button id="recallButon" ng-click="openRecallCriteriaModal()" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
@@ -156,6 +207,19 @@
                         <div class="slds-form-element slds-size--1-of-1">
                             <label class="slds-form-element__label" for="componentDescription">Description</label>
                             <input type="text" id="componentDescription" class="slds-input" ng-model="component.description" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="relativeField">Select Relative Field</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <select id="relativeField" class="slds-select" ng-model="component.ComponentDetails[0].configuration.connectingField">
+                                    <option value="">-- None --</option>
+                                    <option ng-repeat="field in connectingFieldMap[component.SObject.name]" value="{{field.name}}" ng-selected="component.ComponentDetails[0].configuration.connectingField === field.name">{{field.label + ' [ ' + field.name + ' ] '}}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -209,6 +273,77 @@
                         </div>
                     </div>
                 </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval' && component.ComponentDetails[0].configuration.allowAddFinalApprover === true" ng-init="component.ComponentDetails[0].configuration.allowAddFinalApprover = (component.ComponentDetails[0].configuration.allowAddFinalApprover  === undefined) ? false : component.ComponentDetails[0].configuration.allowAddFinalApprover">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="assignedRoleField">Select assigned role field</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.ComponentDetails[0].configuration.assignedRoleField">
+                                    <input readonly type="text" id="assignedRoleField" class="slds-lookup__search-input slds-input--bare" ng-model="component.ComponentDetails[0].configuration.assignedRoleField.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none" >
+                                    <button ng-click="openApprovalDetailFieldListModel('assignedRoleField',{type: 'picklist'})" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for Approval Detail">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for assign role field</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval' && component.ComponentDetails[0].configuration.allowAddFinalApprover === true">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="finalApproverPicklistValue">Select final/approval picklist value</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <select id="finalApproverPicklistValue" class="slds-select" ng-model="component.ComponentDetails[0].configuration.finalApproverPicklistValue">
+                                    <option value="">-- None --</option>
+                                    <option ng-repeat="picklistValue in component.ComponentDetails[0].configuration.assignedRoleField.picklistValues" value="{{picklistValue.value}}" ng-selected="component.ComponentDetails[0].configuration.finalApproverPicklistValue === picklistValue.value">{{picklistValue.label}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group" ng-if="component.catagory == 'MultiLevelApproval'" ng-init="component.ComponentDetails[0].configuration.readonly = (component.ComponentDetails[0].configuration.readonly  === undefined) ? false : component.ComponentDetails[0].configuration.readonly">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="isComponentReadOnly">Read Only ?</label>
+                            <div class="slds-form-element__control" >
+                                <div class="slds-form-element__control" style="float: left;">
+                                    <slds-switch id="isComponentReadOnly" ng-model="component.ComponentDetails[0].configuration.readonly" on-text="Yes" off-text="No" show-texts="false"/>
+                                </div>
+                                <div class="slds-form-element__control" style="float: left;">
+                                    <button ng-if="component.ComponentDetails[0].configuration.readonly === true" id="isComponentReadOnly" ng-click="openComponentReadOnlyCriteriaModal()" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Add Read Only Criteria</span>
+                                    </button>
+                                </div>
+                                <!--<a pf-tooltip if="deleteButton" data-placement="right" title="Delete Criteria" ng-click="openDeleteCriteriaModal()"><i class="fa fa-cogs"></i></a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group" ng-if="component.catagory == 'MultiLevelApproval'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="deleteButton">Delete</label>
+                            <div class="slds-form-element__control" >
+                                <button id="deleteButton" ng-click="openDeleteCriteriaModal()" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete Criteria</span>
+                                </button>
+                                <!--<a pf-tooltip if="deleteButton" data-placement="right" title="Delete Criteria" ng-click="openDeleteCriteriaModal()"><i class="fa fa-cogs"></i></a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
         </div>
     </div>
@@ -248,6 +383,9 @@
                                 <div class="slds-truncate" title="Type">Type</div>
                             </th>
                             <th scope="col" >
+                                <div class="slds-truncate" title="Default value">Default value</div>
+                            </th>
+                            <th scope="col" >
                                 <div class="slds-truncate" title="Read Only">Read Only</div>
                             </th>
                             <th scope="col" >
@@ -260,10 +398,10 @@
                     </thead>
                     <tbody dnd-list="component.ComponentDetails[0].configuration.fields" dnd-allowed-types="['sObjectLayoutFields']">
                         <tr ng-if="component.ComponentDetails[0].configuration.fields.length === 0">
-                            <td colspan="8" class="slds-blank-slate">No field added.</td>
+                            <td colspan="9" class="slds-blank-slate">No field added.</td>
                         </tr>
                         <tr class="dndPlaceholder" style="display: table-row !important">
-                            <th colspan="8" style="background: #e1d951; text-align: center;" >
+                            <th colspan="9" style="background: #e1d951; text-align: center;" >
                                 Move here
                             </th>
                         </tr>
@@ -271,7 +409,7 @@
                             dnd-draggable="field" 
                             dnd-effect-allowed="move" 
                             dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" 
-                            dnd-type="'sObjectLayoutFields'">
+                            dnd-type="'sObjectLayoutFields'"  ng-init="field.readonly = false">
                             <td>{{ $index + 1 }}</td>
                             <td data-label="Label">{{ field.SObjectField.label }}</td>
                             <td data-label="Display Label">
@@ -281,32 +419,55 @@
                             <td data-label="Type">
                                 <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
                             </td>
-                            <td data-label="Read Only">
-                                <button  ng-click="openFieldReadOnlyCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
-                                    <svg class="slds-button__icon" aria-hidden="true">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
-                                    </svg>
-                                    <span class="slds-assistive-text">Read Only Criteria</span>
-                                </button>
+                            <td data-label="Default value">
+                                <div field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field.data"></div>
+                            </td>
+                            <td data-label="Read Only" ng-init="field.readOnly = field.readOnly ? field.readOnly : false">
+                                <div class="slds-form-element__control" style="float: left;">
+                                    <slds-switch ng-model="field.readOnly"  show-texts="false" on-text="Yes" off-text="No"/>
+                                </div>
+                                <div class="slds-form-element__control" style="float: left;" ng-if="field.readOnly === true" >
+                                    <button  ng-click="openFieldReadOnlyCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Read Only Criteria</span>
+                                    </button>
+                                </div>
                                 <!--<a href pf-tooltip data-placement="left" title="Read Only Criteria" ng-click="openFieldReadOnlyCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>-->
                             </td>
-                            <td data-label="Required">
-                                <button  ng-click="openFieldRequiredCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
-                                    <svg class="slds-button__icon" aria-hidden="true">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
-                                    </svg>
-                                    <span class="slds-assistive-text">Required Criteria</span>
-                                </button>
+                            <td data-label="Required"  ng-init="field.isRequired = field.isRequired ? field.isRequired : false">
+                                <div class="slds-form-element__control" style="float: left;">
+                                    <slds-switch ng-model="field.isRequired"  show-texts="false" on-text="Yes" off-text="No"/>
+                                </div>
+                                <div class="slds-form-element__control" style="float: left;" ng-if="field.isRequired === true" >
+                                    <button  ng-click="openFieldRequiredCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Required Criteria</span>
+                                    </button>
+                                </div>
                                 <!--<a href pf-tooltip data-placement="left" title="Required Criteria" ng-click="openFieldRequiredCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>-->
                             </td>
                             <td data-label="Action" style="text-align: center;">
                                 <div class="slds-truncate" ng-if="component.ComponentDetails[0].configuration.fields.length > 1" >
-                                    <button title="Delete" class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--destructive" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)">
-                                        <svg class="slds-button__icon" aria-hidden="true">
-                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-                                        </svg>
-                                        <span class="slds-assistive-text">Delete</span>
-                                    </button>
+                                    <div class="slds-form-element__control" style="float: left;">
+                                        <button title="Delete" class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--destructive" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </button>
+                                    </div>
+                                    <div class="slds-form-element__control" style="float: left;">
+                                        <button  ng-click="openFieldCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Criteria</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -316,7 +477,7 @@
             <div class="slds-card__footer">
                 <form class="slds-form--inline">
                     <div class="slds-form-element" style="float: left;">
-                        <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in component.SObject.SObjectFields | orderBy:'label'">
+                        <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in component.approvalDetailSObject.SObjectFields | orderBy:'label'">
                             <option value="">-- None --</option>
                         </select>
                     </div>

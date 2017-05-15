@@ -6,7 +6,18 @@ setupRouter.post('/sfdc', function(req, res){
     var Sfdcs = db.Salesforce.findAll({
         attributes: {
             exclude: ['createdAt','updatedAt']
-        }
+        },
+        include: [{
+            model: db.TimeZone,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            }
+        },{
+            model: db.Locale,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            }
+        }]
     });
     
     Sfdcs.then(function(sfdcs) {
@@ -20,7 +31,9 @@ setupRouter.post('/sfdc', function(req, res){
                 success: true,
                 data: {
                     sfdc: sfdcs[0],
-                    orgId: global.sfdc.orgId
+                    orgId: global.sfdc.orgId,
+                    locale: locale.list,
+                    timezone: timezone.list
                 }
             });
         }
@@ -123,7 +136,9 @@ setupRouter.post('/sfdc/save', function(req, res){
                         username: sfdcConfig.username,
                         password: sfdcConfig.password,
                         token: sfdcConfig.token,
-                        environment: sfdcConfig.environment
+                        environment: sfdcConfig.environment,
+                        LocaleId: sfdcConfig.LocaleId,
+                        TimeZoneId: sfdcConfig.TimeZoneId
                     },{
                         where: {
                             id: sfdcs[0].id

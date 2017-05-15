@@ -43,6 +43,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="languageSelector" translate>Select Default Time Zone</label>
+                            <select class="slds-select" id="timezoneSelector"  ng-options="timezone.id as timezone.name for timezone in timezones | orderBy: name" ng-model="otherSetting.TimeZoneId" >
+                                <option value="">-- None --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="languageSelector" translate>Select Default Locale</label>
+                            <select class="slds-select" id="localeSelector"  ng-options="locale.id as locale.name for locale in locales | orderBy: 'name'" ng-model="otherSetting.LocaleId" >
+                            <option value="">-- None --</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
         </div>
         <div class="slds-size--1-of-3 slds-panel__section">

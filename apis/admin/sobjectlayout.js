@@ -475,7 +475,7 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                     isComponent: section.isComponent,
                     SObjectLayoutId: section.SObjectLayoutId,
                     ComponentId: section.isComponent ? section.Component ? section.Component.id : null : null,
-                    componentName: section.isComponent && section.Component.name ? section.Component.name : null,
+                    componentName: section.isComponent && section.Component.name ? section.Component.name : (section.isComponent && section.Component.catagory ? section.Component.catagory : null),
                     criteria: section.criteria ? section.criteria : undefined,
                     MobileEditLayoutConfigId: section.MobileEditLayoutConfigId ? section.MobileEditLayoutConfigId : null
                 })
@@ -497,7 +497,7 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                     isComponent: section.isComponent,
                     SObjectLayoutId: section.SObjectLayoutId,
                     ComponentId: section.isComponent ? section.Component ? section.Component.id : null : null,
-                    componentName: section.isComponent && section.Component.name ? section.Component.name : null,
+                    componentName: section.isComponent && section.Component.name ? section.Component.name : (section.isComponent && section.Component.catagory ? section.Component.catagory : null),
                     criteria: section.criteria ? section.criteria : undefined,
                     MobileEditLayoutConfigId: section.MobileEditLayoutConfigId ? section.MobileEditLayoutConfigId : null
                 },{

@@ -18,12 +18,12 @@
                         </tr>
                     </thead>
                     <tbody >
-                        <tr ng-repeat="refField in refSObject.SObjectFields | filter: referenceFieldFilter">
+                        <tr ng-repeat="refField in refSObject.SObjectFields | filter: referenceFieldFilter | filter: filter">
                             <td>{{ refField.label }}</td>
                             <td>{{ refField.name }}</td>
                             <td>{{ refField.type }}</td>
                             <td style="text-align: center;">
-                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(refField.name)"><i class="fa fa-check"></i> Select</button>
+                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(refField.name, refField)"><i class="fa fa-check"></i> Select</button>
                             </td>
                         </tr>
                     </tbody>

@@ -78,7 +78,6 @@ client.controller('CostAllocationComponentController',[
 												response.data.dataModelList[key].isPersisted = true;
 												response.data.dataModelList[key].isDeleted = false;
 											});
-											console.log(response.data.dataModelList);
 											$scope.dataModelList = response.data.dataModelList;
 											if(response.data.invoiceAmount && response.data.invoiceAmount!=null )
 											{
@@ -139,7 +138,6 @@ client.controller('CostAllocationComponentController',[
 								response.data.dataModelList[key].isPersisted = true;
 								response.data.dataModelList[key].isDeleted = false;
 							});
-							console.log(response.data.dataModelList);
 							$scope.dataModelList = response.data.dataModelList;
 							if(response.data.invoiceAmount && response.data.invoiceAmount!=null )
 							{
@@ -194,7 +192,6 @@ client.controller('CostAllocationComponentController',[
 				$scope.newfields["isRemovable"] = true;
 				$scope.newfields["isPersisted"] = false;
 				$scope.newfields["isDeleted"] = false;
-				console.log($scope.newfields);
 				$scope.dataModelList.push($scope.newfields);
 			}
 		  	else{

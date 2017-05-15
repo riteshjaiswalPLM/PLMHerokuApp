@@ -17,6 +17,8 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
                 if(response.success === true){
                     $scope.sfdc = response.data.sfdc;
                     $scope.sfdcOrgId = response.data.orgId;
+                    $scope.locale = response.data.locale;
+                    $scope.timezone = response.data.timezone;
                 }else{
                     $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                 }
@@ -35,6 +37,8 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
             inputs:{
                 data: {
                     sfdc: angular.copy($scope.sfdc),
+                    timezone: $scope.timezone,
+                    locale: $scope.locale,
                     title: 'Edit Salesforce Org Configuration'   
                 }
             }
@@ -52,7 +56,7 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
                 message: 'All information related to configured org will be deleted. \nAre you sure ?',
-                class:'destructive',
+                 class:'destructive',
                 headerClass: 'error'
             },function(confirm){
                 if(confirm){
@@ -92,6 +96,8 @@ admin.controller('AdminSetupSfdcEditModalController',[
 function($scope , $rootScope , $element , $dialog , blockUI , ModalService , data , close , setupService){
     $scope.title = (data.title) ? data.title : 'Edit Salesforce Org configuration';
     $scope.sfdcEnvs = [{label:'Production',value:'PRODUCTION'},{label:'Sandbox',value:'SANDBOX'}];
+    $scope.timezones = data.timezone;
+    $scope.locales = data.locale;
     $scope.sfdc = (data.sfdc) ?  data.sfdc : {
         username: null,
         password: null,
@@ -103,6 +109,10 @@ function($scope , $rootScope , $element , $dialog , blockUI , ModalService , dat
     };
     $scope.save = function(){
         if(!$scope.blockUI.editSalesforceConfiguration.state().blocking){
+            if($scope.sfdc.LocaleId === null || $scope.sfdc.TimeZoneId === null){
+                $dialog.alert('Locale and Time Zone are mandatory.','Error','pficon pficon-error-circle-o');    
+                return;
+            }
             $scope.blockUI.editSalesforceConfiguration.start('Configuring salesforce...');
             setupService.saveSalesforceConfiguration($scope.sfdc)
                 .success(function(response){

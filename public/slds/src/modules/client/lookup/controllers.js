@@ -16,7 +16,6 @@ client.controller('ClientSObjectLookupController',[
                 };
             }
             if($scope.lookupCache.metadata === undefined){
-                console.error('Loading fresh metadata');
                 
                 $scope.blockUI.loadSObjectLookup.start('Loading lookup...');
                 
@@ -39,7 +38,6 @@ client.controller('ClientSObjectLookupController',[
                         $dialog.alert('Server error occured while loading lookup metadata.','Error','pficon pficon-error-circle-o');
                     });
             }else{
-                console.error('Loading cached metadata');
                 $timeout(function(){
                     $scope.metadata = $scope.lookupCache.metadata;
                 },100);
@@ -57,7 +55,6 @@ client.controller('ClientSObjectLookupController',[
                         }
                         $scope.currentPage = $scope.lookupCache.currentPage;
                         $scope.pageSize = $scope.lookupCache.pageSize;
-                        console.error($scope.pageSize + ' == ' + $scope.lookupCache.pageSize);
                         if($scope.lookupCache.orderByField){
                             $scope.applyOrderBy($scope.lookupCache.orderByField);
                         }
@@ -162,7 +159,6 @@ client.controller('ClientSObjectLookupController',[
             $scope.currentPage = 0;
             $scope.lookupCacheId = 'sobject.' + data.field.SObjectField.name +'_'+ data.field.SObjectLookupId + '.lookup';
             $scope.lookupCache = $appCache.get($scope.lookupCacheId);
-            console.error(data);
             console.log('ClientSObjectLookupController loaded!');
             $scope.initBlockUiBlocks();
             $scope.loadLookupMetadata();

@@ -24,10 +24,10 @@
                             : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
                                 ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
                                 : (field.SObjectField.type === 'date') 
-                                    ? (result[field.SObjectField.name] | date: 'mediumDate')
-                                    : (field.SObjectField.type === 'datetime')
-                                        ? (result[field.SObjectField.name] | date: 'medium')
-                                        : result[field.SObjectField.name] }}
+                                        ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                        : (field.SObjectField.type === 'datetime')
+                                            ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
+                                            : result[field.SObjectField.name] }}
                     </td>                            
                 </tr>
             </tbody>

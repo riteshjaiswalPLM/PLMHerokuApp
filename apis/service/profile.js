@@ -3,7 +3,7 @@ var CryptoJS = require('crypto-js');
 var profileRouter = express.Router();
 var request = require('request');
 
-profileRouter.post('/languagelist', function(req, res){
+profileRouter.post('/loadstaticlist', function(req, res){
     var languagelist = [];
     var transaltionMapArrived = false
     for(var key in languageconfig){
@@ -16,7 +16,9 @@ profileRouter.post('/languagelist', function(req, res){
     return res.json({
         success: true,
         data: {
-            languagelist: languagelist
+            languagelist: languagelist,
+            timezone: timezone.list,
+            locale: locale.list
         }
     });
 });
@@ -25,7 +27,7 @@ profileRouter.post('/saveothersettings', function(req, res){
     var otherSettings = req.body;
     var translations = {}
     translations[otherSettings.Language.code] = languageconfig.languageTransaltionMap[otherSettings.Language.code]
-    global.db.User.update({LanguageId: otherSettings.Language.id},{
+    global.db.User.update({LanguageId: otherSettings.Language.id, LocaleId: otherSettings.LocaleId, TimeZoneId: otherSettings.TimeZoneId},{
         where: {
             username: otherSettings.user.username
         }

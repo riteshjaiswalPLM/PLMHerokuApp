@@ -274,8 +274,6 @@ client.controller('UploadAttachmentController',
 					$scope.getUploadedFiles();
 			}
 			$scope.uploadAttachmentController = this;
-			console.log( $scope.section.title +" UploadAttachmentsComponentController Initializing...");
-			console.log($scope);
 		};
 		
 		$scope.initComponent();

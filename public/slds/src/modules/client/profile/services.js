@@ -2,8 +2,8 @@
 
 client.factory('ClientProfileService',['$http',function($http){
     return {
-        languagelist: function(){
-            return $http.post('/api/service/profile/languagelist');
+        loadstaticlist: function(){
+            return $http.post('/api/service/profile/loadstaticlist');
         },
         saveothersettings: function(data){
             return $http.post('/api/service/profile/saveothersettings', data);

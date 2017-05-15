@@ -142,7 +142,7 @@ dashboardRouter.post('/loadData', function(req, res){
     if(componentType.indexOf('MyTaskContainer') > -1){
         selectFields.push('Id');
         config.fields.forEach((field)=>{
-            selectFields.push(field.SObjectField.name)
+             if(selectFields.indexOf(field.SObjectField.name) === -1) selectFields.push(field.SObjectField.name);
             if(field.SObjectField.type === 'reference'){
                 selectFields.push(field.SObjectField.relationshipName + '.' + field.reference)
             }

@@ -4,5 +4,5 @@
                 id="{{ field.SObjectField.name + index}}" 
                 options="{autoclose: true, todayBtn: 'linked', todayHighlight: true}"
                 ng-if="!readonly"></div>
-        <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | date: 'mediumDate'"></span>
+        <span ng-if="readonly" ng-bind="$root.formateDateAndDateTime(model[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate'"></span>
 </div>

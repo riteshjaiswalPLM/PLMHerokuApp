@@ -37,7 +37,6 @@ client.controller('ClientListLayoutController',[
                 };
             }
             if($scope.stateCache.metadata === undefined){
-                // console.error('Loading fresh metadata for ' + $state.current.name);
                 // Load layout metadata. (For example, search criteria fields, search result fields for table etc...)
                 if(!$scope.blockUI.layoutMetadataBlock.state().blocking && $scope.stateParamMetaData !== undefined){
                     $scope.blockUI.layoutMetadataBlock.start('Loading layout...');
@@ -81,7 +80,6 @@ client.controller('ClientListLayoutController',[
                             }else{
                                 $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                             }
-                            console.log('$scope.searchCriteriaFields:-',$scope.searchCriteriaFields);
                         })
                         .error(function(response){
                             $dialog.alert('Server error occured while loading layout metadata.','Error','pficon pficon-error-circle-o');
@@ -89,7 +87,6 @@ client.controller('ClientListLayoutController',[
                         });
                 }
             }else{
-                // console.error('Loading cached metadata for ' + $state.current.name);
                 var metadata = $scope.stateCache.metadata;
                 $scope.searchCriteriaFields = metadata.searchCriteriaFields;
                 $scope.searchResultFields = metadata.searchResultFields;
@@ -104,7 +101,6 @@ client.controller('ClientListLayoutController',[
                     $scope.searchResult = $scope.stateCache.searchResult;
                     $scope.currentPage = $scope.stateCache.currentPage;
                     $scope.pageSize = $scope.stateCache.pageSize;
-                    // console.error($scope.pageSize + ' == ' + $scope.stateCache.pageSize);
                     if($scope.stateCache.orderByField){
                         $scope.applyOrderBy($scope.stateCache.orderByField);
                     }
@@ -210,7 +206,6 @@ client.controller('ClientListLayoutController',[
                     limit: pageSize,
                     page: page 
                 };
-                // console.log(queryObject);
                 
                 $scope.blockUI.searchResultBlock.start('Searching ...');
                 clientSObjectService.search(queryObject)
@@ -321,7 +316,6 @@ client.controller('ClientListLayoutController',[
             $scope.currentPage = 0;
             $scope.stateCache = $appCache.get($state.current.name);
             console.log('ClientListLayoutController loaded!');
-            // console.log($state.current);
             $scope.stateParamMetaData = $state.current.params.metadata;
             $scope.initBlockUiBlocks();
             $scope.loadLayoutMetadata();
@@ -381,7 +375,6 @@ client.controller('ClientSectionLayoutController',[
                         $scope.blockUI.layoutBlock.stop();
                         if(response.success){
                             // $scope.metadata = response.data.metadata;
-                            // console.info($scope.metadata);
                             $timeout(function(){
                                 $scope.loadSObjectDetails(response.data.metadata);
                             },0);
@@ -446,7 +439,6 @@ client.controller('ClientSectionLayoutController',[
                         $scope.metadata = metadata;
                         if(response.success){
                             $scope.dataModel = response.data.dataModel;
-                            // console.info($scope.dataModel);
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                         }
@@ -572,7 +564,6 @@ client.controller('ClientSectionLayoutController',[
                         });
                         if(section.Component.name && $scope[section.Component.name.replace(/\s/g,"")+'Validate']){
                             $scope[section.Component.name.replace(/\s/g,"")+'Validate'](function(result){
-                                console.log('result');
                                 if(!result.success){
                                     validationMessage+=result.message;
                                 }
@@ -595,10 +586,6 @@ client.controller('ClientSectionLayoutController',[
             
             clientSObjectService.isRequireValidation({sObjectData:sObjectData,fields:dataFields},function(result){
                 if(result.success && validationMessage===""){
-                    // console.log($scope.dataModel);
-                    // console.log($scope.metadata.layoutSections);
-                    // console.log(queryObject);
-                    // console.log($scope);
                     $scope.blockUI.layoutBlock.start('Saving values...');
                     angular.forEach(componentSaveCall,function(saveCall){
                         $scope[saveCall]();
@@ -674,7 +661,6 @@ client.controller('ClientSectionLayoutController',[
                         });
                         if(section.Component.name && $scope[section.Component.name.replace(/\s/g,"")+'Validate']){
                             $scope[section.Component.name.replace(/\s/g,"")+'Validate'](function(result){
-                                console.log('result');
                                 if(!result.success){
                                     validationMessage+=result.message;
                                 }
@@ -737,7 +723,6 @@ client.controller('ClientSectionLayoutController',[
             console.log('ClientSectionLayoutController loaded!');
             $scope.files = [];
             $scope.dataModel = {};
-            // console.log($state.current);
             $scope.stateParamMetaData = $state.current.params.metadata;
             $scope.stateParamData = $stateParams.data;
             $scope.initBlockUiBlocks();

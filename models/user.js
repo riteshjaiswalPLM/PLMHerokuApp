@@ -79,6 +79,8 @@ module.exports = function(sequelize, DataTypes){
             associate: function(models){
                 User.belongsTo(models.Role);
                 User.belongsTo(models.Language);
+                User.belongsTo(models.Locale);
+                User.belongsTo(models.TimeZone);
             }
         }
     });

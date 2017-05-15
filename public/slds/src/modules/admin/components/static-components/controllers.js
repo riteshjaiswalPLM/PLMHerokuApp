@@ -128,7 +128,6 @@ admin.controller('AdminStaticComponentsEditController',[
         $scope.saveComponent = function(){
             if(!$scope.blockUI.saveComponent.state().blocking){
                 var componentToSave = angular.copy($scope.component);
-                console.info(componentToSave);
                 
                 $scope.blockUI.saveComponent.start('Saving component...');
                 staticComponentService.saveComponent(componentToSave)

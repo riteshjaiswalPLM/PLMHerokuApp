@@ -89,7 +89,6 @@ admin.controller('AdminMobileUserActionListController', [
         }
 
         $scope.onSobjectChange = function (sObject) {
-            console.log("onSobjectChange");
             if (sObject != null) {
                 $scope.sObjectFields = $filter('filter')(sObject.SObjectFields, { type: 'picklist', name: 'akritivesm__User_Actions__c' });
             }
@@ -98,7 +97,6 @@ admin.controller('AdminMobileUserActionListController', [
             }
         }
         $scope.onSobjectFieldChange = function (sObjectFields) {
-            console.log("onSobjectFieldChange");
             if (sObjectFields != null) {
                 $scope.sObjectFieldsValue = sObjectFields.picklistValues;
             }

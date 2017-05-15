@@ -1,4 +1,4 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">
     <div class="input-group" ng-if="!field.readonly && (field.disabled ==undefined || field.disabled==false)">
         <select class="slds-select slds-p-horizontal--x-small"
                 id="{{field.SObjectField.name + index}}"

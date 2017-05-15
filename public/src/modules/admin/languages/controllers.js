@@ -12,7 +12,6 @@ admin.controller('AdminLanguagesListController',[
                 }
             };
             $adminLookups.language(data,function(language){
-                console.log(language);
                 $scope.language = language;
 
                 if(!$scope.blockUI.loadLanguages.state().blocking){
@@ -154,7 +153,6 @@ admin.controller('AdminLanguagesEditController',[
         };
         $scope.openSObjectsLookup = function(){
             $adminLookups.sObject({},function(sObject){
-                console.log(sObject);
                 $scope.language.SObject = sObject;
             });
         };

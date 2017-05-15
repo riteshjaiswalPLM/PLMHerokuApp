@@ -88,7 +88,6 @@ admin.controller('AdminTabsEditController',[
                 }
             };
             $adminLookups.tab(data,function(tab){
-                console.log(tab);
                 $scope.tab = tab;
             });
         };

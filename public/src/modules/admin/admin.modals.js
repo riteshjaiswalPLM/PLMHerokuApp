@@ -251,7 +251,6 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             $scope.relatedList.SObjectLayoutFields = $scope.relatedListFields;
             $scope.relatedList.SObjectFieldId = $scope.relatedList.SObjectField.id;
             
-            console.error($scope.relatedList);
             $element.modal('hide');
             close($scope.relatedList, 500);
         }
@@ -374,7 +373,6 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     }
                 }
             }, function(lookup){
-                console.error(lookup);
                 if(lookup){
                     $scope.field.lookup = {
                         labelValue: lookup.title + ' | ' + lookup.description,

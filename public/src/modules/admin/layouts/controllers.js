@@ -16,7 +16,6 @@ admin.controller('AdminLayoutsListController',[
                 }
             };
             $adminLookups.sObjectLayout(data,function(sObjectLayout){
-                console.log(sObjectLayout);
                 $scope.sObjectLayout = sObjectLayout;
                 
                 if(!$scope.blockUI.loadLayouts.state().blocking){
@@ -176,10 +175,6 @@ admin.controller('AdminLayoutsEditController',[
                                     recordid: field.type === 'id',
                                     SObjectLayoutId: $scope.layout.id
                                 };
-                                if(ControllerSObjectField){
-                                    console.error('DELENDENT LAYOUT FIELD');
-                                    console.info(SObjectLayoutField);
-                                }
                                 $scope.layout.SObject.fields.push(SObjectLayoutField);
                             });
                         }else{
@@ -387,11 +382,9 @@ admin.controller('AdminLayoutsEditListController',[
     function($scope , $state , $stateParams , layoutService , sobjectService , blockUI , $dialog , $timeout , $adminLookups,$adminModals ){
         $scope.searchCriteriaFieldsDropCallBack = function(event, index, item, external, type, allowedType){
             if($scope.isDuplicate($scope.searchCriteriaFields,item)){
-                console.error('Duplicate field');
                 return false;
             }
             item.type = 'Search-Criteria-Field';
-            console.info(item);
             var rangeAllowedDataTypes = ['date','datetime','double','int'];
             if(rangeAllowedDataTypes.indexOf(item.SObjectField.type) > -1){
                 if(!angular.isDefined(item.tofield) && !angular.isDefined(item.fromfield)){
@@ -418,11 +411,9 @@ admin.controller('AdminLayoutsEditListController',[
         };    
         $scope.searchResultFieldsDropCallBack = function(event, index, item, external, type, allowedType){
             if($scope.isDuplicate($scope.searchResultFields,item)){
-                console.error('Duplicate field');
                 return false;
             }
             item.type = 'Search-Result-Field';
-            console.info(item);
             return item;
         };
         $scope.isDuplicate = function(fields,item){
@@ -519,7 +510,6 @@ admin.controller('AdminLayoutsEditListController',[
             $scope.initListLayoutBlockUiBlocks();
             $scope.loadListLayoutFields();
             $scope.loadActionButtonCriteria();
-            console.log($scope.refSObjects);
         };
         $scope.init();
     }
@@ -536,7 +526,6 @@ admin.controller('AdminLayoutsEditEditController',[
                 $scope.layoutSections[index] = newSection;
             });
         };
-        console.error($scope.$parent);
         $scope.openSectionCriteriaModal = function(section,index){
             $adminModals.criteriaModal({
                 title: 'Section Criteria | ' + section.title,
@@ -565,7 +554,6 @@ admin.controller('AdminLayoutsEditEditController',[
             });
         };
         $scope.openRelatedListPropertiesModal = function(relatedList,index){
-            console.log($scope.refSObjects);
             $adminModals.relatedListProperties({
                 layout: angular.copy($scope.layout),
                 relatedList: angular.copy(relatedList)
@@ -574,7 +562,6 @@ admin.controller('AdminLayoutsEditEditController',[
             });
         };
         $scope.openFieldPropertiesModal = function(section,sectionIndex,columnIndex,field,fieldIndex){
-            console.log(field);
             $adminModals.layoutFieldProperties({
                 layout: angular.copy($scope.layout),
                 section: angular.copy(section),
@@ -650,9 +637,7 @@ admin.controller('AdminLayoutsEditEditController',[
             if(section.columns.length === 2){
                 sectionFields = section.columns[0].concat(section.columns[1]);
             }
-            console.log(sectionFields);
             if($scope.isDuplicate(sectionFields,item)){
-                console.error('Duplicate field');
                 return false;
             }
             item.type = 'Layout-Section-Field';
@@ -716,7 +701,6 @@ admin.controller('AdminLayoutsEditEditController',[
             }
         };
         $scope.saveLayoutRelatedLists = function(){
-            console.info($scope.layoutSections);
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 if($scope.relatedLists !== undefined && $scope.relatedLists.length > 0){
                     $scope.blockUI.editEditLayout.start('Saving layout related lists...');
@@ -781,7 +765,6 @@ admin.controller('AdminLayoutsEditEditController',[
             if(!$scope.isValidLayout()){
                 return;
             }
-            console.info($scope.layoutSections);
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editEditLayout.start('Saving layout...');
                 layoutService.saveEditLayout({ 

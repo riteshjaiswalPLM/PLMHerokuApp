@@ -89,18 +89,14 @@ admin.controller('AdminSetupSObjectsListController',[
                 if(confirm){
                     $scope.blockUI.synchronizeSobject.start('Synchronizing sobjects with Salesforce...');
                     $scope.sObjects;
-                    //console.log('$scope.sObjects:-', $scope.sObjects);
                     $scope.sObjects.forEach(function(sobject){
                         var obj ={  name:sobject.name,
                                     id:sobject.id
                                 };
                         soobjectList.push(obj);
                     });
-                    //console.log('soobjectList:-'+soobjectList);
                     sobjectService.syncSObjects(soobjectList).
                     success(function(response){
-                        console.log('local sobject:-', response.data);
-                        //console.log('local object:-', $scope.sObjects);
                         $scope.blockUI.synchronizeSobject.stop();
                     }).
                     error(function(response){
@@ -188,17 +184,14 @@ admin.controller('AdminSetupSObjectsManageController',[
                 sObjectsToSync.push(angular.copy(sfdcSObj));
             }
         });
-        console.log(sObjectsToSync);
         $scope.blockUI.sObjectActions.stop();
         
         $scope.currentSObjectIndex = 0;
         var stopSync = $scope.$watch(function(){
             return $scope.currentSObjectIndex;
         },function(newValue,oldValue){
-            console.log(newValue + ' :: ' + oldValue);
             if(newValue === 0 || newValue === (oldValue + 1)){
                 if(newValue === sObjectsToSync.length){
-                    console.error('STOP');
                     stopSync();
                     $scope.loadSObjects();
                 }else{
@@ -211,7 +204,6 @@ admin.controller('AdminSetupSObjectsManageController',[
     };
     $scope.syncOne = function(sObject,callback){
         $timeout(function(){
-            console.error('Synchronizing '+ sObject.label +'...');
             callback();
         },1000);
     };
@@ -307,7 +299,6 @@ admin.controller('AdminSetupSObjectsDetailsController',[
             '$scope','$state','$stateParams','sobjectService','sfdcService','blockUI','$dialog','$timeout',
     function($scope , $state , $stateParams , sobjectService , sfdcService , blockUI , $dialog , $timeout){
         $scope.sObject = ($stateParams.sObject) ? $stateParams.sObject : null;
-        console.log($scope.sObject);
         
         $scope.loadSObjectFields = function(){
             if(!$scope.blockUI.sObjectFields.state().blocking && $scope.sObject != null){

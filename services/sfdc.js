@@ -356,7 +356,9 @@ if(!global.hasOwnProperty('sfdc')){
                         userToSave.id = message.sobject.Id;
                         userToSave.password = userMapping.defaultPWD;
                         userToSave.RoleId = userMapping.defaultRole.id;
-                        userToSave.LanguageId = languageconfig.English.id
+                        userToSave.LanguageId = languageconfig.English.id;
+                        userToSave.LocaleId = salesforce.config.LocaleId;
+                        userToSave.TimeZoneId = salesforce.config.TimeZoneId;
                         global.db.User.create(userToSave).then(function(createdUser){
                             
                             if(userMapping.isMobileActive !== undefined && userMapping.isMobileActive == true)

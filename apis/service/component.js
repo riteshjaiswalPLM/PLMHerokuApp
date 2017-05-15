@@ -376,19 +376,6 @@ componentRouter.post('/getinvoicelineitemdata', function(req, res){
     });
     whareClause[invoicelookupFieldName] =invoiceData.invoiceId;
     whareClause[othercharagefieldname] = isOtherCharage;
-    // global.sfdc
-    //     .sobject(invoiceData.componentConfig.parent.name)
-    //     .select(amountFieldName)
-    //     .where({Id:invoiceData.invoiceId})
-    //     .execute(function(err, record){
-    //         if(err){
-    //             return res.json({
-    //                 success: false,
-    //                 message: 'Error occured while loading invoice line item.',
-    //                 error: err
-    //             });
-    //         }
-
             global.sfdc
             .sobject(invoiceData.componentConfig.child.name)
             .select(queryFields.toString())
@@ -422,12 +409,10 @@ componentRouter.post('/getinvoicelineitemdata', function(req, res){
                     success: true,
                     data: {
                         dataModelList: records,
-                        // invoiceAmount: record[0][amountFieldName]
                         invoiceAmount: totalAmount
                     }
                 });
             });
-        // });
 });
 
 
@@ -527,9 +512,7 @@ componentRouter.post('/saveinvoicelineitemdata', function(req, res){
     else{
         updateLineItems();
     }
-    console.log(listToBeDeleted);
-    console.log(listToBeUpdated);
-    console.log(listToBeInserted);
+  
 });
 
 
@@ -775,6 +758,96 @@ componentRouter.post('/getrecorddetail', function(req, res){
         }
     });
     
+});
+
+componentRouter.post('/getapprovalhistory', (req, res)=>{
+    var body = req.body;
+    global.sfdc
+    .sobject(body.selectObj)
+    .select(body.selectFields)
+    .where(body.whereClause)
+    .execute((err, records)=>{
+        if(err){
+            return res.json({
+                success: false,
+                message: 'Error occured while loading invoice line item.',
+                error: err
+            });
+        }
+        else if(records.length === 0){
+            return res.json({
+                success: true,
+                data: {
+                    dataModelList: [],
+                }
+            });
+        }
+        return res.json({
+            success: true,
+            data: {
+                dataModelList: records
+            }
+        });
+    });
+});
+
+componentRouter.post('/saveapprovers', (req, res)=>{
+    var dataModelList = req.body.dataModelList, recordsToBeUpdated = [], recordsToBeCreated = [], recordsToBeDeleted = [];
+    dataModelList.forEach((dataModel)=>{
+        Object.keys(dataModel).forEach((apiName)=>{
+            if(apiName.indexOf('__r') > -1){
+                delete dataModel[apiName];
+            }
+        });
+    });
+    dataModelList.forEach((dataModel)=>{
+        if(dataModel['Id'] === undefined){
+            delete dataModel.deleted;
+            delete dataModel.recalled;
+            recordsToBeCreated.push(dataModel);
+        }
+        else if(dataModel['deleted'] === true){
+            delete dataModel.deleted;
+            delete dataModel.recalled;
+            recordsToBeDeleted.push(dataModel.Id);
+        }
+        else{
+            delete dataModel.deleted;
+            if(dataModel.recalled !== undefined && dataModel.recalled === true) dataModel[req.body.approvalDetailStatusAPI] = 'Recalled';
+            delete dataModel.recalled;
+            recordsToBeUpdated.push(dataModel);
+        }
+    });
+    global.sfdc.sobject(req.body.sObject).create(recordsToBeCreated, function(err, ret) {
+        if(err){
+            return res.json({
+                success: false,
+                message: 'Error occured while saving approver user.',
+                err: err.toString()
+            });
+        }
+        global.sfdc.sobject(req.body.sObject).update(recordsToBeUpdated, function(err, ret) {
+            if(err){
+                return res.json({
+                    success: false,
+                    message: 'Error occured while updating approver user.',
+                    err: err.toString()
+                });
+            }
+            global.sfdc.sobject(req.body.sObject).del(recordsToBeDeleted, function(err, ret) {
+                if(err){
+                    return res.json({
+                        success: false,
+                        message: 'Error occured while deleting approver user.',
+                        err: err.toString()
+                    });
+                }
+                res.json({
+                    success: true,
+                });
+            });
+        });
+    });
 });
 
 module.exports = componentRouter;

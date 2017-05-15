@@ -3,23 +3,17 @@
 auth.factory('httpAuthInterceptor',['$q','$cookies','$injector','$rootScope','$localStorage',function($q,$cookies, $injector,$rootScope,$localStorage){
     return {
         request: function(config){
-            // console.log('httpAuthInterceptor.Request');
-            // console.log(config.url);
             
             var loginService = $injector.get('loginService');
             if(!loginService.isLoggedIn() && config.url.startsWith('/api/') && config.url !== '/api/auth/authenticate' && config.url !== '/api/auth/mailresetpasswordlink' &&  config.url !== '/api/auth/resetpassword' &&  config.url !== '/api/auth/resetpasswordlinkexpired'  ){
-                // console.log('Not logged in!!!');
                 $rootScope.redirectTo('login');
             }else if(loginService.isLoggedIn()){
                 var token = $cookies.getObject('user').token;
                 config.headers['x-access-token'] = token;
             }
-            // console.info(config);
             return config;
         },
         response: function(response){
-            // console.log('httpAuthInterceptor.Response');
-            // console.log(response);
             
             var loginService = $injector.get('loginService');
             // if(response.status === 403){

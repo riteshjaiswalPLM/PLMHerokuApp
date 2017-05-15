@@ -134,7 +134,6 @@ admin.controller('AdminLookupsEditController',[
                     delete field.SObjectField;
                 });
                 delete lookupToSave.SObject;
-                console.info(lookupToSave);
                 
                 $scope.blockUI.saveLookup.start('Saving lookup...');
                 lookupService.saveLookup(lookupToSave)
@@ -190,7 +189,6 @@ admin.controller('AdminLookupsEditController',[
             };
             console.log('AdminLookupsEditController loaded!');
             $scope.initBlockUiBlocks();
-            console.error($stateParams.lookup);
             $scope.lookup = ($stateParams.lookup) ? $stateParams.lookup : angular.copy($scope.newLookup);
             $scope.stateAction = ($stateParams.lookup) ? 'Edit' : 'Create';
             $scope.loadLookupDetails();

@@ -35,6 +35,18 @@
                         <select class="slds-select slds-p-horizontal--x-small" ng-model="sfdc.environment" ng-options="env.value as env.label for env in sfdcEnvs"></select>
                     </div>
                 </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="roleName">Time Zone</label>
+                    <div class="slds-form-element__control">
+                        <select class="slds-select slds-p-horizontal--x-small" ng-model="sfdc.TimeZoneId" ng-options="timezone.id as timezone.name for timezone in timezones"></select>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="roleName">Locale</label>
+                    <div class="slds-form-element__control">
+                        <select class="slds-select slds-p-horizontal--x-small" ng-model="sfdc.LocaleId" ng-options="locale.id as locale.name for locale in locales | orderBy: 'name'"></select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="slds-modal__footer">

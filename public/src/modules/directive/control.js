@@ -273,7 +273,7 @@ ng.directive('sobjectLayoutSection', ['$compile','$http','blockUI','$log','$time
     };
 }]);
 
-ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http','$templateCache','CriteriaHelper',function ($rootScope, $compile, $parse, $http, $templateCache,CriteriaHelper) {
+ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http','$templateCache','MultiObjectCriteriaHelper',function ($rootScope, $compile, $parse, $http, $templateCache,MultiObjectCriteriaHelper) {
     return {
         restrict: 'A', /* optional */
         scope: {
@@ -306,7 +306,32 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
             $scope.doNotRender = function(){
                 $scope.field.rendered = false;
             };
-
+            $scope.extractSObjectNameFromRule = function(criteria){
+                angular.forEach(criteria.group.rules,function(rule){
+                    if(rule.group){
+                        $scope.SObjectNamesForCriteria.push($scope.extractSObjectNameFromRule(rule));
+                    }else{
+                        if($scope.SObjectNamesForCriteria.indexOf(rule.SObjectName) === -1){
+                            $scope.SObjectNamesForCriteria.push(rule.SObjectName);
+                        }
+                    }
+                });
+            };
+            $scope.generateSObjectNameProperty = function(criteria){
+                if(!criteria){
+                    $scope.field.criteria = $scope.generateSObjectNameProperty($scope.field.criteria);
+                }
+                else{
+                    angular.forEach(criteria.group.rules,function(rule){
+                        if(rule.group){
+                            $scope.field.criteria = $scope.generateSObjectNameProperty(rule);
+                        }else{
+                            rule.SObjectName = $scope.parentCtrl.dataModel.attributes.type;
+                        }
+                    });
+                    return criteria;
+                }
+            };
             $scope.criteriaValidation = function(field){
                 if(field.criteria){
                     var loading = true;
@@ -317,11 +342,25 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                         function(value){
                             if(!value){
                                 criteriaWatch();
-                                var criteriaMatched = CriteriaHelper.validate(field.criteria,$scope.parentCtrl.dataModel);
+                                var dataModel = {};
+                                dataModel[$scope.parentCtrl.dataModel.attributes.type] = $scope.parentCtrl.dataModel;
+                                if(field.criteria.group.rules.length > 0 && field.criteria.group.rules[0].hasOwnProperty('SObjectName')){
+                                    $scope.SObjectNamesForCriteria = [];
+                                    $scope.extractSObjectNameFromRule(field.criteria);
+                                    $scope.SObjectNamesForCriteria.splice($scope.SObjectNamesForCriteria.indexOf($scope.parentCtrl.dataModel.attributes.type), 1);
+                                    if($scope.model.attributes && $scope.SObjectNamesForCriteria.indexOf($scope.model.attributes.type) > -1){
+                                        dataModel[$scope.model.attributes.type] = model;
+                                    }
+                                    var userObj = JSON.parse($rootScope.user().userdata);
+                                    dataModel[userObj.attributes.type] = userObj;
+                                }
+                                else{
+                                    $scope.generateSObjectNameProperty();
+                                }
+                                var criteriaMatched = MultiObjectCriteriaHelper.validate(field.criteria, dataModel);
                                 if(!criteriaMatched){
                                     $scope.doNotRender();
                                 }else{
-                                    // ActionValidationService.unregister($scope.section.id);
                                     criteriaWatch();
                                 }
                             }
@@ -427,6 +466,7 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                     $scope.field.rendered = true;
                     $scope.criteriaValidation($scope.field);
                 }
+                $scope.SObjectNamesForCriteria = [];
             };
 
             $scope.init();
@@ -487,6 +527,26 @@ ng.directive('referenceFieldSelector',['ModalService','$dialog', function(ModalS
         $scope.selectAndClose = function(referenceField){
             $element.modal('hide');
             close(referenceField, 500);
+        }
+        
+        $scope.init = function(){
+            // $timeout($scope.loadIcons,500);
+        };
+        $scope.init();
+    }
+]).controller('FieldLookupController',[
+            '$scope','$rootScope','$timeout','$element','blockUI','data','close',
+    function($scope , $rootScope , $timeout , $element , blockUI , data , close){
+        $scope.title = (data.title) ? data.title : 'Select field' ;
+        $scope.field = data.field;
+        $scope.refSObject = data.refSObject;
+        $scope.filter = data.filter ? data.filter : {};
+        $scope.close = function(){
+            $element.modal('hide');
+        };
+        $scope.selectAndClose = function(referenceField, referenceFieldObject){
+            $element.modal('hide');
+            close(referenceFieldObject, 500);
         }
         
         $scope.init = function(){
@@ -555,7 +615,6 @@ ng.directive('criteriaBuilder',['$compile',function($compile){
             '$scope','$rootScope','userMappingService','$appCache',
     function($scope , $rootScope,userMappingService,$appCache){
         $scope.updateRef = function(rule){
-            console.log(rule);
             rule.field.reference=rule.data.fieldname;
         }
         $scope.userData = function(){
@@ -663,7 +722,6 @@ ng.directive('multiObjectCriteriaBuilder',['$compile',function($compile){
             '$scope','$rootScope','userMappingService','$appCache',
     function($scope , $rootScope,userMappingService,$appCache){
         $scope.updateRef = function(rule){
-            console.log(rule);
             rule.field.reference=rule.data.fieldname;
         }
         $scope.userData = function(){
@@ -739,7 +797,6 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
                 limit: pageSize,
                 page: page
             };  
-            console.error(queryObject);
             
             $scope.blockUI.start();
             clientSObjectService.search(queryObject)
@@ -933,14 +990,9 @@ ng.directive('component', function($controller){
             else{
                 angular.extend($scope.ctrl, $controller($scope.section.Component.name.replace(/\s/g,"")+'Controller',{ $scope: $scope}));
             }
-            console.log($scope);
             $scope.getTemplateURL = function() {
-                console.log("from component directive");
                 if($scope.section.Component.catagory){
-                    if($scope.section.Component.catagory == 'UploadAttachment'){
-                        return 'views/client/layout/component/'+$scope.section.Component.catagory+'.html';
-                    }
-                    return;
+                    return 'views/client/layout/component/'+$scope.section.Component.catagory+'.html';
                 }
                 else{
                     if($scope.section.Component.name === 'Cost Allocation Component'){
@@ -954,7 +1006,6 @@ ng.directive('component', function($controller){
                     }
                     return;
                 }
-                // if($scope.section.Component.catagory == 'UploadAttachment'){}
             };
         }
     };

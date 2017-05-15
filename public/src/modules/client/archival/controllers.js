@@ -34,7 +34,6 @@ client.controller('ClientArchivalController',[
                     filtermap[obj.name]= obj.value;
                 }
             });
-            console.log('@filtermap:-',filtermap);
             ArchivalService.getArchivedInvoices(filtermap)
                 .success(function(response){
                     $scope.blockUI.searchArchivedCriteriaBlock.stop();

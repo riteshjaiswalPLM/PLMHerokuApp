@@ -25,13 +25,13 @@
                             <h1>No field found for matching search criteria.</h1>
                         </td>
                     </tr>
-                    <tr ng-repeat="refField in filteredRefFields = (refSObject.SObjectFields | filter: referenceFieldFilter)">
+                    <tr ng-repeat="refField in filteredRefFields = (refSObject.SObjectFields | filter: referenceFieldFilter  | filter: filter)">
                         <td data-label="Label"><div class="slds-truncate" title="{{ refField.label }}" >{{ refField.label }}</div></td>
                         <td data-label="Api name"><div class="slds-truncate" title="{{ refField.name }}" >{{ refField.name }}</div></td>
                         <td data-label="Data Type"><div class="slds-truncate" title="{{ refField.type }}" ><span class="slds-badge">{{ refField.type }}</span></div></td>
                         <td data-label="Action" style="text-align: center;">
                             <div class="slds-truncate" >
-                                <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(refField.name)">
+                                <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(refField.name, refField)">
                                     <svg class="slds-button__icon" aria-hidden="true">
                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
                                     </svg>

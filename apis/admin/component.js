@@ -206,7 +206,7 @@ componentRouter.post('/delete', function(req, res){
                 componentFromDB.SObjectLayoutSections.forEach((sObjectLayoutSection)=>{
                     sObjectLayoutSections.push(sObjectLayoutSection.id);
                 });
-                global.db.SObjectLayoutSection({where: { id: {$in: sObjectLayoutSections}}});
+                global.db.SObjectLayoutSection.destroy({where: { id: {$in: sObjectLayoutSections}}});
             }
         }
         

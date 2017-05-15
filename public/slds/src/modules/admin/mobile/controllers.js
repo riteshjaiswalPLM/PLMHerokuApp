@@ -156,14 +156,12 @@ admin.controller('AdminMobileSObjectsManageController',[
                 sObjectsToSync.push(angular.copy(sfdcSObj));
             }
         });
-        console.log(sObjectsToSync);
         $scope.blockUI.sObjectActions.stop();
         
         $scope.currentSObjectIndex = 0;
         var stopSync = $scope.$watch(function(){
             return $scope.currentSObjectIndex;
         },function(newValue,oldValue){
-            console.log(newValue + ' :: ' + oldValue);
             if(newValue === 0 || newValue === (oldValue + 1)){
                 if(newValue === sObjectsToSync.length){
                     stopSync();
@@ -178,7 +176,6 @@ admin.controller('AdminMobileSObjectsManageController',[
     };
     $scope.syncOne = function(sObject,callback){
         $timeout(function(){
-            console.error('Synchronizing '+ sObject.label +'...');
             callback();
         },1000);
     };
@@ -276,7 +273,6 @@ admin.controller('AdminMobileSObjectsDetailsController',[
             '$scope','$state','$stateParams','mobileSobjectService','sfdcService','blockUI','$dialog','$timeout',
     function($scope , $state , $stateParams , mobileSobjectService , sfdcService , blockUI , $dialog , $timeout){
         $scope.sObject = ($stateParams.sObject) ? $stateParams.sObject : null;
-        console.log($scope.sObject);
         
         $scope.loadSObjectFields = function(){
             if(!$scope.blockUI.sObjectFields.state().blocking && $scope.sObject != null){
@@ -362,14 +358,12 @@ admin.controller('AdminMobileSObjectsFieldsManageController',[
                 sObjectsToSync.push(angular.copy(sfdcSObjFields));
             }
         });
-        console.log(sObjectsToSync);
         $scope.blockUI.sObjectActions.stop();
         
         $scope.currentSObjectIndex = 0;
         var stopSync = $scope.$watch(function(){
             return $scope.currentSObjectIndex;
         },function(newValue,oldValue){
-            console.log(newValue + ' :: ' + oldValue);
             if(newValue === 0 || newValue === (oldValue + 1)){
                 if(newValue === sObjectsToSync.length){
                     stopSync();
@@ -384,7 +378,6 @@ admin.controller('AdminMobileSObjectsFieldsManageController',[
     };
     $scope.syncOne = function(sObject,callback){
         $timeout(function(){
-            console.error('Synchronizing '+ sObject.label +'...');
             callback();
         },1000);
     };

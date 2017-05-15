@@ -108,7 +108,7 @@ client.controller('UploadAttachmentController',
 
 			if(blackListedFiles.length > 0)
 			{
-				$dialog.alert('Extention is black listed for ' + blackListedFiles,'Error','pficon pficon-error-circle-o');
+				$dialog.alert('Extention is black listed for ' + blackListedFiles,'Validation Alert','pficon-warning-triangle-o');
 			}
 	        	
 	        	
@@ -275,7 +275,6 @@ client.controller('UploadAttachmentController',
 			}
 			$scope.uploadAttachmentController = this;
 			console.log( $scope.section.title +" UploadAttachmentsComponentController Initializing...");
-			console.log($scope);
 		};
 		
 		$scope.initComponent();

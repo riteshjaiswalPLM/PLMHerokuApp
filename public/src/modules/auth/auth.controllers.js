@@ -4,7 +4,6 @@ auth.controller('LoginController',[
             '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout',
     function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout){
         $scope.login = function(){
-            console.log($scope.credentials);
             var loggingIn = blockUI.instances.get('loggingIn');
             loggingIn.start('Logging In ...');
             $scope.loggingIn = true;
@@ -20,7 +19,6 @@ auth.controller('LoginController',[
                         }
                     })
                     .error(function(response){
-                        // console.error(response);
                         loggingIn.stop();
                         $scope.loggingIn = false;
                     });
@@ -30,7 +28,6 @@ auth.controller('LoginController',[
             $state.go('resetpasswordlink');
         };
         $scope.init = function(){
-            console.log('LoginController loaded!');
             $scope.credentials = {
                 username: null,
                 password: null
@@ -43,11 +40,14 @@ auth.controller('ResetPasswordLinkController',[
             '$scope','$rootScope','$state','resetPasswordService','blockUI','Notifications','$timeout',
     function($scope , $rootScope , $state , resetPasswordService , blockUI , Notifications , $timeout){
         $scope.resetpassword = function(){
-            console.log($scope.credentials);
             var loggingIn = blockUI.instances.get('resetPWD');
-            loggingIn.start('Reseting Password In ...');
             $scope.resetpass = true;
-            
+            if($scope.credentials==null||$scope.credentials==undefined||$scope.credentials.username==null || $scope.credentials.username.trim()==""){
+                Notifications.error('Username must not be blank');
+                $scope.resetpass = false;
+                return;
+            }
+            loggingIn.start('Reseting Password In ...');
             resetPasswordService.mailresetpasswordlink($scope.credentials)
                 .success(function(response){
                     loggingIn.stop();
@@ -60,7 +60,6 @@ auth.controller('ResetPasswordLinkController',[
                     }
                 })
                 .error(function(response){
-                    // console.error(response);
                     loggingIn.stop();
                     $scope.resetpass = false;
                 });
@@ -82,8 +81,6 @@ auth.controller('ResetPasswordController',[
     function($scope , $rootScope , $state , resetPasswordService , blockUI , Notifications , $timeout,$stateParams){
         $scope.newPassword = function(){
 
-            console.log($stateParams);
-            console.log($scope.credentials);
             if($scope.credentials.password === undefined || $scope.credentials.password ===null || $scope.credentials.password === ''
                 || $scope.credentials.repassword === undefined || $scope.credentials.repassword ===null || $scope.credentials.repassword === ''  ){
                 Notifications.error('Password field must not be blank');
@@ -119,7 +116,6 @@ auth.controller('ResetPasswordController',[
                     }
                 })
                 .error(function(response){
-                    // console.error(response);
                     loggingIn.stop();
                     $scope.resetpass = false;
                 });
@@ -134,7 +130,6 @@ auth.controller('ResetPasswordController',[
                 repassword  :null
             }
             
-            console.log($stateParams);
             var data={
                 id:$stateParams.data
             }

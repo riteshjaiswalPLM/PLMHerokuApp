@@ -90,13 +90,15 @@ client.controller('ClientProfileOtherController',[
             '$scope','$rootScope','ClientProfileService','$dialog','$localStorage','blockUI',
     function($scope , $rootScope , ClientProfileService , $dialog , $localStorage , blockUI){
 
-        $scope.loadLanguageList = function(){
-            $scope.blockUI.manageProfileOtherSettings.start('Loading available languages...');
-            ClientProfileService.languagelist()
+        $scope.loadStaticList = function(){
+            $scope.blockUI.manageProfileOtherSettings.start('Loading available static lists...');
+            ClientProfileService.loadstaticlist()
                 .success(function(response){
                     $scope.blockUI.manageProfileOtherSettings.stop();
                     if(response.success){
-                        $scope.languagelist = response.data.languagelist
+                        $scope.languagelist = response.data.languagelist;
+                        $scope.timezones = response.data.timezone;
+                        $scope.locales = response.data.locale;
                     }
                     else{
                         $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
@@ -108,12 +110,24 @@ client.controller('ClientProfileOtherController',[
                 });
         };
         $scope.save = function(){
+            if($scope.otherSetting.TimeZoneId === null || $scope.otherSetting.LocaleId === null){
+                $dialog.alert('Timezone and locale are mandatory.','Error','pficon pficon-error-circle-o');
+                return;
+            }
             $scope.blockUI.manageProfileOtherSettings.start('Saving...');
             ClientProfileService.saveothersettings($scope.otherSetting)
                 .success(function(response){
                     $scope.blockUI.manageProfileOtherSettings.stop();
                     if(response.success){
                         $scope.otherSetting.user.Language = angular.copy($scope.otherSetting.Language);
+                        $scope.otherSetting.user.LocaleId = $scope.otherSetting.LocaleId;
+                        $scope.otherSetting.user.TimeZoneId = $scope.otherSetting.TimeZoneId;
+                        $scope.timezones.forEach(function(timezone){
+                            if(timezone.id === $scope.otherSetting.user.TimeZoneId) $scope.otherSetting.user.TimeZone = timezone;
+                        });
+                        $scope.locales.forEach(function(locale){
+                            if(locale.id === $scope.otherSetting.user.LocaleId) $scope.otherSetting.user.Locale = locale;
+                        });
                         $rootScope.updateUserLanguage($scope.otherSetting.user);
                         $localStorage.translations = response.translations
                         $rootScope.configureLanguages();
@@ -139,8 +153,9 @@ client.controller('ClientProfileOtherController',[
             $scope.otherSetting = {};
             $scope.otherSetting.user = $rootScope.user();
             $scope.otherSetting.Language = angular.copy($scope.otherSetting.user.Language);
-            $scope.loadLanguageList();
-            console.log($scope.otherSetting.Language)
+            $scope.otherSetting.LocaleId = $scope.otherSetting.user.LocaleId;
+            $scope.otherSetting.TimeZoneId = $scope.otherSetting.user.TimeZoneId;
+            $scope.loadStaticList();
         };
         $scope.init();
     }

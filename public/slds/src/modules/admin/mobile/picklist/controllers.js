@@ -95,7 +95,6 @@ admin.controller('AdminMobilePicklistListController', [
         }
 
         $scope.onSobjectChange = function (sObject) {
-            console.log("onSobjectChange");
             if (sObject != null) {
                 $scope.sObjectFields = []
                 var pname=[];
@@ -115,7 +114,6 @@ admin.controller('AdminMobilePicklistListController', [
             }
         }
         $scope.onSobjectParentFieldChange = function (sObject,sObjectFields) {
-            console.log("onSobjectParentFieldChange");
             if (sObject != null) {
                 $scope.sObjectChildFields = $filter('filter')(sObject.SObjectFields, { forMobile: true,controllerName :sObjectFields.name   });
             }

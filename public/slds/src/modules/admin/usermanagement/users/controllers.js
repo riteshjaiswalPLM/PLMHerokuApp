@@ -124,7 +124,6 @@ admin.controller('AdminUserManagementUsersCreateController',[
                                 $dialog.alert("Please Enter Valid Email Address",'Error','pficon pficon-error-circle-o');
                                 return;
                             }
-                            console.log('Data',$stateParams.metadata.isMobileActive)
                             if(!(username === undefined || username==null || username.trim()=="")){
                                 if($stateParams.metadata.isMobileActive ===true && !$scope.blockUI.layoutBlock.state().blocking){
                                     $scope.blockUI.layoutBlock.start('Checking User Exist...');

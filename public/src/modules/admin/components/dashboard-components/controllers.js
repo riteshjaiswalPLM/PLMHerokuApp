@@ -225,7 +225,6 @@ admin.controller('AdminDashboardComponentsEditController',[
                 // }
                 componentToSave.forMobile = $scope.forMobile;
                 delete componentToSave.SObject;
-                console.info(componentToSave);
                 
                 $scope.blockUI.saveDashoardComponent.start('Saving component...');
                 genericComponentService.saveComponent(componentToSave)

@@ -2,62 +2,67 @@
 <div class="container" block-ui="loggingIn" style="padding:20px 0px;">
     <div class="slds-grid">
         <div class="slds-size--1-of-2 login"></div>
-        <div class="slds-size--1-of-2 slds-grid login">
-            <div class="slds-size--2-of-12"></div>
-            <div class="slds-size--8-of-12 slds-grid form-signin">
-                <div class="slds-size--1-of-12  "></div>
-                <div class="slds-size--10-of-12 " style="padding:0px 20px;">
-                    <form class="slds-form--horizontal  " style="text-align: left !important" role="form">
-                    <div class="slds-form-element">
-                        <div class="" >
-                            <h2 style=" color: #404040; font-size: 25px;margin:20px 0px;"><b> Welcome !! </b></h2>
+        <div class="slds-size--1-of-2  login">
+            <div class="slds-size--12-of-12 slds-grid">
+                <img class="logo-img" src="/resources/images/LeanLogo.png" style="padding:0px 25px"/>
+            </div>
+            <br>
+            <div class="slds-size--12-of-12 slds-grid">
+                <div class="slds-size--2-of-12"></div>
+                <div class="slds-size--8-of-12 slds-grid form-signin">
+                    <div class="slds-size--1-of-12  "></div>
+                    <div class="slds-size--10-of-12 " style="padding:0px 20px;">
+                        <form class="slds-form--horizontal  " style="text-align: left !important" role="form">
+                        <div class="slds-form-element">
+                            <div class="" >
+                                <h2 style=" color: #404040; font-size: 25px;margin:20px 0px;"><b> Welcome! </b></h2>
+                            </div>
                         </div>
+                        <!--<div class="slds-form-element"  style="margin-bottom:0px">
+                            <div class="" style=" color:GREY;"  >
+                                Logon to your Account. 
+                            </div>
+                        </div>-->
+                        <div class="slds-form-element" style="margin-bottom:0px">
+                            <div class="" style=" color:#00B0F0; " >
+                                User Name: 
+                            </div>
+                        </div>
+                        <div class="slds-form-element"  style="margin-bottom:15px">
+                            <div class=""  >
+                                <input type="text" border='0' id="inputUsername" placeholder="" tabindex="1" ng-model="credentials.username">
+                            </div>
+                        </div>
+                        <div class="slds-form-element" style="margin-bottom:0px">
+                            <div class="" style=" color:#00B0F0; " >
+                                Password:
+                            </div>
+                        </div>
+                        <div class="slds-form-element"  style="margin-bottom:15px">
+                            <div class="" >
+                                <input type="password"  id="inputPassword" placeholder="" tabindex="2" ng-model="credentials.password">
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-grid">
+                            <div class="slds-size--8-of-12">
+                                <span class="help-block">  <a href="#" style=" color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickResetPassLink()" tabindex="6"> Forgot Password? </a></span>
+                            </div>
+                            <div class="slds-size--4-of-12 submit" align="right">
+                                <!--<button type="submit" class="btn  btn-lg " style="background-color: #005fb2 ;color:white; border-radius: 5px;"  tabindex="4" ng-click="login()" ng-disabled="loggingIn"> {{ (loggingIn) ? 'Logging In ...' : 'Log In' }}</button>-->
+                                <button type="submit" style="font-size: 14px;" class="slds-button slds-button--brand" ng-click="login()" ng-disabled="loggingIn">
+                                    <!--<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#login"></use>
+                                    </svg>-->
+                                    <b>{{ (loggingIn) ? 'Logging In ...' : 'Login' }}</b>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                     </div>
-                    <div class="slds-form-element"  style="margin-bottom:0px">
-                        <div class="" style=" color:GREY;"  >
-                            Logon to your Account. 
-                        </div>
-                    </div>
-                    <div class="slds-form-element" style="margin-bottom:0px">
-                        <div class="" style=" color:#00B0F0; " >
-                            User Name: 
-                        </div>
-                    </div>
-                    <div class="slds-form-element"  style="margin-bottom:15px">
-                        <div class=""  >
-                            <input type="text" border='0' id="inputUsername" placeholder="" tabindex="1" ng-model="credentials.username">
-                        </div>
-                    </div>
-                    <div class="slds-form-element" style="margin-bottom:0px">
-                        <div class="" style=" color:#00B0F0; " >
-                            Password
-                        </div>
-                    </div>
-                    <div class="slds-form-element"  style="margin-bottom:15px">
-                        <div class="" >
-                            <input type="password"  id="inputPassword" placeholder="" tabindex="2" ng-model="credentials.password">
-                        </div>
-                    </div>
-                    <div class="slds-form-element slds-grid">
-                        <div class="slds-size--8-of-12">
-                            <span class="help-block">  <a href="#" style=" color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickResetPassLink()" tabindex="6"> Reset Password </a></span>
-                        </div>
-                        <div class="slds-size--4-of-12 submit" align="right">
-                            <!--<button type="submit" class="btn  btn-lg " style="background-color: #005fb2 ;color:white; border-radius: 5px;"  tabindex="4" ng-click="login()" ng-disabled="loggingIn"> {{ (loggingIn) ? 'Logging In ...' : 'Log In' }}</button>-->
-                            <button type="submit" style="font-size: 14px;" class="slds-button slds-button--brand" ng-click="login()" ng-disabled="loggingIn">
-                                <!--<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#login"></use>
-                                </svg>-->
-                                 <b>{{ (loggingIn) ? 'Logging In ...' : 'Log In' }}</b>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                </div>
-                <div class="slds-size--1-of-12  "></div>
-            
+                    <div class="slds-size--1-of-12  "></div>
             </div>
             <div class="slds-size--2-of-12"></div>
+             </div>
         </div>
     </div>
 </div>

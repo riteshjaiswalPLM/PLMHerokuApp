@@ -15,7 +15,6 @@ client.controller('ClientController',[
             });
             
             $rootScope.configureStateProviderStates(states,function(homeState){
-                // console.error('HOMEPAGE : '+ homeState);
                 if(homeState){
                     $state.go(homeState);
                 }else{

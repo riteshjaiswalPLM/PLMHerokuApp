@@ -16,7 +16,9 @@ var modelSync = require('../models/sync');
 var language  = require('../language');
 var mailtransporter  = require('../mailer');
 var staticcomponentconfig  = require('../component');
-
+require('../locale');
+require('../timzone');
+require('../salesforceconfig');
 
 var hook      = require('../hook');
 

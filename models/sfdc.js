@@ -21,6 +21,13 @@ module.exports = function(sequelize, DataTypes){
             allowNull: true,
             values: ['PRODUCTION','SANDBOX']
         }
+    }, {
+        classMethods: {
+            associate: function (models) {
+                Salesforce.belongsTo(models.Locale);
+                Salesforce.belongsTo(models.TimeZone);
+            }
+        }
     });
     
     return Salesforce;  

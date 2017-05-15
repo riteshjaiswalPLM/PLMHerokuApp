@@ -257,9 +257,6 @@ client.controller('ChangeRequestComponentController',
 			$scope.initSupplierProfileApiName();
             $scope.loadComponentDetail();
 
-			console.log( $scope.section.title +" ChangeRequestComponentController Initializing...");
-			console.log($scope);
-			console.log($scope.ctrl.stateParamMetaData.sobject.id);
 		};
 		
 		 $scope.initComponent();

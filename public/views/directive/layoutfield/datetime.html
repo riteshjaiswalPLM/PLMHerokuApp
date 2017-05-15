@@ -8,7 +8,7 @@
             id="{{ field.SObjectField.name + index}}" 
             options="{autoclose: true, todayBtn: 'linked', todayHighlight: true}"
             ng-if="!field.readonly"></div>
-    <span ng-if="field.readonly" ng-bind="field.value | date: 'medium'">--</span>
+    <span ng-if="field.readonly" ng-bind="$root.formateDateAndDateTime(field.value,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium'">--</span>
 </div>
 <!--REPLACE WITH FOLLOWING WHILE USING DATETIME-->
 

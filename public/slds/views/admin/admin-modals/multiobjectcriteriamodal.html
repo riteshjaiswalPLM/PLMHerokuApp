@@ -1,19 +1,26 @@
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="criteriaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
-                </button>
-                <h4 class="modal-title" id="criteriaModalLabel" ng-bind-template="{{ title }}">Criteria</h4>
-            </div>
-            <div class="modal-body" style="height:300px;overflow: auto;">
-            	<multi-object-criteria-builder group="criteria.group" fields="fields"></multi-object-criteria-builder>
-            </div>
-            <div class="modal-footer" style="margin-top: 0px;">
-                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
-                <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-check"></i> Save</button>
-            </div>
+<div role="dialog" tabindex="-1" aria-labelledby="criteriaModalLabel" data-backdrop="static" class="slds-modal slds-modal--large">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="criteriaModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium" style="height:400px;overflow: auto;padding:0px;">
+            <multi-object-criteria-builder group="criteria.group" fields="fields"></multi-object-criteria-builder>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                Save
+            </button>
         </div>
     </div>
 </div>
+<div class="slds-backdrop"></div>

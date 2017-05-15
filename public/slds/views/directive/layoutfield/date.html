@@ -1,4 +1,4 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">
         <!--<div    pf-datepicker 
                 date="field.value"
                 id="{{ field.SObjectField.name + index}}" 
@@ -14,5 +14,5 @@
             </div>
         </div>
         <!--<span ng-if="field.readonly" ng-bind="field.value | date: 'mediumDate'"></span>-->
-        <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="field.value | date: 'mediumDate'"></label>
+        <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="$root.formateDateAndDateTime(field.value,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate'"></label>
 </div>

@@ -1,4 +1,4 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !readonly && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
         <select class="slds-select" 
                 id="{{field.SObjectField.name + index}}"
                 ng-model="model[field.SObjectField.name]" 

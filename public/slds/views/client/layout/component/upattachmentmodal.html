@@ -80,10 +80,10 @@
                                     </thead>
                                     <tbody >
                                         <tr ng-repeat="file in data.files ">
-                                            <td class="slds-truncate" data-label="Delete"  title=""><a href="" data-ng-click="data.deleteFile(file)">delete</a></td>
-                                            <td class="slds-truncate" data-label="File"  title="{{file.name}}"><strong>{{ file.name }}</strong></td>
-                                            <td class="slds-truncate" data-label="Size in Bytes"   title="{{ file.size }}">{{file.size}}</td>
-                                            <td data-label="Upload" >
+                                            <td style="width: 10%;" class="slds-truncate" data-label="Delete"  title=""><a href="" data-ng-click="data.deleteFile(file)">delete</a></td>
+                                            <td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="File"  title="{{file.name}}"><strong>{{ file.name }}</strong></td>
+                                            <td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="Size in Bytes"   title="{{ file.size }}">{{file.size}}</td>
+                                            <td style="width: 30%;" data-label="Upload" >
                                                 <!--<a href="" ng-show="!file.isPersisted" data-ng-click="attachFiles(file)" class ="btn btn-success fileinput-button dz-clickable">Upload</a> 
                                                 <label data-ng-if="primaryFileName == file.name" style="margin-bottom: 0;">Primary Document</label>-->
                                                 <button ng-show="!file.isPersisted"  class="slds-button slds-button--brand" type="button" ng-click="data.attachFiles(file)">

@@ -189,10 +189,6 @@ admin.controller('AdminMobileLayoutsEditController',[
                                     recordid: field.type === 'id',
                                     SObjectLayoutId: $scope.layout.id
                                 };
-                                if(ControllerSObjectField){
-                                    console.error('DELENDENT LAYOUT FIELD');
-                                    console.info(SObjectLayoutField);
-                                }
                                 $scope.layout.SObject.fields.push(SObjectLayoutField);
                             });
                         }else{
@@ -336,11 +332,9 @@ admin.controller('AdminMobileLayoutsEditListController',[
     function($scope , $state , $stateParams , mobileLayoutService , sobjectService , blockUI , $dialog , $timeout , $adminLookups,$adminModals ){
         $scope.searchCriteriaFieldsDropCallBack = function(event, index, item, external, type, allowedType){
             if($scope.isDuplicate($scope.searchCriteriaFields,item)){
-                console.error('Duplicate field');
                 return false;
             }
             item.type = 'Search-Criteria-Field';
-            console.info(item);
             var rangeAllowedDataTypes = ['date','datetime','double','int'];
             if(rangeAllowedDataTypes.indexOf(item.SObjectField.type) > -1){
                 if(!angular.isDefined(item.tofield) && !angular.isDefined(item.fromfield)){
@@ -367,11 +361,9 @@ admin.controller('AdminMobileLayoutsEditListController',[
         };    
         $scope.searchResultFieldsDropCallBack = function(event, index, item, external, type, allowedType){
             if($scope.isDuplicate($scope.searchResultFields,item)){
-                console.error('Duplicate field');
                 return false;
             }
             item.type = 'Search-Result-Field';
-            console.info(item);
             return item;
         };
         $scope.isDuplicate = function(fields,item){
@@ -468,7 +460,6 @@ admin.controller('AdminMobileLayoutsEditListController',[
             $scope.initListLayoutBlockUiBlocks();
             $scope.loadListLayoutFields();
             $scope.loadActionButtonCriteria();
-            console.log($scope.refSObjects);
         };
         $scope.init();
     }
@@ -643,7 +634,6 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             });
         };
         $scope.openRelatedListPropertiesModal = function(relatedList,index){
-            console.log($scope.refSObjects);
             $adminModals.relatedListProperties({
                 layout: angular.copy($scope.layout),
                 relatedList: angular.copy(relatedList)
@@ -652,7 +642,6 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             });
         };
         $scope.openFieldPropertiesModal = function(section,sectionIndex,columnIndex,field,fieldIndex){
-            console.log(field);
             $adminModals.layoutFieldProperties({
                 layout: angular.copy($scope.layout),
                 section: angular.copy(section),
@@ -720,9 +709,7 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             if(section.columns.length === 2){
                 sectionFields = section.columns[0].concat(section.columns[1]);
             }
-            console.log(sectionFields);
             if($scope.isDuplicate(sectionFields,item)){
-                console.error('Duplicate field');
                 return false;
             }
             item.type = 'Layout-Section-Field';
@@ -787,7 +774,6 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             }
         };
         $scope.saveLayoutRelatedLists = function(){
-            console.info($scope.layoutSections);
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 if($scope.relatedLists !== undefined && $scope.relatedLists.length > 0){
                     $scope.blockUI.editEditLayout.start('Saving layout related lists...');
@@ -853,7 +839,6 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             if(!$scope.isValidLayout()){
                 return;
             }
-            console.info($scope.layoutSections);
             if(!$scope.blockUI.editEditLayoutWithSideBar.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editEditLayoutWithSideBar.start('Saving layout...');
                 mobileLayoutService.saveEditLayout({ 

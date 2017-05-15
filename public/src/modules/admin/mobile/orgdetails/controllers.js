@@ -29,7 +29,6 @@ admin.controller('AdminMobileOrgDetailController',['$scope','Upload','$rootScope
         $scope.enableEdit = editable;
     }
     $scope.save = function(){
-        console.log($scope.orgDetailConfig);
         if($scope.orgDetailConfig ===undefined || $scope.orgDetailConfig.name === undefined || $scope.orgDetailConfig.name.trim() === "" ){
             //$dialog.alert("Please Enter Name",'Error','pficon pficon-error-circle-o');
             return false;

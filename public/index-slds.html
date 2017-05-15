@@ -81,7 +81,7 @@
             -webkit-box-shadow: 0 0 0 1000px white inset !important;
         }
         .login-pf body {
-            background: rgba(0, 0, 0, 0) url("/resources/images/LoginGenpact.jpg") no-repeat fixed;
+            background: rgba(0, 0, 0, 0)  no-repeat fixed;
             background-size: cover; /* this will make the background-image go fullscreen, but always in Ratio */
             background-repeat: no-repeat;
             
@@ -342,10 +342,140 @@
         .slds-lookup__search-input{
             height: 1.87rem;
         }
+        #animation {
+            width: 60%;
+            height: 100%;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            z-index: 1;
+        }
+        #matrix1 {
+            position: absolute;
+            width: 600px;
+            z-index: 10;
+            left: 0%;
+            top: 0px;
+            display: block;
+        }
+        #matrix3 {
+            position: absolute;
+            width: 600px;
+            z-index: 10;
+            left: 0%;
+            top: 0px;
+            display: block;
+        }
+        @media only screen and (max-width: 980px) {
+            #matrix1 {
+                position: absolute;
+                width: 600px;
+                z-index: 10;
+                right: -40%;
+                top: 0px;
+                display: block;
+            }
+            #matrix2 {
+                position: absolute;
+                width: 400px;
+                z-index: 10;
+                right: -200px;
+                top: 0px;
+                display: block;
+                opacity: 0.5;
+            }
+            #matrix3 {
+                position: absolute;
+                width: 400px;
+                z-index: 10;
+                right: -200px;
+                top: 0px;
+                display: block;
+            }
+        }
+
+        @-webkit-keyframes rotating /* Safari and Chrome */ {
+            from {
+                -ms-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -webkit-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            to {
+                -ms-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes rotating {
+            from {
+                -ms-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -webkit-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            to {
+                -ms-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        .rotating {
+            -webkit-animation: rotating 240s linear infinite;
+            -moz-animation: rotating 240s linear infinite;
+            -ms-animation: rotating 240s linear infinite;
+            -o-animation: rotating 240s linear infinite;
+            animation: rotating 240s linear infinite;
+        }
+        @keyframes flickerAnimation {
+            0%   { opacity:1; }
+            50%  { opacity:0.3; }
+            100% { opacity:1; }
+        }
+        @-o-keyframes flickerAnimation{
+            0%   { opacity:1; }
+            50%  { opacity:0.3; }
+            100% { opacity:1; }
+        }
+        @-moz-keyframes flickerAnimation{
+            0%   { opacity:1; }
+            50%  { opacity:0.3; }
+            100% { opacity:1; }
+        }
+        @-webkit-keyframes flickerAnimation{
+            0%   { opacity:1; }
+            50%  { opacity:0.3; }
+            100% { opacity:1; }
+        }
+        .animate-flicker {
+            -webkit-animation: flickerAnimation 20s infinite;
+            -moz-animation: flickerAnimation 20s infinite;
+            -o-animation: flickerAnimation 20s infinite;
+            animation: flickerAnimation 20s infinite;
+        }
+        .logo-img {
+            position: relative;
+            width: 65%;
+            height: 60px;
+            z-index: 10;
+            right: -19.5%;
+            top: 0px;
+            display: block;
+        }
 
     </style>
 </head>
 <body class="login-pf">
+    <div ng-if="$root.isLoginPage()" id="animation" style="display: none">
+        <img id="matrix1" class="rotating" src="{{$root.matrix1}}"> 
+        <img id="matrix3" class="animate-flicker" src="{{$root.matrix2}}">
+    </div>
     <div class="slds-grid slds-wrap" ui-view></div>
     <!--<input slds-datepicker="" ng-model="field.value" type="text" />-->
     <!--Angular-->
@@ -391,6 +521,10 @@
     <!--<script src="bower_components/angular-translate-loader-url/angular-translate-loader-url.js" ></script>-->
     <script src="bower_components/ngstorage/ngStorage.min.js" ></script>
     <script src="bower_components/json-formatter/dist/json-formatter.min.js" ></script>
+    <script src="bower_components/moment/min/moment.min.js" ></script>
+    <script src="bower_components/moment-timezone/moment-timezone.js" ></script>
+    <script src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js" ></script>
+    
 
 <!-- lightning datepicker -->
     <script src="slds/src/fields/field-datepicker.js" ></script>
@@ -431,6 +565,7 @@
     <script src="slds/src/modules/client/layout/components/costalloactioncomponent/controller.js" ></script>
     <script src="slds/src/modules/client/layout/components/otherchargecomponent/controller.js" ></script>
     <script src="slds/src/modules/client/layout/components/changerequestcomponent/controller.js" ></script>
+    <script src="src/modules/client/layout/components/multilevelapprovalcomponent/controller.js" ></script>
     <script src="slds/src/modules/client/profile/services.js" ></script>
     <script src="slds/src/modules/client/layout/services.js" ></script>
     <script src="slds/src/modules/client/sobject/services.js" ></script>

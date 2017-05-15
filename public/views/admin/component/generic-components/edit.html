@@ -49,9 +49,39 @@
                     </div>
                 </div>
                 <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
-                    <label class="col-md-5 control-label" for="deleteButton">Delete</label>
+                    <label class="col-md-5 control-label" for="cycleField">Approval Detail Status Field</label>
                     <div class="input-group col-md-7">
-                        <a pf-tooltip if="deleteButton" data-placement="right" title="Delete Criteria" ng-click="openDeleteCriteriaModal()"><i class="fa fa-cogs"></i></a>
+                        <input type="hidden" ng-model="component.ComponentDetails[0].configuration.approvalDetailStatusField">
+                        <input type="text" id="cycleField" class="form-control" ng-model="component.ComponentDetails[0].configuration.approvalDetailStatusField.label" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openApprovalDetailFieldListModel('approvalDetailStatusField',{type: 'picklist'})">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
+                    <label class="col-md-5 control-label" for="cycleField">Approval Detail Cycle Field</label>
+                    <div class="input-group col-md-7">
+                        <input type="hidden" ng-model="component.ComponentDetails[0].configuration.approvalDetailCycleField">
+                        <input type="text" id="cycleField" class="form-control" ng-model="component.ComponentDetails[0].configuration.approvalDetailCycleField.label" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openApprovalDetailFieldListModel('approvalDetailCycleField')">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
+                    <label class="col-md-5 control-label" for="cycleField">SObject Cycle Field</label>
+                    <div class="input-group col-md-7">
+                        <input type="hidden" ng-model="component.ComponentDetails[0].configuration.cycleField">
+                        <input type="text" id="cycleField" class="form-control" ng-model="component.ComponentDetails[0].configuration.cycleField.label" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openCycleFieldListModel()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
@@ -76,6 +106,15 @@
                         <input type="text" id="componentDescription" class="form-control" ng-model="component.desc">
                     </div>
                 </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
+                    <label class="col-md-5 control-label" for="relativeField">Select Relative Field</label>
+                    <div class="input-group col-md-7">
+                        <select id="relativeField" pf-select class="form-control" ng-model="component.ComponentDetails[0].configuration.connectingField">
+                            <option value="">-- None --</option>
+                            <option ng-repeat="field in connectingFieldMap[component.SObject.name]" value="{{field.name}}" ng-selected="component.ComponentDetails[0].configuration.connectingField === field.name">{{field.label + ' [ ' + field.name + ' ] '}}</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'" ng-init="component.ComponentDetails[0].configuration.allowAddMore = (component.ComponentDetails[0].configuration.allowAddMore  === undefined) ? false : component.ComponentDetails[0].configuration.allowAddMore">
                     <label class="col-md-5 control-label" for="allowAddMore">Allow Add More ?</label>
                     <div class="input-group col-md-7">
@@ -91,70 +130,115 @@
                         <input type="text" ng-if="component.ComponentDetails[0].configuration.allowAddFinalApprover === true" pf-tooltip data-placement="top" title="Add number of Final Approvers. &#013;This should be between 1 to 5." placeholder="final approvers' count" is-number maxlength="1" ng-model="component.ComponentDetails[0].configuration.finalApproverAllowedCount">
                     </div>
                 </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval' && component.ComponentDetails[0].configuration.allowAddFinalApprover === true" ng-init="component.ComponentDetails[0].configuration.allowAddFinalApprover = (component.ComponentDetails[0].configuration.allowAddFinalApprover  === undefined) ? false : component.ComponentDetails[0].configuration.allowAddFinalApprover">
+                    <label class="col-md-5 control-label" for="assignedRoleField">Select assigned role field</label>
+                    <div class="input-group col-md-7">
+                        <input type="hidden" ng-model="component.ComponentDetails[0].configuration.assignedRoleField">
+                        <input type="text" id="assignedRoleField" class="form-control" ng-model="component.ComponentDetails[0].configuration.assignedRoleField.label" readonly>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openApprovalDetailFieldListModel('assignedRoleField',{type: 'picklist'})">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval' && component.ComponentDetails[0].configuration.allowAddFinalApprover === true">
+                    <label class="col-md-5 control-label" for="finalApproverPicklistValue">Select final/approval picklist value</label>
+                    <div class="input-group col-md-7">
+                        <select id="finalApproverPicklistValue" pf-select class="form-control" ng-model="component.ComponentDetails[0].configuration.finalApproverPicklistValue">
+                            <option value="">-- None --</option>
+                            <option ng-repeat="picklistValue in component.ComponentDetails[0].configuration.assignedRoleField.picklistValues" value="{{picklistValue.value}}" ng-selected="component.ComponentDetails[0].configuration.finalApproverPicklistValue === picklistValue.value">{{picklistValue.label}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'" ng-init="component.ComponentDetails[0].configuration.readonly = (component.ComponentDetails[0].configuration.readonly  === undefined) ? false : component.ComponentDetails[0].configuration.readonly">
+                    <label class="col-md-5 control-label" for="isComponentReadOnly">Read Only ?</label>
+                    <div class="input-group col-md-7">
+                        <input type="checkbox" id="isComponentReadOnly" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" ng-model="component.ComponentDetails[0].configuration.readonly">&nbsp;&nbsp;
+                        <a ng-if="component.ComponentDetails[0].configuration.readonly === true" pf-tooltip data-placement="right" title="Add Final Approver Criteria" ng-click="openComponentReadOnlyCriteriaModal()"><i class="fa fa-cogs"></i></a>&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
+                    <label class="col-md-5 control-label" for="deleteButton">Delete</label>
+                    <div class="input-group col-md-7">
+                        <a pf-tooltip if="deleteButton" data-placement="right" title="Delete Criteria" ng-click="openDeleteCriteriaModal()"><i class="fa fa-cogs"></i></a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
     <div ng-if="component.catagory == 'MultiLevelApproval'" ng-init="component.ComponentDetails[0].configuration.fields = component.ComponentDetails[0].configuration.fields ? component.ComponentDetails[0].configuration.fields : []">
 		<div class="col-md-12" style="padding: 0px;">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Approval fields fields<span class="pull-right badge badge-info">{{ component.ComponentDetails[0].configuration.fields.length }}</span></h3>
-                </div>
-                <div class="panel-body" style="padding: 0px;">
-                    <table class="table table-striped table-hover" style="margin-bottom:0px;">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;">#</th>
-                                <th>Label</th>
-                                <th>Display Label</th>
-                                <th>Reference</th>
-                                <th style="width: 200px;">Type</th>
-                                <th>Read Only</th>
-                                <th>Required</th>
-                                <th style="text-align: center; width: 50px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody dnd-list="component.ComponentDetails[0].configuration.fields" dnd-allowed-types="['sObjectLayoutFields']">
-                            <tr ng-if="component.ComponentDetails[0].configuration.fields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
-                            <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields"
-                                dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" dnd-type="'sObjectLayoutFields'">
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ field.SObjectField.label }}</td>
-                                <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
-                                <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
-                                <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
-                                <td style="padding-left: 30px;">
-                                    <a href pf-tooltip data-placement="left" title="Read Only Criteria" ng-click="openFieldReadOnlyCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
-                                </td>
-                                 <td style="padding-left: 30px;">
-                                    <a href pf-tooltip data-placement="left" title="Required Criteria" ng-click="openFieldRequiredCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span class="pull-right">
-                                        <button pf-tooltip title="Delete" class="btn btn-xs btn-danger" type="button" ng-if="component.ComponentDetails[0].configuration.fields.length > 1" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)"><i class="pficon-delete"></i></button>
+            <form>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Approval fields fields<span class="pull-right badge badge-info">{{ component.ComponentDetails[0].configuration.fields.length }}</span></h3>
+                    </div>
+                    <div class="panel-body" style="padding: 0px;">
+                        <table class="table table-striped table-hover" style="margin-bottom:0px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Label</th>
+                                    <th>Display Label</th>
+                                    <th>Reference</th>
+                                    <th style="width: 200px;">Type</th>
+                                    <th>Default value</th>
+                                    <th>Read Only</th>
+                                    <th>Required</th>
+                                    <th style="text-align: center; width: 50px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody dnd-list="component.ComponentDetails[0].configuration.fields" dnd-allowed-types="['sObjectLayoutFields']">
+                                <tr ng-if="component.ComponentDetails[0].configuration.fields.length === 0"><td colspan="6" style="text-align: center;">No field added.</td></tr>
+                                <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields"
+                                    dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" dnd-type="'sObjectLayoutFields'" ng-init="field.readonly = false">
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ field.SObjectField.label }}</td>
+                                    <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
+                                    <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                                    <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
+                                    <td ng-init="field.data = field.data ? field.data : {}">
+                                        <div field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field.data"></div>
+                                    </td>
+                                    <td ng-init="field.readOnly = field.readOnly ? field.readOnly : false">
+                                        <!--<input type="checkbox" switch-change="onChangeReadonly(field);" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" ng-model="field.readOnly">&nbsp;&nbsp;-->
+                                        <input type="checkbox" switch-change="" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" ng-model="field.readOnly">&nbsp;&nbsp;
+                                        <a href ng-if="field.readOnly === true" pf-tooltip data-placement="left" title="Read Only Criteria" ng-click="openFieldReadOnlyCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
+                                    </td>
+                                    <td ng-init="field.isRequired = field.isRequired ? field.isRequired : false">
+                                        <input type="checkbox" switch-change="" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" ng-model="field.isRequired">&nbsp;&nbsp;
+                                        <!--<input type="checkbox" switch-change="onChangeRequired(field);" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" ng-model="field.isRequired">&nbsp;&nbsp;-->
+                                        <a href ng-if="field.isRequired === true" pf-tooltip data-placement="left" title="Required Criteria" ng-click="openFieldRequiredCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="pull-right">
+                                            <button pf-tooltip title="Delete" class="btn btn-xs btn-danger" type="button" ng-if="component.ComponentDetails[0].configuration.fields.length > 1" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)"><i class="pficon-delete"></i></button>
+                                            <a href pf-tooltip data-placement="left" title="Criteria" ng-click="openFieldCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select pf-select class="form-control" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in component.approvalDetailSObject.SObjectFields | orderBy:'label'">
+                                        <option value="">-- None --</option>
+                                    </select>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)">
+                                            <i class="fa fa-plus"></i> Add
+                                        </button>
                                     </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select pf-select class="form-control" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in component.SObject.SObjectFields | orderBy:'label'">
-                                    <option value="">-- None --</option>
-                                </select>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" ng-disabled="!fieldToAdd" ng-click="addToComponentFields(fieldToAdd)">
-                                        <i class="fa fa-plus"></i> Add
-                                    </button>
-                                </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>    
     </div>
     <div ng-if="component.catagory == 'UploadAttachment'">

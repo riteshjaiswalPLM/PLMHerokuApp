@@ -25,8 +25,6 @@ ng.directive('isDouble', function () {
 	return {
 		require: 'ngModel',
 		link: function (scope) {	
-            console.info(scope.field.SObjectField.label + ' precision: ' + scope.field.SObjectField.precision + ' scale: ' + scope.field.SObjectField.scale);
-            console.info(scope.field.SObjectField.label + ' length: ' + scope.field.SObjectField.precision + ' scale: ' + scope.field.SObjectField.scale);
             if(scope.field.value === undefined){
                 scope.field.value = '';
             }

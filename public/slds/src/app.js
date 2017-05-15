@@ -19,6 +19,9 @@ var stateProviderRef = null, _$translateProvider = null;
 
 app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,$localStorage){
     $localStorage.$default({translations: {}});
+    $rootScope.matrix1 = '/resources/images/matrix1.png';
+    $rootScope.matrix2 = '/resources/images/matrix2.png';
+    $('#animation').show();
     $rootScope.configureLanguages =function() {
         if(_$translateProvider != null)
         {
@@ -113,14 +116,19 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
         callback && callback(homeState);
     };
     
-    // $rootScope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams,options){
-        // console.info('$stateChangeStart START');
-        // console.log(toState);
-        // console.log(fromState);
-        // console.info('$stateChangeStart END');
-    // });
-    
     $rootScope.encodeURI = function(URI){
 		return encodeURIComponent(URI);
 	};
+
+    $rootScope.formateDateAndDateTime = function(element, timezone, locale, format){
+        if(timezone === undefined || locale === undefined || format === undefined){
+            return element;
+        }
+        if(element !== null && element !== ''){
+            return moment(element).tz(timezone).locale(locale).format(format);
+        }
+        else{
+            return '';
+        }
+    }
 });

@@ -33,6 +33,16 @@ authRouter.post('/authenticate', function(req, res){
         },{
             model: db.Language,
             attributes: ['id','name','code']
+        },{
+            model: db.TimeZone,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            }
+        },{
+            model: db.Locale,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            }
         }],
         attributes: {
             exclude: ['createdAt','updatedAt','RoleId','active','LanguageId']
@@ -77,6 +87,8 @@ authRouter.post('/authenticate', function(req, res){
             delete clonedUser.Role;
             
             if(!clonedUser.isAdmin){
+                if(clonedUser.Locale === undefined && global.salesforce.config.Locale !== undefined) clonedUser.Locale = JSON.parse(JSON.stringify(global.salesforce.config.Locale));
+                if(clonedUser.TimeZone === undefined && global.salesforce.config.TimeZone !== undefined) clonedUser.TimeZone = JSON.parse(JSON.stringify(global.salesforce.config.TimeZone));
                 return res.json({
                     success: true,
                     message: message.auth.success.AUTHENTICATION_SUCCESS,
@@ -483,8 +495,8 @@ authRouter.post('/mailresetpasswordlink', function(req, res){
     User.then(function(user){
         if(user === null || user === undefined){
             return res.json({
-                success: false,
-                message: message.auth.error.INVALID_USERNAME
+                success: true,
+                message: message.auth.success.RESETPASSWORD_SUCCESS,
             });
         }else{
             

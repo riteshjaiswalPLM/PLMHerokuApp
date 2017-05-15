@@ -1,4 +1,4 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">
     <div class="slds-grid slds-box--border" ng-if="!field.readonly  && (field.disabled ==undefined || field.disabled==false)">
         <div class="slds-input-has-icon slds-grow">
             <input type="hidden" ng-model="field.value">

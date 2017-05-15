@@ -70,8 +70,8 @@ admin.controller('AdminGenericComponentsListController',[
 ]);
 
 admin.controller('AdminGenericComponentsEditController',[
-            '$scope','$state','$stateParams','$dialog','$adminLookups','sobjectService','blockUI','genericComponentService','$adminModals',
-    function($scope , $state , $stateParams , $dialog , $adminLookups , sobjectService , blockUI , genericComponentService , $adminModals){
+            '$scope','$state','$stateParams','$dialog','$adminLookups','sobjectService','blockUI','genericComponentService','$adminModals','ModalService',
+    function($scope , $state , $stateParams , $dialog , $adminLookups , sobjectService , blockUI , genericComponentService , $adminModals , ModalService){
     	$scope.openAddMoreCriteriaModal = function(){
     		if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
     			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');
@@ -101,9 +101,91 @@ admin.controller('AdminGenericComponentsEditController',[
                 fields: fields,
                 criteria: $scope.component.ComponentDetails[0].configuration.addFinalApprover ? $scope.component.ComponentDetails[0].configuration.addFinalApprover : null
             },function(criteria){
-                $scope.component.ComponentDetails[0].configuration.addFinalApprover = criteria;
+                $scope.component.ComponentDetails[0].configuration.addFinalApproverCriteria = criteria;
             });
         };
+        $scope.openFieldCriteriaModal = function(field,index){
+            var fields = {}
+            fields[$scope.UserSObject.name+'-'+$scope.UserSObject.label] = $scope.UserSObject.SObjectFields;
+    		fields[$scope.component.approvalDetailSObject.name+'-'+$scope.component.approvalDetailSObject.label] = $scope.component.approvalDetailSObject.SObjectFields;
+			fields[$scope.component.SObject.name+'-'+$scope.component.SObject.label] = $scope.component.SObject.SObjectFields;
+        	$adminModals.multiObjectCriteriaModal({
+                title: 'Field Visible Criteria | ' + field.label,
+                fields: fields,
+                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].criteria ? $scope.component.ComponentDetails[0].configuration.fields[index].criteria : null
+            },function(criteria){
+                $scope.component.ComponentDetails[0].configuration.fields[index].criteria = criteria;
+            });
+        };
+        $scope.openComponentReadOnlyCriteriaModal = function(){
+    		if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
+    			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');
+    			return;
+    		}
+    		var fields = {}
+    		fields[$scope.UserSObject.name+'-'+$scope.UserSObject.label] = $scope.UserSObject.SObjectFields;
+			fields[$scope.component.SObject.name+'-'+$scope.component.SObject.label] = $scope.component.SObject.SObjectFields;
+			$adminModals.multiObjectCriteriaModal({
+                title: 'Add Component Read Only Criteria',
+                fields: fields,
+                criteria: $scope.component.ComponentDetails[0].configuration.componentReadOnlyCriteria ? $scope.component.ComponentDetails[0].configuration.componentReadOnlyCriteria : null
+            },function(criteria){
+                $scope.component.ComponentDetails[0].configuration.componentReadOnlyCriteria = criteria;
+            });
+        };
+        $scope.openApprovalDetailFieldListModel = function(fieldName, filter){
+            if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
+    			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');
+    			return;
+    		}
+            ModalService.showModal({
+                templateUrl: 'views/directive/control/referencefield.html',
+                controller:'FieldLookupController',
+                inputs:{
+                    data: {
+                        title: 'Select approval detail field',
+                        field: $scope.component.approvalDetailSObject.SObjectFields,
+                        refSObject: $scope.component.approvalDetailSObject,
+                        filter: filter
+                    }  
+                }
+            }).then(function(modal){
+                modal.element.modal();
+                modal.close.then(function(referenceFieldObject){
+                    $scope.component.ComponentDetails[0].configuration[fieldName] = angular.copy(referenceFieldObject);
+                });
+            });
+        };
+        $scope.openCycleFieldListModel = function(){
+            if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
+    			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');
+    			return;
+    		}
+            ModalService.showModal({
+                templateUrl: 'views/directive/control/referencefield.html',
+                controller:'FieldLookupController',
+                inputs:{
+                    data: {
+                        title: 'Select SObject cycle field',
+                        field: $scope.component.SObject.SObjectFields,
+                        refSObject: $scope.component.SObject
+                    }  
+                }
+            }).then(function(modal){
+                modal.element.modal();
+                modal.close.then(function(referenceFieldObject){
+                    $scope.component.ComponentDetails[0].configuration.cycleField = referenceFieldObject;
+                });
+            });
+        };
+        $scope.onChangeReadonly = function(field){
+            if(field.readOnly)
+                field.isRequired=false;
+        };
+        $scope.onChangeRequired = function(field){
+            if(field.isRequired)
+                field.readOnly=false;
+        }; 
         $scope.openRecallCriteriaModal = function(){
     		if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
     			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');
@@ -145,9 +227,9 @@ admin.controller('AdminGenericComponentsEditController',[
         	$adminModals.multiObjectCriteriaModal({
                 title: 'Field Read Only Criteria | ' + field.label,
                 fields: fields,
-                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].criteria ? $scope.component.ComponentDetails[0].configuration.fields[index].criteria : null
+                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].readOnlyCriteria ? $scope.component.ComponentDetails[0].configuration.fields[index].readOnlyCriteria : null
             },function(criteria){
-            	$scope.component.ComponentDetails[0].configuration.fields[index].criteria = criteria;
+            	$scope.component.ComponentDetails[0].configuration.fields[index].readOnlyCriteria = criteria;
             });
         };
         $scope.openFieldRequiredCriteriaModal = function(field,index){
@@ -157,14 +239,14 @@ admin.controller('AdminGenericComponentsEditController',[
         	$adminModals.multiObjectCriteriaModal({
                 title: 'Field Required Criteria | ' + field.label,
                 fields: fields,
-                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].criteria ? $scope.component.ComponentDetails[0].configuration.fields[index].criteria : null
+                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria ? $scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria : null
             },function(criteria){
-            	$scope.component.ComponentDetails[0].configuration.fields[index].criteria = criteria;
+            	$scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria = criteria;
             });
         };
         $scope.loadComponentDetails = function(){
-            if($scope.component.id !== undefined && !$scope.blockUI.saveComponent.state().blocking){
-                $scope.blockUI.saveComponent.start('Loading component details...');
+            if($scope.component.id !== undefined && !$scope.blockUI.layoutBlock.state().blocking){
+                $scope.blockUI.layoutBlock.start('Loading component details...');
                 genericComponentService.loadComponentDetails($scope.component)
                     .success(function(response){
                         if(response.success === true){
@@ -182,12 +264,16 @@ admin.controller('AdminGenericComponentsEditController',[
                             }
                             if($scope.component.catagory === 'MultiLevelApproval'){
                             	$scope.refSObjects = response.data.refSObjects;
+                                $scope.connectingFieldMap = {};
                             	$scope.component.approvalDetailSObject.SObjectFields.forEach(function(field){
                             		if(field.type === 'reference' && field.referenceTo){
                             			field.referenceTo.forEach(function(reference){
+                                            if($scope.connectingFieldMap[reference] === undefined)
+                                                $scope.connectingFieldMap[reference] = [];
+                                            $scope.connectingFieldMap[reference].push(field)
                             				if($scope.referenceSObjectNames.indexOf(reference) === -1)
                             					$scope.referenceSObjectNames.push(reference);
-                            			})
+                            			});
                             		}
                                 });
                             	genericComponentService.getUserSObject()
@@ -206,18 +292,18 @@ admin.controller('AdminGenericComponentsEditController',[
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                         }
-                        $scope.blockUI.saveComponent.stop();
+                        $scope.blockUI.layoutBlock.stop();
                     })
                     .error(function(response){
                         $dialog.alert('Server Error occured while loading component details.','Error','pficon pficon-error-circle-o');
-                        $scope.blockUI.saveComponent.stop();
+                        $scope.blockUI.layoutBlock.stop();
                     });
             }
             else{
-            	$scope.blockUI.saveComponent.start('Loading user object details...');
+            	$scope.blockUI.layoutBlock.start('Loading user object details...');
             	genericComponentService.getUserSObject()
-        		.success(function(){
-        			$scope.blockUI.saveComponent.stop();
+        		.success(function(response){
+        			$scope.blockUI.layoutBlock.stop();
         			if(response.success === true){
         				$scope.UserSObject = response.data.userSObject;
         			}
@@ -226,7 +312,7 @@ admin.controller('AdminGenericComponentsEditController',[
         			}
         		})
         		.error(function(){
-        			$scope.blockUI.saveComponent.stop();
+        			$scope.blockUI.layoutBlock.stop();
         			$dialog.alert('Server Error occured while loading component details.','Error','pficon pficon-error-circle-o');
         		});
             }
@@ -277,11 +363,11 @@ admin.controller('AdminGenericComponentsEditController',[
                     $scope.component.ComponentDetails[0].configuration.fields = [];
                     if($scope.component.catagory === 'MultiLevelApproval'){
                     	var referenceSObjectNames = [];
-                    	sObject.SObjectFields.forEach(function(field){
+                        sObject.SObjectFields.forEach(function(field){
                     		if(field.type === 'reference'){
                     			field.referenceTo.forEach(function(reference){
                     				if(referenceSObjectNames.indexOf(reference) === -1){
-                    					referenceSObjectNames.push(reference);
+                                        referenceSObjectNames.push(reference);
                     				}
                     			});
                     		}
@@ -310,18 +396,24 @@ admin.controller('AdminGenericComponentsEditController',[
             },function(sObject){
             	$scope.component.SObject = undefined;
             	$scope.component.ComponentDetails[0].configuration.fields = [];
+                if(sObject !== undefined){
+                    $scope.connectingFieldMap = {};
+                    sObject.SObjectFields.forEach(function(field){
+                		if(field.type === 'reference' && field.referenceTo){
+                			field.referenceTo.forEach(function(reference){
+                                if($scope.connectingFieldMap[reference] === undefined)
+                                    $scope.connectingFieldMap[reference] = [];
+                                $scope.connectingFieldMap[reference].push(field)
+                				if($scope.referenceSObjectNames.indexOf(reference) === -1)
+                					$scope.referenceSObjectNames.push(reference);
+                			});
+                		}
+                    });
+                }
                 if(sObject === undefined){
                     $scope.component.approvalDetailSObject = sObject;
                 }else if($scope.component.approvalDetailSObject == null || $scope.component.approvalDetailSObject.name !== sObject.name){
                     $scope.component.approvalDetailSObject = sObject;
-                    sObject.SObjectFields.forEach(function(field){
-                		if(field.type === 'reference' && field.referenceTo){
-                			field.referenceTo.forEach(function(reference){
-                				if($scope.referenceSObjectNames.indexOf(reference) === -1)
-                					$scope.referenceSObjectNames.push(reference);
-                			})
-                		}
-                    });
                 }
             });
         };
@@ -335,7 +427,25 @@ admin.controller('AdminGenericComponentsEditController',[
             if(duplicate.length === 0 || field.type === 'reference'){
                 $scope.component.ComponentDetails[0].configuration.fields.push({
                     SObjectField: field,
-                    label: field.label
+                    label: field.label,
+                    criteria: {
+                        group: {
+                            operator: '&&',
+                            rules: []
+                        }
+                    },
+                    requiredCriteria: {
+                        group: {
+                            operator: '&&',
+                            rules: []
+                        }
+                    },
+                    readOnlyCriteria: {
+                        group: {
+                            operator: '&&',
+                            rules: []
+                        }
+                    }
                 });
             }
             if(duplicate.length > 0 && duplicate[0].SObjectField.type.toLowerCase() !== 'reference'){
@@ -350,11 +460,35 @@ admin.controller('AdminGenericComponentsEditController',[
     			$dialog.alert('Please select Approval Detail SObject.','Error','pficon pficon-error-circle-o');
     			return false;
     		}
-    		if(!$scope.component.approvalDetailSObject){
+    		if(!$scope.component.SObject){
     			$dialog.alert('Please select SObject.','Error','pficon pficon-error-circle-o');
     			return false;
     		}
-    		if($scope.component.ComponentDetails[0].configuration.fields.length === 0){
+    		if(!$scope.component.ComponentDetails[0].configuration.cycleField){
+    			$dialog.alert('Please select cycle field.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            if(!$scope.component.ComponentDetails[0].configuration.approvalDetailCycleField){
+    			$dialog.alert('Please select approval detail cycle field.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            if(!$scope.component.ComponentDetails[0].configuration.connectingField && $scope.component.ComponentDetails[0].configuration.connectingField !== null && $scope.component.ComponentDetails[0].configuration.connectingField === ""){
+    			$dialog.alert('Please select relative field.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            if(!$scope.component.ComponentDetails[0].configuration.approvalDetailStatusField){
+    			$dialog.alert('Please select approval detail status field.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            if(!$scope.component.ComponentDetails[0].configuration.assignedRoleField){
+    			$dialog.alert('Please select assigned role field.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            if(!$scope.component.ComponentDetails[0].configuration.finalApproverPicklistValue && $scope.component.ComponentDetails[0].configuration.finalApproverPicklistValue !== null && $scope.component.ComponentDetails[0].configuration.finalApproverPicklistValue === ""){
+    			$dialog.alert('Please select final/approval picklist value.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            if($scope.component.ComponentDetails[0].configuration.fields.length === 0){
     			$dialog.alert('No fields added in field list.\nPlease add some fields.','Error','pficon pficon-error-circle-o');
     			return false;
     		}
@@ -376,12 +510,10 @@ admin.controller('AdminGenericComponentsEditController',[
                 $dialog.alert('Duplicate field found in reference.','Error','pficon pficon-error-circle-o');
                 return false;
             }
-            else{
-            	return true;
-            }
+            return true;
         };
         $scope.saveComponent = function(){
-            if(!$scope.blockUI.saveComponent.state().blocking){
+            if(!$scope.blockUI.layoutBlock.state().blocking){
             	if($scope.component.catagory === 'MultiLevelApproval'){
             		if(!$scope.validateComponentBeforeSave()){
             			return;
@@ -396,13 +528,21 @@ admin.controller('AdminGenericComponentsEditController',[
                 componentToSave.SObjectId = componentToSave.SObject.id;
                 if($scope.component.catagory === 'MultiLevelApproval'){
                 	componentToSave.approvalDetailSObjectId = componentToSave.approvalDetailSObject.id; 
-                	componentToSave.approvalDetailSObjectName = componentToSave.approvalDetailSObject.name;
+                	componentToSave.ComponentDetails[0].configuration.approvalDetailSObjectName = componentToSave.approvalDetailSObject.name;
+                    if(componentToSave.ComponentDetails[0].configuration.allowAddMoreCriteria === undefined){
+                        componentToSave.ComponentDetails[0].configuration.allowAddMoreCriteria = {group: { operator: '&&', rules: [] }};
+                    }
+                    if(componentToSave.ComponentDetails[0].configuration.deleteCriteria === undefined){
+                        componentToSave.ComponentDetails[0].configuration.deleteCriteria = {group: { operator: '&&', rules: [] }};
+                    }
+                    if(componentToSave.ComponentDetails[0].configuration.recallCriteria === undefined){
+                        componentToSave.ComponentDetails[0].configuration.recallCriteria = {group: { operator: '&&', rules: [] }};
+                    }
                 	delete componentToSave.approvalDetailSObject;
                 }
                 delete componentToSave.SObject;
-                console.info(componentToSave);
                 
-                $scope.blockUI.saveComponent.start('Saving component...');
+                $scope.blockUI.layoutBlock.start('Saving component...');
                 genericComponentService.saveComponent(componentToSave)
                     .success(function(response){
                         if(response.success === true){
@@ -428,17 +568,17 @@ admin.controller('AdminGenericComponentsEditController',[
                         }else{
                             $dialog.alert('Error occured while saving component.','Error','pficon pficon-error-circle-o');
                         }
-                        $scope.blockUI.saveComponent.stop();
+                        $scope.blockUI.layoutBlock.stop();
                     })
                     .error(function(response){
                         $dialog.alert('Server Error occured while saving component.','Error','pficon pficon-error-circle-o');
-                        $scope.blockUI.saveComponent.stop();
+                        $scope.blockUI.layoutBlock.stop();
                     });
             }
         };
         $scope.initBlockUiBlocks = function(){
             $scope.blockUI = {
-                saveComponent: blockUI.instances.get('saveComponent')
+                layoutBlock: blockUI.instances.get('saveComponent')
             };
         };
         $scope.init = function(){
@@ -447,9 +587,10 @@ admin.controller('AdminGenericComponentsEditController',[
             $scope.allowedExtentions=[]; 
             $scope.allowedExtentionsForPrime=[];
             $scope.referenceSObjectNames=[];
+            $scope.picklistValues = [];
             $scope.component = $stateParams.component;
             $scope.stateAction = $stateParams.stateAction;
-
+            $scope.ctrl = this;
             $scope.loadComponentDetails();
         };
         $scope.init();

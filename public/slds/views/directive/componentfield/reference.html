@@ -14,7 +14,7 @@
     </div>
     <span ng-if="readonly" ng-bind="model[field.SObjectField.relationshipName][field.reference]"></span>
 </div>-->
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !readonly && (!model[field.SObjectField.name] || model[field.SObjectField.name] === undefined || model[field.SObjectField.name] === ''))}">
     <div class="slds-grid slds-box--border" ng-if="!readonly">
         <div class="slds-input-has-icon slds-grow">
             <input type="hidden" ng-model="model[field.SObjectField.name]">
@@ -34,5 +34,5 @@
             </button>
         </div>
     </div>
-    <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="model[field.SObjectField.relationshipName][field.reference]"></label>
+    <label ng-if="readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="model[field.SObjectField.relationshipName][field.reference]"></label>
 </div>

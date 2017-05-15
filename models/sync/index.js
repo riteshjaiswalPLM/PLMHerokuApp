@@ -7,8 +7,10 @@ module.exports = {
         var user = require('./user');
         var language = require('./language');
         var translation = require('./translation');
+        var timezone = require('./timezone');
+        var locale = require('./locale');
         
-        var objectsToSync = [application, sfdc, icon, user, language, translation];
+        var objectsToSync = [application, sfdc, icon, user, language, translation, timezone, locale];
         
         async.each(objectsToSync, function(object, callback){
             object.sync(models, function(err){

@@ -6,5 +6,5 @@
                 ng-required="field.required"
                 ng-if="!readonly">
         <!--<span ng-if="readonly" ng-bind="model[field.SObjectField.name]"></span>-->
-        <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="model[field.SObjectField.name]"></label>
+        <label ng-if="readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="model[field.SObjectField.name]"></label>
 </div>
