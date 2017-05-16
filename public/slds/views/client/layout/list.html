@@ -87,11 +87,11 @@
                             
             </div>
         </div>
-        <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="min-height: 200px;">
+        <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="min-height: 200px;overflow: auto;margin:.75rem">
             <table fixed-header-search-table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
                 <thead>
                     <tr class="slds-text-title--caps">
-                        <th style="max-width:200px"  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
+                        <th  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
                             ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
                             ng-click="applyOrderBy(field)" 
                             ng-repeat="field in searchResultFields" >
@@ -102,7 +102,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                        <td style="max-width:200px" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                        <td  class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
                             title="{{ (field.SObjectField.type === 'reference') 
                                 ? result[field.SObjectField.relationshipName][field.reference] 
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
