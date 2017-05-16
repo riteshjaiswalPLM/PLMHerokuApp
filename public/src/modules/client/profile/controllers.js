@@ -110,6 +110,10 @@ client.controller('ClientProfileOtherController',[
                 });
         };
         $scope.save = function(){
+            if($scope.otherSetting.Language === null ){
+                $dialog.alert('Language is mandatory.','Error','pficon pficon-error-circle-o');
+                return;
+            }
             if($scope.otherSetting.TimeZoneId === null || $scope.otherSetting.LocaleId === null){
                 $dialog.alert('Timezone and locale are mandatory.','Error','pficon pficon-error-circle-o');
                 return;

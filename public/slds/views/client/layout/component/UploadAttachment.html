@@ -155,14 +155,14 @@
 								</thead>
 								<tbody >
 									<tr ng-repeat="attachment in attachments | filter: {IsDeleted: false}">
-										<td class="slds-truncate" data-label=""  title="{{attachment.Name}}" ng-if="type !== 'detail'">
+										<td style="width: 10%;" class="slds-truncate" data-label=""  title="{{attachment.Name}}" ng-if="type !== 'detail'">
 											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
 											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
 										</td>
-										<td class="slds-truncate" data-label="Title"  title="{{attachment.Name}}"><strong>{{ attachment.Name }}</strong></td>
-										<td class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.BodyLength/1024 | number : 2}} KB</td>
-										<td class="slds-truncate" data-label="ContentType"   title="{{ sObj.name }}">{{attachment.Description}}</td>
-										<td data-label="Download" >
+										<td style="width: 40%;max-width: 200px" class="slds-truncate" data-label="Title"  title="{{attachment.Name}}"><strong>{{ attachment.Name }}</strong></td>
+										<td style="width: 10%;" class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.BodyLength/1024 | number : 2}} KB</td>
+										<td style="width: 20%;" class="slds-truncate" data-label="ContentType"   title="{{ sObj.ContentType }}">{{attachment.ContentType}}</td>
+										<td style="width: 20%;" data-label="Download" >
 											<div class="slds-truncate slds-align--absolute-center" >
 												<div class="slds-button-group" role="group">
 													<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="getFileData($root.encodeURI(attachment.Name),attachment.Body)" >

@@ -110,8 +110,12 @@ client.controller('ClientProfileOtherController',[
                 });
         };
         $scope.save = function(){
+            if($scope.otherSetting.Language === null ){
+                $dialog.alert('Language is mandatory.','Validation Alert','pficon-warning-triangle-o');
+                return;
+            }
             if($scope.otherSetting.TimeZoneId === null || $scope.otherSetting.LocaleId === null){
-                $dialog.alert('Timezone and locale are mandatory.','Error','pficon pficon-error-circle-o');
+                $dialog.alert('Timezone and locale are mandatory.','Validation Alert','pficon-warning-triangle-o');
                 return;
             }
             $scope.blockUI.manageProfileOtherSettings.start('Saving...');

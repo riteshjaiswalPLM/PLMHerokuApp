@@ -608,7 +608,7 @@ client.controller('ClientSectionLayoutController',[
                     if(!result.success){
                         validationMessage=result.message+validationMessage
                     }
-                    $dialog.alert(validationMessage,'Error','pficon pficon-error-circle-o');
+                    $dialog.alert(validationMessage,'Validation Alert','pficon-warning-triangle-o');
                 }
             });
             

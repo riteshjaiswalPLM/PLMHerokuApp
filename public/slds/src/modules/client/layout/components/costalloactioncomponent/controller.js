@@ -195,7 +195,7 @@ client.controller('CostAllocationComponentController',[
 				$scope.dataModelList.push($scope.newfields);
 			}
 		  	else{
-				$dialog.alert("You are not allowed to add more with total amount more than  " + ($scope.invoiceAmount),'Error','pficon pficon-error-circle-o');	
+				$dialog.alert("You are not allowed to add more with total amount more than  " + ($scope.invoiceAmount),'Validation Alert','pficon-warning-triangle-o');	
 				return false;
 		  	}
 		};

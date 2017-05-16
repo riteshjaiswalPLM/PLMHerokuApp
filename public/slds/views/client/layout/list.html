@@ -101,8 +101,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                        <td  class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                    <tr  ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                        <td style="max-width:200px;width:auto"  class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
                             title="{{ (field.SObjectField.type === 'reference') 
                                 ? result[field.SObjectField.relationshipName][field.reference] 
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
