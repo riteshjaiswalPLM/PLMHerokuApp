@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    <div class="slds-grid slds-panel slds-wrap " style="height: calc(100vh - 156px);">
+    <div class="" style="height: calc(100vh - 156px);">
         <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small ">
             <div class="slds-form--stacked slds-grow">
                 <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
@@ -101,8 +101,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr  ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                        <td style="max-width:200px;width:auto"  class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                    <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                        <td  class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
                             title="{{ (field.SObjectField.type === 'reference') 
                                 ? result[field.SObjectField.relationshipName][field.reference] 
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 

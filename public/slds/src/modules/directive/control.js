@@ -482,14 +482,7 @@ ng.directive('referenceFieldSelector',['ModalService','$dialog', function(ModalS
             field: "=",
             refSobjects: "="
         },
-        template: `<a   href="javascript:void(0);" 
-                        class="slds-card__header-link slds-truncate"
-                        ng-if="field.SObjectField.type === 'reference'" 
-                        ng-click="openReferenceFieldLookup();"
-                        title="{{field.reference}}">
-                        <svg class="slds-icon slds-icon-text-default slds-p-around--x-small" aria-hidden="true">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#link"></use>
-                        </svg>{{field.reference}}</a>`,
+        template: '<a   href="javascript:void(0);" class="slds-card__header-link slds-truncate" ng-if="field.SObjectField.type === \'reference\'" ng-click="openReferenceFieldLookup();" title="{{field.reference}}"><svg class="slds-icon slds-icon-text-default slds-p-around--x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#link"></use></svg>{{field.reference}}</a>',
         controller: function($scope){
             $scope.field.reference = ($scope.field.reference) ? $scope.field.reference : (($scope.field.referenceRemoved !== undefined && $scope.field.referenceRemoved === true)? undefined : 'Name');
             $scope.openReferenceFieldLookup = function(){

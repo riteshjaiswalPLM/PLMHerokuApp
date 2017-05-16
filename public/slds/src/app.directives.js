@@ -24,28 +24,7 @@ app.directive('sldsNotification',['$rootScope', function($rootScope){
     return {
         restrict: 'E',
         replace: true,
-        template: `
-            <div class="slds-notify_container"  style="width: 100%;font-size:12px">
-                <div ng-repeat="notification in notifications.data"  >
-                    <div class="slds-notify slds-notify--toast slds-theme--{{notification.type =='danger'? 'error':notification.type }}" role="alert" style="width: 100%;padding: 0.5rem 1.5rem;margin:0px;margin-bottom: .5rem">
-                        <span class="slds-assistive-text">Info</span>
-                        <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" ng-click="$parent.notifications.remove($index)">
-                        <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
-                            <use xlink:href="slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-                        </svg>
-                        <span class="slds-assistive-text">Close</span>
-                        </button>
-                        <div class="slds-notify__content slds-grid">
-                            <svg class="slds-icon slds-icon--small slds-m-right--small slds-col slds-no-flex" aria-hidden="true">
-                                <use xlink:href="{{notification.type =='danger'? 'slds221/assets/icons/utility-sprite/svg/symbols.svg#error':'slds221/assets/icons/utility-sprite/svg/symbols.svg#'+notification.type}}"></use>
-                            </svg>
-                            <div class="slds-col slds-align-middle">
-                                <h2 class="slds-text-heading--small "><strong>{{notification.header}}</strong> {{notification.message}}</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`,
+        template: '<div class="slds-notify_container"  style="width: 100%;font-size:12px"><div ng-repeat="notification in notifications.data"  ><div class="slds-notify slds-notify--toast slds-theme--{{notification.type ==\'danger\'? \'error\':notification.type }}" role="alert" style="width: 100%;padding: 0.5rem 1.5rem;margin:0px;margin-bottom: .5rem"><span class="slds-assistive-text">Info</span><button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" ng-click="$parent.notifications.remove($index)"><svg class="slds-button__icon slds-button__icon--large" aria-hidden="true"><use xlink:href="slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use></svg><span class="slds-assistive-text">Close</span></button><div class="slds-notify__content slds-grid"><svg class="slds-icon slds-icon--small slds-m-right--small slds-col slds-no-flex" aria-hidden="true"><use xlink:href="{{notification.type ==\'danger\'? \'slds221/assets/icons/utility-sprite/svg/symbols.svg#error\':\'slds221/assets/icons/utility-sprite/svg/symbols.svg#\'+notification.type}}"></use></svg><div class="slds-col slds-align-middle"><h2 class="slds-text-heading--small "><strong>{{notification.header}}</strong> {{notification.message}}</h2></div></div></div></div></div>',
         link: function(scope, el, attrs, ngModel){
         }
     };
@@ -63,15 +42,7 @@ app.directive('sldsSwitch',['$rootScope', function($rootScope){
             switchReadonly: "="
         },
         replace: true,
-        template: `
-            <label class="slds-checkbox--toggle slds-grid">
-                <input id="{{id}}" type="checkbox" name="checkbox" aria-describedby="{{descId}}" ng-model="value" ng-disabled="switchReadonly" />
-                <span id="{{descId}}" class="slds-checkbox--faux_container" aria-live="assertive">
-                    <span class="slds-checkbox--faux"></span>
-                    <span class="slds-checkbox--on" ng-if="showTexts">{{onText}}</span>
-                    <span class="slds-checkbox--off" ng-if="showTexts">{{offText}}</span>
-                </span>
-            </label>`,
+        template: '<label class="slds-checkbox--toggle slds-grid"><input id="{{id}}" type="checkbox" name="checkbox" aria-describedby="{{descId}}" ng-model="value" ng-disabled="switchReadonly" /><span id="{{descId}}" class="slds-checkbox--faux_container" aria-live="assertive"><span class="slds-checkbox--faux"></span><span class="slds-checkbox--on" ng-if="showTexts">{{onText}}</span><span class="slds-checkbox--off" ng-if="showTexts">{{offText}}</span></span></label>',
         link: function(scope, el, attrs, ngModel){
             if(!scope.id || scope.id == ''){
                 scope.id = 'slds-switch-' + ((Math.random() * (100 - 1)) + 1);
@@ -138,28 +109,7 @@ app.directive('sldsTouchSpin',['$rootScope', function($rootScope){
             max: "@"
         },
         replace: true,
-        template: `
-            <div class="slds-form-element__control slds-grid slds-box--border">
-                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
-                    <button ng-click="change(0)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Decrease value">
-                        <svg class="slds-button__icon" aria-hidden="true">
-                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#dash"></use>
-                        </svg>
-                        <span class="slds-assistive-text">Decrease value</span>
-                    </button>
-                </div>
-                <div class="slds-input-has-icon slds-grow">
-                    <input readonly type="number" id="{{id}}" class="slds-lookup__search-input slds-input--bare" ng-model="value" />
-                </div>
-                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
-                    <button ng-click="change(1)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Increase value">
-                        <svg class="slds-button__icon" aria-hidden="true">
-                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
-                        </svg>
-                        <span class="slds-assistive-text">Increase value</span>
-                    </button>
-                </div>
-            </div>`,
+        template: '<div class="slds-form-element__control slds-grid slds-box--border"><div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none"><button ng-click="change(0)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Decrease value"><svg class="slds-button__icon" aria-hidden="true"><use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#dash"></use></svg><span class="slds-assistive-text">Decrease value</span></button></div><div class="slds-input-has-icon slds-grow"><input readonly type="number" id="{{id}}" class="slds-lookup__search-input slds-input--bare" ng-model="value" /></div><div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none"><button ng-click="change(1)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Increase value"><svg class="slds-button__icon" aria-hidden="true"><use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use></svg><span class="slds-assistive-text">Increase value</span></button></div></div>',
         link: function(scope, el, attrs, ngModel){
             if(!scope.min || scope.min == ''){
                 scope.min = 0;
@@ -249,7 +199,7 @@ app.directive('sldsDropdownMenu',['$rootScope', function($rootScope){
 app.directive('sldsAccordionItem',['$rootScope', function($rootScope){
     return {
         transclude: true,
-        template: `<ng-transclude></ng-transclude>`,
+        template: '<ng-transclude></ng-transclude>',
         replace: true,
         link: function(scope, el, attrs){
 
@@ -261,7 +211,7 @@ app.directive('sldsAccordion',['$rootScope', function($rootScope){
     const sldsAccordionItemClass = 'slds-accordion-item';
     return {
         transclude: true,
-        template: `<ng-transclude></ng-transclude>`,
+        template: '<ng-transclude></ng-transclude>',
         replace: true,
         link: function(scope, el, attrs){
             var focusElement = function(panel){
