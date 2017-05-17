@@ -1,6 +1,6 @@
 client.controller('ClientArchivalController',[
-            '$scope','$rootScope','$state','$dialog', 'blockUI', 'authService', 'ArchivalService',
-    function($scope , $rootScope , $state , $dialog, blockUI, authService, ArchivalService){
+            '$scope','$rootScope','$state','$stateParams','$dialog', 'blockUI', 'authService', 'ArchivalService',
+    function($scope , $rootScope , $state ,$stateParams, $dialog, blockUI, authService, ArchivalService){
         $scope.blockUI = {
                 searchArchivedCriteriaBlock: blockUI.instances.get('searchArchivedCriteriaBlock'),
             };
@@ -60,4 +60,8 @@ client.controller('ClientArchivalController',[
             });
             $scope.searchResults.length = 0;
         };
+        $scope.init=function(){
+             $scope.icon = $stateParams.icon;
+        }
+        $scope.init();
     }]);

@@ -305,12 +305,12 @@ authRouter.post('/states', function(req, res){
                             templateUrl: viewPrefix + 'views/client/dashboard.html',
                             title: global.config.dashboardConfig.title,
                             params:{
-                                icon: global.config.dashboardConfig.icon,
+                                icon: global.config.dashboardConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'icon'],
                                 showRefreshResult: global.config.dashboardConfig.showRefreshResult
                             },
                             tab:{
                                 label: global.config.dashboardConfig.tabLabel,
-                                icon: (global.config.dashboardConfig.tabICON) ? global.config.dashboardConfig.tabICON : null,
+                                icon: (global.config.dashboardConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON']) ? global.config.dashboardConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON'] : null,
                             }
                         });
                     }
@@ -376,12 +376,12 @@ authRouter.post('/states', function(req, res){
                             templateUrl: viewPrefix + 'views/client/archival.html',
                             title: global.config.archivalConfig.title,
                             params:{
-                                icon: global.config.archivalConfig.icon,
+                                icon: global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'icon'],
                                 showRefreshResult: global.config.archivalConfig.showRefreshResult
                             },
                             tab:{
                                 label: global.config.archivalConfig.tabLabel,
-                                icon: (global.config.archivalConfig.tabICON) ? global.config.archivalConfig.tabICON : null,
+                                icon: (global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON']) ? global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON'] : null,
                             }
                         });
                     }

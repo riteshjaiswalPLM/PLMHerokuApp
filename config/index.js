@@ -33,6 +33,8 @@ if(!global.hasOwnProperty('config')){
             tabLabel: 'Home',
             icon: 'fa fa-dashboard',
             tabICON: 'fa fa-dashboard',
+            sldsicon: 'dashboard',
+            sldstabICON: 'home',
             active: true,
             showRefreshResult: true
         },
@@ -41,6 +43,8 @@ if(!global.hasOwnProperty('config')){
             tabLabel: 'Archival',
             icon: 'fa fa-archive',
             tabICON: 'fa fa-archive',
+            sldsicon: 'summary',
+            sldstabICON: 'summary',
             active: true,
             showRefreshResult: true
         }

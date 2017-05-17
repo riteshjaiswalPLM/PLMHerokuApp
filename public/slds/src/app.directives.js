@@ -88,9 +88,9 @@ app.directive('sldsSwitch',['$rootScope', function($rootScope){
                 return ngModel.$modelValue;
             },function(modelValue){
                 if(modelValue!= null && modelValue != undefined){
-                    watchformodalvalue();
                     scope.safeApply(function(){
                         scope.value = modelValue;
+                        ngModel.$setViewValue(modelValue);
                         valueChangeCount++;
                     });
                 }
