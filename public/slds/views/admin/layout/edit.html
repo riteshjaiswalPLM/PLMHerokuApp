@@ -1,4 +1,4 @@
-<div class="slds-col slds-size--1-of-1">
+<div class="slds-col slds-size--1-of-1" >
     <div class="slds-page-header slds-page-header--object-home">
         <div class="slds-grid">
             <div class="slds-col slds-has-flexi-truncate">
@@ -58,7 +58,7 @@
                 <div class="slds-p-horizontal--xx-small slds-scrollable-y">
                     <ul>
                         <li ng-repeat="field in filteredLayoutSObjectFields = (layout.SObject.fields | filter: { recordid: false,SObjectField :{label :search.key} } | orderBy: 'label')">
-                            <a href="javascript:void(0);"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                            <a href="javascript:void(0);"  title="{{field.SObjectField.name}}"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
                                 <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
                                     <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-4">
                                         <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
@@ -68,6 +68,7 @@
                                 </div>
                                 <div class="slds-app-launcher__tile-body" dnd-draggable="field" dnd-effect-allowed="copy" draggable="true" dnd-type="'sObjectField'">
                                     <span class="slds-text-link">{{ field.SObjectField.label }}</span>
+                                    <small style="float:right">{{ field.SObjectField.type + ' ' + ((field.SObjectField.calculated) ? '| formula' : '') }}</small>
                                 </div>
                             </a>
                         </li>

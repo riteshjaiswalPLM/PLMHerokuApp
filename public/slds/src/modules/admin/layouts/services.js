@@ -93,6 +93,9 @@ admin.factory('layoutService',['$http',function($http){
                                 }
                             });
                         });
+                        angular.forEach(section.deletedFields,function(fields){
+                            section.columns[0].push(fields);
+                        });
                     }
                     else{
                         

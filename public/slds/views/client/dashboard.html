@@ -54,7 +54,7 @@
                                     <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;" id="{{'collepseComponent_'+component.id}}"
                                         block-ui="{{component.Component.catagory+component.id+'Block'}}" >
                                         <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-                                            style="height:300px;">
+                                            style="height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'200px':'auto'}}">
                                             <thead>
                                                 <tr class="slds-text-title--caps">
                                                     <th class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-class="{'th-sorted': predicate === field.SObjectField.name}"

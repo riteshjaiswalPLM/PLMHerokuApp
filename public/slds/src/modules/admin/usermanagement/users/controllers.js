@@ -96,7 +96,7 @@ admin.controller('AdminUserManagementUsersCreateController',[
                     $scope.save = function(){
                         var rtn=$scope.saveValidation(function(rtn){
                             if(rtn!=undefined && rtn !=null && rtn.message!=undefined && rtn.message!=="" ){
-                                $dialog.alert(rtn.message,'Error','pficon pficon-error-circle-o');
+                                $dialog.alert(rtn.message,'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }
                             var username="";
@@ -121,7 +121,7 @@ admin.controller('AdminUserManagementUsersCreateController',[
                             });
                             if(!(emailFieldVal === undefined || emailFieldVal==null || emailFieldVal.trim()==""
                                 || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailFieldVal))){
-                                $dialog.alert("Please Enter Valid Email Address",'Error','pficon pficon-error-circle-o');
+                                $dialog.alert("Please Enter Valid Email Address",'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }
                             if(!(username === undefined || username==null || username.trim()=="")){
@@ -200,7 +200,7 @@ admin.controller('AdminUserManagementUsersEditController',[
                     $scope.save = function(){
                         var rtn=$scope.saveValidation(function(rtn){
                             if(rtn!=undefined && rtn !=null && rtn.message!=undefined && rtn.message!=="" ){
-                                $dialog.alert(rtn.message,'Error','pficon pficon-error-circle-o');
+                                $dialog.alert(rtn.message,'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }
                             var username="";
@@ -225,7 +225,7 @@ admin.controller('AdminUserManagementUsersEditController',[
                             });
                             if(!(emailFieldVal === undefined || emailFieldVal==null || emailFieldVal.trim()==""
                                 || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailFieldVal))){
-                                $dialog.alert("Please Enter Valid Email Address",'Error','pficon pficon-error-circle-o');
+                                $dialog.alert("Please Enter Valid Email Address",'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }
                             if(!(username === undefined || username==null || username.trim()=="")){
