@@ -1018,7 +1018,8 @@ ng.filter('currencyFilter',
         return function(input){
             var numberFilter = $filter('number');
             var inputVal = (input) 
-                            ? numberFilter(input,2).toString().trim().replace(',','').trim() 
+                            ? numberFilter(input,2).toString().trim().split(",").join("").trim() 
+                            // ? numberFilter(input,2).toString().trim().replace(',','').trim()
                             : null;
             return parseFloat(inputVal);
         };

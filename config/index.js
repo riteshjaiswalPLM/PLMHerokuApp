@@ -2,9 +2,9 @@ if(!global.hasOwnProperty('config')){
     global.config = {
         constant: require('./constant'),
         db: {
-            dbname:     'esm-node',
+            dbname:     'QA-NODE',
             username:   'postgres',
-            password:   'kaushik'
+            password:   'Satya@123'
         },
         sfdc: {
             username: 'mekyush.jariwala@esmdev.com',
