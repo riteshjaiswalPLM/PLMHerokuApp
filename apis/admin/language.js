@@ -251,13 +251,16 @@ languageRouter.post('/automatelanguagetranslation', function(req, res){
             englishTranslation.then(function(engTranslations) {
                 if(engTranslations){
                     var _engTranslations = [];
+                    var labelTrack = [];
                     var tempObj = {};
                     translations.forEach(function(translation, index){
                         tempObj[translation.label] = translation;
                     });
                     engTranslations.forEach(function(engTranslation, engIndex){
                         if(tempObj[engTranslation.label] === undefined || tempObj[engTranslation.label].translation === engTranslation.label){
-                            _engTranslations.push(engTranslation);
+                        	if(labelTrack.indexOf(engTranslation.label) === -1){
+                        		_engTranslations.push(engTranslation);
+                        	}
                         }
                     });
                     return autoMappingFunction(_engTranslations);
