@@ -70,6 +70,7 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                         else if($scope.field.excludeCurrentUser && $scope.field.excludeCurrentUser==true ){
                             if($scope.model[$scope.field.SObjectField.name] === userData['Id']){
                                 $scope.field.labelValue ="";
+                                $scope.field.value=null;
                             }
                         }
                     }

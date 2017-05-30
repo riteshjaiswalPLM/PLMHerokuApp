@@ -363,6 +363,9 @@ admin.controller('AdminLayoutsEditController',[
                 widgets: blockUI.instances.get('widgets')
             };
         };
+        $scope.callSaveLayout = function(){
+            angular.element(document.getElementById('layoutPage')).scope().saveLayout();
+        }
         $scope.init = function(){
             console.log('AdminLayoutsEditController loaded!');
             $scope.initBlockUiBlocks();
