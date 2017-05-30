@@ -162,7 +162,7 @@ client.controller('CostAllocationComponentController',[
 					//invoiceLineItemTotalAmount += parseFloat(model['Amount__c']);
 					invoiceLineItemTotalAmount += parseFloat(model[$scope.childAmountFieldName]);
 			});
-			return isNaN(invoiceLineItemTotalAmount) ? 0 : (isNaN(invoiceLineItemTotalAmount) ? 0 : invoiceLineItemTotalAmount);
+			return isNaN(invoiceLineItemTotalAmount) ? 0 :  invoiceLineItemTotalAmount;
 			//return isNaN(invoiceLineItemTotalAmount) ? 0 : (isNaN(currencyFilter(invoiceLineItemTotalAmount)) ? 0 : currencyFilter(invoiceLineItemTotalAmount));
 
 		};
