@@ -114,6 +114,21 @@ module.exports = function(sequelize, DataTypes){
                 else
                     this.getDataValue('criteria');
             }
+        },
+        requiredCriteria: {
+            type: DataTypes.TEXT,
+            defaultValue: function(){
+                return undefined;
+            },
+            set: function(value){
+                this.setDataValue('requiredCriteria',JSON.stringify(value));
+            },
+            get: function() {
+                if(this.getDataValue('requiredCriteria') !== undefined)
+                    return JSON.parse(this.getDataValue('requiredCriteria'));
+                else
+                    this.getDataValue('requiredCriteria');
+            }
         }
     },{
         classMethods: {

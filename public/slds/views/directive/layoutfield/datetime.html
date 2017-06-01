@@ -2,7 +2,7 @@
         datetime="field.value"
         id="{{ field.SObjectField.name + index}}" 
         options="{}"></div>-->
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">            
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (isFieldRequired(field) && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">            
      <div class="slds-form-element__control" ng-if="!field.readonly">
            <div class="slds-input-has-icon slds-input-has-icon--right">
                 <svg aria-hidden="true" class="slds-icon slds-input__icon slds-icon--x-small">

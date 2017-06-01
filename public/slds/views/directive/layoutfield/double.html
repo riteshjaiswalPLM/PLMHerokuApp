@@ -4,7 +4,7 @@
                 ng-model="field.value"
                 is-double 
                 class="slds-input" 
-                ng-required="{{field.required}}"
+                ng-required="isFieldRequired(field)"
                 ng-if="!field.readonly"/>
         <span ng-if="field.readonly" ng-bind="field.value | number: 2"></span>
 </div>

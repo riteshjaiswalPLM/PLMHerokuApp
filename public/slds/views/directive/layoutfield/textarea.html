@@ -4,7 +4,7 @@
                 class="slds-textarea"
                 style="resize: none;"
                 rows="3"
-                ng-required="{{field.required}}" 
+                ng-required="isFieldRequired(field)" 
                 ng-if="!field.readonly">
     </textarea>
     <label ng-if="field.readonly" class="slds-form-element__label" style="white-space: pre-line; margin-top:.2rem;margin-bottom: 0;" ng-bind-html="field.value"></label>

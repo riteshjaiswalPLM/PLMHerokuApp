@@ -180,6 +180,10 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 );
             }
 
+            $scope.isFieldRequired = function(field){
+                return field.required && CriteriaHelper.validate(field.requiredCriteria,$scope.model);
+            };
+
             $scope.init = function(){
                 if($scope.field){
                     $scope.field.rendered = true;

@@ -537,6 +537,7 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                                     ControllerSObjectFieldId: (field.ControllerSObjectFieldId) ? field.ControllerSObjectFieldId : null,
                                     event: (field.event) ? field.event : undefined,
                                     criteria: field.criteria ? field.criteria : undefined,
+                                    requiredCriteria: field.requiredCriteria ? field.requiredCriteria : undefined,
                                     required: (editLayout.type === 'Details') ? false : field.required,
                                     currentUserSelected: (field.currentUserSelected)?field.currentUserSelected:false,
                                     excludeCurrentUser: (field.excludeCurrentUser)?field.excludeCurrentUser:false
@@ -562,6 +563,7 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                                     ControllerSObjectFieldId: (field.ControllerSObjectFieldId) ? field.ControllerSObjectFieldId : null,
                                     event: (field.event) ? field.event : undefined,
                                     criteria: field.criteria ? field.criteria : undefined,
+                                    requiredCriteria: field.requiredCriteria ? field.requiredCriteria : undefined,
                                     required: (editLayout.type === 'Details') ? false : field.required,
                                     currentUserSelected: (field.currentUserSelected)?field.currentUserSelected:false,
                                     excludeCurrentUser: (field.excludeCurrentUser)?field.excludeCurrentUser:false

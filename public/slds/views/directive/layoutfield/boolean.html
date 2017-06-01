@@ -25,7 +25,7 @@
                 ng-if="!field.readonly && (!field.criteriaField || field.criteriaField === false)"/>
         <slds-switch id="{{ field.SObjectField.name + index}}" ng-model="field.value" on-text="True" off-text="False" 
                 show-texts="False"
-                ng-required="field.required"
+                ng-required="isFieldRequired(field)"
                 ng-if="!field.readonly && field.criteriaField === true"/>
         <span ng-if="field.readonly" ng-bind="field.value "></span>
 </div>

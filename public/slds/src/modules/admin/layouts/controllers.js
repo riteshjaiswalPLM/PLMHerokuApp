@@ -574,12 +574,22 @@ admin.controller('AdminLayoutsEditEditController',[
                 $scope.relatedLists[index] = newRelatedList;
             });
         };
+        $scope.openFieldRequiredCriteriaModal = function(field,index){
+        	$adminModals.multiObjectCriteriaModal({
+                title: 'Field Required Criteria | ' + field.label,
+                fields: fields,
+                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria ? $scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria : null
+            },function(criteria){
+            	$scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria = criteria;
+            });
+        };
         $scope.openFieldPropertiesModal = function(section,sectionIndex,columnIndex,field,fieldIndex){
             $adminModals.layoutFieldProperties({
                 layout: angular.copy($scope.layout),
                 section: angular.copy(section),
                 field: angular.copy(field),
-                refSObjects: angular.copy($scope.refSObjects)
+                refSObjects: angular.copy($scope.refSObjects),
+                fields: $scope.$parent.$parent.layout.SObject.fields
             },function(newField){
                 $scope.layoutSections[sectionIndex].columns[columnIndex][fieldIndex] = newField;
             });

@@ -1,9 +1,9 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (isFieldRequired(field) && !field.readonly && (!field.value || field.value === undefined || field.value === ''))}">
         <select class="slds-select"
                 id="{{field.SObjectField.name + index}}"
                 ng-model="field.value" 
                 multiple="multiple"
-                ng-required="{{field.required}}"
+                ng-required="isFieldRequired(field)"
                 size="3"
                 ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
                 ng-if="!field.readonly">

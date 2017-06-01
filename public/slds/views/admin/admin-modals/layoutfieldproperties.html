@@ -20,7 +20,8 @@
                 <div class="slds-form-element">
                     <label class="slds-form-element__label" for="fieldRequired">Required ?</label>
                     <div class="slds-form-element__control">
-                        <slds-switch id="fieldRequired" switch-change="onChangeRequired()" ng-model="field.required" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || section.readonly"/>
+                        <slds-switch id="fieldRequired" switch-change="onChangeRequired()" ng-model="field.required" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || section.readonly"/>&nbsp;
+                        <a href ng-if="field.required === true" aria-haspopup="true" title="Required Criteria" ng-click="openFieldRequiredCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
                     </div>
                 </div>
                 <div class="slds-form-element">
