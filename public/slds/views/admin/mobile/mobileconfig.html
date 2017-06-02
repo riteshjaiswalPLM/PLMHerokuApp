@@ -1,8 +1,13 @@
-<div class="col-sm-12" style="margin:10px 0px " >
-    <button class="btn btn-primary" type="button" ng-click="syncWithMiddleware()"><i class="fa fa-cogs"></i> Sync With Middleware</button>
+<div class="slds-col slds-size--1-of-1" style="margin:10px 10px " >
+    <button class="slds-button slds-button--brand" ng-click="syncWithMiddleware()">
+        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#replace"></use>
+        </svg>
+        Sync With Middleware
+    </button>
 </div>
-<div class="col-sm-12"block-ui="MobileConfigBlockUI">
-    <div style="padding: 20px;height: 500px;overflow: auto;border : 5px ridge  red">
-    <json-formatter json="MobileConfig" open="1"></json-formatter>
+<div class="slds-col slds-size--1-of-1"block-ui="MobileConfigBlockUI">
+    <div style="padding: 20px;height: calc(100vh - 245px);overflow: auto;border : 3px solid #00a1df">
+        <json-formatter json="MobileConfig" open="1"></json-formatter>
     </div>
 </div>

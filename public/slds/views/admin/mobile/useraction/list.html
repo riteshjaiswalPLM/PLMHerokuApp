@@ -1,76 +1,147 @@
-<div class="col-md-12">
-    <div class="page-header page-header-bleed-right">
-        <h1><i class="fa fa-user"></i> {{ $root.title() }}</h1>
-    </div>
-    <div class="panel panel-default" block-ui="loadSObjects">
-        <div class="panel-heading">
-            <h3 class="panel-title">Configure New User Action</h3>
-        </div>
-        <div class="panel-body"  >
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Sobject</label>
-                    <div class="col-sm-2" style="padding:0px">
-                        <select pf-select="{size:10}" class="form-control" ng-model="data.SObject" ng-change="onSobjectChange(data.SObject)" ng-options="sObj as sObj.label for sObj in sObjects | orderBy:'label'">
-                            <option value="">-- None --</option>
-                        </select>
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#user"></use>
+                            </svg>
+                        </span>
                     </div>
-                    <label class="col-sm-2 control-label">Sobject Fields</label>
-                    <div class="col-sm-2" style="padding:0px">
-                        <select pf-select="{size:10}" class="form-control" ng-model="data.SObjectField" ng-change="onSobjectFieldChange(data.SObjectField)" ng-options="field as field.label  for field in sObjectFields | orderBy:'label'">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                    <label class="col-sm-1 control-label" >Value</label>
-                    <div class="col-sm-2" style="padding:0px">
-                        <select pf-select="{size:10}" class="form-control" ng-model="data.SObjectFieldValue" ng-options="field.value as field.label for field in sObjectFieldsValue | orderBy:'label'">
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2" align="center">
-                        <button type="submit" class="btn btn-primary" ng-click="addItem()" ><i class="fa fa-plus"></i>Add</button>
-                        <!--<button type="submit" class="btn btn-default">Reset</button>-->
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">User Actions</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ $root.title() }}">{{ $root.title() }}</h1>
                     </div>
                 </div>
-                
-            </form>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top"></div>
         </div>
     </div>
-    <div class="panel panel-success" block-ui="useraction" style="min-height:100px;">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <i class="fa fa-database"></i> Configured Actions
-                <div class="actions pull-right">
-                    <input class="form-control" ng-model="sObjectsFilter" placeholder="Search" style="font-weight: normal;margin-top: -5px"></input>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" block-ui="loadSObjects"
+        style="height: calc(100vh - 237px);">
+        <article class="slds-card slds-size--1-of-1">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-datadotcom slds-p-around--xx-small" title="description of icon when needed">
+                            <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#user"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2><span class="slds-text-heading--small">Configure New User Action</span></h2>
+                    </div>
+                </header>
+                <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                    <button type="submit" class="slds-button slds-button--brand" ng-click="addItem()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"/>
+                        </svg>
+                        Add
+                    </button>
                 </div>
-            </h3>
-        </div>
-        <div class="panel-body"  style="padding:0px;" >
-            <table fixed-header class="table table-striped table-hover table-bordered" style="height: {{ (userActions.length===0) ? 0 : 300 }}px;">
-                <thead>
-                    <tr>
-                        <th>Sobject</th>
-                        <th>User Action Value</th>
-                        <th style="text-align: center;min-width: 150px;width: 220px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <tr ng-repeat="sObj in userActions |filter: { actionvalue : sObjectsFilter}">
-                        <td> <strong>{{ sObj.SObject.label }}<strong></td>
-                        <td>{{ sObj.actionvalue }}</td>
-                        <td style="text-align: center;">
-                            <button class="btn btn-xs btn-primary" type="button" ng-click="manageSObjectFields(sObj)"><i class="fa fa-cogs"></i> Manage Fields</button>
-                            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteUserAction(sObj)"><i class="pficon-delete"></i> Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="blank-slate-pf" ng-if="userActions.length === 0" style="margin-bottom: 0px;height: 373px;">
-                <div class="blank-slate-pf-icon">
-                    <span class="pficon pficon-add-circle-o"></span>
+            </div>
+            <div class=" slds-border--top slds-border--bottom" style="background: white;">
+                <div class="slds-size--1-of-1 slds-panel__section" style="padding-right:20%">
+                    <div class="slds-form--horizontal">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Sobject</label>
+                            <div class="slds-form-element__control">
+                                <select class="slds-select" ng-model="data.SObject" ng-change="onSobjectChange(data.SObject)" ng-options="sObj as sObj.label for sObj in sObjects | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Sobject Fields</label>
+                            <div class="slds-form-element__control">
+                                <select class="slds-select" ng-model="data.SObjectField" ng-change="onSobjectFieldChange(data.SObjectField)" ng-options="field as field.label  for field in sObjectFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Value</label>
+                            <div class="slds-form-element__control">
+                                <select class="slds-select" ng-model="data.SObjectFieldValue" ng-options="field.value as field.label for field in sObjectFieldsValue | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <h1>No User Action Configure added.</h1>
-                
+            </div>
+        </article>
+        <div class="slds-col slds-size--1-of-2 slds-border" style="border: 1px solid #00A8E1;">
+            <div class="slds-grid slds-page-header " style="margin: 0.3rem;padding: 0.3rem; background-color: #00A8E1;">
+                <div class="slds-col slds-align-middle">
+                    <p class="slds-text-title--caps slds-line-height--reset ng-binding" style="color:white"><b>Configured Actions</b></p>
+                </div>
+                <div class="slds-col slds-no-flex slds-grid slds-align-bottom">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                            <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                            </svg>
+                            <input class="slds-input ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search..." ng-model="sObjectsFilter" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-scrollable" block-ui="useraction">
+                <table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped"
+                    ng-if="userActions.length > 0" style="margin-bottom:0px;height: calc(100vh - 339px);">
+                    <thead>
+                        <tr class="slds-text-title--caps">
+                            <th style="white-space:normal !important;" title="Sobject">Sobject</th>
+                            <th style="white-space:normal !important;" title="User Action Value">User Action Value</th>
+                            <th style="white-space:normal !important;text-align:center;min-width:100px;" title="Actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="sObj in userActions | filter: { actionvalue : sObjectsFilter}">
+                            <td class="slds-truncate" data-label="Sobject" style="white-space:normal !important;" title="{{ sObj.SObject.label }}"><strong>{{ sObj.SObject.label }}</strong></td>
+                            <td class="slds-truncate" data-label="User Action Value" style="white-space:normal !important;" title="{{ sObj.actionvalue }}">{{ sObj.actionvalue }}</td>
+                            <td data-label="Action" style="white-space:normal !important;">
+                                <div class="slds-truncate slds-align--absolute-center">
+                                    <div class="slds-button-group" role="group">
+                                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="manageSObjectFields(sObj)">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Manage Fields</span>
+                                            </button>
+                                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="deleteUserAction(sObj)">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">delete</span>
+                                            </button>
+                                    </div>
+                                </div>
+                                <!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="slds-col slds-has-flexi-truncate" ng-if="userActions.length == 0">
+                    <div class=" slds-no-space slds-grow" align="center" style="padding-top:100px ">
+                        <div style="padding:20px 0px">
+                            <span class="slds-icon_container slds-icon-standard-user">
+                                    <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>
+                                </span>
+                        </div>
+                        <div class="">
+                            <h1 style="margin:0px" class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ 'No User Action Configure added.' }}">No User Action Configure added.</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

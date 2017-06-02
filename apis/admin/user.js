@@ -126,7 +126,7 @@ userRouter.post('/sync', function (req, res) {
                         }).spread(function(affectedCount, affectedRows){
                             if(affectedCount === 0){
                                 userToSave.id = record.Id;
-                                userToSave.password = 'sailfin@123';
+                                userToSave.password = global.UserMapping.defaultPWD;
                                 userToSave.RoleId = global.UserMapping.defaultRole.id;
                                 userToSave.LanguageId = languageconfig.English.id
                                 global.db.User.create(userToSave).then(function(createdUser){
