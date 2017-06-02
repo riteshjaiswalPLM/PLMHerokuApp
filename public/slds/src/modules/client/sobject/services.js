@@ -17,7 +17,7 @@ client.factory('clientSObjectService',['$http','CriteriaHelper',function($http, 
             var message="";
             angular.forEach(sObjectData,function(data, datakey){
                 angular.forEach(fields,function(field, fieldkey){
-                    if(datakey===field.SObjectField.name && field.required && CriteriaHelper.validate(field.requiredCriteria,sObjectData)){){
+                    if(datakey===field.SObjectField.name && field.required && CriteriaHelper.validate(field.requiredCriteria,sObjectData)){
                         if(field.SObjectField.type==="picklist"){
                             var found=false;
                             angular.forEach(field.SObjectField.picklistValues,function(picklstValue, picklstkey){
