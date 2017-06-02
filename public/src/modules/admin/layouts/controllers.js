@@ -307,9 +307,9 @@ admin.controller('AdminLayoutsEditController',[
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
                 item.deleted = true;
-                   if(item.id === undefined || item.type !== undefined){
+                if(item.id === undefined || item.type == "Layout-Section-Field"){
                     items.splice(index,1);
-                   }
+                }
                 
                 var itemIndex = 0;
                 angular.forEach(items,function(i, _index){
