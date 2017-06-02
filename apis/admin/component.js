@@ -401,6 +401,7 @@ componentRouter.post('/save', function(req, res){
                 fieldsUpdated: fieldsToCreate.length
             }
         });
+        global.sObjectFieldListConfig.refreshConfig();
     });
 });
 
@@ -505,6 +506,7 @@ componentRouter.post('/static/save', function(req, res){
                 success: true,
 
             });
+            global.sObjectFieldListConfig.refreshConfig();
         }).catch(function (err) {
       
             return res.json({
@@ -526,6 +528,7 @@ componentRouter.post('/static/save', function(req, res){
             return res.json({
                 success: true,
             });
+            global.sObjectFieldListConfig.refreshConfig();
         }).catch(function (err) {
             console.log(err);
             return res.json({

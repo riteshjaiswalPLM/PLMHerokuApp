@@ -27,6 +27,7 @@
     "sequelize-cache": "~0.0.1",
     "serve-favicon": "~2.3.0",
     "underscore": "^1.8.3",
-    "unix-timestamp": "^0.2.0"
+    "unix-timestamp": "^0.2.0",
+    "xlsx-populate": "^1.7.0"
   }
 }

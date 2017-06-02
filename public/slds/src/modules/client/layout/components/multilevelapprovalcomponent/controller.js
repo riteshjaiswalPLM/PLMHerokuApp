@@ -10,12 +10,12 @@ client.controller('MultiLevelApprovalController',[
 				selectObj: '',
 				whereClause: {}
 			};
-			$scope.section.Component.ComponentDetails[0].configuration.fields.forEach(function(field) {
-				dataObj.selectFields.push(field.SObjectField.name);
-				if(field.SObjectField.type === 'reference'){
-					dataObj.selectFields.push(field.SObjectField.relationshipName + '.' + field.reference)
-				}
-			});
+			// $scope.section.Component.ComponentDetails[0].configuration.fields.forEach(function(field) {
+			// 	dataObj.selectFields.push(field.SObjectField.name);
+			// 	if(field.SObjectField.type === 'reference'){
+			// 		dataObj.selectFields.push(field.SObjectField.relationshipName + '.' + field.reference)
+			// 	}
+			// });
 			dataObj.selectObj = $scope.section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName;
 			dataObj.whereClause[$scope.section.Component.ComponentDetails[0].configuration.connectingField] = $scope.ctrl.stateParamData.record.Id;
 			dataObj.whereClause[$scope.section.Component.ComponentDetails[0].configuration.approvalDetailCycleField.name] = $scope.ctrl.dataModel[$scope.section.Component.ComponentDetails[0].configuration.cycleField.name];

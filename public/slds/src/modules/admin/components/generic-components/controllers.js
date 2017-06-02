@@ -153,6 +153,9 @@ admin.controller('AdminGenericComponentsEditController',[
                 modal.element.modal();
                 modal.close.then(function(referenceFieldObject){
                     $scope.component.ComponentDetails[0].configuration[fieldName] = angular.copy(referenceFieldObject);
+                    if(fieldName === 'assignedRoleField'){
+                        $scope.component.ComponentDetails[0].configuration.finalApproverPicklistValue = '';
+                    }
                 });
             });
         };

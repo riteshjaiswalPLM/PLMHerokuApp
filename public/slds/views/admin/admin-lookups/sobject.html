@@ -30,7 +30,7 @@
                         <h1>No sobject added.</h1>
                     </td>
                 </tr>
-                <tr ng-repeat="sObj in sObjects | filter: {label: sobjectFilter}">
+                <tr ng-repeat="sObj in sObjects | filter:{customSetting: false} | filter: {label: sObjectsFilter} | orderBy: 'label'">
                     <td data-label="Label">
                         <strong>{{ sObj.label }}<strong>
                     </td>

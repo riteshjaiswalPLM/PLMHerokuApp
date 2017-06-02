@@ -49,6 +49,9 @@
                                 <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
                                     class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
                                     <h3>{{component.label | translate}}</h3>
+                                    <span class="pull-right badge-info">
+                                        <button class="btn btn-primary" type="button" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" style="line-height: 0 !important;"> &nbsp; <i class="fa fa-upload"></i> &nbsp; </button>
+                                    </span>
                                 </div>
                                 <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y;" style="margin-bottom:0px">
                                     <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;" id="{{'collepseComponent_'+component.id}}"

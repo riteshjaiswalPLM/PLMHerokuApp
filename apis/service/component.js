@@ -764,7 +764,7 @@ componentRouter.post('/getapprovalhistory', (req, res)=>{
     var body = req.body;
     global.sfdc
     .sobject(body.selectObj)
-    .select(body.selectFields)
+    .select(global.sObjectFieldListConfig.FieldListMap[body.selectObj])
     .where(body.whereClause)
     .execute((err, records)=>{
         if(err){

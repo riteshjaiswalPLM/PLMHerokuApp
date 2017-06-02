@@ -299,14 +299,12 @@ admin.controller('AdminLayoutsEditController',[
         $scope.returnToList = function(){
             $state.go('admin.layouts.list');  
         };
-        
         $scope.removeFieldsStore=function(section,item){
             if(section.deletedFields==undefined){
                 section.deletedFields=[];
             }
             section.deletedFields.push(item);
         }
-
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
                 item.deleted = true;
@@ -478,7 +476,7 @@ admin.controller('AdminLayoutsEditListController',[
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editListLayout.start('Saving ...');
-                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id)
+                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id,$scope.layout.whereClause)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){

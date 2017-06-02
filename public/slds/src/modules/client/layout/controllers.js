@@ -231,6 +231,136 @@ client.controller('ClientListLayoutController',[
                     });
             }
         };
+        $scope.exportToExcel = function () {
+            if ($scope.stateParamMetaData !== undefined) {
+                var selectFields = [];
+                angular.forEach($scope.searchResultFields, function (field, index) {
+                    selectFields.push(field);
+                });
+
+                var whereFields = {};
+                whereFields['$and'] = [];
+                var validateFields = {};
+                angular.forEach($scope.searchCriteriaFields, function (field, index) {
+                    if (field.value !== undefined && field.value !== null && field.value !== '') {
+                        var fieldType = field.SObjectField.type;
+                        if (field.tofield || field.fromfield) {
+                            var dataObj = {};
+                            if (field.tofield) {
+                                if (fieldType === "date" || fieldType === "datetime") {
+                                    var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
+                                    dataObj[field.SObjectField.name] = { $lt: dataValue, type: field.SObjectField.type };
+                                    validateFields[field.SObjectField.name + "_tofield"] = field;
+                                }
+                                else {
+                                    dataObj[field.SObjectField.name] = { $lt: field.value, type: field.SObjectField.type };
+                                    validateFields[field.SObjectField.name + "_tofield"] = field;
+                                }
+                            }
+                            else {
+                                if (fieldType === "date" || fieldType === "datetime") {
+                                    var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
+                                    dataObj[field.SObjectField.name] = { $gt: dataValue, type: field.SObjectField.type };
+                                    validateFields[field.SObjectField.name + "_fromfield"] = field;
+                                }
+                                else {
+                                    dataObj[field.SObjectField.name] = { $gt: field.value, type: field.SObjectField.type };
+                                    validateFields[field.SObjectField.name + "_fromfield"] = field;
+                                }
+
+                            }
+                            whereFields['$and'].push(dataObj);
+                        } else {
+                            if (!(angular.isArray(field.value) && field.value.join(";") === '')) {
+                                var data = {};
+                                if (field.oldType && field.oldType === "picklist") {
+                                    data[field.SObjectField.name] = { value: (angular.isArray(field.value)) ? field.value.join("','") : field.value, fieldtype: field.oldType };
+                                }
+                                else if (fieldType === "date" || fieldType === "datetime") {
+                                    var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
+                                    data[field.SObjectField.name] = { value: dataValue, fieldtype: field.oldType };
+                                }
+                                else {
+                                    data[field.SObjectField.name] = { value: (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype: field.SObjectField.type };
+                                }
+                                whereFields['$and'].push(data);
+                            }
+                        }
+                    }
+                });
+
+                var validationMessage = "";
+                var tofieldData = undefined;
+                angular.forEach(validateFields, function (field, key) {
+                    if (field.fromfield) {
+                        tofieldData = validateFields[field.SObjectField.name + "_tofield"];
+                        if (tofieldData && field.value > tofieldData.value) {
+                            validationMessage += "\"" + tofieldData.label + "\"  should be greater than \"" + field.label + "\". <br>";
+                        }
+                    }
+                });
+                if (validationMessage !== "") {
+                    $dialog.alert(validationMessage, 'Validation Alert', 'pficon-warning-triangle-o');
+                    return;
+                }
+                var queryObject = {
+                    sObject: $scope.stateParamMetaData.sobject,
+                    selectFields: selectFields,
+                    whereFields: whereFields
+                };
+
+                $scope.btnExportDis = true;
+                clientSObjectService.export(queryObject)
+                    .success(function (response) {
+                        if (response.success) {
+                            if (response.data != undefined) {
+                                $scope.getFileData(response.data.file);
+                            }
+                            else {
+                                $dialog.alert("No records found.");
+                            }
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                        $scope.btnExportDis = false;
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.btnExportDis = false;
+                    });
+            }
+        };
+
+        $scope.getFileData = function (file) {
+            var req = { file: file };
+            var res = { cache: true, responseType: 'arraybuffer' };
+            clientSObjectService.getfiledata(req, res)
+                .success(function (response, status, headers, config) {
+                    var objectUrl = URL.createObjectURL(new Blob([response], { type: headers()['content-type'] }));
+                    if (navigator.appVersion.toString().indexOf('.NET') > 0 || navigator.userAgent.toString().indexOf('MSIE') != -1) { // for IE browser
+                        window.navigator.msSaveBlob(new Blob([response], { type: headers()['content-type'] }), $rootScope.title() + ".xlsx");
+                    } else { // for other browsers
+                        var a = $("<a style='display: none;'/>");
+                        a.attr("href", objectUrl);
+                        a.attr("download", $rootScope.title() + ".xlsx");
+                        $("body").append(a);
+                        a[0].click();
+                        a.remove();
+                    }
+
+                    //Delete file from server
+                    var fileObject = {
+                        file: file
+                    };
+                    clientSObjectService.deletefile(fileObject)
+                        .success(function () {
+                        })
+                        .error(function () {
+                        });
+                }).error(function () {
+                    $dialog.alert('Server error occured while downloading file.', 'Error', 'pficon pficon-error-circle-o');
+                });
+        };
         $scope.applyOrderBy = function(field){
             if($scope.searchResult && $scope.searchResult.length > 0){
                 $scope.predicate = field.SObjectField.name;
@@ -319,6 +449,7 @@ client.controller('ClientListLayoutController',[
             $scope.stateParamMetaData = $state.current.params.metadata;
             $scope.initBlockUiBlocks();
             $scope.loadLayoutMetadata();
+            $scope.btnExportDis = false;
         };
         $scope.init();
     }
@@ -413,24 +544,25 @@ client.controller('ClientSectionLayoutController',[
                     $scope.queryObject = {
                         selectFields: ["Id"],
                         sObject: $scope.stateParamData.record.attributes.type,
-                        whereFields: { "Id" : $scope.stateParamData.record.Id }
+                        whereFields: { "Id" : $scope.stateParamData.record.Id },
+                        type: $scope.stateParamMetaData.layout.type
                     }
-                    angular.forEach(metadata.layoutSections,function(section,sectionIndex){
-                        angular.forEach(section.columns,function(fields, columnIndex){
-                            angular.forEach(fields,function(field,fieldIndex){
-                                if($scope.queryObject.selectFields.indexOf(field.SObjectField.name) === -1){
-                                    $scope.queryObject.selectFields.push(field.SObjectField.name);
-                                    if(field.SObjectField.type === 'reference'){
-                                        if(field.SObjectField.reference === undefined){
-                                            $scope.queryObject.selectFields.push(field.SObjectField.relationshipName + '.Name');
-                                        }else{
-                                            $scope.queryObject.selectFields.push(field.SObjectField.relationshipName + '.' +field.SObjectField.reference);
-                                        }
-                                    }
-                                }
-                            });
-                        });
-                    });
+                    // angular.forEach(metadata.layoutSections,function(section,sectionIndex){
+                    //     angular.forEach(section.columns,function(fields, columnIndex){
+                    //         angular.forEach(fields,function(field,fieldIndex){
+                    //             if($scope.queryObject.selectFields.indexOf(field.SObjectField.name) === -1){
+                    //                 $scope.queryObject.selectFields.push(field.SObjectField.name);
+                    //                 if(field.SObjectField.type === 'reference'){
+                    //                     if(field.SObjectField.reference === undefined){
+                    //                         $scope.queryObject.selectFields.push(field.SObjectField.relationshipName + '.Name');
+                    //                     }else{
+                    //                         $scope.queryObject.selectFields.push(field.SObjectField.relationshipName + '.' +field.SObjectField.reference);
+                    //                     }
+                    //                 }
+                    //             }
+                    //         });
+                    //     });
+                    // });
                 }
                 $scope.blockUI.layoutBlock.start('Loading details...');
                 clientSObjectService.details($scope.queryObject)
@@ -509,6 +641,11 @@ client.controller('ClientSectionLayoutController',[
                 sObjectLayoutSections.pop();
                 angular.forEach($scope.metadata.layoutSections,function(section,sectionIndex){
                     if(!section.isComponent){
+                        section.columns.forEach(function(column){
+                            column.forEach(function(field){
+                                field.rendered = true;
+                            });
+                        });
                         $scope.metadata.layoutSections[sectionIndex] = angular.copy(section);
                     }
                 });
@@ -539,6 +676,9 @@ client.controller('ClientSectionLayoutController',[
             var sObjectData = {
                 Id: $scope.dataModel.Id
             };
+            var allSObjectData = {
+                Id: $scope.dataModel.Id
+            };
             var dataFields=[] ;
             var validationMessage="";
             angular.forEach($scope.metadata.layoutSections,function(section,sectionIndex){
@@ -549,6 +689,15 @@ client.controller('ClientSectionLayoutController',[
                                 if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
                                     sObjectData[field.SObjectField.name] = field.value;
                                     dataFields.push(field);
+                                }
+                            });
+                        });
+                    }
+                    if(section.rendered === true){
+                        angular.forEach(section.columns,function(fields, columnIndex){
+                            angular.forEach(fields,function(field,fieldIndex){
+                                if(field.SObjectField.custom === true && field.enable === true && field.rendered != undefined && field.rendered === true){
+                                	allSObjectData[field.SObjectField.name] = field.value;
                                 }
                             });
                         });
@@ -584,7 +733,7 @@ client.controller('ClientSectionLayoutController',[
             }
             
             
-            clientSObjectService.isRequireValidation({sObjectData:sObjectData,fields:dataFields},function(result){
+            clientSObjectService.isRequireValidation({sObjectData:sObjectData, allSObjectData: allSObjectData,fields:dataFields},function(result){
                 if(result.success && validationMessage===""){
                     $scope.blockUI.layoutBlock.start('Saving values...');
                     angular.forEach(componentSaveCall,function(saveCall){

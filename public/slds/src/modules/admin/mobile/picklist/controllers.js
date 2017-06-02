@@ -298,6 +298,15 @@ admin.controller('AdminMobilePicklistFieldController', [
                             // dataItem["dependentValue"]=["Approval Received","Create"].join();
                             $scope.picklistChildDetail.push(dataItem);
                         });
+                        var dataItem={
+                            userType      : 'DEFAULT'
+                        }
+                        angular.forEach(response.data.dependentPicklistChildDetail, function (field) {
+                            if(field.userType ==='DEFAULT' ){
+                                dataItem["dependentValue"]=field.childfieldvalue;
+                            }
+                        });
+                        $scope.picklistChildDetail.push(dataItem);
                     } else {
                         $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                     }

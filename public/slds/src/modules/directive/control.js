@@ -181,7 +181,14 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
             }
 
             $scope.isFieldRequired = function(field){
-                return field.required && CriteriaHelper.validate(field.requiredCriteria,$scope.model);
+                var requiredCriteria;
+                if(field.requiredCriteria === null || field.requiredCriteria === undefined){
+                    requiredCriteria = true;
+                }
+                else{
+                    requiredCriteria = CriteriaHelper.validate(field.requiredCriteria,$scope.model);
+                }
+                return field.required && requiredCriteria;
             };
 
             $scope.init = function(){
@@ -1028,8 +1035,8 @@ ng.filter('currencyFilter',
         return function(input){
             var numberFilter = $filter('number');
             var inputVal = (input) 
-                            ? numberFilter(input,2).toString().trim().split(",").join("").trim() 
-                            // ? numberFilter(input,2).toString().trim().replace(',','').trim()
+                             //? numberFilter(input,2).toString().trim().replace(',','').trim() 
+                            ? numberFilter(input,2).toString().trim().split(",").join("").trim()
                             : null;
             return parseFloat(inputVal);
         };

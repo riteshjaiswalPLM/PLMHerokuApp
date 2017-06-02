@@ -19,6 +19,7 @@ var staticcomponentconfig  = require('../component');
 require('../locale');
 require('../timzone');
 require('../salesforceconfig');
+require('../sobjectfieldlistconfig');
 
 var hook      = require('../hook');
 

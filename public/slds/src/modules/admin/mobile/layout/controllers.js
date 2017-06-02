@@ -360,7 +360,7 @@ admin.controller('AdminMobileLayoutsEditListController',[
             return item;
         };    
         $scope.searchResultFieldsDropCallBack = function(event, index, item, external, type, allowedType){
-            if($scope.isDuplicate($scope.searchResultFields,item)){
+            if (item.SObjectField.type !== 'reference' && $scope.isDuplicate($scope.searchResultFields, item)) {
                 return false;
             }
             item.type = 'Search-Result-Field';
@@ -414,8 +414,29 @@ admin.controller('AdminMobileLayoutsEditListController',[
         };
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
+                var duplicate = false;
+                angular.forEach($scope.searchResultFields, function (field, index) {
+                    if (field.SObjectField.type === 'reference' && !field.deleted) {
+                        angular.forEach($scope.searchResultFields, function (_field, _index) {
+                            if (_field.SObjectField.type === 'reference' && !_field.deleted) {
+                                if (!duplicate) {
+                                    if (_field.reference && field.reference && _index !== index && _field.SObjectField.id === field.SObjectField.id && _field.reference === field.reference) {
+                                        duplicate = true;
+                                    }
+                                    if (_field.referenceRemoved && field.referenceRemoved && _field.referenceRemoved === true && field.referenceRemoved === true && _index !== index && _field.SObjectField.id === field.SObjectField.id) {
+                                        duplicate = true;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+                if (duplicate === true) {
+                    $dialog.alert('Duplicate field found in reference.', 'Error', 'pficon pficon-error-circle-o');
+                    return;
+                }
                 $scope.blockUI.editListLayout.start('Saving ...');
-                mobileLayoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria)
+                mobileLayoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.whereClause)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){

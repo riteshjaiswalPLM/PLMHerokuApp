@@ -40,8 +40,8 @@ layoutRouter.post('/list', function(req, res){
                 });
             }else{
                 sObjectLayouts.forEach(function(sObjectLayout, index){
-                    if(sObjectLayout.SObjectId === userMapping[0].SObjectId && sObjectLayout.type === 'Edit')
-                        sObjectLayouts.splice(index, 1);
+                    if(sObjectLayout.SObjectId === userMapping[0].SObjectId && sObjectLayout.type === 'Edit') sObjectLayouts.splice(index, 1);
+                    if(sObjectLayout.SObjectId === userMapping[0].SObjectId && sObjectLayout.type === 'Create') sObjectLayouts.splice(index, 1);
                 });
                 return res.json({
                     success: true,
@@ -416,7 +416,8 @@ layoutRouter.post('/savelistlayout', function(req, res){
                             }
                         }).then(function(affectedRows){
                             db.SObjectLayout.update({
-                                btnCriteria : listLayout.actionButtonCriteria
+                                btnCriteria : listLayout.actionButtonCriteria,
+                                whereClause : listLayout.sObjectLayoutWhereClause
                             },{
                                 where: {
                                     id: sObjectLayoutId
@@ -438,7 +439,8 @@ layoutRouter.post('/savelistlayout', function(req, res){
         }
         else{
             db.SObjectLayout.update({
-                btnCriteria : listLayout.actionButtonCriteria
+                btnCriteria : listLayout.actionButtonCriteria,
+                whereClause : listLayout.sObjectLayoutWhereClause
             },{
                 where: {
                     id: listLayout.sObjectLayoutId
@@ -755,6 +757,7 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                             }
                         });
                     });
+                    global.sObjectFieldListConfig.refreshConfig();
                 });
             });
         }
@@ -823,11 +826,18 @@ layoutRouter.post('/loadgoverningfields', (req, res)=>{
     var whereClause = {
         forMobile : true,
         isGovernField : true,
-        SObjectId : req.body.SObject.id
+        
     }
+    if(req.body.SObject) whereClause.SObjectId = req.body.SObject.id;
     db.SObjectField.findAll({
         attributes: {
             exclude: ['createdAt','updatedAt']
+        },
+        include:{
+            model: db.SObject,
+            attributes:{
+                include: ['name']
+            }
         },
         where: whereClause,
     })

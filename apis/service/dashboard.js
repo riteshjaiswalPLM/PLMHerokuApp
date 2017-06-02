@@ -1,5 +1,10 @@
 var express = require('express');
 var dashboardRouter = express.Router();
+var XlsxPopulate  = require('xlsx-populate');
+var timestamp = require('unix-timestamp');
+var path = require('path');
+var os = require('os');
+var fs = require('fs');
 
 dashboardRouter.post('/getdashboardcomponentmetadata', function(req, res){
     var slds = req.body && req.body.slds === true;
@@ -181,6 +186,146 @@ dashboardRouter.post('/loadData', function(req, res){
     else{
         return res.json({success: true});
     }
+});
+dashboardRouter.post('/exportData', function (req, res) {
+    var config = req.body.config;
+    var componentType = req.body.type;
+    var selectFields = [], whereClause = "";
+    if (componentType.indexOf('MyTaskContainer') > -1) {
+        selectFields.push('Id');
+        config.fields.forEach((field) => {
+            if (selectFields.indexOf(field.SObjectField.name) === -1) selectFields.push(field.SObjectField.name);
+            if (field.SObjectField.type === 'reference') {
+                selectFields.push(field.SObjectField.relationshipName + '.' + field.reference)
+            }
+        });
+        if (config.whereClause) {
+            whereClause = config.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? config.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : config.whereClause
+        }
+        global.sfdc
+            .sobject(config.name)
+            .select(selectFields)
+            .where(whereClause)
+            //.limit(10)
+            .execute(function (err, records) {
+                if (err) {
+                    return res.json({
+                        success: false,
+                        message: 'Error occured while searching records.\n' + err.name + ' : ' + err.message,
+                        error: err
+                    });
+                }
+                records.forEach(function (record, index) {
+                    delete record.attributes;
+                    delete record.Id;
+
+                    var keys = Object.keys(record);
+                    var fieldChanged = false;
+                    keys.forEach(function (key) {
+                        fieldChanged = false;
+                        config.fields.forEach(function (field) {
+                            if (key == field.SObjectField.name && !fieldChanged) {
+                                if (field.SObjectField.type === 'reference') {
+                                    if (record[field.SObjectField.relationshipName] == null) {
+                                        record[field.SObjectField.label] = record[field.SObjectField.relationshipName];
+                                    } else {
+                                        record[field.SObjectField.label] = record[field.SObjectField.relationshipName][field.reference];
+                                    }
+
+                                    delete record[key];
+                                    delete record[field.SObjectField.relationshipName];
+                                    if (keys.indexOf(field.SObjectField.relationshipName) > -1) {
+                                        keys.splice(keys.indexOf(field.SObjectField.relationshipName), 1);
+                                    }
+                                } else {
+                                    record[field.SObjectField.label] = record[key];
+                                    delete record[key];
+                                }
+                                fieldChanged = true;
+                            }
+                        });
+
+                        if (fieldChanged == false) {
+                            delete record[key];
+                        }
+                    });
+                });
+
+                if (records.length > 0) {
+                    var file = "MyTaskResult" + timestamp.now() + ".xlsx";
+                    file = path.join(os.tmpdir(), file);
+
+                    var keys = Object.keys(records[0]);
+                    // Load a new blank workbook 
+                    XlsxPopulate.fromBlankAsync()
+                        .then(workbook => {
+                            // Modify the workbook.
+                            workbook.sheet("Sheet1").row(1).style("bold", true);
+                            keys.forEach(function (key, index) {
+                                workbook.sheet("Sheet1").row(1).cell(index + 1).value(key);
+                                //workbook.sheet("Sheet1").row(1).cell(index + 1).style({ bold: true, italic: true, border: true, borderColor: "0000FF", borderStyle: "thin", fontColor: "0000FF", fill: "909090" });
+                                workbook.sheet("Sheet1").row(1).cell(index + 1).style({ bold: true, border: true, borderColor: "808080", borderStyle: "thin" });
+                                workbook.sheet("Sheet1").column(index + 1).width(key.length > 25 ? key.length : 25);
+                            });
+
+                            records.forEach(function (row, index) {
+                                keys.forEach(function (key, _index) {
+                                    workbook.sheet("Sheet1").row(index + 2).cell(_index + 1).value(row[key]);
+                                    workbook.sheet("Sheet1").row(index + 2).cell(_index + 1).style({ border: true, borderColor: "808080", borderStyle: "thin" });
+                                });
+                            });
+
+                            // Write to file.
+                            workbook.toFileAsync(file)
+                                .then(workbook => {
+                                    return res.json({
+                                        success: true,
+                                        data: {
+                                            file: file
+                                        }
+                                    });
+                                })
+                                .catch((err) => {
+                                    callback && callback({
+                                        success: false,
+                                        message: 'Error occured while saving Excel file.',
+                                        err: err
+                                    });
+                                });
+                        })
+                        .catch((err) => {
+                            callback && callback({
+                                success: false,
+                                message: 'Error occured while creating Excel file.',
+                                err: err
+                            });
+                        });
+                }
+                else {
+                    return res.json({
+                        success: true
+                    });
+                }
+            });
+    }
+    else {
+        return res.json({
+            success: true
+        });
+    }
+});
+
+dashboardRouter.post('/getfiledata', function (req, res) {
+    fs.createReadStream(req.body.file, { bufferSize: 64 * 1024 }).pipe(res);
+});
+
+dashboardRouter.post('/deletefile', function (req, res) {
+    var file = req.body.file;
+    fs.unlinkSync(file, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
 });
 
 module.exports = dashboardRouter;

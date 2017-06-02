@@ -170,6 +170,15 @@
                                 <th scope="col">
                                     <div class="slds-truncate" title=""></div>
                                 </th>
+                                <th ng-if="forMobile" scope="col">
+                                    <div class="slds-truncate" title="User Field">User Field</div>
+                                </th>
+                                <th ng-if="forMobile" scope="col">
+                                    <div class="slds-truncate" title="Assigned Role Field">Assigned Role Field</div>
+                                </th>
+                                <th ng-if="forMobile" scope="col">
+                                    <div class="slds-truncate" title="Governing Field">Governing Field</div>
+                                </th>
                                 <th scope="col">
                                     <div class="slds-truncate" title="Hidden">Hidden</div>
                                 </th>
@@ -204,6 +213,23 @@
                                 <td data-label="">
                                     <div class="slds-truncate" title="{{field.label}}">
                                         <a pf-tooltip data-placement="left" title="Remove reference" ng-if="field.SObjectField.type === 'reference'" ng-click="field.reference = undefined; field.referenceRemoved = true" href><i class='fa fa-times'></i></a>
+                                    </div>
+                                </td>
+                                 <td data-label="User Field" ng-if="forMobile" >
+                                    <div class="slds-truncate"  ng-init="field.isUserNameField = ((field.isUserNameField === undefined) ? false : field.isUserNameField)">
+                                        <slds-switch id="isUserNameField"  switch-change="onChangeUserNameField(field);" ng-model="field.isUserNameField" on-text="Yes" off-text="No" show-texts="false"/>
+                                    </div>
+                                </td>
+                                 <td data-label="Assigned Role Field" ng-if="forMobile" >
+                                    <div class="slds-truncate"  ng-init="field.isAssignedRoleField = field.isAssignedRoleField === undefined ? false : field.isAssignedRoleField">
+                                        <slds-switch id="isAssignedRoleField"  switch-change="onChangeAssignedRoleField(field);" ng-model="field.isAssignedRoleField" on-text="Yes" off-text="No" show-texts="false"/>
+                                    </div>
+                                </td>
+                                 <td data-label="Governing Field" ng-if="forMobile" >
+                                    <div class="slds-truncate"  ng-init="field.governFieldName = field.governFieldName ? field.governFieldName : null">
+                                        <select class="slds-select" ng-model="field.governFieldName" ng-options="field.name as field.label for field in governingFields | orderBy:'label'">
+                                            <option value="">-- None --</option>
+                                        </select>
                                     </div>
                                 </td>
                                 <td data-label="Hidden">

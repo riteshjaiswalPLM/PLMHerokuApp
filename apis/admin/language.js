@@ -260,6 +260,7 @@ languageRouter.post('/automatelanguagetranslation', function(req, res){
                         if(tempObj[engTranslation.label] === undefined || tempObj[engTranslation.label].translation === engTranslation.label){
                         	if(labelTrack.indexOf(engTranslation.label) === -1){
                         		_engTranslations.push(engTranslation);
+                                 labelTrack.push(engTranslation.label);
                         	}
                         }
                     });

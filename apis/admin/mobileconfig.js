@@ -117,13 +117,13 @@ var getMobileConfig = function(callback){
                 attributes: ['name'],
                 include: {
                     model: global.db.SObjectLayout,
-                    attributes: ['id'],
+                    attributes: ['id', 'whereClause'],
                     include: {
                         model: global.db.SObjectLayoutField,
-                        attributes: ['id', 'type'],
+                        attributes: ['id', 'type', 'reference', 'hidden'],
                         include: {
                             model: global.db.SObjectField,
-                            attributes: ['name'],
+                            attributes: ['name', ['relationshipName', 'relationName'], 'type'],
                             where: {
                                 forMobile: true
                             }
@@ -153,12 +153,25 @@ var getMobileConfig = function(callback){
                         objectSearchConfig[sObjectsSearchConfigField.name] = {};
                         objectSearchConfig[sObjectsSearchConfigField.name].crateria = [];
                         objectSearchConfig[sObjectsSearchConfigField.name].result = [];
+                        objectSearchConfig[sObjectsSearchConfigField.name].displayFields = [];
+                        if (sObjectsSearchConfigField.SObjectLayouts[0].whereClause != null) {
+                            objectSearchConfig[sObjectsSearchConfigField.name].defaultCriteria = sObjectsSearchConfigField.SObjectLayouts[0].whereClause;
+                        } else {
+                            objectSearchConfig[sObjectsSearchConfigField.name].defaultCriteria = "";
+                        }
                         sObjectsSearchConfigField.SObjectLayouts[0].SObjectLayoutFields.forEach(function (Field) {
                             if (Field.type === "Search-Criteria-Field") {
                                 objectSearchConfig[sObjectsSearchConfigField.name].crateria.push(Field.SObjectField.name);
                             }
                             else {
                                 objectSearchConfig[sObjectsSearchConfigField.name].result.push(Field.SObjectField.name);
+                                if (Field.hidden === false) {
+                                    if (Field.SObjectField.type === 'reference' && Field.reference !== undefined) {
+                                        objectSearchConfig[sObjectsSearchConfigField.name].displayFields.push(JSON.parse(JSON.stringify(Field.SObjectField))["relationName"] + '.' + Field.reference);
+                                    } else {
+                                        objectSearchConfig[sObjectsSearchConfigField.name].displayFields.push(Field.SObjectField.name);
+                                    }
+                                }
                             }
                         });
                     }
@@ -247,19 +260,44 @@ var getMobileConfig = function(callback){
                                 title: "",
                                 query: "",
                                 displayFields: [],
+                                mainObject: "",
                                 detailObject: "",
-                                idField: ""
+                                idField: "",
+                                userMapping: {
+                                    assignUser: "",
+                                    assignRole: ""
+                                },
+                                governFieldMapping:{}
                             };
                             taskConfig.title = myTaskComponent.title;
+                            taskConfig.mainObject = myTaskComponent.SObject.name;
                             taskConfig.detailObject = myTaskComponent.detailSObject ? myTaskComponent.detailSObject.name : myTaskComponent.SObject.name;
                             taskConfig.idField = myTaskComponent.detailSObject && myTaskComponent.ComponentDetails[0].configuration.relativeField ? myTaskComponent.ComponentDetails[0].configuration.relativeField.name : 'Id';
                             taskConfig.query = "Select Id, ", fieldsLength = myTaskComponent.ComponentDetails[0].configuration.fields.length;
                             myTaskComponent.ComponentDetails[0].configuration.fields.forEach((field, index)=>{
                                 if(field.SObjectField.type === 'reference' && field.reference !== undefined){
                                     taskConfig.query += field.SObjectField.relationshipName + '.' + field.reference; 
+                                    if(field.isUserNameField){
+                                        taskConfig.userMapping.assignUser = field.SObjectField.relationshipName + '.' + field.reference;
+                                    }
+                                    if(field.isAssignedRoleField){
+                                        taskConfig.userMapping.assignRole = field.SObjectField.relationshipName + '.' + field.reference;
+                                    }
+                                    if(field.governFieldName !== null){
+                                        taskConfig.governFieldMapping[field.governFieldName] = field.SObjectField.relationshipName + '.' + field.reference;
+                                    }
                                 }
                                 else{
                                     taskConfig.query += field.SObjectField.name;
+                                    if(field.isUserNameField){
+                                        taskConfig.userMapping.assignUser = field.SObjectField.name;
+                                    }
+                                    if(field.isAssignedRoleField){
+                                        taskConfig.userMapping.assignRole = field.SObjectField.name;
+                                    }
+                                    if(field.governFieldName !== null){
+                                        taskConfig.governFieldMapping[field.governFieldName] = field.SObjectField.name;
+                                    }
                                 }
                                 if(index < fieldsLength-1){
                                     taskConfig.query += ", ";
@@ -337,10 +375,17 @@ var getMobileConfig = function(callback){
                                     datachildfield=picklistDetailField.DependentPicklist.childSObjectField.name;
                                     parentValue=picklistDetailField.DependentPicklist.parentfieldvalue;
                                 }
-                                childDependency.push({
-                                    values: picklistDetailField.childfieldvalue.split(","),
-                                    userType:picklistDetailField.userType
-                                })
+                                if(picklistDetailField.userType == "DEFAULT"){
+                                    childDependency.push({
+                                        values: picklistDetailField.childfieldvalue.split(","),
+                                    })
+                                }
+                                else{
+                                    childDependency.push({
+                                        values: picklistDetailField.childfieldvalue.split(","),
+                                        userType:picklistDetailField.userType
+                                    })
+                                }
                                 
                             });
                             if(prvDPID!= -1){
@@ -399,7 +444,7 @@ var getMobileConfig = function(callback){
                                     attributes: ['governingFieldValue'],
                                     include: [{
                                         model: db.SObjectLayoutSection,
-                                        attributes: ['title','readonly','order'],
+                                        attributes: ['id','title','readonly','order'],
                                         required: false,
                                         include: {
                                             model: db.SObjectLayoutField,
@@ -419,7 +464,7 @@ var getMobileConfig = function(callback){
                                         order: ['order']
                                     },{
                                         model: db.SObjectLayoutRelatedList,
-                                        attributes: ['title','requireAddMore','criteria','readonly'],
+                                        attributes: ['id','title','requireAddMore','criteria','readonly'],
                                         required: false,
                                         include: [{
                                             model: db.SObject,

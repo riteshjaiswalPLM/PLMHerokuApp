@@ -51,6 +51,12 @@ module.exports = function(sequelize, DataTypes){
                 else
                     this.getDataValue('btnCriteria');
             }
+        },
+        whereClause: {
+            type: DataTypes.TEXT,
+            defaultValue: function () {
+                return undefined;
+            }
         }
     },{
         classMethods: {
