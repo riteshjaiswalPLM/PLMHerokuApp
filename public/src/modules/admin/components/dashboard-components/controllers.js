@@ -83,8 +83,8 @@ admin.controller('AdminDashboardComponentsListController',[
 ]);
 
 admin.controller('AdminDashboardComponentsEditController',[
-            '$scope','$state','$stateParams','$dialog','$adminLookups','sobjectService','blockUI','genericComponentService',
-    function($scope , $state , $stateParams , $dialog , $adminLookups , sobjectService , blockUI , genericComponentService ){
+            '$scope','$state','$stateParams','$dialog','$adminLookups','sobjectService','blockUI','genericComponentService','mobileLayoutService',
+    function($scope , $state , $stateParams , $dialog , $adminLookups , sobjectService , blockUI , genericComponentService , mobileLayoutService){
         
         $scope.loadComponentDetails = function(){
             if($scope.component.id !== undefined && !$scope.blockUI.saveDashoardComponent.state().blocking){
@@ -98,10 +98,23 @@ admin.controller('AdminDashboardComponentsEditController',[
                             $scope.sObjectFields = angular.copy(response.data.component.SObject.SObjectFields);
                             if($scope.component.detailSObject && $scope.component.SObject){
 	                            angular.forEach($scope.component.SObject.SObjectFields,function(field){
-	                        		if(field.type === 'reference' && field.referenceTo.indexOf($scope.component.detailSObject.name) !== -1){
-	                        			$scope.relativeFields.push(field);
+	                        		if(field.type === 'reference'){
+                                        if(field.referenceTo.indexOf($scope.component.detailSObject.name) !== -1){
+                                            if($scope.forMobile){
+                                            	if(field.forMobile) $scope.relativeFields.push(field);
+                                            }
+                                            else{
+                                                $scope.relativeFields.push(field);
+                                            }
+                                        }
+                                        field.referenceTo.forEach(function(reference){
+                                            if($scope.referenceSObjectNames.indexOf(reference) === -1) $scope.referenceSObjectNames.push(reference);
+                                        });
 	                        		}
 	                        	});
+                            }
+                            if($scope.forMobile){
+                                $scope.loadGoverningFields();
                             }
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
@@ -113,12 +126,112 @@ admin.controller('AdminDashboardComponentsEditController',[
                     });
             } 
         };
+        $scope.loadGoverningFields = function(){
+            var SObject = {
+                id: $scope.component.detailSObject ? $scope.component.detailSObject.id : $scope.component.SObject.id
+            }
+            mobileLayoutService.loadgoverningfields({SObject: SObject})
+                .success(function(response){
+                    if(response.success){
+                        $scope.governingFields = response.data.governingFields;
+                    }
+                    else{
+                        $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function(){
+                    $dialog.alert('Server error occured while loading governing field lists.','Error','pficon pficon-error-circle-o');
+                });
+        };
+        $scope.loadGoverningFieldsForSObject = function(){
+            mobileLayoutService.loadgoverningfields({})
+                .success(function(response){
+                    if(response.success){
+                        $scope.governingFieldsForSObject = response.data.governingFields;
+                    }
+                    else{
+                        $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function(){
+                    $dialog.alert('Server error occured while loading governing field lists.','Error','pficon pficon-error-circle-o');
+                });
+        };
+        $scope.onChangeUserNameField = function(field){
+            if(field.isUserNameField){
+                field.isAssignedRoleField = false;
+                $scope.component.ComponentDetails[0].configuration.fields.forEach(function(_field){
+                    if(field.SObjectField.type === 'reference'){
+                        if(_field.SObjectField.type === 'reference'){
+                            if(field.reference !== _field.reference){
+                                _field.isUserNameField = false;
+                            }
+                        }
+                        else{
+                            if(field.SObjectField.name !== _field.SObjectField.name){
+                                _field.isUserNameField = false;
+                            }
+                        }
+                    }
+                    else{
+                        if(field.SObjectField.name !== _field.SObjectField.name){
+                            _field.isUserNameField = false;
+                        }
+                    }
+                });
+            }
+        };
+        $scope.onChangeAssignedRoleField = function(field){
+            if(field.isAssignedRoleField){
+                field.isUserNameField = false;
+                $scope.component.ComponentDetails[0].configuration.fields.forEach(function(_field){
+                    if(field.SObjectField.type === 'reference'){
+                        if(_field.SObjectField.type === 'reference'){
+                            if(field.reference !== _field.reference){
+                                _field.isAssignedRoleField = false;
+                            }
+                        }
+                        else{
+                            if(field.SObjectField.name !== _field.SObjectField.name){
+                                _field.isAssignedRoleField = false;
+                            }
+                        }
+                    }
+                    else{
+                        if(field.SObjectField.name !== _field.SObjectField.name){
+                            _field.isAssignedRoleField = false;
+                        }
+                    }
+                });
+            }
+        };
         $scope.openSObjectsLookup = function(SObject){
-            $adminLookups.sObject({
+            var whereClause = {
                 criteria: {
                     includeFields: true
                 }
-            },function(sObject){
+            };
+        	if(SObject === 'detailSObject'){
+                if(!$scope.component.SObject){
+                    $dialog.alert('Please select SObject.','Error','pficon pficon-error-circle-o');
+                    return;
+                }
+                var referenceSObjectNames = []
+                $scope.referenceSObjectNames.forEach(function(sObject){
+                    if($scope.forMobile){
+                        $scope.governingFieldsForSObject.forEach(function(governField){
+                            if(governField.SObject.name === sObject && referenceSObjectNames.indexOf(governField.SObject.name) === -1){
+                                referenceSObjectNames.push(governField.SObject.name);
+                            }
+                        });
+                    }
+                    else{
+                        referenceSObjectNames.push(sObject);
+                    }
+                });
+                whereClause.criteria.referenceSObjectNames = referenceSObjectNames;
+        	}
+        	$adminLookups.sObject(whereClause,function(sObject){
                 if(!$scope.component.hasOwnProperty('ComponentDetails')){
                     $scope.component.ComponentDetails = [];
                     if($scope.component.ComponentDetails.length === 0){
@@ -135,29 +248,37 @@ admin.controller('AdminDashboardComponentsEditController',[
                         $scope.component.ComponentDetails[0].configuration.fields = [];
                         $scope.sObjectFields = angular.copy(sObject.SObjectFields);
                         $scope.component.title = ($scope.component.title) ? $scope.component.title : sObject.labelPlural;
-                        var referenceSObjectNames = [];
+                        $scope.referenceSObjectNames = [];
                         sObject.SObjectFields.forEach(function(field){
                         	if(field.type === 'reference'){
                         		field.referenceTo.forEach(function(reference){
-                        			if(referenceSObjectNames.indexOf(reference) === -1){
-                        				referenceSObjectNames.push(reference);
+                        			if($scope.referenceSObjectNames.indexOf(reference) === -1){
+                        				$scope.referenceSObjectNames.push(reference);
                         			}
                         		});
                         	}
                         });
-                        if(referenceSObjectNames.length > 0){                    	
-                        	$scope.loadRefSObject(referenceSObjectNames);
+                        if($scope.referenceSObjectNames.length > 0){                    	
+                        	$scope.loadRefSObject($scope.referenceSObjectNames);
                         }
                     }
                 }
                 else{
                 	$scope.component.detailSObject = sObject;
                 }
+                if($scope.forMobile){
+                    $scope.loadGoverningFields();
+                }
                 $scope.relativeFields = [];
                 if($scope.component.detailSObject && $scope.component.SObject){                	
                 	angular.forEach($scope.component.SObject.SObjectFields,function(field){
                 		if(field.type === 'reference' && field.referenceTo.indexOf($scope.component.detailSObject.name) !== -1){
-                			$scope.relativeFields.push(field);
+                			if($scope.forMobile){
+                                if(field.forMobile) $scope.relativeFields.push(field);
+                            }
+                            else{
+                                $scope.relativeFields.push(field);
+                            }
                 		}
                 	});
                 }
@@ -209,9 +330,45 @@ admin.controller('AdminDashboardComponentsEditController',[
                         });
                     }
                 });
+                if ($scope.component.title == null || $scope.component.title == 'undefined' || $scope.component.title  == ''){
+                    $dialog.alert('Please enter Title');
+                    return;
+                }
                 if(duplicate === true){
                     $dialog.alert('Duplicate field found in reference.','Error','pficon pficon-error-circle-o');
                     return;
+                }
+                if($scope.component.detailSObject && $scope.component.SObject.name !== $scope.component.detailSObject.name && !$scope.component.ComponentDetails[0].configuration.relativeField){
+                    $dialog.alert('Please select relative field.','Error','pficon pficon-error-circle-o');
+                    return;
+                }
+                if($scope.forMobile){
+                    var governFieldAPINameList = {};
+                    var fieldHasMultipleOccurence = false, fieldHasNoOccurence = false;
+                    $scope.governingFields.forEach(function(field){
+                        governFieldAPINameList[field.name] = 0;
+                    });
+                    $scope.component.ComponentDetails[0].configuration.fields.forEach(function(field){
+                        if(field.governFieldName !== null){
+                            governFieldAPINameList[field.governFieldName]++;
+                        }
+                    });
+                    $scope.governingFields.forEach(function(field){
+                        if(governFieldAPINameList[field.name] === 0){
+                            fieldHasNoOccurence = true;
+                        }
+                        else if(governFieldAPINameList[field.name] > 1){
+                            fieldHasMultipleOccurence = true;
+                        }
+                    });
+                    if(fieldHasNoOccurence){
+                        $dialog.alert('Please map all the governing fields.','Error','pficon pficon-error-circle-o');
+                        return;
+                    }
+                    if(fieldHasMultipleOccurence){
+                        $dialog.alert('You can not map same governing field multiple time.','Error','pficon pficon-error-circle-o');
+                        return;
+                    }
                 }
                 var componentToSave = angular.copy($scope.component);
                 componentToSave.sobjectname = componentToSave.SObject.name;
@@ -225,7 +382,7 @@ admin.controller('AdminDashboardComponentsEditController',[
                 // }
                 componentToSave.forMobile = $scope.forMobile;
                 delete componentToSave.SObject;
-                
+
                 $scope.blockUI.saveDashoardComponent.start('Saving component...');
                 genericComponentService.saveComponent(componentToSave)
                     .success(function(response){
@@ -269,8 +426,10 @@ admin.controller('AdminDashboardComponentsEditController',[
             console.log('AdminComponentsEditController loaded!');
             $scope.initBlockUiBlocks();
             $scope.relativeFields = [];
+            $scope.referenceSObjectNames = [];
             $scope.component = $stateParams.component;
             $scope.stateAction = $stateParams.stateAction;
+            if($scope.forMobile) $scope.loadGoverningFieldsForSObject();
             $scope.loadComponentDetails();
         };
         $scope.init();

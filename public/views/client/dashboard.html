@@ -18,14 +18,17 @@
                 <div id="accordion-markup-inner{{container.id}}">
                     <div ng-repeat="component in container.DashboardContainersComponents | orderBy: 'order'" class="panel panel-default" >
                         <div class="panel-heading" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType)">
-                            <a data-toggle="collapse" data-parent="#accordion-markup-inner{{container.id}}" href="#{{'collepseComponent_'+component.id}}">
-                                <h3 class="panel-title">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-markup-inner{{container.id}}" href="#{{'collepseComponent_'+component.id}}">
                                     {{component.label}}
-                                    <!--<a ng-click="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType, true)">
-                                        <span class="pficon pficon-refresh"></span> {{'Refresh' | translate}}
-                                    </a>-->
-                                </h3>
-                            </a>
+                                </a>
+                                <!--<a ng-click="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType, true)">
+                                    <span class="pficon pficon-refresh"></span> {{'Refresh' | translate}}
+                                </a>-->
+                                <span class="pull-right badge-info">
+                                    <button class="btn btn-primary" type="button" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" style="line-height: 0 !important;"> &nbsp; <i class="fa fa-upload"></i> &nbsp; </button>
+                                </span>
+                            </h3>
                         </div>
                         <div class="panel-body panel-collapse collapse {{$index === 0 ? 'in' : ''}}" style="padding:0px;height: auto;overflow: auto;max-height: 300px" id="{{'collepseComponent_'+component.id}}" block-ui="{{component.Component.catagory+component.id+'Block'}}">
                             <table class="table table-striped table-hover table-bordered">

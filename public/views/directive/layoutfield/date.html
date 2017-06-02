@@ -1,4 +1,4 @@
-<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (field.required && (!field.value || field.value === undefined || field.value === ''))}">
+<div ng-if="field.rendered" ng-class="{'ng-invalid-val' : (isFieldRequired(field) && (!field.value || field.value === undefined || field.value === ''))}">
         <div    pf-datepicker 
                 date="field.value"
                 id="{{ field.SObjectField.name + index}}" 

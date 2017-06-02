@@ -163,6 +163,63 @@ client.controller('ClientDashboardController',[
             }
 
         };
+        $scope.exportData = function (configuration, componentType, label) {
+            var payload = {
+                config: configuration,
+                type: componentType
+            };
+
+            $scope.btnExportDis = true;
+            DashboardService.exportData(payload)
+                .success(function (response) {
+                    if (response.success) {
+                        if (response.data != undefined) {
+                            $scope.getFileData(response.data.file, label);
+                        }
+                        else {
+                            $dialog.alert("No records found.");
+                        }
+                    }
+                    else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                    $scope.btnExportDis = false
+                })
+                .error(function () {
+                    $dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
+                    $scope.btnExportDis = false;
+                });
+        };
+        $scope.getFileData = function (file, label) {
+            var req = { file: file };
+            var res = { cache: true, responseType: 'arraybuffer' };
+            DashboardService.getfiledata(req, res)
+                .success(function (response, status, headers, config) {
+                    var objectUrl = URL.createObjectURL(new Blob([response], { type: headers()['content-type'] }));
+                    if (navigator.appVersion.toString().indexOf('.NET') > 0 || navigator.userAgent.toString().indexOf('MSIE') != -1) { // for IE browser
+                        window.navigator.msSaveBlob(new Blob([response], { type: headers()['content-type'] }), label + ".xlsx");
+                    } else { // for other browsers
+                        var a = $("<a style='display: none;'/>");
+                        a.attr("href", objectUrl);
+                        a.attr("download", label + ".xlsx");
+                        $("body").append(a);
+                        a[0].click();
+                        a.remove();
+                    }
+
+                    //Delete file from server
+                    var fileObject = {
+                        file: file
+                    };
+                    DashboardService.deletefile(fileObject)
+                        .success(function () {
+                        })
+                        .error(function () {
+                        });
+                }).error(function () {
+                    $dialog.alert('Server error occured while downloading file.', 'Error', 'pficon pficon-error-circle-o');
+                });
+        };
         $scope.initBlockUiBlocks = function(){
             $scope.blockUI = {
                 ClientDashboardBlockUI: blockUI.instances.get('ClientDashboardBlockUI'),
@@ -176,6 +233,7 @@ client.controller('ClientDashboardController',[
             $scope.searchResult = {};
             $scope.stateCache = $appCache.get($state.current.name)
             $scope.getDashboardComponentMetadata();
+            $scope.btnExportDis = false;
         };
         $scope.init();
     }

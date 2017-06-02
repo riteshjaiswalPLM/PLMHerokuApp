@@ -70,7 +70,6 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                         else if($scope.field.excludeCurrentUser && $scope.field.excludeCurrentUser==true ){
                             if($scope.model[$scope.field.SObjectField.name] === userData['Id']){
                                 $scope.field.labelValue ="";
-                                $scope.field.value=null;
                             }
                         }
                     }
@@ -105,9 +104,9 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                     $scope.$watch(function(scope){
                         return ($scope.model && $scope.model[$scope.field.SObjectField.controllerName]) ? $scope.model[$scope.field.SObjectField.controllerName] : undefined;
                     },function(newValue, oldValue){
-                        if(!($scope.field.fromCriteriaModel == true)){
+                        if(!($scope.field.fromCriteriaModel == true)){
                             $scope.field.SObjectField.picklistValues = [];
-                        } 
+                        }
                         if(newValue !== undefined){
                             var ctrlItem = -1;
                             angular.forEach($scope.field.ControllerSObjectField.picklistValues,function(ctrlValue, ctrlValueItem){
@@ -179,6 +178,17 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                     }
                 );
             }
+
+            $scope.isFieldRequired = function(field){
+                var requiredCriteria;
+                if(field.requiredCriteria === null || field.requiredCriteria === undefined){
+                    requiredCriteria = true;
+                }
+                else{
+                    requiredCriteria = CriteriaHelper.validate(field.requiredCriteria,$scope.model);
+                }
+                return field.required && requiredCriteria;
+            };
 
             $scope.init = function(){
                 if($scope.field){
@@ -661,7 +671,7 @@ ng.directive('criteriaBuilder',['$compile',function($compile){
             $scope.userDataField=[];
             $scope.userMasterObjName="";
             angular.forEach($scope.fields,function(field){
-               field.fromCriteriaModel=true;
+                field.fromCriteriaModel=true;
             });
             $scope.userData();
         };
@@ -1023,7 +1033,8 @@ ng.filter('currencyFilter',
         return function(input){
             var numberFilter = $filter('number');
             var inputVal = (input) 
-                            ? numberFilter(input,2).toString().trim().replace(',','').trim() 
+                            //? numberFilter(input,2).toString().trim().replace(',','').trim() 
+                            ? numberFilter(input,2).toString().trim().split(",").join("").trim()
                             : null;
             return parseFloat(inputVal);
         };

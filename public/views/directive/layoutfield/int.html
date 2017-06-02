@@ -6,7 +6,7 @@
                 ng-model="field.value" 
                 name="{{ field.SObjectField.name + index }}" 
                 ng-if="!field.readonly"
-                ng-required="{{field.required}}"
+                ng-required="isFieldRequired(field)"
                 readonly>
         <span ng-if="field.readonly" ng-bind="field.value | number: 0"></span>
 </div>

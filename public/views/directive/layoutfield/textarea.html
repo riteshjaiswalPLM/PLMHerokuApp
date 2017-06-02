@@ -4,7 +4,7 @@
                 class="form-control"
                 style="resize: none;"
                 rows="3"
-                ng-required="{{field.required}}" 
+                ng-required="isFieldRequired(field)" 
                 ng-if="!field.readonly">
     </textarea>
     <textarea   id="{{ field.SObjectField.name + index}}"
@@ -13,7 +13,7 @@
                 style="resize: none;border: none;margin-top: -3px; -webkit-box-shadow: none;box-shadow: none;"
                 rows="3"
                 readonly="readonly"
-                ng-required="{{field.required}}" 
+                ng-required="isFieldRequired(field)" 
                 ng-if="field.readonly">
     </textarea>
 </div>

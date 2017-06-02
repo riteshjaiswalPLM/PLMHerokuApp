@@ -1,9 +1,18 @@
 'use strict';
 
-client.factory('clientSObjectService',['$http',function($http){
+client.factory('clientSObjectService',['$http','CriteriaHelper',function($http, CriteriaHelper){
     return {
         search: function(queryObject){
             return $http.post('/api/service/sobject/search', queryObject);
+        },
+        export: function (queryObject) {
+            return $http.post('/api/service/sobject/export', queryObject);
+        },
+        getfiledata: function (req, res) {
+            return $http.post('/api/service/sobject/getfiledata', req, res);
+        },
+        deletefile: function (file) {
+            return $http.post('/api/service/sobject/deletefile', file);
         },
         details: function(queryObject){
             return $http.post('/api/service/sobject/details', queryObject);
@@ -17,7 +26,14 @@ client.factory('clientSObjectService',['$http',function($http){
             var message="";
             angular.forEach(sObjectData,function(data, datakey){
                 angular.forEach(fields,function(field, fieldkey){
-                    if(datakey===field.SObjectField.name && field.required){
+                    var requiredCriteria;
+                    if(field.requiredCriteria === null || field.requiredCriteria === undefined){
+                        requiredCriteria = true;
+                    }
+                    else{
+                        requiredCriteria = CriteriaHelper.validate(field.requiredCriteria,queryObject.allSObjectData);
+                    }
+                    if(datakey===field.SObjectField.name && field.required && requiredCriteria){
                         if(field.SObjectField.type==="picklist"){
                             var found=false;
                             angular.forEach(field.SObjectField.picklistValues,function(picklstValue, picklstkey){

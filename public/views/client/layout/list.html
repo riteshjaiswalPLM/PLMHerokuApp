@@ -30,7 +30,11 @@
     <div class="panel panel-info" block-ui="searchResultBlock" >
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-list"></i> {{'Search Results' | translate}} <span class="pull-right badge badge-info">{{ searchResult.length }}</span>
+                <i class="fa fa-list"></i> {{'Search Results' | translate}}
+                <span class="pull-right badge-info">
+                    <button class="btn btn-primary" type="button" ng-click="exportToExcel()" ng-disabled="btnExportDis" style="line-height: 0 !important;"> &nbsp; <i class="fa fa-upload"></i> &nbsp; </button>
+                    <span class="badge badge-info">{{ searchResult.length }}</span>
+                </span>
             </h3>
         </div>
         <div class="panel-body" style="padding:0px;height: auto;overflow: auto;">

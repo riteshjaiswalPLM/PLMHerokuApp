@@ -40,7 +40,7 @@
                                 dnd-allowed-types="['sObjectField']" 
                                 style="min-height: 20px;">
                             <div pf-tooltip title="{{ field.SObjectField.name + ' [ ' + field.SObjectField.type + ' ] ' + ((field.SObjectField.calculated) ? '| formula' : '') }}" data-placement="top" class="form-group" 
-                                ng-repeat="field in fields | filter: {deleted: false }" 
+                                ng-repeat="field in fields | filter: {deleted: false }"
                                 dnd-draggable="field" 
                                 dnd-effect-allowed="move" 
                                 dnd-moved="fields.splice($index,1)" 
@@ -59,7 +59,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">
                                                 <li class="dropdown-header">{{ field.SObjectField.type + ' ' + ((field.SObjectField.calculated) ? '| formula' : '') }}</li>
-                                                <li><a href ng-click="removeAndReorder(fields,field,$index)"><i  style="color: red;" class="fa fa-minus-circle"></i> Remove</a></li>
+                                                <li><a href ng-click="removeFieldsStore(section,field);removeAndReorder(fields,field,$index)"><i  style="color: red;" class="fa fa-minus-circle"></i> Remove</a></li>
                                                 <li><a href ng-click="openFieldPropertiesModal(section,sectionIndex,columnIndex,field,fieldIndex)"><i class="fa fa-wrench"></i> Properties</a></li>
                                                 <li><a href ng-click="openFieldCriteriaModal(field)"><i class="fa fa-cogs"></i> Criteria</a></li>
                                             </ul>

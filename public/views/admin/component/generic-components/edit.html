@@ -109,7 +109,7 @@
                 <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval'">
                     <label class="col-md-5 control-label" for="relativeField">Select Relative Field</label>
                     <div class="input-group col-md-7">
-                        <select id="relativeField" pf-select class="form-control" ng-model="component.ComponentDetails[0].configuration.connectingField">
+                        <select id="relativeField" class="form-control" ng-model="component.ComponentDetails[0].configuration.connectingField">
                             <option value="">-- None --</option>
                             <option ng-repeat="field in connectingFieldMap[component.SObject.name]" value="{{field.name}}" ng-selected="component.ComponentDetails[0].configuration.connectingField === field.name">{{field.label + ' [ ' + field.name + ' ] '}}</option>
                         </select>
@@ -145,7 +145,7 @@
                 <div class="form-group" ng-if="component.catagory == 'MultiLevelApproval' && component.ComponentDetails[0].configuration.allowAddFinalApprover === true">
                     <label class="col-md-5 control-label" for="finalApproverPicklistValue">Select final/approval picklist value</label>
                     <div class="input-group col-md-7">
-                        <select id="finalApproverPicklistValue" pf-select class="form-control" ng-model="component.ComponentDetails[0].configuration.finalApproverPicklistValue">
+                        <select id="finalApproverPicklistValue" class="form-control" ng-model="component.ComponentDetails[0].configuration.finalApproverPicklistValue">
                             <option value="">-- None --</option>
                             <option ng-repeat="picklistValue in component.ComponentDetails[0].configuration.assignedRoleField.picklistValues" value="{{picklistValue.value}}" ng-selected="component.ComponentDetails[0].configuration.finalApproverPicklistValue === picklistValue.value">{{picklistValue.label}}</option>
                         </select>

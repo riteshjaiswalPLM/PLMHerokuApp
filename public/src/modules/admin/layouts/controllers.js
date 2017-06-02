@@ -297,13 +297,19 @@ admin.controller('AdminLayoutsEditController',[
         };
         $scope.returnToList = function(){
             $state.go('admin.layouts.list');  
-        };
+        }; 
+        $scope.removeFieldsStore=function(section,item){
+            if(section.deletedFields==undefined){
+                section.deletedFields=[];
+            }
+            section.deletedFields.push(item);
+        } 
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
                 item.deleted = true;
-                 if(item.id === undefined || item.type !== undefined){
+                   if(item.id === undefined || item.type !== undefined){
                     items.splice(index,1);
-                }
+                   }
                 
                 var itemIndex = 0;
                 angular.forEach(items,function(i, _index){
@@ -465,7 +471,7 @@ admin.controller('AdminLayoutsEditListController',[
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editListLayout.start('Saving ...');
-                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id)
+                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id,$scope.layout.whereClause)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){
@@ -566,9 +572,19 @@ admin.controller('AdminLayoutsEditEditController',[
                 layout: angular.copy($scope.layout),
                 section: angular.copy(section),
                 field: angular.copy(field),
-                refSObjects: angular.copy($scope.refSObjects)
+                refSObjects: angular.copy($scope.refSObjects),
+                fields: $scope.$parent.$parent.layout.SObject.fields
             },function(newField){
                 $scope.layoutSections[sectionIndex].columns[columnIndex][fieldIndex] = newField;
+            });
+        };
+        $scope.openFieldRequiredCriteriaModal = function(field,index){
+        	$adminModals.multiObjectCriteriaModal({
+                title: 'Field Required Criteria | ' + field.label,
+                fields: fields,
+                criteria: $scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria ? $scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria : null
+            },function(criteria){
+            	$scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria = criteria;
             });
         };
         $scope.sectionsDropCallBack = function(event, index, item, external, type){
@@ -652,7 +668,11 @@ admin.controller('AdminLayoutsEditEditController',[
                     field.order = fieldOrder;
                 });
             });
+            
+
             // angular.forEach(section.columns[columnNumber-1],function(field,fieldIndex){
+            //     alert(field.order);
+            //      alert(fieldIndex);
             //     field.order = fieldIndex;
             // });
             

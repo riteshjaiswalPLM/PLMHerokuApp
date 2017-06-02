@@ -17,7 +17,7 @@
                         </tr>
                     </thead>
                     <tbody >
-                        <tr ng-repeat="sObj in sObjects">
+                        <tr ng-repeat="sObj in sObjects | filter:{customSetting: false} | filter: {label: sObjectsFilter} | orderBy: 'label'">
                             <td><strong>{{ sObj.label }}<strong></td>
                             <td>{{ sObj.name }}</td>
                             <td style="text-align: center;">
@@ -34,6 +34,9 @@
                 </div>
             </div>
             <div class="modal-footer" style="margin-top: 0px;">
+                <div class="actions pull-left col-md-6" style="padding-left: 0px;">
+                    <input type="text" class="form-control " ng-model="sObjectsFilter" placeholder="Search ..." style="float: left;" />
+                </div>
                 <button type="button" class="btn btn-default" ng-click="selectAndClose()">None</button>
                 <button type="button" class="btn btn-default" ng-click="close()">Close</button>
             </div>

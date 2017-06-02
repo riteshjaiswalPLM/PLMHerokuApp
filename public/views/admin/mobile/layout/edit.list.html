@@ -1,4 +1,4 @@
-<div ng-controller="AdminLayoutsEditListController">
+<div ng-controller="AdminMobileLayoutsEditListController">
     <div class="page-header page-header-bleed-right">
         <div class="actions pull-right">
             <a href ng-click="returnToList()"><span class="fa fa-chevron-circle-left"></span> Back to layouts</a>&nbsp;&nbsp;
@@ -58,6 +58,7 @@
                             <th>Label</th>
                             <th>Display Label</th>
                             <th>Reference</th>
+                            <th>Hidden</th>
                             <th style="width: 200px;">Type</th>
                             <th style="text-align: center; width: 50px;">Actions</th>
                         </tr>
@@ -70,6 +71,9 @@
                             <td>{{ field.SObjectField.label }}</td>
                             <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
                             <td reference-field-selector field="field" ref-sobjects="refSObjects"> 
+                            </td>
+                            <td ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.hidden">
                             </td>
                             <td>{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</td>
                             <td style="text-align: center;">
@@ -95,5 +99,17 @@
         <!--<div>
             <pre>searchCriteriaFields:</br>{{searchCriteriaFields | json}}</pre>
         </div>-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-cogs"></i> Where Clause
+                </h3>
+            </div>
+            <div style="height: 100px; overflow: auto; -webkit-align-content: center; align-content: center; text-align: center; vertical-align: middle;">
+                <div class="input-group col-md-10">
+                    <textarea ng-model="layout.whereClause" class="form-control" style="resize: none; margin-top: 8px; margin-left:10%; margin-right: 10%;" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -94,6 +94,9 @@
                             <th>Display Label</th>
                             <th>Reference</th>
                             <th></th>
+                            <th ng-if="forMobile">User Field</th>
+                            <th ng-if="forMobile">Assigned Role Field</th>
+                            <th ng-if="forMobile">Governing Field</th>
                             <th>Hidden</th>
                             <th style="width: 200px;">Type</th>
                             <th style="text-align: center; width: 50px;">Actions</th>
@@ -108,6 +111,17 @@
                             <td><input type="text" class="form-control input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" /></td>
                             <td reference-field-selector field="field" ref-sobjects="refSObjects"></td>
                             <td><a pf-tooltip data-placement="left" title="Remove reference" ng-if="field.SObjectField.type === 'reference'" ng-click="field.reference = undefined; field.referenceRemoved = true" href><i class='fa fa-times'></i></a></td>
+                            <td ng-if="forMobile" ng-init="field.isUserNameField = ((field.isUserNameField === undefined) ? false : field.isUserNameField)">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isUserNameField" switch-change="onChangeUserNameField(field);" ng-model="field.isUserNameField">
+                            </td>
+                            <td ng-if="forMobile" ng-init="field.isAssignedRoleField = field.isAssignedRoleField === undefined ? false : field.isAssignedRoleField">
+                                <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isAssignedRoleField" switch-change="onChangeAssignedRoleField(field);" ng-model="field.isAssignedRoleField">
+                            </td>
+                            <td ng-if="forMobile" ng-init="field.governFieldName = field.governFieldName ? field.governFieldName : null">
+                                <select pf-select class="form-control" ng-model="field.governFieldName" ng-options="field.name as field.label for field in governingFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </td>
                             <td ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
                                 <input type="checkbox" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.hidden">
                             </td>

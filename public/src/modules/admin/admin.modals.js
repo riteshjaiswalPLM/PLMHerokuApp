@@ -315,6 +315,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.field.readonly = $scope.section.readonly || $scope.field.readonly;
         $scope.field.required = $scope.field.readonly==true?false:$scope.field.required;
         $scope.refSObjects = data.refSObjects;
+        $scope.fields = data.fields;
         $scope.forMobile = data.layout.type === 'Mobile' ? true : false;
         if($scope.field.SObjectLookup !== undefined && $scope.field.SObjectLookup !== null && $scope.field.SObjectField.type === 'reference'){
             $scope.field.lookup = {
@@ -362,7 +363,15 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 $scope.field = field;
             });
         };
-        
+        $scope.openFieldRequiredCriteriaModal = function(field,index){
+            $adminModals.criteriaModal({
+                title: 'Field Criteria | ' + field.label,
+                fields: $scope.fields,
+                criteria: field.requiredCriteria ? field.requiredCriteria : null
+            },function(criteria){
+                field.requiredCriteria = criteria;
+            });
+        };
         $scope.openLookupsModal = function(){
             $adminLookups.sObjectLookup({
                 criteria: {

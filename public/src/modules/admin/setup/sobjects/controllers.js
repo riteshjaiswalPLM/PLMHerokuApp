@@ -199,13 +199,63 @@ admin.controller('AdminSetupSObjectsManageController',[
                 }
             }
         });
+        document.getElementById("chkSfObjSelectAll").checked = false;
+        document.getElementById("chkLocalObjSelectAll").checked = false;
+        var chkSf = document.getElementsByName("chkSfObjs");
+        for (var i = 0; i < chkSf.length; i++) {
+            chkSf[i].checked = false;
+        }
     };
     $scope.syncOne = function(sObject,callback){
         $timeout(function(){
             callback();
         },1000);
     };
-    $scope.newSObject = function(sObject, callback){
+    $scope.callSfObjSelectAll = function (sAllChkId, chkName) {
+        var sAll = document.getElementById(sAllChkId);
+        var chks = document.getElementsByName(chkName);
+        if (sAll.checked) {
+            for (var i = 0; i < chks.length; i++) {
+                chks[i].checked = true;
+            }
+        }
+        else {
+            for (var i = 0; i < chks.length; i++) {
+                chks[i].checked = false;
+            }
+        }
+    }
+    $scope.newSObjects = function (callback) {
+        var chks = document.getElementsByName("chkSfObjs");
+        var jsonStr = '';
+        var obj;
+        var isSelected = false;
+        for (var i = 0; i < chks.length; i++) {
+            if (chks[i].checked) {
+                isSelected = true;
+                obj = JSON.parse('{"theSfObjects":[' + chks[i].id + ']}');
+                jsonStr = JSON.stringify(obj);
+                obj = JSON.parse(jsonStr).theSfObjects[0];
+                jsonStr = JSON.stringify(obj);
+                $scope.newSObject(jsonStr);
+            }
+        }
+        if (!isSelected) {
+            $dialog.alert("Please select Salesforce sObjects tobe added");
+        }
+        document.getElementById("chkSfObjSelectAll").checked = false;
+        document.getElementById("chkLocalObjSelectAll").checked = false;
+        var chkSf = document.getElementsByName("chkSfObjs");
+        for (var i = 0; i < chkSf.length; i++) {
+            chkSf[i].checked = false;
+        }
+    }
+    $scope.newSObject = function (sObjectArr, callback) {
+        var sObject = sObjectArr;
+        if (angular.isString(sObjectArr)) {
+            sObject = JSON.parse(sObjectArr);
+        }
+
         $scope.blockUI.sObjectActions.start('Synchronizing '+ sObject.label +'...');
         // $scope.blockUI.sObjectActions.start('Saving new SObject...');
         
@@ -243,30 +293,68 @@ admin.controller('AdminSetupSObjectsManageController',[
                 }
             });
     }
-    $scope.deleteSObject = function(sObject){
-        $dialog.confirm({
-            title: 'Confirm delete ?',
-            yes: 'Yes, Delete', no: 'Cancel',
-            message: 'All information related to '+ sObject.label +' will be deleted. \nAre you sure ?',
-            class:'danger'
-        },function(confirm){
-            if(confirm){
-                $scope.blockUI.sObjectActions.start('Deleting '+ sObject.label +'...');
-                sobjectService.deleteSObject(sObject)
-                    .success(function(response){
-                        $scope.blockUI.sObjectActions.stop();
-                        if(response.success){
-                            $scope.loadSObjects();
-                        }else{
-                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                        }
-                    })
-                    .error(function (response) {
-                        $scope.blockUI.sObjectActions.stop();
-                        $dialog.alert('Error occured while deleting sObject.','Error','pficon pficon-error-circle-o');
-                    });
+    $scope.deleteSObjects = function () {
+        var chks = document.getElementsByName("chkLocalsObjs");
+        var jsonStr = '';
+        var obj;
+        var isSelected = false;
+        for (var i = 0; i < chks.length; i++) {
+            if (chks[i].checked) {
+                isSelected = true;
+                break;
             }
-        });
+        }
+        if (!isSelected) {
+            $dialog.alert("Please select Local sObjects tobe deleted");
+            return;
+        }
+
+        if (isSelected) {
+            $dialog.confirm({
+                title: 'Confirm delete ?',
+                yes: 'Yes, Delete', no: 'Cancel',
+                message: 'All information related to selected sObects will be deleted. \nAre you sure ?',
+                class:'danger'
+            },function(confirm){
+                if(confirm){
+                    for (var i = 0; i < chks.length; i++) {
+                        if (chks[i].checked) {
+                            obj = JSON.parse('{"thesObjectGvrnFields":[' + chks[i].id + ']}');
+                            jsonStr = JSON.stringify(obj);
+                            obj = JSON.parse(jsonStr).thesObjectGvrnFields[0];
+                            jsonStr = JSON.stringify(obj);
+                            $scope.deleteSObject(jsonStr);
+                        }
+                    }
+                    document.getElementById("chkSfObjSelectAll").checked = false;
+                    document.getElementById("chkLocalObjSelectAll").checked = false;
+                    var chkSf = document.getElementsByName("chkSfObjs");
+                    for (var i = 0; i < chkSf.length; i++) {
+                        chkSf[i].checked = false;
+                    }
+                }
+            });
+        }
+    }
+    $scope.deleteSObject = function (sObjectArr) {
+        var sObject = sObjectArr;
+        if (angular.isString(sObjectArr)) {
+            sObject = JSON.parse(sObjectArr);
+        }
+        $scope.blockUI.sObjectActions.start('Deleting '+ sObject.label +'...');
+        sobjectService.deleteSObject(sObject)
+            .success(function(response){
+                $scope.blockUI.sObjectActions.stop();
+                if(response.success){
+                    $scope.loadSObjects();
+                }else{
+                    $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                }
+            })
+            .error(function (response) {
+                $scope.blockUI.sObjectActions.stop();
+                $dialog.alert('Error occured while deleting sObject.','Error','pficon pficon-error-circle-o');
+            });
     }
     
     $scope.refreshResults = function(){

@@ -19,7 +19,8 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="fieldRequired">Required ?</label>
                             <div class="col-md-9">
-                                <input type="checkbox" switch-change="onChangeRequired()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldRequired" ng-model="field.required">
+                                <input type="checkbox" switch-change="onChangeRequired()" bs-switch class="bootstrap-switch" switch-size="small" switch-on-text="Yes" switch-off-text="No" switch-readonly="layout.type === 'Details' || section.readonly" id="fieldRequired" ng-model="field.required">&nbsp;
+                                <a href ng-if="field.required === true" pf-tooltip data-placement="left" title="Required Criteria" ng-click="openFieldRequiredCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>
                             </div>
                         </div>
                         <div class="form-group">

@@ -8,7 +8,7 @@
     </div>
 
     <div class="row" block-ui="sObjectActions">
-        <div class="col-xs-6 col-sm-6 col-md-6" block-ui="describeSObjects">
+        <div class="col-xs-6 col-sm-6 col-md-6" block-ui="describeSObjects" style="width: 47%; float: left;" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -25,7 +25,9 @@
                                 <th>Label</th>
                                 <th>Api Name</th>
                                 <th style="text-align: center;">Custom</th>
-                                <th style="text-align: center;">Actions</th>
+                                <th style="text-align: center;">Actions
+                                    <input type="checkbox" id="chkLocalObjGvrnFieldSelectAll" name="chkLocalObjGvrnFieldSelectAll" ng-click="callObjGvrnFieldSelectAll('chkLocalObjGvrnFieldSelectAll','chkLocalsObjGvrnFields')" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody >
@@ -34,7 +36,8 @@
                                 <td>{{ sObj.name }}</td>
                                 <td style="text-align: center;"><i class="{{ (sObj.custom) ? 'fa fa-check' : '' }}"></i></td>
                                 <td style="text-align: center;">
-                                    <button class="btn btn-xs btn-primary" type="button" ng-click="newSObjectFields(sObj)"><i class="fa fa-plus"></i> Add</button>
+                                    <!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObjectFields(sObj)"><i class="fa fa-plus"></i> Add</button>-->
+                                    <input type="checkbox" id="{{ sObj }}" name="chkLocalsObjGvrnFields" />
                                 </td>
                             </tr>
                         </tbody>
@@ -49,7 +52,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6" block-ui="loadSObjects">
+        <div style="width: 6%; height:430px; float: left; padding-left: 1%; padding-right: 1%; padding-top: 190px; padding-bottom: 190px; -webkit-flex-wrap: wrap; flex-wrap: wrap; -webkit-align-content: center; align-content: center; text-align: center; vertical-align: middle;">
+            <button class="btn btn-xs btn-primary" type="button" ng-click="newSObjectFields()" style="margin-bottom: 10%;">&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+            <br/>
+            <button class="btn btn-xs btn-danger" type="button" ng-click="deleteSObjects()" style="margin-top: 10%;">&nbsp;&nbsp;<<&nbsp;&nbsp;</button>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6" block-ui="loadSObjects" style="width: 47%; float: left;" >
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -66,7 +74,9 @@
                                 <th>Label</th>
                                 <th>Api Name</th>
                                 <th style="text-align: center;">Custom</th>
-                                <th style="text-align: center;width: 110px;">Actions</th>
+                                <th style="text-align: center;width: 80px;">Actions
+                                    <input type="checkbox" id="chkMobileObjGvrnFieldSelectAll" name="chkMobileObjGvrnFieldSelectAll" ng-click="callObjGvrnFieldSelectAll('chkMobileObjGvrnFieldSelectAll','chkMobilesObjGvrnFields')" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody >
@@ -76,7 +86,8 @@
                                 <td style="text-align: center;"><i class="{{ (sObj.custom) ? 'fa fa-check' : '' }}"></td>
                                 <td style="text-align: right;">
                                     <!--<button class="btn btn-xs btn-primary" ng-click="syncRefSObjectsFields(sObj)" ng-if="dependentSObjectsFields(sObj).length > 0" type="button"><i class="pficon-refresh"></i></button>-->
-                                    <button class="btn btn-xs btn-danger" type="button" ng-click="deleteSObject(sObj)"><i class="pficon-delete"></i> Delete</button>
+                                    <!--<button class="btn btn-xs btn-danger" type="button" ng-click="deleteSObject(sObj)"><i class="pficon-delete"></i> Delete</button>-->
+                                    <input type="checkbox" id="{{ sObj }}" name="chkMobilesObjGvrnFields" />
                                 </td>
                             </tr>
                         </tbody>

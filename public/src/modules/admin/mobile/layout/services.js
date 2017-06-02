@@ -32,7 +32,7 @@ admin.factory('mobileLayoutService',['$http',function($http){
         changeActive: function(layout){
             return $http.post('/api/admin/sobjectlayout/changeactive',layout);
         },
-        saveListLayout: function(searchCriteriaFields,searchRecordFields,actionButtonCriteria){
+        saveListLayout: function(searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutWhereClause){
             // var fieldsToDelete = [];
             var _index = 0;
             angular.forEach(searchCriteriaFields,function(field,index){
@@ -59,7 +59,8 @@ admin.factory('mobileLayoutService',['$http',function($http){
             var listLayout = {
                 searchCriteriaFields: searchCriteriaFields,
                 searchRecordFields: searchRecordFields,
-                actionButtonCriteria : actionButtonCriteria
+                actionButtonCriteria : actionButtonCriteria,
+                sObjectLayoutWhereClause: sObjectLayoutWhereClause
             };
             return $http.post('/api/admin/sobjectlayout/savelistlayout',listLayout);
         },

@@ -4,7 +4,7 @@
                 ng-model="field.value"
                 is-double 
                 class="form-control" 
-                ng-required="{{field.required}}"
+                ng-required="isFieldRequired(field)"
                 ng-if="!field.readonly"/>
-        <span ng-if="field.readonly" ng-bind="field.value | number: 2"></span>
+        <span ng-if="field.readonly" ng-bind="field.value | number: 3"></span>
 </div>
