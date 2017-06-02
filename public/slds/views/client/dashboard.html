@@ -46,12 +46,33 @@
                         <div id="accordion-markup-inner{{container.id}}" style="margin:20px;margin-bottom:0px ">
                             <div class="slds-form--stacked slds-grow" ng-repeat="component in container.DashboardContainersComponents | orderBy: 'order'"
                                 style="border: 1px solid #d8dde6;margin-bottom: 10px">
-                                <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
+                                <!--<div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
                                     class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
                                     <h3>{{component.label | translate}}</h3>
                                     <span class="pull-right badge-info">
-                                        <button class="btn btn-primary" type="button" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" style="line-height: 0 !important;"> &nbsp; <i class="fa fa-upload"></i> &nbsp; </button>
+                                        <button class="slds-button slds-button--neutral" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" >
+                                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
+                                            </svg>
+                                        </button>
                                     </span>
+                                </div>-->
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-has-flexi-truncate">
+                                        <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
+                                            class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+                                            <h3>{{component.label | translate}}</h3>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                                        <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;border-bottom: 3px solid #d8dde6">
+                                           <button class="slds-button slds-button--brand " style="border-bottom:0px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" >
+                                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" style="margin:0px">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y;" style="margin-bottom:0px">
                                     <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;" id="{{'collepseComponent_'+component.id}}"
