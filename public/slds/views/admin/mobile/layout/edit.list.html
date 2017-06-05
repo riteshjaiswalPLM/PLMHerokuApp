@@ -100,6 +100,7 @@
                         <th scope="col"><div class="slds-truncate" title="Label">Label</div></th>
                         <th scope="col"><div class="slds-truncate" title="Display Label">Display Label</div></th>
                         <th scope="col"><div class="slds-truncate" title="Reference">Reference</div></th>
+                        <th scope="col"><div class="slds-truncate" title="Hidden">Hidden</div></th>
                         <th scope="col" style="width: 200px;"><div class="slds-truncate" title="Type">Type</div></th>
                         <th scope="col" style="text-align: center; width: 50px;"><div class="slds-truncate" title="Actions">Actions</div></th>
                     </tr>
@@ -123,6 +124,9 @@
                             </div>
                         </td>
                         <th scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                        <td ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
+                            <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field)" ng-model="field.hidden" on-text="Yes" off-text="No" />
+                        </td>
                         <td>
                             <div class="slds-truncate" title="{{ field.SObjectField.type }}">
                                 <span class="slds-badge">{{ field.SObjectField.type }}</span>
@@ -143,6 +147,29 @@
                     </tr>
                 </tbody>                    
             </table>
+        </div>
+    </article>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact">
+                        <svg class="slds-icon slds-icon--small slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading--small">Where Clause</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-p-around--x-small slds-border--top" style="margin-bottom: 0;background-color: white;">
+            <div class="slds-button-group slds-align--absolute-center" role="group">
+                <textarea ng-model="layout.whereClause" class="slds-input" style="resize: none; margin-top: 8px; margin-left:10%; margin-right: 10%;" rows="3"></textarea>
+            </div>
         </div>
     </article>
     <!--<article class="slds-card">
