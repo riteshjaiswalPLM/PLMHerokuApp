@@ -40,7 +40,7 @@
     </div>
 
     <div class="slds-grid slds-wrap  " block-ui="sObjectActions">
-        <div class="slds-col slds-size--1-of-2 slds-border" style="border: 1px solid #00A8E1;">
+        <div class="slds-col slds-size--5-of-12 slds-border" style="border: 1px solid #00A8E1;">
                 <div class="slds-grid slds-page-header " style="margin: 0.3rem;padding: 0.3rem; background-color: #00A8E1;">
                     <div class="slds-col slds-align-middle">
                         <p class="slds-text-title--caps slds-line-height--reset ng-binding" style="color:white"><b>Local sObjects</b></p>
@@ -63,7 +63,15 @@
                                 <th style="white-space:normal !important;max-width:250px" title="Label">Label</th>
                                 <th style="white-space:normal !important;max-width:250px !important" title="Api Name">Api Name</th>
                                 <th style="white-space:normal !important;" title="Custom">Custom</th>
-                                <th style="white-space:normal !important;text-align:center;min-width:100px;"  title="Actions">Actions</th>
+                                <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions">Actions
+                                    <span class="slds-checkbox">
+                                        <input type="checkbox" name="chkLocalObjSelectAll" id="chkLocalObjSelectAll" ng-click="callObjSelectAll('chkLocalObjSelectAll','chkLocalsObj')" />
+                                        <label class="slds-checkbox__label" for="chkLocalObjSelectAll" style="width: 0px;height:0px;">
+                                            <span class="slds-checkbox--faux" style="margin:0px"></span>
+                                            <span class="slds-form-element__label"></span>
+                                        </label>
+                                    </span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody >
@@ -77,14 +85,21 @@
                                 </td>
                                 <td data-label="Action" style="white-space:normal !important;" >
                                     <div class="slds-truncate slds-align--absolute-center" >
-                                        <div class="slds-button-group" role="group">
+                                        <!--<div class="slds-button-group" role="group">
                                             <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="newSObject(sObj)" >
                                                 <svg class="slds-button__icon" aria-hidden="true">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
                                                 </svg>
                                                 <span class="slds-assistive-text">Add</span>
                                             </button>
-                                        </div>
+                                        </div>-->
+                                        <span class="slds-checkbox">
+                                            <input type="checkbox" name="chkLocalsObj" id="{{ sObj }}"  />
+                                            <label class="slds-checkbox__label" for="{{ sObj }}" style="width: 0px;height:0px;">
+                                                <span class="slds-checkbox--faux" style="margin:0px"></span>
+                                                <span class="slds-form-element__label"></span>
+                                            </label>
+                                        </span>
                                     </div>
                                     <!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
                                 </td>
@@ -93,7 +108,17 @@
                     </table>
                 </div>
         </div>
-        <div class="slds-col slds-size--1-of-2 slds-border" style="border: 1px solid #3F9C35;" >
+        <div class="slds-col slds-size--0.5-of-12 slds-border" style="min-height: calc(100vh - 242px);-webkit-flex-wrap: wrap; flex-wrap: wrap; -webkit-align-content: center; align-content: center; text-align: center; vertical-align: middle;" >
+            <div style="padding-top:50%;min-height: calc(100vh - 242px);">
+                <div class="slds-form-element">
+                    <button class="slds-button slds-button--brand" type="button" ng-click="newSObjects()" style="margin-bottom: 10%;">&nbsp;&nbsp;>>&nbsp;&nbsp;</button>
+                </div>
+                <div class="slds-form-element">
+                    <button class="slds-button slds-button--neutral" type="button" ng-click="deleteSObjects()" style="margin-top: 10%;">&nbsp;&nbsp;<<&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col slds-size--5-of-12 slds-border" style="border: 1px solid #3F9C35;" >
                 <div class="slds-grid slds-page-header " style="margin: 0.3rem;padding: 0.3rem;background-color: #3F9C35;">
                     <div class="slds-col slds-align-middle">
                         <p class="slds-text-title--caps slds-line-height--reset ng-binding" style="color:white"><b>Mobile sObjects</b></p>
@@ -116,7 +141,15 @@
                                     <th style="white-space:normal !important;max-width:250px" title="Label">Label</th>
                                     <th style="white-space:normal !important;max-width:250px !important" title="Api Name">Api Name</th>
                                     <th style="white-space:normal !important;" title="Custom">Custom</th>
-                                    <th style="white-space:normal !important;text-align:center;min-width:100px;" title="Actions" >Actions</th>
+                                    <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions" >Actions
+                                        <span class="slds-checkbox">
+                                            <input type="checkbox" name="chkMobileObjSelectAll" id="chkMobileObjSelectAll" ng-click="callObjSelectAll('chkMobileObjSelectAll','chkMobilesObj')"  />
+                                            <label class="slds-checkbox__label" for="chkMobileObjSelectAll" style="width: 0px;height:0px;">
+                                                <span class="slds-checkbox--faux" style="margin:0px"></span>
+                                                <span class="slds-form-element__label"></span>
+                                            </label>
+                                        </span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody >
@@ -129,20 +162,28 @@
                                         </svg>
                                     </td>
                                     <td data-label="Action" style="white-space:normal !important;">
-                                        <div class="slds-truncate slds-align--absolute-center" >
-                                            <div class="slds-button-group" role="group">
+                                        <div class="slds-truncate " style="text-align:right">
+                                            <div >
                                                 <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="syncRefSObjects(sObj)" ng-if="lookupSObjects(sObj).length > 0">
                                                     <svg class="slds-button__icon" aria-hidden="true">
                                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
                                                     </svg>
                                                     <span class="slds-assistive-text">Refresh</span>
                                                 </button>
-                                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-click="deleteSObject(sObj)">
+                                                <span class="slds-checkbox">
+                                                    <input type="checkbox" name="chkMobilesObj" id="{{ sObj }}"  />
+                                                    <label class="slds-checkbox__label" for="{{ sObj }}" style="width: 0px;height:0px;">
+                                                        <span class="slds-checkbox--faux" style="margin:0px"></span>
+                                                        <span class="slds-form-element__label"></span>
+                                                    </label>
+                                                </span>
+
+                                                <!--<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-click="deleteSObject(sObj)">
                                                     <svg class="slds-button__icon" aria-hidden="true">
                                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                                     </svg>
                                                     <span class="slds-assistive-text">Delete</span>
-                                                </button>
+                                                </button>-->
                                             </div>
                                         </div>
                                         <!--<button class="btn btn-xs btn-primary" ng-click="syncRefSObjects(sObj)" ng-if="lookupSObjects(sObj).length > 0" type="button"><i class="pficon-refresh"></i></button>
