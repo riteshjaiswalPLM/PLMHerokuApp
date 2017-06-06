@@ -627,6 +627,11 @@ client.controller('ClientSectionLayoutController',[
                 sObjectLayoutSections.pop();
                 angular.forEach($scope.metadata.layoutSections,function(section,sectionIndex){
                     if(!section.isComponent){
+                        section.columns.forEach(function(column){
+                            column.forEach(function(field){
+                                field.rendered = true;
+                            });
+                        });
                         $scope.metadata.layoutSections[sectionIndex] = angular.copy(section);
                     }
                 });
