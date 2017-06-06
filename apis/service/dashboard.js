@@ -147,7 +147,7 @@ dashboardRouter.post('/loadData', function(req, res){
     if(componentType.indexOf('MyTaskContainer') > -1){
         selectFields.push('Id');
         config.fields.forEach((field)=>{
-             if(selectFields.indexOf(field.SObjectField.name) === -1) selectFields.push(field.SObjectField.name);
+            if(selectFields.indexOf(field.SObjectField.name) === -1) selectFields.push(field.SObjectField.name);
             if(field.SObjectField.type === 'reference'){
                 selectFields.push(field.SObjectField.relationshipName + '.' + field.reference)
             }
@@ -187,6 +187,7 @@ dashboardRouter.post('/loadData', function(req, res){
         return res.json({success: true});
     }
 });
+
 dashboardRouter.post('/exportData', function (req, res) {
     var config = req.body.config;
     var componentType = req.body.type;
@@ -220,25 +221,53 @@ dashboardRouter.post('/exportData', function (req, res) {
                     delete record.Id;
 
                     var keys = Object.keys(record);
+                    var innerKeys = [];
+                    var innerJSON;
+                    keys.forEach(function (key) {
+                        if (Object.prototype.toString.call(record[key]) === "[object Object]") {
+                            if (record[key].hasOwnProperty('attributes')) {
+                                delete record[key]['attributes'];
+                            }
+                            if (record[key].hasOwnProperty('Id')) {
+                                delete record[key]['Id'];
+                            }
+
+                            var oneRecAttrKeys = Object.keys(record[key]);
+                            oneRecAttrKeys.forEach(function (oneRecAttrKey) {
+                                if (oneRecAttrKey != "Name") {
+                                    innerKeys.push(oneRecAttrKey);
+                                }
+                            });
+                        }
+                    });
+
+                    var keysTobeDeleted = [];
                     var fieldChanged = false;
                     keys.forEach(function (key) {
                         fieldChanged = false;
                         config.fields.forEach(function (field) {
                             if (key == field.SObjectField.name && !fieldChanged) {
-                                if (field.SObjectField.type === 'reference') {
-                                    if (record[field.SObjectField.relationshipName] == null) {
-                                        record[field.SObjectField.label] = record[field.SObjectField.relationshipName];
+                                if (field.hidden == false) {
+                                    if (field.SObjectField.type === 'reference') {
+                                        if (record[field.SObjectField.relationshipName] == null) {
+                                            record[field.label] = record[field.SObjectField.relationshipName];
+                                            delete record[key];
+                                            delete record[field.SObjectField.relationshipName];
+                                            if (keys.indexOf(field.SObjectField.relationshipName) > -1) {
+                                                keys.splice(keys.indexOf(field.SObjectField.relationshipName), 1);
+                                            }
+                                        } else {
+                                            record[field.label] = record[field.SObjectField.relationshipName][field.reference];
+                                            delete record[key];
+                                            delete record[field.SObjectField.relationshipName][field.reference];
+                                            keysTobeDeleted.push(field.SObjectField.relationshipName);
+                                        }
                                     } else {
-                                        record[field.SObjectField.label] = record[field.SObjectField.relationshipName][field.reference];
+                                        record[field.SObjectField.label] = record[key];
+                                        delete record[key];
                                     }
-
-                                    delete record[key];
-                                    delete record[field.SObjectField.relationshipName];
-                                    if (keys.indexOf(field.SObjectField.relationshipName) > -1) {
-                                        keys.splice(keys.indexOf(field.SObjectField.relationshipName), 1);
-                                    }
-                                } else {
-                                    record[field.SObjectField.label] = record[key];
+                                }
+                                else {
                                     delete record[key];
                                 }
                                 fieldChanged = true;
@@ -246,7 +275,51 @@ dashboardRouter.post('/exportData', function (req, res) {
                         });
 
                         if (fieldChanged == false) {
+                            if (!(Object.prototype.toString.call(record[key]) === "[object Object]" && Object.keys(record[key]).length > 0)) {
+                                delete record[key];
+                            }
+                            else {
+                                if (innerJSON == null || innerJSON == undefined) {
+                                    innerJSON = record[key];
+                                } else {
+                                    var allKeys = Object.keys(record[key]);
+                                    allKeys.forEach(function (allKey) {
+                                        innerJSON[allKey] = record[key][allKey];
+                                    });
+                                }
+                                delete record[key];
+                            }
+                        }
+                    });
+
+                    keysTobeDeleted.forEach(function (key) {
+                        if (record[key] != null && record[key] != undefined) {
                             delete record[key];
+                        }
+                    });
+
+                    innerKeys.forEach(function (key, index) {
+                        fieldChanged = false;
+                        config.fields.forEach(function (field) {
+                            if (field.hidden == false) {
+                                if (key == field.reference && !fieldChanged) {
+                                    if (innerJSON != null && innerJSON != undefined) {
+                                        record[field.label] = innerJSON[key];
+                                        delete innerJSON[key];
+                                        fieldChanged = true;
+                                    }
+                                }
+                            }
+                            else {
+                                delete innerJSON[key];
+                                fieldChanged = true;
+                            }
+                        });
+
+                        if (fieldChanged == false) {
+                            if (innerJSON != null && innerJSON != undefined) {
+                                delete innerJSON[key];
+                            }
                         }
                     });
                 });
