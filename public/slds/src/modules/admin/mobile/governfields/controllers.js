@@ -123,55 +123,65 @@ admin.controller('AdminMobileGovernFieldsManageController',[
                 }
             }
         });
-        document.getElementById("chkLocalObjGvrnFieldSelectAll").checked = false;
-        document.getElementById("chkMobileObjGvrnFieldSelectAll").checked = false;
+        $scope.data.chkLocalObjGvrnFieldSelectAll = false;
+        $scope.data.chkMobileObjGvrnFieldSelectAll = false;
     };
     $scope.syncOne = function(sObject,callback){
         $timeout(function(){
             callback();
         },1000);
     };
-    $scope.callObjGvrnFieldSelectAll = function (sAllChkId, chkName) {
-        var sAll = document.getElementById(sAllChkId);
-        var chks = document.getElementsByName(chkName);
-        if (sAll.checked) {
-            for (var i = 0; i < chks.length; i++) {
-                chks[i].checked = true;
-            }
+    $scope.callObjGvrnFieldSelectAll = function (sAllChkId, sObjGvrnFields) {
+        if (sAllChkId) {
+            angular.forEach(sObjGvrnFields, function (sObjField) {
+                sObjField.isChecked = true;
+            });
         }
         else {
-            for (var i = 0; i < chks.length; i++) {
-                chks[i].checked = false;
-            }
+            angular.forEach(sObjGvrnFields, function (sObjField) {
+                sObjField.isChecked = false;
+            });
         }
+    }
+    $scope.syncObjGvrnFieldCheckbox = function (sAllChkId, sObjGvrnFields) {
+        var isAllChecked = true;
+        angular.forEach(sObjGvrnFields, function (sObjField) {
+            if (!sObjField.isChecked) {
+                isAllChecked = false;
+            }
+        });
+        $scope.data[sAllChkId] = isAllChecked;
     }
     $scope.newSObjectFields = function (callback) {
-        var chks = document.getElementsByName("chkLocalsObjGvrnFields");
-        var jsonStr = '';
-        var obj;
-        var isSelected = false;
-        for (var i = 0; i < chks.length; i++) {
-            if (chks[i].checked) {
-                isSelected = true;
-                obj = JSON.parse('{"thesObjectFields":[' + chks[i].id + ']}');
-                jsonStr = JSON.stringify(obj);
-                obj = JSON.parse(jsonStr).thesObjectFields[0];
-                jsonStr = JSON.stringify(obj);
-                $scope.newSObjectField(jsonStr);
+        var sObjectFieldsToSync = [];
+        angular.forEach($scope.sfdcSObjectFields, function (sfdcSObjField) {
+            if (sfdcSObjField.isChecked) {
+                sObjectFieldsToSync.push(angular.copy(sfdcSObjField));
             }
-        }
-        if (!isSelected) {
+        });
+        if (sObjectFieldsToSync.length <= 0) {
             $dialog.alert("Please select Local sObject Govern fields tobe added");
         }
-        document.getElementById("chkLocalObjGvrnFieldSelectAll").checked = false;
-        document.getElementById("chkMobileObjGvrnFieldSelectAll").checked = false;
-    }
-    $scope.newSObjectField = function (sObjectFieldsArr, callback) {
-        var sObjectFields = sObjectFieldsArr;
-        if (angular.isString(sObjectFieldsArr)) {
-            sObjectFields = JSON.parse(sObjectFieldsArr);
-        }
 
+        $scope.currentSObjectIndex = 0;
+        var stopSync = $scope.$watch(function () {
+            return $scope.currentSObjectIndex;
+        }, function (newValue, oldValue) {
+            if (newValue === 0 || newValue === (oldValue + 1)) {
+                if (newValue === sObjectFieldsToSync.length) {
+                    stopSync();
+                    $scope.loadSObjectFields();
+                } else {
+                    $scope.newSObjectField(sObjectFieldsToSync[newValue], function () {
+                        $scope.currentSObjectIndex++;
+                    });
+                }
+            }
+        });
+        $scope.data.chkLocalObjGvrnFieldSelectAll = false;
+        $scope.data.chkMobileObjGvrnFieldSelectAll = false;
+    }
+    $scope.newSObjectField = function (sObjectFields, callback) {
         $scope.blockUI.sObjectActions.start('Synchronizing '+ sObjectFields.label +'...');
         // $scope.blockUI.sObjectActions.start('Saving new SObject...');
         if($scope.sObjectFields.length >= 5){
@@ -215,50 +225,34 @@ admin.controller('AdminMobileGovernFieldsManageController',[
             });
     }
     $scope.deleteSObjects = function () {
-        var chks = document.getElementsByName("chkMobilesObjGvrnFields");
-        var jsonStr = '';
-        var obj;
-        var isSelected = false;
-        for (var i = 0; i < chks.length; i++) {
-            if (chks[i].checked) {
-                isSelected = true;
-                break;
+        var sObjectFieldsToSync = [];
+        angular.forEach($scope.sObjectFields, function (sObjField) {
+            if (sObjField.isChecked) {
+                sObjectFieldsToSync.push(angular.copy(sObjField));
             }
-        }
-        if (!isSelected) {
+        });
+        if (sObjectFieldsToSync.length <= 0) {
             $dialog.alert("Please select Mobile sObjects Govern fields tobe deleted");
             return;
         }
-
-        if (isSelected) {
+        else {
             $dialog.confirm({
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
                 message: 'All information related to selected sObects fields will be deleted. \nAre you sure ?',
-                class:'danger'
-            },function(confirm){
-                if(confirm){
-                    for (var i = 0; i < chks.length; i++) {
-                        if (chks[i].checked) {
-                            obj = JSON.parse('{"thesObjectGvrnFields":[' + chks[i].id + ']}');
-                            jsonStr = JSON.stringify(obj);
-                            obj = JSON.parse(jsonStr).thesObjectGvrnFields[0];
-                            jsonStr = JSON.stringify(obj);
-                            $scope.deleteSObject(jsonStr);
-                        }
-                    }
-                    document.getElementById("chkLocalObjGvrnFieldSelectAll").checked = false;
-                    document.getElementById("chkMobileObjGvrnFieldSelectAll").checked = false;
+                class: 'danger'
+            }, function (confirm) {
+                if (confirm) {
+                    angular.forEach(sObjectFieldsToSync, function (sObjField) {
+                        $scope.deleteSObject(sObjField);
+                    });
+                    $scope.data.chkLocalObjGvrnFieldSelectAll = false;
+                    $scope.data.chkMobileObjGvrnFieldSelectAll = false;
                 }
             });
         }
     }
-    $scope.deleteSObject = function (sObjectFieldsArr) {
-        var sObjectFields = sObjectFieldsArr;
-        if (angular.isString(sObjectFieldsArr)) {
-            sObjectFields = JSON.parse(sObjectFieldsArr);
-        }
-
+    $scope.deleteSObject = function (sObjectFields) {
         $scope.blockUI.sObjectActions.start('Deleting '+ sObjectFields.label +'...');
         sObjectFields.isGovernField=false;
         mobileGovernFieldsService.updateSObjectFields(sObjectFields)
@@ -297,6 +291,10 @@ admin.controller('AdminMobileGovernFieldsManageController',[
         $scope.initBlockUiBlocks();
         console.log('AdminMobileSObjectsFieldsManageController loaded!');
         $scope.refreshResults();
+        $scope.data = {
+            chkLocalObjGvrnFieldSelectAll: false,
+            chkMobileObjGvrnFieldSelectAll: false
+        };
     };  
     $scope.init();
 }]);

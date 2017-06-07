@@ -201,63 +201,71 @@ admin.controller('AdminSetupSObjectsManageController',[
                 }
             }
         });
-        document.getElementById("chkSfObjSelectAll").checked = false;
-        document.getElementById("chkLocalObjSelectAll").checked = false;
-        var chkSf = document.getElementsByName("chkSfObjs");
-        for (var i = 0; i < chkSf.length; i++) {
-            chkSf[i].checked = false;
-        }
+        $scope.data.chkSfObjSelectAll = false;
+        $scope.data.chkLocalObjSelectAll = false;
+        angular.forEach($scope.sfdcSObjects, function (sObj) {
+            sObj.isChecked = false;
+        });
     };
     $scope.syncOne = function(sObject,callback){
         $timeout(function(){
             callback();
         },1000);
     };
-    $scope.callSfObjSelectAll = function (sAllChkId, chkName) {
-        var sAll = document.getElementById(sAllChkId);
-        var chks = document.getElementsByName(chkName);
-        if (sAll.checked) {
-            for (var i = 0; i < chks.length; i++) {
-                chks[i].checked = true;
-            }
+    $scope.callSfObjSelectAll = function (sAllChkId, sObjects) {
+        if (sAllChkId) {
+            angular.forEach(sObjects, function (sObj) {
+                sObj.isChecked = true;
+            });
         }
         else {
-            for (var i = 0; i < chks.length; i++) {
-                chks[i].checked = false;
-            }
+            angular.forEach(sObjects, function (sObj) {
+                sObj.isChecked = false;
+            });
         }
+    }
+    $scope.syncSfObjCheckbox = function (sAllChkId, sObjects) {
+        var isAllChecked = true;
+        angular.forEach(sObjects, function (sObj) {
+            if (!sObj.isChecked) {
+                isAllChecked = false;
+            }
+        });
+        $scope.data[sAllChkId] = isAllChecked;
     }
     $scope.newSObjects = function (callback) {
-        var chks = document.getElementsByName("chkSfObjs");
-        var jsonStr = '';
-        var obj;
-        var isSelected = false;
-        for (var i = 0; i < chks.length; i++) {
-            if (chks[i].checked) {
-                isSelected = true;
-                obj = JSON.parse('{"theSfObjects":[' + chks[i].id + ']}');
-                jsonStr = JSON.stringify(obj);
-                obj = JSON.parse(jsonStr).theSfObjects[0];
-                jsonStr = JSON.stringify(obj);
-                $scope.newSObject(jsonStr);
+        var sObjectsToSync = [];
+        angular.forEach($scope.sfdcSObjects, function (sfdcSObj) {
+            if (sfdcSObj.isChecked) {
+                sObjectsToSync.push(angular.copy(sfdcSObj));
             }
-        }
-        if (!isSelected) {
+        });
+        if (sObjectsToSync.length <= 0) {
             $dialog.alert("Please select Salesforce sObjects tobe added");
         }
-        document.getElementById("chkSfObjSelectAll").checked = false;
-        document.getElementById("chkLocalObjSelectAll").checked = false;
-        var chkSf = document.getElementsByName("chkSfObjs");
-        for (var i = 0; i < chkSf.length; i++) {
-            chkSf[i].checked = false;
-        }
-    }
-    $scope.newSObject = function (sObjectArr, callback) {
-        var sObject = sObjectArr;
-        if (angular.isString(sObjectArr)) {
-            sObject = JSON.parse(sObjectArr);
-        }
 
+        $scope.currentSObjectIndex = 0;
+        var stopSync = $scope.$watch(function () {
+            return $scope.currentSObjectIndex;
+        }, function (newValue, oldValue) {
+            if (newValue === 0 || newValue === (oldValue + 1)) {
+                if (newValue === sObjectsToSync.length) {
+                    stopSync();
+                    $scope.loadSObjects();
+                } else {
+                    $scope.newSObject(sObjectsToSync[newValue], function () {
+                        $scope.currentSObjectIndex++;
+                    });
+                }
+            }
+        });
+        $scope.data.chkSfObjSelectAll = false;
+        $scope.data.chkLocalObjSelectAll = false;
+        angular.forEach($scope.sfdcSObjects, function (sObj) {
+            sObj.isChecked = false;
+        });
+    }
+    $scope.newSObject = function (sObject, callback) {
         $scope.blockUI.sObjectActions.start('Synchronizing '+ sObject.label +'...');
         // $scope.blockUI.sObjectActions.start('Saving new SObject...');
         
@@ -296,53 +304,37 @@ admin.controller('AdminSetupSObjectsManageController',[
             });
     }
     $scope.deleteSObjects = function () {
-        var chks = document.getElementsByName("chkLocalsObjs");
-        var jsonStr = '';
-        var obj;
-        var isSelected = false;
-        for (var i = 0; i < chks.length; i++) {
-            if (chks[i].checked) {
-                isSelected = true;
-                break;
+        var sObjectsToSync = [];
+        angular.forEach($scope.sObjects, function (sObj) {
+            if (sObj.isChecked) {
+                sObjectsToSync.push(angular.copy(sObj));
             }
-        }
-        if (!isSelected) {
+        });
+        if (sObjectsToSync.length <= 0) {
             $dialog.alert("Please select Local sObjects tobe deleted");
             return;
         }
-
-        if (isSelected) {
+        else {
             $dialog.confirm({
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
                 message: 'All information related to selected sObects will be deleted. \nAre you sure ?',
-                class:'danger'
-            },function(confirm){
-                if(confirm){
-                    for (var i = 0; i < chks.length; i++) {
-                        if (chks[i].checked) {
-                            obj = JSON.parse('{"thesObjectGvrnFields":[' + chks[i].id + ']}');
-                            jsonStr = JSON.stringify(obj);
-                            obj = JSON.parse(jsonStr).thesObjectGvrnFields[0];
-                            jsonStr = JSON.stringify(obj);
-                            $scope.deleteSObject(jsonStr);
-                        }
-                    }
-                    document.getElementById("chkSfObjSelectAll").checked = false;
-                    document.getElementById("chkLocalObjSelectAll").checked = false;
-                    var chkSf = document.getElementsByName("chkSfObjs");
-                    for (var i = 0; i < chkSf.length; i++) {
-                        chkSf[i].checked = false;
-                    }
+                class: 'danger'
+            }, function (confirm) {
+                if (confirm) {
+                    angular.forEach(sObjectsToSync, function (sObj) {
+                        $scope.deleteSObject(sObj);
+                    });
+                    $scope.data.chkSfObjSelectAll = false;
+                    $scope.data.chkLocalObjSelectAll = false;
+                    angular.forEach($scope.sfdcSObjects, function (sObj) {
+                        sObj.isChecked = false;
+                    });
                 }
             });
         }
     }
-    $scope.deleteSObject = function (sObjectArr) {
-        var sObject = sObjectArr;
-        if (angular.isString(sObjectArr)) {
-            sObject = JSON.parse(sObjectArr);
-        }
+    $scope.deleteSObject = function (sObject) {
         $scope.blockUI.sObjectActions.start('Deleting '+ sObject.label +'...');
         sobjectService.deleteSObject(sObject)
             .success(function(response){
@@ -379,6 +371,10 @@ admin.controller('AdminSetupSObjectsManageController',[
         $scope.initBlockUiBlocks();
         console.log('AdminSetupSObjectsManageController loaded!');
         $scope.refreshResults();
+        $scope.data = {
+            chkSfObjSelectAll: false,
+            chkLocalObjSelectAll: false
+        };
     };  
     $scope.init();
 }]);

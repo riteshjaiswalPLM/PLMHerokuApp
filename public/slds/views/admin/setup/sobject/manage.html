@@ -65,7 +65,7 @@
                                 <th style="white-space:normal !important;" title="Custom">Custom</th>
                                 <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions">Actions
                                     <span class="slds-checkbox">
-                                        <input type="checkbox" name="chkSfObjSelectAll" id="chkSfObjSelectAll" ng-click="callSfObjSelectAll('chkSfObjSelectAll','chkSfObjs')" />
+                                        <input type="checkbox" ng-model="data.chkSfObjSelectAll" id="chkSfObjSelectAll" ng-click="callSfObjSelectAll(data.chkSfObjSelectAll, sfdcSObjects)" />
                                         <label class="slds-checkbox__label" for="chkSfObjSelectAll" style="width: 0px;height:0px;">
                                             <span class="slds-checkbox--faux" style="margin:0px"></span>
                                             <span class="slds-form-element__label"></span>
@@ -85,7 +85,7 @@
                                 </td>
                                 <td data-label="Action" style="white-space:normal !important;" >
                                     <div class="slds-truncate slds-align--absolute-center" >
-                                        <div class="slds-button-group" role="group">
+                                        <div class="slds-button-group" role="group" ng-init="sObj.isChecked = false">
                                             <!--<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="newSObject(sObj)" >
                                                 <svg class="slds-button__icon" aria-hidden="true">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
@@ -93,7 +93,7 @@
                                                 <span class="slds-assistive-text">Add</span>
                                             </button>-->
                                             <span class="slds-checkbox">
-                                                <input type="checkbox" name="chkSfObjs" id="{{ sObj }}"  />
+                                                <input type="checkbox" ng-model="sObj.isChecked" id="{{ sObj }}" ng-click="syncSfObjCheckbox('chkSfObjSelectAll', sfdcSObjects)" />
                                                 <label class="slds-checkbox__label" for="{{ sObj }}" style="width: 0px;height:0px;">
                                                     <span class="slds-checkbox--faux" style="margin:0px"></span>
                                                     <span class="slds-form-element__label"></span>
@@ -143,7 +143,7 @@
                                     <th style="white-space:normal !important;" title="Custom">Custom</th>
                                     <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions" >Actions
                                         <span class="slds-checkbox">
-                                            <input type="checkbox" name="chkLocalObjSelectAll" id="chkLocalObjSelectAll" ng-click="callSfObjSelectAll('chkLocalObjSelectAll','chkLocalsObjs')" />
+                                            <input type="checkbox" ng-model="data.chkLocalObjSelectAll" id="chkLocalObjSelectAll" ng-click="callSfObjSelectAll(data.chkLocalObjSelectAll, sObjects)" />
                                             <label class="slds-checkbox__label" for="chkLocalObjSelectAll" style="width: 0px;height:0px;">
                                                 <span class="slds-checkbox--faux" style="margin:0px"></span>
                                                 <span class="slds-form-element__label"></span>
@@ -163,7 +163,7 @@
                                     </td>
                                       <td data-label="Action" style="white-space:normal !important;">
                                         <div class="slds-truncate " style="text-align:right">
-                                            <div >
+                                            <div ng-init="sObj.isChecked = false">
                                                 <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="syncRefSObjects(sObj)" ng-if="lookupSObjects(sObj).length > 0">
                                                     <svg class="slds-button__icon" aria-hidden="true">
                                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
@@ -171,7 +171,7 @@
                                                     <span class="slds-assistive-text">Refresh</span>
                                                 </button>
                                                  <span class="slds-checkbox">
-                                                    <input type="checkbox" name="chkLocalsObjs" id="{{ sObj }}"  />
+                                                    <input type="checkbox" ng-model="sObj.isChecked" id="{{ sObj }}" ng-click="syncSfObjCheckbox('chkLocalObjSelectAll', sObjects)" />
                                                     <label class="slds-checkbox__label" for="{{ sObj }}" style="width: 0px;height:0px;">
                                                         <span class="slds-checkbox--faux" style="margin:0px"></span>
                                                         <span class="slds-form-element__label"></span>
