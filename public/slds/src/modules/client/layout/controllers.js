@@ -13,7 +13,7 @@ client.controller('ClientLayoutController',[
             console.log('ClientLayoutController loaded!');
             $scope.stateParamMetaData = $stateParams.metadata;
             $scope.defaultState = $state.current.name;
-            $scope.icon=$state.current.tab.icon;
+            $scope.icon=$state.current.tab?$state.current.tab.icon:'';
             if($scope.stateParamMetaData !== null && $scope.stateParamMetaData.redirectTo !== undefined){
                 $state.go($scope.stateParamMetaData.redirectTo);
             }
