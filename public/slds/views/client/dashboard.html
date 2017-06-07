@@ -78,7 +78,7 @@
                                     <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;overflow: auto;max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}" id="{{'collepseComponent_'+component.id}}"
                                         block-ui="{{component.Component.catagory+component.id+'Block'}}"  >
                                         <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-                                            style="height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}">
+                                            style="max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}">
                                             <thead>
                                                 <tr class="slds-text-title--caps">
                                                     <th style="font-weight: 600;" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
