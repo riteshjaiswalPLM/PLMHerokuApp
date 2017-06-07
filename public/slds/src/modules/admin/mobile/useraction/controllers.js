@@ -90,7 +90,13 @@ admin.controller('AdminMobileUserActionListController', [
 
         $scope.onSobjectChange = function (sObject) {
             if (sObject != null) {
-                $scope.sObjectFields = $filter('filter')(sObject.SObjectFields, { type: 'picklist', name: 'akritivesm__User_Actions__c' });
+                $scope.sObjectFields = [];
+                var sObjectFieldsData = $filter('filter')(sObject.SObjectFields, { type: 'picklist'});
+                angular.forEach(sObjectFieldsData, function (field) {
+                    if(field.name=='User_Actions__c' || field.name=='akritivesm__User_Actions__c' ){
+                        $scope.sObjectFields.push(field);
+                    }
+                });
             }
             else {
                 $scope.sObjectFields = [];

@@ -13,6 +13,7 @@ client.controller('ClientLayoutController',[
             console.log('ClientLayoutController loaded!');
             $scope.stateParamMetaData = $stateParams.metadata;
             $scope.defaultState = $state.current.name;
+            $scope.icon=$state.current.tab.icon;
             if($scope.stateParamMetaData !== null && $scope.stateParamMetaData.redirectTo !== undefined){
                 $state.go($scope.stateParamMetaData.redirectTo);
             }
@@ -115,6 +116,9 @@ client.controller('ClientListLayoutController',[
                    field.labelValue="";
                }
             });
+            $timeout(function(){
+                $scope.search(1, $scope.pageSize);
+            },100);
         };
         $scope.search = function(page,pageSize){
             $scope.pageSize=pageSize;

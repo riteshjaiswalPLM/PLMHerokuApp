@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="slds-col slds-no-flex slds-grid slds-align-top">
                                         <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;border-bottom: 3px solid #d8dde6">
-                                           <button class="slds-button slds-button--brand " style="border-bottom:0px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" >
+                                           <button title="Export" class="slds-button slds-button--brand " style="border-bottom:0px;padding:0px 10px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" >
                                                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" style="margin:0px">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
                                                 </svg>
@@ -75,13 +75,13 @@
                                     </div>
                                 </div>
                                 <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y;" style="margin-bottom:0px">
-                                    <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;" id="{{'collepseComponent_'+component.id}}"
-                                        block-ui="{{component.Component.catagory+component.id+'Block'}}" >
-                                        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-                                            style="height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'200px':'auto'}}">
+                                    <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;overflow: auto;max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}" id="{{'collepseComponent_'+component.id}}"
+                                        block-ui="{{component.Component.catagory+component.id+'Block'}}"  >
+                                        <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
+                                            style="height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}">
                                             <thead>
                                                 <tr class="slds-text-title--caps">
-                                                    <th class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
+                                                    <th style="font-weight: 600;" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
                                                         ng-click="applyOrderBy(field, component.Component.catagory+'Component'+component.id)"
                                                         ng-repeat="field in component.Component.ComponentDetail.configuration.fields">
                                                         {{ field.label | translate}}
@@ -94,7 +94,13 @@
                                             <tbody>
                                                 <!--<tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" ng-dblclick="doDefaultAction(result, component.Component.ComponentDetail.recordActions)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">-->
                                                 <tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                                                    <td class="{{ 'td-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-repeat="field in component.Component.ComponentDetail.configuration.fields">
+                                                    <td style="max-width:200px;width:{{100/component.Component.ComponentDetail.configuration.fields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-repeat="field in component.Component.ComponentDetail.configuration.fields" 
+                                                        title="{{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
+                                                        === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
+                                                        | number: field.SObjectField.scale) : (field.SObjectField.type ===
+                                                        'date') ? (result[field.SObjectField.name] | date: 'mediumDate')
+                                                        : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
+                                                        | date: 'medium') : result[field.SObjectField.name] }}">
                                                         {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
                                                         === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
                                                         | number: field.SObjectField.scale) : (field.SObjectField.type ===
@@ -102,8 +108,8 @@
                                                         : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
                                                         | date: 'medium') : result[field.SObjectField.name] }}
                                                     </td>
-                                                    <td ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0"
-                                                        class="td-actions">
+                                                    <td   ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0"
+                                                        class="slds-truncate td-actions">
                                                         <div class="slds-truncate slds-align--absolute-center">
                                                             <div class="slds-button-group" role="group">
                                                                 <button title="{{ action.label | translate}}" ng-repeat="action in component.Component.ComponentDetail.recordActions" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"

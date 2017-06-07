@@ -6,7 +6,7 @@
                     <div class="slds-media__figure">
                         <span class="slds-icon_container slds-icon-standard-user">
                             <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
-                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#' + $parent.tab.icon }}"></use>
+                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#' + icon }}"></use>
                             </svg>
                         </span>
                     </div>
@@ -39,7 +39,7 @@
                         style="margin-top: 0.5rem !important;"
                         ng-repeat="field in searchCriteriaFields" 
                     ng-init="field.SObjectField.type= (field.oldType ?field.oldType : field.SObjectField.type) ;field.oldType=field.SObjectField.type;field.SObjectField.type= (field.SObjectField.type === 'picklist' ? 'multipicklist' : field.SObjectField.type)" >
-                        <label class="slds-form-element__label slds-p-right--small" for="{{field.SObjectField.name + $index}}" style="float: none;" translate>
+                        <label class="slds-form-element__label slds-p-right--small"  for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none;" translate>
                             {{ field.label }}
                         </label>
                         <div class="slds-form-element__control">
@@ -93,22 +93,22 @@
                             
             </div>
         </div>
-        <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="min-height: 200px;overflow: auto;margin:.75rem">
-            <table fixed-header-search-table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
+        <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="min-height: 200px;overflow: auto;margin:.75rem;height: {{ (searchResult.length===0) ? 0 : 400 }}px">
+            <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
                 <thead>
                     <tr class="slds-text-title--caps">
                         <th  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
                             ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
                             ng-click="applyOrderBy(field)" 
                             ng-repeat="field in searchResultFields" >
-                            <div class="slds-truncate" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
+                            <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                         </th>
                         <th scope="col"  style="min-width:150px;width:100%" class="th-actions"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                        <td  class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                        <td style="max-width:200px;width:{{100/searchResultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
                             title="{{ (field.SObjectField.type === 'reference') 
                                 ? result[field.SObjectField.relationshipName][field.reference] 
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
@@ -130,7 +130,7 @@
                                         : (field.SObjectField.type === 'datetime')
                                             ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
                                             : result[field.SObjectField.name] }}</div></td>
-                        <td  class="td-actions" >
+                        <td   class="td-actions" >
                             <div class="slds-truncate slds-align--absolute-center" >
                                 <div class="slds-button-group" role="group">
                                     <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
