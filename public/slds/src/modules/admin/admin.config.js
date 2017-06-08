@@ -163,7 +163,12 @@ admin.config(function($stateProvider) {
             controller: "AdminSetupUserMappingController",
             title: "User Mapping"
         })
-        
+        .state("admin.setup.ssoconfig",{
+            templateUrl: "slds/views/admin/setup/ssoconfig/view.html",
+            controller: "AdminSetupSSOConfigController",
+            title: "SSO Configuration"
+        })
+
         // Admin Languages
         .state("admin.languages",{
             templateUrl: "slds/views/admin/language/index.html",

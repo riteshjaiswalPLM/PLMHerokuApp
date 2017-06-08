@@ -73,6 +73,10 @@ module.exports = function(sequelize, DataTypes){
         },
         changereqdate :{
             type:DataTypes.DATE
+        },
+        faderationId:{
+            type: DataTypes.STRING,
+            unique: true
         }
     },{
         classMethods: {

@@ -4,25 +4,18 @@ var CryptoJS = require('crypto-js');
 var authRouter = express.Router();
 var request = require('request');
 
-authRouter.post('/authenticate', function(req, res){
-    console.log(req.body);
-    
-    console.log("accessToken : " + global.sfdc.accessToken);
-    console.log("instanceUrl : " + global.sfdc.instanceUrl);
-    console.log("orgId : " + global.sfdc.orgId);
-    
-    var username = req.body.username;
-    var password = req.body.password;
-    
-    if(!username && !password){
-        return res.json({
+global.authenticate = (credential, where, isSSOLogin, callback)=>{
+    if(isSSOLogin == false && !credential.username && !credential.password){
+        callback && callback({
             success: false,
             message: message.auth.error.USERNAME_PASSWORD_MISSING
         });
     }
     
-    var ciphertext = CryptoJS.MD5(password);
-    password = ciphertext.toString();
+    if(!isSSOLogin){
+        var ciphertext = CryptoJS.MD5(credential.password);
+        credential.password = ciphertext.toString();
+    }
     
     var User = db.User.findOne({
         include: [{
@@ -47,19 +40,14 @@ authRouter.post('/authenticate', function(req, res){
         attributes: {
             exclude: ['createdAt','updatedAt','RoleId','active','LanguageId']
         },
-        where: {
-            username: username,
-            active: true
-        }
+        where: where
     });
     
     User.then(function(user){
-        console.log(JSON.stringify(user));
-        console.log(password);
-        
-        if((user == null || !user) || user.password != password){
-            return res.json({
+        if((user == null || !user) || (isSSOLogin == false && user.password != credential.password)){
+            callback && callback({
                 success: false,
+                isSSOLogin: isSSOLogin,
                 message: message.auth.error.INVALID_CREDENTIALS
             });
         } else {
@@ -89,8 +77,9 @@ authRouter.post('/authenticate', function(req, res){
             if(!clonedUser.isAdmin){
                 if(clonedUser.Locale === undefined && global.salesforce.config.Locale !== undefined) clonedUser.Locale = JSON.parse(JSON.stringify(global.salesforce.config.Locale));
                 if(clonedUser.TimeZone === undefined && global.salesforce.config.TimeZone !== undefined) clonedUser.TimeZone = JSON.parse(JSON.stringify(global.salesforce.config.TimeZone));
-                return res.json({
+                callback && callback({
                     success: true,
+                    isSSOLogin: isSSOLogin,
                     message: message.auth.success.AUTHENTICATION_SUCCESS,
                     token: token,
                     user: clonedUser,
@@ -98,135 +87,27 @@ authRouter.post('/authenticate', function(req, res){
                 });
             }
             else{
-                return res.json({
+                callback && callback({
                     success: true,
+                    isSSOLogin: isSSOLogin,
                     message: message.auth.success.AUTHENTICATION_SUCCESS,
                     token: token,
                     user: clonedUser
                 });
             }
-            
-            /*
-            if(Role !== 'ADMINISTRATOR'){
-                var Tabs = db.Tab.findAll({
-                    include: [{
-                        model: db.SObject,
-                        attributes: {
-                            exclude: ['createdAt','updatedAt']
-                        },
-                        include: [{
-                            model: db.SObjectLayout,
-                            as: 'SObjectLayouts',
-                            attributes: {
-                                exclude: ['createdAt','updatedAt']
-                            },
-                            where: {
-                                created: true,
-                                active: true
-                            }
-                        }]
-                    },{
-                        model: db.Icon,
-                        attributes: {
-                            exclude: ['createdAt','updatedAt']
-                        }
-                    }],
-                    attributes: {
-                        exclude: ['createdAt','updatedAt']
-                    },
-                    order: [
-                        ['order']
-                    ],
-                    where: {
-                        active: true,
-                        created: true
-                    }
-                }).then(function(tabs) {
-                    // clonedUser.tabs = tabs;
-                    clonedUser.states = [];
-                    tabs.forEach(function(tab){
-                        if(tab.SObject.SObjectLayouts !== null && tab.SObject.SObjectLayouts !== undefined){
-                            tab.SObject.SObjectLayouts.forEach(function(layout){
-                                var stateName = 'client.' + tab.SObject.keyPrefix + '.' + layout.type.toLowerCase();
-                                var controllerName = 'Client' + layout.type + 'LayoutController';
-                                if(layout.default){
-                                    clonedUser.states.push({
-                                        name: 'client.' + tab.SObject.keyPrefix,
-                                        controller: 'ClientLayoutController',
-                                        templateUrl: 'views/client/layout/index.html',
-                                        params:{
-                                            data: {
-                                                redirectTo: stateName
-                                            }
-                                        },
-                                        tab:{
-                                            label: tab.label,
-                                            icon: (tab.Icon) ? tab.Icon.class : null,
-                                            keyPrefix: tab.SObject.keyPrefix,
-                                            id: tab.id
-                                        }
-                                    });
-                                }
-                                clonedUser.states.push({
-                                    name: stateName,
-                                    controller: controllerName,
-                                    templateUrl: 'views/client/layout/'+layout.type.toLowerCase()+'.html',
-                                    params:{
-                                        data: {
-                                            sobject: {
-                                                id: tab.SObject.id,
-                                                name: tab.SObject.name
-                                            },  
-                                            layout: {
-                                                id: layout.id,
-                                                type: layout.type
-                                            }
-                                        }
-                                    },
-                                    title: (layout.type === 'List') ? tab.SObject.labelPlural : layout.type + ' ' + tab.SObject.label
-                                });
-                            });
-                        }
-                        
-                        // if(tab.SObjectLayout !== null && tab.SObjectLayout !== undefined){
-                        //     var stateName = 'client.' + tab.SObject.keyPrefix; 
-                        //     var defaultStateName = 'client.' + tab.SObject.keyPrefix + '.' + tab.SObjectLayout.type.toLowerCase();
-                        //     var state = {
-                        //         controller: 'ClientLayoutController',
-                        //         name: stateName,
-                        //         title: tab.label,
-                        //         params:{
-                        //             data: {
-                        //                 redirectTo: defaultStateName
-                        //             }
-                        //         },
-                        //         tab:{
-                        //             label: tab.label,
-                        //             icon: (tab.Icon) ? tab.Icon.class : null,
-                        //             keyPrefix: tab.SObject.keyPrefix,
-                        //             id: tab.id
-                        //         }
-                        //     };
-                        //     clonedUser.states.push(state);
-                        // }
-                    });
-                    return res.json({
-                        success: true,
-                        message: message.auth.success.AUTHENTICATION_SUCCESS,
-                        token: token,
-                        user: clonedUser
-                    });
-                });
-            }else{
-                return res.json({
-                    success: true,
-                    message: message.auth.success.AUTHENTICATION_SUCCESS,
-                    token: token,
-                    user: clonedUser
-                });
-            }
-            */
         }
+    });
+};
+
+authRouter.post('/authenticate', function(req, res){
+    global.authenticate({
+        username: req.body.username, 
+        password: req.body.password
+    },{
+        username: req.body.username,
+        active: true
+    }, req.body.isSSOLogin ? req.body.isSSOLogin : false, function(response){
+        return res.json(response);
     });
 });
 

@@ -368,4 +368,51 @@ setupRouter.post('/usermapping/save', function(req, res){
     });
 });
 
+setupRouter.post('/ssoconfig', function(req, res){
+    return res.json({
+        success: true,
+        data: {
+            ssoConfig: global.ssoconfig.config
+        }
+    });
+});
+
+setupRouter.post('/ssoconfig/getuserobjectfields', function(req, res){
+    var includeFields = ['firstname','lastname','email','username','faderationId'];
+    return res.json({
+        success: true,
+        data: {
+            userTableFields: includeFields
+        }
+    });
+});
+
+setupRouter.post('/ssoconfig/save', function(req, res){
+    var ssoConfig = req.body;
+    db.SSOConfig.update({
+        active: ssoConfig.active,
+        entryPoint: ssoConfig.entryPoint,
+        cert: ssoConfig.cert,
+        signatureAlgorithm: ssoConfig.signatureAlgorithm,
+        authnRequestBinding: ssoConfig.authnRequestBinding,
+        issuer: ssoConfig.issuer,
+        identifierFormat: ssoConfig.identifierFormat,
+        linkCaption: ssoConfig.linkCaption,
+        mappingConfig: ssoConfig.mappingConfig
+    },{
+        where: {
+            id: ssoConfig.id
+        }
+    }).then(function(){
+        global.ssoconfig.refreshSSOConfig(function(updatedConfig){
+            return res.json({
+                success: true,
+                data: {
+                    ssoConfig: updatedConfig
+                }
+            });
+        });
+    });
+});
+
 module.exports = setupRouter;

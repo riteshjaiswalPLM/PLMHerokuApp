@@ -59,10 +59,24 @@
                         </div>
                     </form>
                     </div>
-                    <div class="slds-size--1-of-12  "></div>
-            </div>
-            <div class="slds-size--2-of-12"></div>
+                    <div class="slds-size--1-of-12"></div>
+                </div>
+                <div class="slds-size--2-of-12"></div>
              </div>
+             <br>
+             <div class="slds-size--12-of-12 slds-grid">
+                <div class="slds-size--2-of-12"></div>
+                <div class="slds-size--8-of-12 slds-grid">
+                    <div class="slds-size--1-of-1 slds-text-heading_large" style="text-align: center;">
+                        <span class="help-block slds-text-heading_large" ng-if="$root.SSOConfig().isSSOEnabled">
+                            <a href style="color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickGoToSSO()">
+                                {{$root.SSOConfig().ssoLinkCaption}}
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-size--2-of-12"></div>
+            </div>
         </div>
     </div>
 </div>

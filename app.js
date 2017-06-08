@@ -22,7 +22,11 @@ app.get('/pf',function(req,res){
     res.sendFile('./public/index-pf.html', {root: path.join(__dirname)});
 });
 app.get('/*',function(req,res){
-    //res.sendFile('./public/index.html', {root: path.join(__dirname)});
+    var ssoConfig = {
+        isSSOEnabled: global.ssoconfig.config.active,
+        ssoLinkCaption: global.ssoconfig.config.linkCaption,
+    } 
+    res.cookie('ssoConfig', JSON.stringify(ssoConfig), { maxAge: 900000});
     res.sendFile('./public/index-slds.html', {root: path.join(__dirname)});
 });
 

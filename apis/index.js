@@ -5,6 +5,7 @@ var apiRouter = express.Router();
 apiRouter.use('/salesforce', require('./getorgdetail'));
 // Authentication Apis
 apiRouter.use('/auth', require('./auth'));
+apiRouter.use('/sso', require('./sso'));
 
 // Middleware to protect API Routes
 apiRouter.use(function(req, res, next){

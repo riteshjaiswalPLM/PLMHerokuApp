@@ -73,6 +73,11 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
     $rootScope.updateUserLanguage = function(user){
         $cookies.putObject('user', user);
     };
+
+    $rootScope.SSOConfig = function(){
+        return $cookies.getObject('ssoConfig');
+    };
+
     $rootScope.user = function(){
         return $cookies.getObject('user');
     };

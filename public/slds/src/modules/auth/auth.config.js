@@ -24,5 +24,12 @@ auth.config(function($stateProvider) {
             templateUrl: 'slds/views/app.resetpassword.html',
             controller: 'ResetPasswordController',
             title: 'Reset password'
+        })
+
+        .state('ssologin', {
+            url : '/sso/login/:data',
+            templateUrl: 'slds/views/app.login.sso.html',
+            controller: 'SSOLoginController',
+            title: 'SSO Login'
         });
 });

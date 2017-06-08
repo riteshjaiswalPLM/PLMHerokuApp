@@ -1,0 +1,114 @@
+<div class="slds-col slds-size--1-of-1" block-ui="loadSSOConfiguration">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#user"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">Setup</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ $root.title() }}">{{ $root.title() }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <button ng-if="enableEdit === false" type="submit" class="slds-button slds-button--neutral" ng-click="edit(true)" ng-bind-template="{{ (ssoConfig.SObject) ? 'Edit' : 'Configure' }}">Loading...</button>
+                <button ng-if="enableEdit === true" type="submit" class="slds-button slds-button--neutral" ng-click="edit(false)" class="btn btn-default">Cancel</button>
+                <button ng-if="enableEdit === true" type="submit" class="slds-button slds-button--brand" ng-click="save()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"/>
+                    </svg>
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="height: calc(100vh - 237px);">
+        <article class="slds-card slds-size--1-of-1">
+            <div class=" slds-border--top slds-border--bottom" style="background: white;">
+                <div class="slds-size--1-of-1 slds-panel__section" style="padding-right:20%">
+                    <div class="slds-form--horizontal">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="isSSOActive">Is SSO Active</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.active ? 'YES' : 'NO' }}</label>
+                                <slds-switch ng-if="enableEdit === true" id="isSSOActive" ng-model="ssoConfig.active" on-text="Yes" off-text="No" />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="entryPoint">Entry point</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.entryPoint }}</label>
+                                <input ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" class="slds-input" type="text"  id="entryPoint" placeholder="" tabindex="2" ng-model="ssoConfig.entryPoint">
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="certificate">Certificate</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input slds-truncate">{{ ssoConfig.cert }}</label>
+                                <input ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" class="slds-input" type="text"  id="certificate" placeholder="" tabindex="2" ng-model="ssoConfig.cert">
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="signatureAlgorithm">Signature Algorithm</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.signatureAlgorithm }}</label>
+                                <select ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" id="signatureAlgorithm" class="slds-select slds-p-horizontal--x-small"  ng-model="ssoConfig.signatureAlgorithm" ng-options="algo.value as algo.label for algo in signatureAlgorithm">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="requestMethod">Request Method</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.authnRequestBinding }}</label>
+                                <select ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" id="requestMethod" class="slds-select slds-p-horizontal--x-small" ng-model="ssoConfig.authnRequestBinding" ng-options="method.value as method.label for method in requestMethod">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="issuer">Issuer</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.issuer }}</label>
+                                <input ng-if="enableEdit === true" class="slds-input" ng-disabled="!ssoConfig.active" type="text"  id="issuer" placeholder="" tabindex="2" ng-model="ssoConfig.issuer">
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="identifierFormat">Identifier Format</label>
+                            <div class="slds-form-element__control">
+                                <!--<input ng-if="enableEdit === true" class="slds-input" type="text" ng-disabled="!ssoConfig.active" id="identifierFormat" placeholder="" tabindex="2" ng-model="ssoConfig.identifierFormat">-->
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.identifierFormat }}</label>
+                                <select ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" id="identifierFormat" class="slds-select slds-p-horizontal--x-small" ng-model="ssoConfig.identifierFormat" ng-options="format.label as format.label for format in nameIdFormates">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="caption">Homepage SSO link caption</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.linkCaption }}</label>
+                                <input ng-if="enableEdit === true" class="slds-input" type="text" ng-disabled="!ssoConfig.active" id="caption" placeholder="" tabindex="2" ng-model="ssoConfig.linkCaption">
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">Mapping Configuration</label>
+                            <div class="slds-form-element__control" ng-init="ssoConfig.mappingConfig = ssoConfig.mappingConfig ? ssoConfig.mappingConfig : {}">
+                                <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.mappingConfig.ssoField === undefined && ssoConfig.mappingConfig.userField === undefined ? '' : '{'+ssoConfig.mappingConfig.userField + ' : ' + ssoConfig.mappingConfig.ssoField + '}'}}</label>
+                                <select style="width: 40%;" ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" class="slds-select slds-p-horizontal--x-small" ng-model="ssoConfig.mappingConfig.userField" ng-options="field as field for field in userTableFields">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <input style="width: 40%;" ng-if="enableEdit === true" class="slds-input" type="text" ng-disabled="!ssoConfig.active" id="caption" placeholder="" tabindex="2" ng-model="ssoConfig.mappingConfig.ssoField">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>

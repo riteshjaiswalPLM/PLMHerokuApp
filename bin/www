@@ -20,7 +20,7 @@ require('../locale');
 require('../timzone');
 require('../salesforceconfig');
 require('../sobjectfieldlistconfig');
-
+require('../ssoconfig');
 var hook      = require('../hook');
 
 /**

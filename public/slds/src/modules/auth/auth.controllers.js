@@ -1,8 +1,8 @@
 'use strict';
 
 auth.controller('LoginController',[
-            '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout',
-    function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout){
+            '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout','$window',
+    function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout , $window){
         $scope.login = function(){
             var loggingIn = blockUI.instances.get('loggingIn');
             loggingIn.start('Logging In ...');
@@ -24,6 +24,9 @@ auth.controller('LoginController',[
                     });
             // },3000);  
         };
+        $scope.onClickGoToSSO = function(){
+            $window.location.href = '/api/sso/login';
+        };
         $scope.onClickResetPassLink =function(){
             $state.go('resetpasswordlink');
         };
@@ -32,6 +35,38 @@ auth.controller('LoginController',[
                 username: null,
                 password: null
             }
+        };
+        $scope.init();
+}]);
+
+auth.controller('SSOLoginController',[
+            '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout','$stateParams','$window',
+    function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout , $stateParams , $window ){
+        $scope.login = function(){
+            var loggingIn = blockUI.instances.get('loggingIn');
+            loggingIn.start('Logging In ...');
+            $scope.loggingIn = true;
+                loginService.login($scope.credentials)
+                    .success(function(response){
+                        loggingIn.stop();
+                        $scope.loggingIn = false;
+                        if(!response.success){
+                            Notifications.error(response.message);
+                        }else{
+                            $window.location.href = '/';
+                        }
+                    })
+                    .error(function(response){
+                        loggingIn.stop();
+                        $scope.loggingIn = false;
+                    });
+        };
+        $scope.init = function(){
+            $scope.credentials = {
+                username: $stateParams.data,
+                isSSOLogin: true
+            }
+            $scope.login();
         };
         $scope.init();
 }]);
