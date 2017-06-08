@@ -41,15 +41,15 @@ function($scope , $rootScope , $state , $dialog , ModalService , ssoConfigServic
         $scope.enableEdit = editable;
     };
     $scope.save = function() {
-        if($scope.ssoConfig.entryPoint === undefined ||  $scope.ssoConfig.entryPoint.trim()===""){
+        if($scope.ssoConfig.active === true && ($scope.ssoConfig.entryPoint === null || $scope.ssoConfig.entryPoint === undefined || ($scope.ssoConfig.entryPoint && $scope.ssoConfig.entryPoint.trim()===""))){
             $dialog.alert("Entery point can not be blank.",'Error','pficon pficon-error-circle-o');
             return;
         }
-        if($scope.ssoConfig.cert === undefined ||  $scope.ssoConfig.cert.trim()===""){
+        if($scope.ssoConfig.active === true && ($scope.ssoConfig.cert === null || $scope.ssoConfig.cert === undefined || ($scope.ssoConfig.cert && $scope.ssoConfig.cert.trim()===""))){
             $dialog.alert("Certificate can not be blank.",'Error','pficon pficon-error-circle-o');
             return;
         }
-        if($scope.ssoConfig.linkCaption === undefined ||  $scope.ssoConfig.linkCaption.trim()===""){
+        if($scope.ssoConfig.active === true && ($scope.ssoConfig.linkCaption === null || $scope.ssoConfig.linkCaption === undefined || ($scope.ssoConfig.linkCaption && $scope.ssoConfig.linkCaption.trim()===""))){
             $dialog.alert("Homepage SSO link caption can not be blank.",'Error','pficon pficon-error-circle-o');
             return;
         }
