@@ -105,7 +105,7 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                     $scope.$watch(function(scope){
                         return ($scope.model && $scope.model[$scope.field.SObjectField.controllerName]) ? $scope.model[$scope.field.SObjectField.controllerName] : undefined;
                     },function(newValue, oldValue){
-                        if(!($scope.field.fromCriteriaModel == true)){
+                        if(!($scope.field.criteriaField == true)){
                             $scope.field.SObjectField.picklistValues = [];
                         } 
                         if(newValue !== undefined){
@@ -672,9 +672,6 @@ ng.directive('criteriaBuilder',['$compile',function($compile){
             $scope.stateCache = $appCache.get("criteriaBuilderUserMappingFields");
             $scope.userDataField=[];
             $scope.userMasterObjName="";
-            angular.forEach($scope.fields,function(field){
-               field.fromCriteriaModel=true;
-            });
             $scope.userData();
         };
         $scope.init();
