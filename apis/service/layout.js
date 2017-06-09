@@ -3,6 +3,12 @@ var layoutRouter = express.Router();
 var path = require('path');
 var fs = require('fs');
 
+layoutRouter.post('/sobjectMetadata', function(req, res){
+    var sObject = req.body.sobject;
+    return res.json({
+        sObjectDetails:global.sObjectFieldListConfig.sObjectFieldLabelMapping[sObject.name]
+    });
+});
 layoutRouter.post('/metadata', function(req, res){
     var slds = req.body && req.body.slds === true;
     var layout = req.body.layout;

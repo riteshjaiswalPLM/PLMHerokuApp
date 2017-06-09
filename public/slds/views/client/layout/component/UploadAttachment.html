@@ -1,5 +1,5 @@
 <div ng-if="type === 'create'">
-	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:150px"> 
+	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:100px"> 
 	<div class="slds-grid" >
 		<div class="slds-size--1-of-{{allowAttachPrime ? 2 : 1}}">
 			<form class="slds-form--horizontal slds-p-horizontal--x-small">
@@ -108,7 +108,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="files" data-ng-show="files.length == 0">
+					<div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="files" data-ng-show="files.length == 0">
 							<strong>No attachment found.</strong>
 					</div>
 				</div>
@@ -118,7 +118,7 @@
 	</div>
 </div>
 <div ng-if="type !== 'create'" >
-	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:150px"> 
+	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:100px"> 
 		<div class="slds-col slds-size--1-of-1" >
 			<form class="slds-form--horizontal">
 				<div class="slds-form-element">
@@ -179,7 +179,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
+						<div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
 								<strong>No attachment found.</strong>
 						</div>
 					</div>

@@ -847,26 +847,32 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
         $scope.criteriaValidation = function(section){
             if(section.criteria){
                 
-                var loading = true;
-                var criteriaWatch = $scope.$watch(
-                    function($scope){
-                        return $scope.blockUI.state().blocking;
-                    },
-                    function(value){
-                        if(!value){
-                            criteriaWatch();
-                            var criteriaMatched = CriteriaHelper.validate(section.criteria,$scope.datamodel);
-                            if(criteriaMatched){
-                                $scope.doRender(section);
-                            }else{
-                                 $scope.rendered = false;
-                                // ActionValidationService.unregister($scope.section.id);
-                                criteriaWatch();
-                            }
-                        }
-                        loading = false;
-                    }
-                );
+                // var loading = true;
+                // var criteriaWatch = $scope.$watch(
+                //     function($scope){
+                //         return $scope.blockUI.state().blocking;
+                //     },
+                //     function(value){
+                //         if(!value){
+                //             criteriaWatch();
+                //             var criteriaMatched = CriteriaHelper.validate(section.criteria,$scope.datamodel);
+                //             if(criteriaMatched){
+                //                 $scope.doRender(section);
+                //             }else{
+                //                  $scope.rendered = false;
+                //                 // ActionValidationService.unregister($scope.section.id);
+                //                 criteriaWatch();
+                //             }
+                //         }
+                //         loading = false;
+                //     }
+                // );
+                var criteriaMatched = CriteriaHelper.validate(section.criteria,$scope.datamodel);
+                if(criteriaMatched){
+                    $scope.doRender(section);
+                }else{
+                        $scope.rendered = false;
+                }
             }else{
                 $scope.doRender(section);
             }
@@ -876,10 +882,11 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
             $scope.pageSize = 25;
             $scope.currentPage = 0;
             console.log('LayoutRelatedListController loaded!');
-            $scope.search(1,$scope.pageSize);
-            // $dialog.alert(JSON.stringify($scope.parentSObject));
             $scope.rendered = false;
             $scope.criteriaValidation($scope.model);
+            $scope.search(1,$scope.pageSize);
+            $scope.sObjectMetaData=$scope.$parent.$parent.$parent.$parent.sObjectMetaData;
+            // $dialog.alert(JSON.stringify($scope.parentSObject));
         };
         $scope.init();
     }

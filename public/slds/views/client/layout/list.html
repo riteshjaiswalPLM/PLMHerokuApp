@@ -93,62 +93,63 @@
                             
             </div>
         </div>
-        <div block-ui="searchResultBlock" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="overflow: auto;margin:.75rem;max-height: 400px ">
-            <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height: {{ (searchResult.length===0) ? 0 : 400 }}px;">
-                <thead>
-                    <tr class="slds-text-title--caps">
-                        <th  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
-                            ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
-                            ng-click="applyOrderBy(field)" 
-                            ng-repeat="field in searchResultFields" >
-                            <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
-                        </th>
-                        <th scope="col"  style="min-width:150px;width:100%" class="th-actions"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                        <td style="max-width:200px;width:{{100/searchResultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
-                            title="{{ (field.SObjectField.type === 'reference') 
-                                ? result[field.SObjectField.relationshipName][field.reference] 
-                                : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
-                                    ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
-                                    : (field.SObjectField.type === 'date') 
+        <div block-ui="searchResultBlock">
+            <div  class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="overflow: auto;margin:.75rem;max-height: 400px;min-height:200px ">
+                <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height: {{ (searchResult.length===0) ? 0 : 400 }}px;height:auto">
+                    <thead>
+                        <tr class="slds-text-title--caps">
+                            <th  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
+                                ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
+                                ng-click="applyOrderBy(field)" 
+                                ng-repeat="field in searchResultFields" >
+                                <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
+                            </th>
+                            <th scope="col"  style="min-width:150px;width:100%" class="th-actions"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                            <td style="max-width:200px;width:{{100/searchResultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                                title="{{ (field.SObjectField.type === 'reference') 
+                                    ? result[field.SObjectField.relationshipName][field.reference] 
+                                    : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                        ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                        : (field.SObjectField.type === 'date') 
+                                            ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                            : (field.SObjectField.type === 'datetime')
+                                                ? (result[field.SObjectField.name] | date: 'medium')
+                                                : result[field.SObjectField.name] }}" 
+                                class="{{ 'td-'+field.SObjectField.type }}" 
+                                ng-repeat="field in searchResultFields">
+                                <div class="slds-truncate">
+                                {{ (field.SObjectField.type === 'reference') 
+                                    ? result[field.SObjectField.relationshipName][field.reference] 
+                                    : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                        ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                        : (field.SObjectField.type === 'date') 
                                         ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
-                                        : (field.SObjectField.type === 'datetime')
-                                            ? (result[field.SObjectField.name] | date: 'medium')
-                                            : result[field.SObjectField.name] }}" 
-                             class="{{ 'td-'+field.SObjectField.type }}" 
-                            ng-repeat="field in searchResultFields">
-                            <div class="slds-truncate">
-                            {{ (field.SObjectField.type === 'reference') 
-                                ? result[field.SObjectField.relationshipName][field.reference] 
-                                : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
-                                    ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
-                                    : (field.SObjectField.type === 'date') 
-                                       ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
-                                        : (field.SObjectField.type === 'datetime')
-                                            ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
-                                            : result[field.SObjectField.name] }}</div></td>
-                        <td   class="td-actions" >
-                            <div class="slds-truncate slds-align--absolute-center" >
-                                <div class="slds-button-group" role="group">
-                                    <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
-                                        <svg class="slds-button__icon" aria-hidden="true">
-                                            <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
-                                        </svg>
-                                        <span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>
-                                    </button>
+                                            : (field.SObjectField.type === 'datetime')
+                                                ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
+                                                : result[field.SObjectField.name] }}</div></td>
+                            <td   class="td-actions" >
+                                <div class="slds-truncate slds-align--absolute-center" >
+                                    <div class="slds-button-group" role="group">
+                                        <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>      
-            <div ng-if="searchResult.length === 0">
-                <h1 colspan="{{searchResultFields.length}}" class="slds-blank-slate"  style="padding:5px" translate>No Record found.</h1>
-            </div>
-        </div>  
-        
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>      
+                <div ng-if="searchResult.length === 0">
+                    <h1 colspan="{{searchResultFields.length}}" class="slds-blank-slate"  style="padding:5px" translate>No Record found.</h1>
+                </div>
+            </div>  
+        </div>
     </div>
 </div>

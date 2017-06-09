@@ -1,5 +1,6 @@
 sObjectFieldListConfig ={};
 sObjectFieldListConfig.FieldListMap={};
+sObjectFieldListConfig.sObjectFieldLabelMapping={};
 sObjectFieldListConfig.refreshConfig = ()=>{
     var layoutListMetaArray = [];
     var sObjectDetails = db.SObjectLayout.findAll({
@@ -21,7 +22,7 @@ sObjectFieldListConfig.refreshConfig = ()=>{
         },
         order: ['SObjectId']
     }).then((layouts)=>{
-        console.log(layouts);
+        // console.log(layouts);
         var layoutMetaData, relatedListMetaData;
         async.each(layouts, (layout, callback)=>{
             sObjectFieldListConfig.FieldListMap[layout.SObject.name+'-'+layout.type] = ['Id'];
@@ -137,7 +138,7 @@ sObjectFieldListConfig.refreshConfig = ()=>{
 
             callback();
         },()=>{
-            console.log(layoutListMetaArray);
+            // console.log(layoutListMetaArray);
             async.each(layoutListMetaArray,(layoutListMeta, callback)=>{
                 layoutListMeta.layoutMetaData.then((resultMetaData)=>{
                     if(layoutListMeta.layout.type !== 'List'){
@@ -312,7 +313,7 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                         });
                         if(layoutListMeta.layout.type !== 'Create'){
                             layoutListMeta.relatedListMetaData.then((resultRelatedListMetaData)=>{
-                                console.log(resultRelatedListMetaData);
+                                // console.log(resultRelatedListMetaData);
                                 resultRelatedListMetaData.forEach((resultRelatedListMeta)=>{
                                     if(resultRelatedListMeta.criteria != null){
                                         var fieldList = extractFieldFromCriteria(resultRelatedListMeta.criteria,[]);
@@ -340,7 +341,7 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                 callback();
             },
             ()=>{
-                console.log(sObjectFieldListConfig.FieldListMap);
+                // console.log(sObjectFieldListConfig.FieldListMap);
             });
         });
     });
@@ -386,5 +387,30 @@ var extractFieldFromCriteria = function(criteria, field, sObjectName){
     return field;
 }
 
+sObjectFieldListConfig.refreshFieldLabelMappingConfig = ()=>{
+    var sObjectDetails = db.SObject.findAll({
+        attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        include: {
+            model: db.SObjectField,
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            },
+        },
+    });
+    sObjectDetails.then(function(_sObjectDetails){
+        var sobjectFieldMap={}
+        _sObjectDetails.forEach(function(sObject){
+            var fieldsNameLabelMapping={};
+            sObject.SObjectFields.forEach(function(fields){
+                fieldsNameLabelMapping[fields.name]=fields.label;
+            });
+            sobjectFieldMap[sObject.name]=fieldsNameLabelMapping;
+        });
+        sObjectFieldListConfig.sObjectFieldLabelMapping=sobjectFieldMap;
+    });
+}
 sObjectFieldListConfig.refreshConfig();
+sObjectFieldListConfig.refreshFieldLabelMappingConfig();
 module.exports = sObjectFieldListConfig;

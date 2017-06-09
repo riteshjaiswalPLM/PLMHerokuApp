@@ -523,6 +523,19 @@ client.controller('ClientSectionLayoutController',[
                     });
             }
         };
+        $scope.loadsObjectMetadata = function(){
+            // Load sobject metadata. 
+            if($scope.stateParamMetaData !== undefined ){
+                clientLayoutService.sobjectMetadata($scope.stateParamMetaData)
+                    .success(function(response){
+                        $scope.sObjectMetaData=response.sObjectDetails;
+                    })
+                    .error(function(response){
+                        $dialog.alert('Server error occured while loading layout metadata.','Error','pficon pficon-error-circle-o');
+                    });
+            }
+            
+        };
         $scope.criteriaValidation = function(action,model){
             if(action.criteria === undefined){
                 return true;
@@ -884,6 +897,7 @@ client.controller('ClientSectionLayoutController',[
             $scope.stateParamMetaData = $state.current.params.metadata;
             $scope.stateParamData = $stateParams.data;
             $scope.initBlockUiBlocks();
+            $scope.loadsObjectMetadata();
             $scope.loadLayoutMetadata();
             $scope.baseCtrl = this;
             $scope.dispayEditBtn=false;
