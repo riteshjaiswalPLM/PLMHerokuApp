@@ -1,0 +1,51 @@
+<div class="slds-col slds-size--1-of-1" >
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#standard_objects"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">Unlock Mobile User</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ $root.title() }}">{{ $root.title() }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <button class="slds-button slds-button--brand" ng-click="unlockusers()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#replace"></use>
+                    </svg>
+                    Unlock Mobile Users
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-scrollable--y" block-ui="unlockmobileusers">
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: calc(100vh - 303px);">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col"><div class="slds-truncate" title="Username">Username</div></th>
+                    <th scope="col"><div class="slds-truncate" title="Switch to unlock">Switch To Unlock</div></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in lockedusers">
+                    <td data-label="Username">
+                        <div class="slds-truncate" title="{{ user.username }}" >{{ user.username }}</div>
+                    </td>
+                    <td data-label="Switch to unlock">
+                        <div class="slds-truncate slds-align--absolute-center">
+                            <slds-switch ng-model="user.unlock"  show-texts="false"/>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

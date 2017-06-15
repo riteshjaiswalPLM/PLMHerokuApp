@@ -388,5 +388,10 @@ admin.config(function($stateProvider) {
             },
             title: "Mobile Config Layout"
         })
+        .state("admin.mobile.unlockmobusers", {
+            templateUrl: "slds/views/admin/mobile/unlockmobusers/list.html",
+            controller: "AdminUnlockMobUsersController",
+            title: "Unlock Mobile Users"
+        })
         ;
 });

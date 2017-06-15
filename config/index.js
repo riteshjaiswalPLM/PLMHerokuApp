@@ -2,9 +2,9 @@ if(!global.hasOwnProperty('config')){
     global.config = {
         constant: require('./constant'),
         db: {
-            dbname:     'QA-NODE',
+            dbname:     'lightning_product_qa',
             username:   'postgres',
-            password:   'Satya@123'
+            password:   'admin@123'
         },
         sfdc: {
             username: 'mekyush.jariwala@esmdev.com',
