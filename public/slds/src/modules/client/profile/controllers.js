@@ -5,6 +5,7 @@ client.controller('ClientProfileManageController',[
 
         $scope.init = function(){
             console.log('ClientProfileManageController loaded!');
+            $stateParams.metadata.redirectTo="client.profile";
             $stateParams.data = {}; $state.current.params={};
             $state.current.params.metadata = $stateParams.metadata;
             $scope.template = 'slds/views/client/layout/edit.html';

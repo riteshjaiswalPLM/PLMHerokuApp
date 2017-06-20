@@ -173,7 +173,7 @@ admin.controller('AdminUserManagementUsersEditController',[
          $scope.init = function(){
            
             console.log('AdminUserManagementUsersEditController loaded!');
-            $http.post("/api/admin/user/getUserLayoutDetail", {type:'Edit'})
+            $http.post("/api/admin/user/getUserLayoutDetail",{})
             .success(function(response){
                 if(!response.success){
                     $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
@@ -198,6 +198,7 @@ admin.controller('AdminUserManagementUsersEditController',[
                     angular.extend(thisCtrl, $controller('ClientSectionLayoutController', {$scope: $scope, $stateParams: $stateParams}));
                     $scope.saveOld = $scope.save;
                     $scope.save = function(){
+                        $stateParams.metadata.layout.type="Edit";
                         var rtn=$scope.saveValidation(function(rtn){
                             if(rtn!=undefined && rtn !=null && rtn.message!=undefined && rtn.message!=="" ){
                                 $dialog.alert(rtn.message,'Validation Alert','pficon-warning-triangle-o');
@@ -228,6 +229,7 @@ admin.controller('AdminUserManagementUsersEditController',[
                                 $dialog.alert("Please Enter Valid Email Address",'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }
+                            
                             if(!(username === undefined || username==null || username.trim()=="")){
                                 if($stateParams.metadata.isMobileActive ===true && oldUsername!=username && !$scope.blockUI.layoutBlock.state().blocking){
                                     $scope.blockUI.layoutBlock.start('Checking User Exist...');
