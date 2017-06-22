@@ -1,0 +1,43 @@
+<div>
+    <slds-accordion>
+        <h3 class="slds-align-middle slds-text-heading--small slds-border--top slds-p-horizontal--large slds-p-vertical--x-small slds-accordion-header slds-text-title--caps">
+            <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small" aria-hidden="true">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#apex"></use>
+            </svg>
+            Salesforce User Fields
+        </h3>
+
+        <div class="slds-grid slds-grid--vertical slds-accordion-item" block-ui="sfdcUserFields">
+            <div class="slds-p-left--x-small slds-p-right--x-small slds-p-bottom--x-small slds-p-top--xx-small slds-shrink-none slds-theme--shade slds-has-divider--bottom">
+                <div class="slds-form-element__control">
+                    <div class="slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        <input id="fieldSearch" type="text" class="slds-lookup__search-input slds-input" placeholder="Search..." ng-model="search.key">
+                    </div>
+                </div>
+            </div>
+            <div class="slds-p-horizontal--xx-small slds-scrollable-y">
+                <ul>
+                    <li ng-repeat="field in filteredusersObjectFields = (usersObjectFields | filter: { label: search.key })">
+                        <a dnd-draggable="field" dnd-effect-allowed="copy" draggable="true" dnd-type="'sObjectField'" href="javascript:void(0);"
+                            title="{{field.name}}" class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                            <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
+                                <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-4">
+                                <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#apex"></use>
+                                </svg>
+                            </span>
+                            </div>
+                            <div class="slds-app-launcher__tile-body" dnd-draggable="field" dnd-effect-allowed="copy" draggable="true" dnd-type="'sObjectField'">
+                                <span class="slds-text-link">{{ field.label }}</span>
+                                <small style="float:right">{{ field.type + ' ' + ((field.calculated) ? '| formula' : '') }}</small>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </slds-accordion>
+</div>

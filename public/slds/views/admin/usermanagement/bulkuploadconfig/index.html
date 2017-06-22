@@ -1,0 +1,37 @@
+<div ui-view class="slds-col slds-size--1-of-1">
+    <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header slds-page-header--object-home">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <div class="slds-media slds-no-space slds-grow">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-user">
+                                <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#groups"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-text-title--caps slds-line-height--reset">Users</p>
+                            <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Bulk User Upload Configuration">Bulk User Upload Configuration</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button--brand" ng-click="saveuserconfig()">
+                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid">
+        <div class="slds-col slds-size--3-of-12 slds-scrollable--y slds-border--right" style="height: calc(100vh - 240px);" ng-include="sidePanel"></div>
+        <div class="slds-col slds-size--9-of-12 slds-scrollable--y slds-p-around--small" style="height: calc(100vh - 240px);" ng-include="dropZone"></div>
+    </div>
+</div>

@@ -17,5 +17,6 @@ adminRouter.use('/mobileconfig',require('./mobileconfig'));
 adminRouter.use('/useraction',require('./useraction'));
 adminRouter.use('/orgdetails',require('./orgdetails'));
 adminRouter.use('/dependentpicklist',require('./dependentpicklist'));
+adminRouter.use('/userconfig',require('./userconfig'));
 
 module.exports = adminRouter;

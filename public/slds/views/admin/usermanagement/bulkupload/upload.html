@@ -1,0 +1,79 @@
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#groups"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">Users</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Bulk User Upload">Bulk User Upload</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <button class="slds-button slds-button--neutral">
+                    <input type="checkbox" ng-model="upload.ignoreBlank" id="chkIgnoreBlank" />
+                    Ignore Blank from file
+                </button>
+                <file-field class="slds-button slds-button--brand" callback="uploadUsers" allowed-ext="'.csv'" ng-model="upload.userFile">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload" />
+                    </svg>
+                    Upload
+                </file-field>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="min-height: 200px !important;">
+        <article class="slds-card slds-size--1-of-1">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y" style="min-height: 100px;" block-ui="userUpload">
+                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+                    <h3 class="slds-section__title">User Upload Report</h3>
+                </div>
+                <div class="slds-size--1-of-1 slds-panel__section">
+                    <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y;" style="margin-bottom:0px">
+                        <div style="padding:0px;overflow: auto;max-height:290px">
+                            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
+                                style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
+                                <thead>
+                                    <tr class="slds-text-title--caps">
+                                        <th style="white-space:normal !important;" title="File Name">File Name</th>
+                                        <th style="white-space:normal !important;min-width: 180px !important;" title="Date">Date</th>
+                                        <th style="white-space:normal !important;" title="Uploaded By">Uploaded By</th>
+                                        <th style="white-space:normal !important;" title="Records Inserted">Records Inserted</th>
+                                        <th style="white-space:normal !important;" title="Records Updated">Records Updated</th>
+                                        <th style="white-space:normal !important;" title="Records Failed">Records Failed</th>
+                                        <th style="white-space:normal !important;" title="Invalid Records">Invalid Records</th>
+                                        <th style="white-space:normal !important;" title="Result">Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="field in historyRecords">
+                                        <td>{{ field.filename }}</td>
+                                        <td>
+                                            {{ ($root.formateDateAndDateTime(field.createdAt,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') }}
+                                        </td>
+                                        <td>{{ field.createdby }}</td>
+                                        <td>{{ field.recordsinserted }}</td>
+                                        <td>{{ field.recordsupdated }}</td>
+                                        <td>{{ field.recordsfailed }}</td>
+                                        <td>{{ field.invalidrecords }}</td>
+                                        <td>
+                                            <a ng-if="field.invalidrecords > 0 || field.recordsfailed > 0" href ng-click="getFile(field.id)"><span class="fa fa-chevron-circle-left"></span>View</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>

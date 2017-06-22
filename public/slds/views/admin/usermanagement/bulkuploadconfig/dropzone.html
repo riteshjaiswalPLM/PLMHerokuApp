@@ -1,0 +1,155 @@
+<div class="slds-form--stacked slds-grow slds-scrollable--y" style="min-height: 100px;" block-ui="userFieldsMapping">
+    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+        <h3 class="slds-section__title">User Field Mapping</h3>
+    </div>
+    <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
+        style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
+        <thead>
+            <tr class="slds-text-title--caps">
+                <th style="white-space:normal !important; width: 5%; text-align: center !important;" title="Unique Field">Unique Field</th>
+                <th style="white-space:normal !important; width: 13%; text-align: center !important;" title="Salesforce Field">Salesforce Field</th>
+                <th style="white-space:normal !important; width: 22%; text-align: center !important;" title="CSV File Field">CSV File Field</th>
+                <th style="white-space:normal !important; width: 60%; text-align: center !important;" title="Reference Field / Date Format">Reference Field / Date Format</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
+        <div ng-repeat="fields in section.columns" class="slds-size--1-of-1">
+            <div class="slds-form--horizontal" dnd-list="fields" dnd-drop="fieldsDropCallBack(event, index, item, external, type, section, $index+1)"
+                dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
+                <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
+                    Drop field here
+                </div>
+                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in fields" dnd-draggable="field" dnd-effect-allowed="move"
+                    dnd-moved="fields.splice($index,1)" dnd-type="'sObjectField'">
+                    <span>
+                        <slds-switch ng-model="field.isUsernameField" on-text="true" off-text="false" ng-click="syncUserRadio(field)" style="width: 5%;float: left !important" />
+                    </span>
+                    <label class="slds-form-element__label" style="font-weight: 600;float: none;width: 15%;">
+                        <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{field.error}}"><i class="fa fa-exclamation-circle"></i></a>
+                        {{ field.label }} ({{ field.type }})
+                    </label>
+                    <div class="slds-form-element__control" style="width: 78%;">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-has-flexi-truncate">
+                                <table ng-if="field.type != 'datetime' && field.type != 'date' && field.type != 'reference'">
+                                    <tr>
+                                        <td style="padding-left: 2px; padding-right: 2px;">
+                                            <input type="text" placeholder="CSV field name .." class="slds-input" ng-model="field.fileFieldName" style="width: 30% !important;"
+                                            />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table ng-if="field.type == 'datetime' || field.type == 'date'">
+                                    <tr>
+                                        <td style="padding-left: 2px; padding-right: 2px; width: 30% !important;">
+                                            <input type="text" placeholder="CSV field name .." class="slds-input" ng-model="field.fileFieldName" />
+                                        </td>
+                                        <td style="padding-left: 2px; padding-right: 2px; width: 70% !important;">
+                                            <table>
+                                                <table style="width: 70% !important; float: left;">
+                                                    <tr>
+                                                        <td>
+                                                            <label class="slds-form-element__label" style="font-weight: 600;float: none;width: 20%;">
+                                                                Format
+                                                            </label>
+                                                        </td>
+                                                        <td>
+                                                            <select class="slds-select slds-p-horizontal--x-small" ng-model="field.csvfieldddformat">
+                                                                <option value="-1"></option>
+                                                                <option value="DD">DD</option>
+                                                                <option value="MM">MM</option>
+                                                                <option value="YY">YY</option>
+                                                                <option value="YYYY">YYYY</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="slds-select slds-p-horizontal--x-small" ng-model="field.csvfielddatesep">
+                                                                <option value="-1"></option>
+                                                                <option value="-">-</option>
+                                                                <option value="/">/</option>
+                                                                <option value="space">space</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="slds-select slds-p-horizontal--x-small" ng-model="field.csvfieldmmformat">
+                                                                <option value="-1"></option>
+                                                                <option value="DD">DD</option>
+                                                                <option value="MM">MM</option>
+                                                                <option value="YY">YY</option>
+                                                                <option value="YYYY">YYYY</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="slds-select slds-p-horizontal--x-small" ng-model="field.csvfielddatesep">
+                                                                <option value="-1"></option>
+                                                                <option value="-">-</option>
+                                                                <option value="/">/</option>
+                                                                <option value="space">space</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="slds-select slds-p-horizontal--x-small" ng-model="field.csvfieldyyformat">
+                                                                <option value="-1"></option>
+                                                                <option value="DD">DD</option>
+                                                                <option value="MM">MM</option>
+                                                                <option value="YY">YY</option>
+                                                                <option value="YYYY">YYYY</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table style="width: 25% !important;">
+                                                    <tr>
+                                                        <td ng-if="field.type == 'datetime'">
+                                                            <select class="slds-select slds-p-horizontal--x-small" ng-model="field.csvfieldtimeformat">
+                                                                <option value="-1"></option>
+                                                                <option value="hh:mm a">HH:MM AM/PM</option>
+                                                                <option value="hh:mm:ss a">HH:MM:SS AM/PM</option>
+                                                                <option value="HH:mm">HH:MM</option>
+                                                                <option value="HH:mm:ss">HH:MM:SS</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table ng-if="field.type == 'reference'">
+                                    <tr>
+                                        <td style="padding-left: 2px; padding-right: 2px; width: 30% !important;">
+                                            <input type="text" placeholder="CSV field name .." class="slds-input" ng-model="field.fileFieldName" />
+                                        </td>
+                                        <td style="padding-left: 2px; padding-right: 2px; width: 70% !important;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 20%;">
+                                                        <label class="slds-form-element__label" style="font-weight: 600;float: none;">
+                                                            Reference Field
+                                                        </label>
+                                                    </td>
+                                                    <th scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="slds-col slds-no-flex slds-grid slds-align-middle">
+                                <div class="slds-button-group slds-field-actions" role="group">
+                                    <button ng-click="removeFieldsStore(section,field);removeAndReorder(fields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

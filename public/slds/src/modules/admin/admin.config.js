@@ -114,6 +114,16 @@ admin.config(function($stateProvider) {
             controller: "AdminUserManageUsersLayoutController",
             title: "Manage User Layout"
         })
+        .state("admin.usermanagement.bulkuploadconfig",{
+            templateUrl: "slds/views/admin/usermanagement/bulkuploadconfig/index.html",
+            controller: "AdminUserManageBulkUploadConfigController",
+            title: "Bulk User Upload Config"
+        })
+        .state("admin.usermanagement.bulkupload",{
+            templateUrl: "slds/views/admin/usermanagement/bulkupload/upload.html",
+            controller: "AdminUserManageBulkUploadController",
+            title: "Bulk User Upload"
+        })
         .state("admin.usermanagement.roles",{
             templateUrl: "slds/views/admin/usermanagement/roles/index.html",
             controller: "AdminUserManagementRolesController",
