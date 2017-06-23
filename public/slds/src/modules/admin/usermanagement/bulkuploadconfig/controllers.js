@@ -279,7 +279,7 @@ admin.controller('AdminUserManageBulkUploadConfigController', [
 
             if (isValid && configs.length > 0) {
                 if (!isUsernameFieldConfigured) {
-                    $dialog.alert("Please select your Unique field.");
+                    $dialog.alert("Please select Unique field.");
                 }
                 else {
                     if (!$scope.blockUI.userFieldsMapping.state().blocking && $scope.section.columns[0].length > 0) {
