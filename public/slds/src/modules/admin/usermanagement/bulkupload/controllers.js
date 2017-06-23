@@ -26,23 +26,30 @@ admin.controller('AdminUserManageBulkUploadController', [
             var lines = csv.replace(/\"/g, "").replace(/\r/g, "").split("\n");
             var result = [];
             var headers = lines[0].split(",");
-            for (var i = 1; i < lines.length - 1; i++) {
+            for (var i = 1; i < lines.length; i++) {
                 var obj = {};
                 var currentline = lines[i].split(",");
                 for (var j = 0; j < headers.length; j++) {
-                    if (currentline[j] === "null") {
-                        obj[headers[j]] = null;
-                    }
-                    // else if (currentline[j] === "") {
-                    //     if (!ignoreBlank) {
-                    //         obj[headers[j]] = "";
-                    //     }
-                    // }
-                    else {
-                        obj[headers[j]] = currentline[j];
+                    if (currentline[j] === undefined) {
+                        currentline[j] = "";
                     }
                 }
-                result.push(obj);
+                if (currentline.length > 0) {
+                    for (var j = 0; j < headers.length; j++) {
+                        if (currentline[j] === "null") {
+                            obj[headers[j]] = null;
+                        }
+                        // else if (currentline[j] === "") {
+                        //     if (!ignoreBlank) {
+                        //         obj[headers[j]] = "";
+                        //     }
+                        // }
+                        else {
+                            obj[headers[j]] = currentline[j];
+                        }
+                    }
+                    result.push(obj);
+                }
             }
             return result;
         };
