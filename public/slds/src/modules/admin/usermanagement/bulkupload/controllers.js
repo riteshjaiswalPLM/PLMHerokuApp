@@ -25,30 +25,32 @@ admin.controller('AdminUserManageBulkUploadController', [
         $scope.csvToJSON = function (csv) {
             var lines = csv.replace(/\"/g, "").replace(/\r/g, "").split("\n");
             var result = [];
-            var headers = lines[0].split(",");
-            for (var i = 1; i < lines.length; i++) {
-                var obj = {};
-                var currentline = lines[i].split(",");
-                for (var j = 0; j < headers.length; j++) {
-                    if (currentline[j] === undefined) {
-                        currentline[j] = "";
-                    }
-                }
-                if (currentline.length > 0) {
+            if (lines.length > 1) {
+                var headers = lines[0].split(",");
+                for (var i = 1; i < lines.length; i++) {
+                    var obj = {};
+                    var currentline = lines[i].split(",");
                     for (var j = 0; j < headers.length; j++) {
-                        if (currentline[j] === "null") {
-                            obj[headers[j]] = null;
-                        }
-                        // else if (currentline[j] === "") {
-                        //     if (!ignoreBlank) {
-                        //         obj[headers[j]] = "";
-                        //     }
-                        // }
-                        else {
-                            obj[headers[j]] = currentline[j];
+                        if (currentline[j] === undefined) {
+                            currentline[j] = "";
                         }
                     }
-                    result.push(obj);
+                    if (currentline.length > 0) {
+                        for (var j = 0; j < headers.length; j++) {
+                            if (currentline[j] === "null") {
+                                obj[headers[j]] = null;
+                            }
+                            // else if (currentline[j] === "") {
+                            //     if (!ignoreBlank) {
+                            //         obj[headers[j]] = "";
+                            //     }
+                            // }
+                            else {
+                                obj[headers[j]] = currentline[j];
+                            }
+                        }
+                        result.push(obj);
+                    }
                 }
             }
             return result;
@@ -61,26 +63,34 @@ admin.controller('AdminUserManageBulkUploadController', [
             var file = $scope.upload.userFile;
             $scope.upload.userFile = {};
 
-            $scope.blockUI.userUpload.start('Uploading ...');
+            $scope.blockUI.userUpload.start('Reading file ...');
             $scope.upload.userFile = $scope.csvToJSON(file);
-            $scope.upload.username = $rootScope.user().username;
+            if ($scope.upload.userFile.length > 0) {
+                $scope.blockUI.userUpload.stop();
+                $scope.blockUI.userUpload.start('Uploading ...');
+                $scope.upload.username = $rootScope.user().username;
 
-            userUploadService.uploadUsers($scope.upload)
-                .success(function (response) {
-                    $scope.blockUI.userUpload.stop();
-                    $scope.upload.userFile = undefined;
-                    if (response.success) {
-                        $dialog.alert(response.message);
-                        $scope.getUploadHistory();
-                    }
-                    else {
-                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                    }
-                })
-                .error(function (response) {
-                    $scope.blockUI.userUpload.stop();
-                    $dialog.alert('Error occured while uploading users.', 'Error', 'pficon pficon-error-circle-o');
-                });
+                userUploadService.uploadUsers($scope.upload)
+                    .success(function (response) {
+                        $scope.blockUI.userUpload.stop();
+                        $scope.upload.userFile = undefined;
+                        if (response.success) {
+                            $dialog.alert(response.message);
+                            $scope.getUploadHistory();
+                        }
+                        else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $scope.blockUI.userUpload.stop();
+                        $dialog.alert('Error occured while uploading users.', 'Error', 'pficon pficon-error-circle-o');
+                    });
+            }
+            else {
+                $scope.blockUI.userUpload.stop();
+                $dialog.alert("No records found in file.");
+            }
         };
 
         $scope.getFile = function (id) {

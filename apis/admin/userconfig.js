@@ -440,12 +440,17 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
 
                         var usernameexistinMobile = false;
                         var checkUsernameexistinMobile = function (username, callback) {
-
                             if (global.UserMapping.isMobileActive) {
-                                var baseURL = process.env.MOBILE_AUTH_INSTANCE_URL || 'https://esm-mob-auth-v3.herokuapp.com';
+                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000";
+                                instanceurl = instanceurl + '/api/admin/user/checkusernameexist/';
+                                console.log("URL: " + instanceurl);
+
                                 request({
-                                    url: baseURL + '/api/mobusers/check-uniqueness/',
+                                    url: instanceurl,
                                     method: 'Post',
+                                    headers: {
+                                        [config.constant.X_ACCESS_TOKEN_HEADER]: req.headers[config.constant.X_ACCESS_TOKEN_HEADER]
+                                    },
                                     json: {
                                         username: username
                                     }
@@ -455,7 +460,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                         callback();
                                     }
                                     else {
-                                        if (response.statusCode === 500) {
+                                        if (response.body.success) {
                                             usernameexistinMobile = true;
                                             callback();
                                         }
