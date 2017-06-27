@@ -135,6 +135,18 @@ userconfigRouter.post('/saveuserconfig', function (req, res) {
                 referenceFieldName: fieldsmapping.reference
             });
         }
+        else if (fieldsmapping.type == 'string') {
+            recordsToInsert.push({
+                sfFieldName: fieldsmapping.name,
+                label: fieldsmapping.label,
+                //fileFieldName: (fieldsmapping.fileFieldName) ? fieldsmapping.fileFieldName : fieldsmapping.name,
+                fileFieldName: fieldsmapping.fileFieldName,
+                datatype: fieldsmapping.type,
+                stringLength: fieldsmapping.length,
+                required: !fieldsmapping.nillable,
+                isUsernameField: fieldsmapping.isUsernameField
+            });
+        }
         else {
             recordsToInsert.push({
                 sfFieldName: fieldsmapping.name,
@@ -342,12 +354,12 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                     sfdcRecord.invalidReason = sfdcRecord.invalidReason + " Invalid value provided for " + key + ". Expected value type '" + config.datatype + "'.";
                                                 }
                                             }
-                                            // else if (config.datatype == "string" || config.datatype == "textarea") {
-                                            //     if (!validator.isAlphanumeric(record[key])) {
-                                            //         sfdcRecord.valid = false;
-                                            //         sfdcRecord.invalidReason = sfdcRecord.invalidReason + " Invalid value provided for " + key + ". Expected value type '" + config.datatype + "'.";
-                                            //     }
-                                            // }
+                                            else if (config.datatype == "string") {
+                                                if (record[key].length > config.stringLength) {
+                                                    sfdcRecord.valid = false;
+                                                    sfdcRecord.invalidReason = sfdcRecord.invalidReason + " data value too large for " + key + ". (max length=" + config.stringLength + ")";
+                                                }
+                                            }
                                             else if (config.datatype == "url") {
                                                 if (!validator.isURL(record[key])) {
                                                     sfdcRecord.valid = false;
@@ -517,7 +529,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                                 if (err || !ret.success) {
                                                                     totalFail = totalFail + 1;
                                                                     record.rowdata = rowData;
-                                                                    record.rowdata.Result = "Failed to Create";
+                                                                    record.rowdata.Result = "Failed to Create: " + err.message;
                                                                     resultJSON.push(record.rowdata);
                                                                 }
                                                                 else {
@@ -547,7 +559,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                                 if (err || !ret.success) {
                                                                     totalFail = totalFail + 1;
                                                                     record.rowdata = rowData;
-                                                                    record.rowdata.Result = "Failed to Update";
+                                                                    record.rowdata.Result = "Failed to Update: " + err.message;
                                                                     resultJSON.push(record.rowdata);
                                                                 }
                                                                 else {

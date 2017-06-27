@@ -20,6 +20,13 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
+        stringLength: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: function () {
+                return 0;
+            }
+        },
         required: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

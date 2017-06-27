@@ -43,6 +43,8 @@ admin.controller('AdminUserManageBulkUploadConfigController', [
                                 delete field.datatype;
                                 field.name = field.sfFieldName;
                                 delete field.sfFieldName;
+                                field.length = field.stringLength;
+                                delete field.stringLength;
                                 field.subtype = 'User-Mapping-Field';
                                 field.columns = 1;
 
