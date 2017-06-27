@@ -8,7 +8,6 @@ var timestamp = require('unix-timestamp');
 var path = require('path');
 var fs = require('fs');
 var json2csv = require('json2csv');
-var batch = require('batchflow');
 
 userconfigRouter.post('/getuserfields', function (req, res) {
     global.sfdc
