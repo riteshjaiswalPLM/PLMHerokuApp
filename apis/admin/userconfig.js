@@ -8,6 +8,7 @@ var timestamp = require('unix-timestamp');
 var path = require('path');
 var fs = require('fs');
 var json2csv = require('json2csv');
+var batch = require('batchflow');
 
 userconfigRouter.post('/getuserfields', function (req, res) {
     global.sfdc
@@ -246,6 +247,11 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
 
                             global.sfdc.sobject(global.UserMapping.SObject.name)
                                 .select(['Id', refField.table + "." + refField.field])
+                                .where({
+                                    [refField.table + "." + refField.field]: {
+                                        $ne: null
+                                    }
+                                })
                                 .execute(function (err, data) {
 
                                     if (err) {
