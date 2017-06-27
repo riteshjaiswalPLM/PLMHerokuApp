@@ -106,13 +106,13 @@ admin.controller('AdminUserManageBulkUploadConfigController', [
                                         field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf("-") + 1);
                                     }
                                     else if (field.datatypeFormat.indexOf('/') != -1) {
-                                        field.csvfielddatesep = '-';
+                                        field.csvfielddatesep = '/';
                                         field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf("/"));
                                         field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf("/") + 1, field.datatypeFormat.lastIndexOf("/"));
                                         field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf("/") + 1);
                                     }
                                     else if (field.datatypeFormat.indexOf(' ') != -1) {
-                                        field.csvfielddatesep = '-';
+                                        field.csvfielddatesep = 'space';
                                         field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf(" "));
                                         field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf(" ") + 1, field.datatypeFormat.lastIndexOf(" "));
                                         field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf(" ") + 1);
