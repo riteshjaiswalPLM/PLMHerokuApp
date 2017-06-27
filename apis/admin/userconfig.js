@@ -246,7 +246,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                         referenceFields.forEach(function (refField, _ind) {
 
                             global.sfdc.sobject(global.UserMapping.SObject.name)
-                                .select(['Id', refField.table + "." + refField.field])
+                                .select(['Id', refField.table + ".Id", refField.table + "." + refField.field])
                                 .where({
                                     [refField.table + "." + refField.field]: {
                                         $ne: null
@@ -287,7 +287,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                     refDataJson.data = {};
                     data.forEach(function (_data) {
                         if (_data[tableName] != null && _data[tableName] != undefined) {
-                            refDataJson['data'][_data[tableName][fieldName]] = _data['Id'];
+                            refDataJson['data'][_data[tableName][fieldName]] = _data[tableName]['Id'];
                         }
                     });
                     allRefData.push(refDataJson);
