@@ -33,7 +33,8 @@
         </div>
     </div>
 </div>
-<div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" block-ui="SaveDashoardComponentBlockUI" style="height: calc(100vh - 237px);">
+<div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" block-ui="SaveDashoardComponentBlockUI"
+    style="height: calc(100vh - 237px);">
     <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large">
         <div class="slds-size--1-of-2 slds-p-around--medium">
             <fieldset class="slds-form--compound">
@@ -44,10 +45,12 @@
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <div class="slds-input-has-icon slds-grow">
                                     <input type="hidden" ng-model="component.SObject">
-                                    <input readonly type="text" id="componentSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.SObject.label" />
+                                    <input readonly type="text" id="componentSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.SObject.label"
+                                    />
                                 </div>
                                 <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
-                                    <button ng-click="openSObjectsLookup('SObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                    <button ng-click="openSObjectsLookup('SObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
+                                        aria-haspopup="true" title="Open lookup modal for SObjects">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                                         </svg>
@@ -70,7 +73,16 @@
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">
                             <label class="slds-form-element__label" for="whereClause">Where Clause</label>
-                            <textarea ng-model="component.ComponentDetails[0].configuration.whereClause" style="resize: none;" class="slds-textarea" rows="3"></textarea>
+                            <textarea ng-model="component.ComponentDetails[0].configuration.whereClause" style="resize: none;" class="slds-textarea"
+                                rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;" ng-init="component.multipleApprove = component.multipleApprove === undefined ? false : component.multipleApprove">
+                            <label class="slds-form-element__label" for="MultipleApprove">Bulk Operation ?</label>
+                            <slds-switch id="MultipleApprove" ng-model="component.multipleApprove" on-text="Yes" off-text="No" show-texts="false" />
                         </div>
                     </div>
                 </div>
@@ -80,9 +92,9 @@
             <fieldset class="slds-form--compound">
                 <div class="slds-form-element__group">
                     <div class="slds-form-element__row">
-                        <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;"  ng-init="component.active = component.active === undefined ? false : component.active">
-                            <label class="slds-form-element__label" for="componentActive" >Active ?</label>
-                            <slds-switch id="componentActive" ng-model="component.active" on-text="Yes" off-text="No" show-texts="false"/>
+                        <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;" ng-init="component.active = component.active === undefined ? false : component.active">
+                            <label class="slds-form-element__label" for="componentActive">Active ?</label>
+                            <slds-switch id="componentActive" ng-model="component.active" on-text="Yes" off-text="No" show-texts="false" />
                         </div>
                     </div>
                 </div>
@@ -101,10 +113,14 @@
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <div class="slds-input-has-icon slds-grow">
                                     <input type="hidden" ng-model="component.detailSObject">
-                                    <input readonly type="text" id="detailSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.detailSObject.label" />
+                                    <input readonly type="text" id="detailSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.detailSObject.label"
+                                    />
                                 </div>
+
+
                                 <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
-                                    <button ng-click="openSObjectsLookup('detailSObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
+                                    <button ng-click="openSObjectsLookup('detailSObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
+                                        aria-haspopup="true" title="Open lookup modal for SObjects">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                                         </svg>
@@ -115,11 +131,11 @@
                         </div>
                     </div>
                 </div>
-                 <div class="slds-form-element__group">
+                <div class="slds-form-element__group">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">
                             <label class="slds-form-element__label" for="relativeField">Relative field</label>
-                             <select id="relativeField" class="slds-select" ng-model="component.ComponentDetails[0].configuration.relativeField" ng-options="field.label for field in relativeFields | orderBy:'label' track by field.label">
+                            <select id="relativeField" class="slds-select" ng-model="component.ComponentDetails[0].configuration.relativeField" ng-options="field.label for field in relativeFields | orderBy:'label' track by field.label">
                                 <option value="">-- None --</option>
                             </select>
                         </div>
@@ -135,6 +151,203 @@
                 </div>
             </fieldset>
         </div>
+
+
+        <div class="slds-size--1-of-1 slds-p-horizontal--medium" ng-if="component.multipleApprove">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading--small">BulkOperation Fields</span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate" title="#">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Label">Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display Label">Display Label</div>
+                                </th>
+                                <th scope="col" style="width: 200px;">
+                                    <div class="slds-truncate" title="Reference">Reference</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title=""></div>
+                                </th>
+                                <th ng-if="forMobile" scope="col">
+                                    <div class="slds-truncate" title="User Field">User Field</div>
+                                </th>
+                                <th ng-if="forMobile" scope="col">
+                                    <div class="slds-truncate" title="Assigned Role Field">Assigned Role Field</div>
+                                </th>
+                                <th ng-if="forMobile" scope="col">
+                                    <div class="slds-truncate" title="Governing Field">Governing Field</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Properties">Properties</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Reference">Criteria</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Require">Require</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Readonly">Readonly</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Hidden">Hidden</div>
+                                </th>
+
+                                <th scope="col" style="width: 200px;">
+                                    <div class="slds-truncate" title="Type">Type</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 50px;">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dnd-list="component.ComponentDetails[0].configuration.multipleFields" dnd-allowed-types="['DashboardMyTaskFields']">
+                            <tr ng-if="!component.ComponentDetails[0].configuration.multipleFields || component.ComponentDetails[0].configuration.multipleFields.length === 0">
+                                <td colspan="10" class="slds-blank-slate">
+                                    <div class="slds-truncate slds-align--absolute-center">No field added.</div>
+                                </td>
+                            </tr>
+                            <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
+                                <th colspan="8" style="background: #e1d951;">
+                                    <div class="slds-truncate slds-align--absolute-center">Drop field here</div>
+                                </th>
+                            </tr>
+                            <tr ng-repeat="multipleField in component.ComponentDetails[0].configuration.multipleFields" dnd-draggable="multipleField"
+                                dnd-effect-allowed="move" dnd-moved="component.ComponentDetails[0].configuration.multipleFields.splice($index,1)"
+                                dnd-type="'DashboardMyTaskFields'" ng-init="multipleField.referenceRemoved = multipleField.referenceRemoved ? multipleField.referenceRemoved : false">
+                                <td data-label="#">
+                                    <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
+                                </td>
+                                <td data-label="Label">
+                                    <div class="slds-truncate" title="{{ multipleField.SObjectField.label }}">{{ multipleField.SObjectField.label }}</div>
+                                </td>
+                                <td data-label="Display Label">
+                                    <div class="slds-truncate" title="{{multipleField.label}}">
+                                        <input type="text" class="slds-input input-xs" placeholder="{{multipleField.SObjectField.label}}" ng-model="multipleField.label"
+                                        />
+                                    </div>
+                                </td>
+                                <td data-label="Reference" scope="row" reference-field-selector field="multipleField" ref-sobjects="refSObjects"></td>
+                                <td data-label="">
+                                    <div class="slds-truncate" title="{{multipleField.label}}">
+                                        <a pf-tooltip data-placement="left" title="Remove reference" ng-if="multipleField.SObjectField.type === 'reference'" ng-click="multipleField.reference = undefined; multipleField.referenceRemoved = true"
+                                            href><i class='fa fa-times'></i></a>
+                                    </div>
+                                </td>
+                                <td data-label="User Field" ng-if="forMobile">
+                                    <div class="slds-truncate" ng-init="multipleField.isUserNameField = ((multipleField.isUserNameField === undefined) ? false : multipleField.isUserNameField)">
+                                        <slds-switch id="isUserNameField" switch-change="onChangeUserNameField(multipleField);" ng-model="multipleField.isUserNameField"
+                                            on-text="Yes" off-text="No" show-texts="false" />
+                                    </div>
+                                </td>
+                                <td data-label="Assigned Role Field" ng-if="forMobile">
+                                    <div class="slds-truncate" ng-init="multipleField.isAssignedRoleField = multipleField.isAssignedRoleField === undefined ? false : multipleField.isAssignedRoleField">
+                                        <slds-switch id="isAssignedRoleField" switch-change="onChangeAssignedRoleField(multipleField);" ng-model="field.isAssignedRoleField"
+                                            on-text="Yes" off-text="No" show-texts="false" />
+                                    </div>
+                                </td>
+                                <td data-label="Governing Field" ng-if="forMobile">
+                                    <div class="slds-truncate" ng-init="multipleField.governFieldName = multipleField.governFieldName ? multipleField.governFieldName : null">
+                                        <select class="slds-select" ng-model="multipleField.governFieldName" ng-options="multipleField.name as multipleField.label for multipleField in governingFields | orderBy:'label'">
+                                            <option value="">-- None --</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate" ng-init=" multipleField.event ==undefined ? {}  : multipleField.event">
+                                        <select class="slds-select" ng-model=" multipleField.event.onChange">
+                                            <option value="">-- None --</option>
+                                            <option value="reloadLayout">reloadLayout</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button ng-click="openFieldCriteriaModal(multipleField)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Criteria</span>
+                                    </button>
+                                </td>
+
+                                <td data-label="Required">
+                                    <div class="slds-truncate" ng-init="multipleField.required = multipleField.required === undefined ? false : multipleField.required">
+                                        <slds-switch id="isRequired" switch-change="onChangeRequired(multipleField);" ng-model="multipleField.required" show-texts="false"
+                                        />
+                                    </div>
+                                </td>
+                                <td data-label="Readonly">
+                                    <div class="slds-truncate" ng-init="multipleField.readonly = multipleField.readonly === undefined ? false : multipleField.readonly">
+                                        <slds-switch id="isReadonly" switch-change="onChangeReadonly(multipleField);" ng-model="multipleField.readonly" on-text="Yes"
+                                            off-text="No" show-texts="false" />
+                                    </div>
+                                </td>
+                                <td data-label="Hidden">
+                                    <div class="slds-truncate" ng-init="multipleField.hidden = multipleField.hidden === undefined ? false : multipleField.hidden">
+                                        <slds-switch id="isHidden" switch-change="onChangeMultipleHidden(multipleField);" ng-model="multipleField.hidden" on-text="Yes"
+                                            off-text="No" show-texts="false" />
+                                    </div>
+                                </td>
+                                <td data-label="Type">
+                                    <div class="slds-truncate" title="{{ multipleField.SObjectField.type + ((multipleField.SObjectField.calculated) ? ' | formula' : '') }}">
+                                        {{ multipleField.SObjectField.type + ((multipleField.SObjectField.calculated) ? ' | formula' : '') }}
+                                    </div>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <div class="slds-button-group" role="group">
+                                            <button ng-if="component.ComponentDetails[0].configuration.multipleFields.length > 1" ng-click="component.ComponentDetails[0].configuration.multipleFields.splice($index,1)"
+                                                class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-card__footer">
+                    <form class="slds-form--inline" ng-if="component.SObject">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="lineItemFields"> Invoice Fields</label>
+                            <div class="slds-form-element__control">
+                                <select id="lineItemFields" class="slds-select" ng-model="mulipleFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in multipleField | orderBy:'label'">
+                            <option value="">-- None --</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <button type="button" ng-disabled="!mulipleFieldToAdd" ng-click="addToMultipleFields(mulipleFieldToAdd)" class="slds-button slds-button--brand">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </div>
+
         <div class="slds-size--1-of-1 slds-p-horizontal--medium">
             <article class="slds-card">
                 <div class="slds-card__header slds-grid">
@@ -190,14 +403,22 @@
                                 </th>
                             </tr>
                         </thead>
+
+
                         <tbody dnd-list="component.ComponentDetails[0].configuration.fields" dnd-allowed-types="['DashboardMyTaskFields']">
                             <tr ng-if="!component.ComponentDetails[0].configuration.fields || component.ComponentDetails[0].configuration.fields.length === 0">
-                                <td colspan="8" class="slds-blank-slate"><div class="slds-truncate slds-align--absolute-center">No field added.</div></td>
+                                <td colspan="8" class="slds-blank-slate">
+                                    <div class="slds-truncate slds-align--absolute-center">No field added.</div>
+                                </td>
                             </tr>
                             <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
-                                <th colspan="6" style="background: #e1d951;" ><div class="slds-truncate slds-align--absolute-center">Drop field here</div></th>
+                                <th colspan="6" style="background: #e1d951;">
+                                    <div class="slds-truncate slds-align--absolute-center">Drop field here</div>
+                                </th>
                             </tr>
-                            <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" dnd-type="'DashboardMyTaskFields'"  ng-init="field.referenceRemoved = field.referenceRemoved ? field.referenceRemoved : false">
+                            <tr ng-repeat="field in component.ComponentDetails[0].configuration.fields" dnd-draggable="field" dnd-effect-allowed="move"
+                                dnd-moved="component.ComponentDetails[0].configuration.fields.splice($index,1)" dnd-type="'DashboardMyTaskFields'"
+                                ng-init="field.referenceRemoved = field.referenceRemoved ? field.referenceRemoved : false">
                                 <td data-label="#">
                                     <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
                                 </td>
@@ -212,29 +433,33 @@
                                 <td data-label="Reference" scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
                                 <td data-label="">
                                     <div class="slds-truncate" title="{{field.label}}">
-                                        <a pf-tooltip data-placement="left" title="Remove reference" ng-if="field.SObjectField.type === 'reference'" ng-click="field.reference = undefined; field.referenceRemoved = true" href><i class='fa fa-times'></i></a>
+                                        <a pf-tooltip data-placement="left" title="Remove reference" ng-if="field.SObjectField.type === 'reference'" ng-click="field.reference = undefined; field.referenceRemoved = true"
+                                            href><i class='fa fa-times'></i></a>
                                     </div>
                                 </td>
-                                 <td data-label="User Field" ng-if="forMobile" >
-                                    <div class="slds-truncate"  ng-init="field.isUserNameField = ((field.isUserNameField === undefined) ? false : field.isUserNameField)">
-                                        <slds-switch id="isUserNameField"  switch-change="onChangeUserNameField(field);" ng-model="field.isUserNameField" on-text="Yes" off-text="No" show-texts="false"/>
+                                <td data-label="User Field" ng-if="forMobile">
+                                    <div class="slds-truncate" ng-init="field.isUserNameField = ((field.isUserNameField === undefined) ? false : field.isUserNameField)">
+                                        <slds-switch id="isUserNameField" switch-change="onChangeUserNameField(field);" ng-model="field.isUserNameField" on-text="Yes"
+                                            off-text="No" show-texts="false" />
                                     </div>
                                 </td>
-                                 <td data-label="Assigned Role Field" ng-if="forMobile" >
-                                    <div class="slds-truncate"  ng-init="field.isAssignedRoleField = field.isAssignedRoleField === undefined ? false : field.isAssignedRoleField">
-                                        <slds-switch id="isAssignedRoleField"  switch-change="onChangeAssignedRoleField(field);" ng-model="field.isAssignedRoleField" on-text="Yes" off-text="No" show-texts="false"/>
+                                <td data-label="Assigned Role Field" ng-if="forMobile">
+                                    <div class="slds-truncate" ng-init="field.isAssignedRoleField = field.isAssignedRoleField === undefined ? false : field.isAssignedRoleField">
+                                        <slds-switch id="isAssignedRoleField" switch-change="onChangeAssignedRoleField(field);" ng-model="field.isAssignedRoleField"
+                                            on-text="Yes" off-text="No" show-texts="false" />
                                     </div>
                                 </td>
-                                 <td data-label="Governing Field" ng-if="forMobile" >
-                                    <div class="slds-truncate"  ng-init="field.governFieldName = field.governFieldName ? field.governFieldName : null">
+                                <td data-label="Governing Field" ng-if="forMobile">
+                                    <div class="slds-truncate" ng-init="field.governFieldName = field.governFieldName ? field.governFieldName : null">
                                         <select class="slds-select" ng-model="field.governFieldName" ng-options="field.name as field.label for field in governingFields | orderBy:'label'">
                                             <option value="">-- None --</option>
                                         </select>
                                     </div>
                                 </td>
                                 <td data-label="Hidden">
-                                    <div class="slds-truncate"  ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
-                                        <slds-switch id="isHidden"  switch-change="onChangeReadonly(field);" ng-model="field.hidden" on-text="Yes" off-text="No" show-texts="false"/>
+                                    <div class="slds-truncate" ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
+                                        <slds-switch id="isHidden" switch-change="onChangeHidden(field);" ng-model="field.hidden" on-text="Yes" off-text="No" show-texts="false"
+                                        />
                                     </div>
                                 </td>
 
@@ -246,7 +471,8 @@
                                 <td data-label="Actions">
                                     <div class="slds-truncate slds-align--absolute-center">
                                         <div class="slds-button-group" role="group">
-                                            <button ng-if="component.ComponentDetails[0].configuration.fields.length > 1" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                            <button ng-if="component.ComponentDetails[0].configuration.fields.length > 1" ng-click="component.ComponentDetails[0].configuration.fields.splice($index,1)"
+                                                class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
                                                 <svg class="slds-button__icon" aria-hidden="true">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                                 </svg>
@@ -278,6 +504,9 @@
         </div>
     </div>
 </div>
+
+
+
 <!--<div block-ui="saveDashoardComponent">
     <div class="col-md-12">
         <div class="page-header page-header-bleed-right">

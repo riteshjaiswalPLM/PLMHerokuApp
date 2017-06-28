@@ -13,6 +13,12 @@ module.exports = function(sequelize, DataTypes){
             defaultValue: function(){
                 return false;
             }
+        }, 
+        multipleApprove: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function(){
+                return false;
+            }
         },
         catagory: {
             type: DataTypes.ENUM,

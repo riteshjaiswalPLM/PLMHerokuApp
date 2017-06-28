@@ -129,6 +129,7 @@ dashboardRouter.post('/getdashboardcomponentmetadata', function(req, res){
                 });
                 var ComponentDetail = JSON.parse(JSON.stringify(component.ComponentDetails[0]));
                 ComponentDetail.configuration.name = component.SObject.name;
+                ComponentDetail.configuration.detailSobjectname = (component.detailSObject !== undefined && component.detailSObject !== null) ? component.detailSObject.name : null; 
                 delete component.dataValues.ComponentDetails;
                 delete component.dataValues.SObject;
                 component.dataValues.ComponentDetail = ComponentDetail;

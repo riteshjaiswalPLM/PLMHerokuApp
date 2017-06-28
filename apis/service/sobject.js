@@ -499,6 +499,78 @@ sobjectRouter.post('/save', function(req, res){
     }
 });
 
+sobjectRouter.post('/multipleApproveSave', function(req, res){
+    var queryObject = req.body;
+    var fieldsToUpdate = [];
+    var sObject = global.db.SObject.findAll({
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            },
+            where: {
+                name: queryObject.sObject.name
+            }
+        });
+        sObject.then(function(sObjectDetail){
+
+            if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0] != undefined && sObjectDetail[0].config != null && sObjectDetail[0].config.sobjectconfig !=undefined){
+                var configuration=sObjectDetail[0].config.sobjectconfig;
+                Object.keys(configuration).forEach((key)=>{
+                    if(key==="fieldToMap"){
+                        Object.keys(configuration[key]).forEach((fieldToMapkey)=>{
+                            if(queryObject.sObject.data[configuration[key][fieldToMapkey]]!==undefined){
+                                queryObject.sObject.data[fieldToMapkey]=queryObject.sObject.data[configuration[key][fieldToMapkey]];
+                            }
+                        });
+                    }
+                    else if(key==="dataToMap"){
+                        Object.keys(configuration[key]).forEach((fieldToMapkey)=>{
+                            if(configuration[key][fieldToMapkey]==="LOGIN_USER_ID"){
+                                queryObject.sObject.data[fieldToMapkey]=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
+                            }
+                            else{
+                                queryObject.sObject.data[fieldToMapkey]=configuration[key][fieldToMapkey];
+                            }
+                        });
+                    }
+                });
+            }
+            queryObject.multipleIds.split(",").forEach(function(id){
+                if(id!=""){
+                    var Modeldata=JSON.parse(JSON.stringify(queryObject.sObject.data));
+                    Modeldata["Id"]=id;
+                    fieldsToUpdate.push(Modeldata);
+                }
+            });
+            console.log('daa',queryObject.sObject.data)
+            global.sfdc
+            .sobject(queryObject.sObject.name)
+            .update(fieldsToUpdate, function(err, ret){
+                if(err ){
+                    var msg="Error occured while creating new record.";
+                    try{
+                        msg=err.toString().substring(err.toString().indexOf(err['name'])+err['name'].length+1);
+                    }
+                    catch(err){
+                        console.log('eer',err)
+                    }
+                    return res.json({
+                        success: false,
+                        message: msg,
+                        error: err,
+                        errMsg:err.toString()
+                    });
+                }else{
+                    return res.json({
+                        success: true,
+                        data: {
+                            result: ret
+                        }
+                    });
+                }
+            });
+        });
+            
+});
 var uploadFileOnSalesforce = function(queryObject){
     var attachmentIdArray = [];
     if(queryObject.files && queryObject.files.length > 0){

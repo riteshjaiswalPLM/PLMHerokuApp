@@ -41,7 +41,7 @@
                     class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
                     <h3>{{container.label | translate}}</h3>
                 </div>
-                <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y"  style="margin-bottom:0px">
+                <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y" style="margin-bottom:0px">
                     <div class="slds-is-{{container.isCollapse ? 'expanded' : 'collapsed'}}" id="{{container.id}}">
                         <div id="accordion-markup-inner{{container.id}}" style="margin:20px;margin-bottom:0px ">
                             <div class="slds-form--stacked slds-grow" ng-repeat="component in container.DashboardContainersComponents | orderBy: 'order'"
@@ -60,27 +60,44 @@
                                 <div class="slds-grid">
                                     <div class="slds-col slds-has-flexi-truncate">
                                         <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
-                                            class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+                                            class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
+                                            style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
                                             <h3>{{component.label | translate}}</h3>
                                         </div>
                                     </div>
                                     <div class="slds-col slds-no-flex slds-grid slds-align-top">
-                                        <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;border-bottom: 3px solid #d8dde6">
-                                           <button title="Export" class="slds-button slds-button--brand " style="border-bottom:0px;padding:0px 10px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)" ng-disabled="btnExportDis" >
+                                        <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
+                                            style="cursor:pointer;border-bottom: 3px solid #d8dde6">
+                                            <button title="Export" class="slds-button slds-button--brand " style="border-bottom:0px;padding:0px 10px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)"
+                                                ng-disabled="btnExportDis">
                                                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" style="margin:0px">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
                                                 </svg>
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="slds-col slds-no-flex slds-grid slds-align-top" style=" margin-left: 5px;">
+                                        <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
+                                            style="cursor:pointer;border-bottom: 3px solid #d8dde6">
+                                            <button class="slds-button slds-button--brand" ng-show="component.Component.multipleApprove" type="button" ng-click="bulkOperationLookup(component.Component.ComponentDetail.configuration,container.allowedType,'InvoiceApproveFieldSelectAll', searchResult[component.Component.catagory+'Component'+component.id],component)">
+                                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                            </svg>
+                                            Bulk Operation
+                                        </button>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y;" style="margin-bottom:0px">
-                                    <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;overflow: auto;max-height:250px" id="{{'collepseComponent_'+component.id}}"
-                                        block-ui="{{component.Component.catagory+component.id+'Block'}}"  >
-                                        <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-                                            style="max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}">
+                                    <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;overflow: auto;max-height:250px"
+                                        id="{{'collepseComponent_'+component.id}}" block-ui="{{component.Component.catagory+component.id+'Block'}}">
+                                        <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}">
                                             <thead>
                                                 <tr class="slds-text-title--caps">
+                                                    <th> <input type="checkbox" ng-show="component.Component.multipleApprove"
+                                                            ng-model="data.InvoiceApproveFieldSelectAll" ng-click="callInvoiceApproveFieldSelectAll(data.InvoiceApproveFieldSelectAll, searchResult[component.Component.catagory+'Component'+component.id])"
+                                                        /></th>
                                                     <th style="font-weight: 600;" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
                                                         ng-click="applyOrderBy(field, component.Component.catagory+'Component'+component.id)"
                                                         ng-repeat="field in component.Component.ComponentDetail.configuration.fields">
@@ -94,7 +111,12 @@
                                             <tbody>
                                                 <!--<tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" ng-dblclick="doDefaultAction(result, component.Component.ComponentDetail.recordActions)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">-->
                                                 <tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                                                    <td style="max-width:200px;width:{{100/component.Component.ComponentDetail.configuration.fields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" ng-if="field.hidden === false" ng-repeat="field in component.Component.ComponentDetail.configuration.fields" 
+                                                    <td ng-init="result.isChecked = false">
+                                                        <input type="checkbox" ng-show="component.Component.multipleApprove" ng-model="result.isChecked" ng-click="syncObjFieldCheckbox('InvoiceApproveFieldSelectAll', searchResult[component.Component.catagory+'Component'+component.id])"
+                                                        />
+                                                    </td>
+                                                    <td style="max-width:200px;width:{{100/component.Component.ComponentDetail.configuration.fields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}"
+                                                        ng-if="field.hidden === false" ng-repeat="field in component.Component.ComponentDetail.configuration.fields"
                                                         title="{{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
                                                         === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
                                                         | number: field.SObjectField.scale) : (field.SObjectField.type ===
@@ -108,7 +130,7 @@
                                                         : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
                                                         | date: 'medium') : result[field.SObjectField.name] }}
                                                     </td>
-                                                    <td   ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0"
+                                                    <td ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0"
                                                         class="slds-truncate td-actions">
                                                         <div class="slds-truncate slds-align--absolute-center">
                                                             <div class="slds-button-group" role="group">

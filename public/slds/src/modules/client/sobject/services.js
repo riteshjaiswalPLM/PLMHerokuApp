@@ -20,6 +20,9 @@ client.factory('clientSObjectService',['$http','CriteriaHelper',function($http, 
         save: function(queryObject){
             return $http.post('/api/service/sobject/save', queryObject);
         },
+        multipleApproveSave: function(queryObject){
+            return $http.post('/api/service/sobject/multipleApproveSave', queryObject);
+        },
         isRequireValidation: function(queryObject,callback){
             var sObjectData=queryObject.sObjectData;
             var fields =queryObject.fields
