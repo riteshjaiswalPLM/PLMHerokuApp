@@ -6,7 +6,8 @@ admin.factory('userUploadService', ['$http', function ($http) {
             return $http.post('/api/admin/userconfig/getUploadHistory');
         },
         uploadUsers: function (upload) {
-            return $http.post('/api/admin/userconfig/uploadUsers', upload);
+            // return $http.post('/api/admin/userconfig/uploadUsers', upload);
+            return $http.post('/api/admin/userconfig/uploadUsersInSync', upload);
         },
         getFile: function (id) {
             return $http.post('/api/admin/userconfig/createFile', id);
