@@ -127,7 +127,7 @@ admin.controller('AdminDashboardComponentsEditController', [
                                     }
                                 });
                                 if ($scope.referenceSObjectNames.length > 0) {
-                                    $scope.loadRefSObject($scope.referenceSObjectNames);
+                                    $scope.loadRefDetailSObject($scope.referenceSObjectNames);
                                 }
                             }
                             else if ($scope.component.SObject != undefined || $scope.component.SObject != null) {
@@ -334,7 +334,7 @@ admin.controller('AdminDashboardComponentsEditController', [
 
                             });
                             if ($scope.referenceSObjectNames.length > 0) {
-                                $scope.loadRefSObject($scope.referenceSObjectNames);
+                                $scope.loadRefDetailSObject($scope.referenceSObjectNames);
                             }
                         }
 
@@ -355,7 +355,7 @@ admin.controller('AdminDashboardComponentsEditController', [
 
                         });
                         if ($scope.referenceSObjectNames.length > 0) {
-                            $scope.loadRefSObject($scope.referenceSObjectNames);
+                            $scope.loadRefDetailSObject($scope.referenceSObjectNames);
                         }
                     }
 
@@ -386,6 +386,13 @@ admin.controller('AdminDashboardComponentsEditController', [
                 .success(function (response) {
                     if (response.success === true)
                         $scope.refSObjects = response.data.refSObjects;
+                });
+        };
+        $scope.loadRefDetailSObject = function (referenceSObjectNames) {
+            genericComponentService.loadRefSObject({ referenceSObjectNames: referenceSObjectNames })
+                .success(function (response) {
+                    if (response.success === true)
+                        $scope.refDetailSObjects = response.data.refSObjects;
                 });
         };
         $scope.addToComponentFields = function (field) {

@@ -599,18 +599,27 @@ var uploadFileOnSalesforce = function(queryObject){
                         }
                         else{
                             attachmentIdArray.push(ret.id);
-                            if(fileToBeSaved.fileName.indexOf('_primary') > 0){
-                                fileToBeSaved.Id = ret.Id;
+                            if(fileToBeSaved.isPrimary==true){
+                                
+                                fileToBeSaved.Id = ret.id;
                                 fileToBeSaved.trackerId = queryObject.trackerId;
-                                var isTrackerUpdateSuccess = updateTracker(fileToBeSaved);
-                                if(!isTrackerUpdateSuccess){
-                                    deleteAttachment(attachmentIdArray);
-                                    fileUploadedSuccess = false;
-                                    return;
-                                }
+                                 updateTracker(fileToBeSaved,function(isTrackerUpdateSuccess){
+                                    if(!isTrackerUpdateSuccess){
+                                        deleteAttachment(attachmentIdArray);
+                                        fileUploadedSuccess = false;
+                                        return;
+                                    }
+                                    else{
+                                        fileUploadedSuccess = true;
+                                        return;
+                                    }
+                                 });
+                                
                             }
-                            fileUploadedSuccess = true;
-                            return;
+                            else{
+                                fileUploadedSuccess = true;
+                                return;
+                            }
                         }
                     });
                 }
@@ -627,7 +636,8 @@ var deleteAttachment = function(attachmentIdArray){
     });
 };
 
-var updateTracker = function(file){
+var updateTracker = function(file,callback){
+    
     var trackerData = {
         Id: file.trackerId,
         akritivtlm__Primary_Document_ID__c: file.Id,
@@ -636,9 +646,9 @@ var updateTracker = function(file){
     global.sfdc.sobject('akritivtlm__Tracker__c')
         .update(trackerData, function(err, ret){
             if(err && !ret.success){
-                return false; 
+               callback(false); 
             }else{
-                return true;
+                callback(true);
             }
         });
 };

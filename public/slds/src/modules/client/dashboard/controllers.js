@@ -65,7 +65,7 @@ client.controller('ClientDashboardController', [
             $appCache.put($state.current.name, $scope.stateCache);
             var _editAction = undefined;
             if (relativeField) {
-                record.id = record[relativeField.name];
+                record.Id = record[relativeField.name];
                 record.attributes = record[relativeField.relationshipName].attributes;
             }
             if (recordActions.length > 1) {
@@ -299,14 +299,25 @@ client.controller('ClientDashboardController', [
             var isChecked = false;
             var isCheckedField = '';
             isChecked = $scope.data[sAllChkId];
-            if (!isChecked) {
+            {
                 angular.forEach(sObjectFields, function (sObjField) {
                     if (sObjField.isChecked) {
                         if (isField == undefined) {
-                            isField = sObjField
+                            if(configuration.detailSobjectname!=null && configuration.detailSobjectname!=undefined){
+                                isField = sObjField[configuration.relativeField.relationshipName];
+                            }
+                            else{
+                                isField = sObjField;
+                            }
+                        
                         }
                         isChecked = true;
-                        isCheckedField += sObjField.Id + ",";
+                        if(configuration.detailSobjectname!=null && configuration.detailSobjectname!=undefined){
+                            isCheckedField += sObjField[configuration.relativeField.name] + ",";
+                        }
+                        else{
+                            isCheckedField += sObjField.Id + ",";
+                        }
                     }
                 });
             }

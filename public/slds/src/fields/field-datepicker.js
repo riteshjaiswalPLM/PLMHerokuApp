@@ -191,7 +191,7 @@ angular.module('angular-lightning.datepicker', [])
 		var clickedElementIsInInput = inputEl[0].contains(event.target);
 		var clickedElementIsInPopup = $popup[0].contains(event.target);
 
-		if($scope.isOpen && !(clickedElementIsInInput || clickedElementIsInPopup )) {
+		if($scope.isOpen && (!(clickedElementIsInInput || clickedElementIsInPopup ) || (event.target.tagName=="SPAN" && clickedElementIsInPopup ))) { 
 			$scope.isOpen = false;
 			$scope.$apply();					
 		}

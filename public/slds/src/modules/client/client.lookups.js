@@ -155,11 +155,11 @@ clientLookup.controller('BulkOperationController', [
                                 $dialog.alert(response.message, 'Validation Alert', 'pficon-warning-triangle-o');
                             }
                             $element.modal('hide');
-                            close(response, 500);
+                            close(response, 100);
                         })
                         .error(function (response) {
                             $element.modal('hide');
-                            close(response, 500);
+                            close(response, 100);
                             $dialog.alert('Server error occured while saving details.', 'Error', 'pficon pficon-error-circle-o');
                             $scope.blockUI.layoutBlock.stop();
                         });

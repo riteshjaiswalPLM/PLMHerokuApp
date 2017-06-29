@@ -33,7 +33,8 @@
         </div>
     </div>
 </div>
-<div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" block-ui="SaveDashoardComponentBlockUI"
+<div block-ui="SaveDashoardComponentBlockUI">
+<div class="slds-grid slds-wrap slds-scrollable--y slds-grid--vertical-align-start" 
     style="height: calc(100vh - 237px);">
     <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large">
         <div class="slds-size--1-of-2 slds-p-around--medium">
@@ -135,7 +136,7 @@
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">
                             <label class="slds-form-element__label" for="relativeField">Relative field</label>
-                            <select id="relativeField" class="slds-select" ng-model="component.ComponentDetails[0].configuration.relativeField" ng-options="field.label for field in relativeFields | orderBy:'label' track by field.label">
+                            <select id="relativeField" class="slds-select" ng-model="component.ComponentDetails[0].configuration.relativeField" ng-options="field.label for field in relativeFields | orderBy:'label' track by field.name">
                                 <option value="">-- None --</option>
                             </select>
                         </div>
@@ -223,12 +224,12 @@
                         </thead>
                         <tbody dnd-list="component.ComponentDetails[0].configuration.multipleFields" dnd-allowed-types="['DashboardMyTaskFields']">
                             <tr ng-if="!component.ComponentDetails[0].configuration.multipleFields || component.ComponentDetails[0].configuration.multipleFields.length === 0">
-                                <td colspan="10" class="slds-blank-slate">
+                                <td colspan="12" class="slds-blank-slate">
                                     <div class="slds-truncate slds-align--absolute-center">No field added.</div>
                                 </td>
                             </tr>
                             <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
-                                <th colspan="8" style="background: #e1d951;">
+                                <th colspan="12" style="background: #e1d951;">
                                     <div class="slds-truncate slds-align--absolute-center">Drop field here</div>
                                 </th>
                             </tr>
@@ -247,7 +248,7 @@
                                         />
                                     </div>
                                 </td>
-                                <td data-label="Reference" scope="row" reference-field-selector field="multipleField" ref-sobjects="refSObjects"></td>
+                                <td data-label="Reference" scope="row" reference-field-selector field="multipleField" ref-sobjects="refDetailSObjects"></td>
                                 <td data-label="">
                                     <div class="slds-truncate" title="{{multipleField.label}}">
                                         <a pf-tooltip data-placement="left" title="Remove reference" ng-if="multipleField.SObjectField.type === 'reference'" ng-click="multipleField.reference = undefined; multipleField.referenceRemoved = true"
@@ -504,7 +505,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 
 <!--<div block-ui="saveDashoardComponent">
