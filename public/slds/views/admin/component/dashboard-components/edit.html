@@ -275,7 +275,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="slds-truncate" ng-init=" multipleField.event ==undefined ? {}  : multipleField.event">
+                                    <div class="slds-truncate" ng-init=" multipleField.event ==undefined ? {}  : multipleField.event" ng-show="multipleField.SObjectField.type=='picklist'">
                                         <select class="slds-select" ng-model=" multipleField.event.onChange">
                                             <option value="">-- None --</option>
                                             <option value="reloadLayout">reloadLayout</option>
