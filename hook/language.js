@@ -16,6 +16,13 @@ module.exports = function(){
             SObjectId: newSObject.id
         });
         engTranslation.push({
+            label: 'Search ' + newSObject.label, 
+            translation: 'Search ' + newSObject.label,
+            type: 'SObject-Label', 
+            LanguageId: global.languageconfig.English.id,
+            SObjectId: newSObject.id
+        });
+        engTranslation.push({
             label: 'Edit ' + newSObject.label, 
             translation: 'Edit ' + newSObject.label,
             type: 'SObject-Label', 

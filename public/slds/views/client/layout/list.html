@@ -11,8 +11,8 @@
                         </span>
                     </div>
                     <div class="slds-media__body">
-                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() }}</p>
-                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Search {{ $root.title() }}">Search {{ $root.title() }}</h1>
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Search {{ $root.title() }}"> {{'Search '+ $root.title() | translate }}</h1>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small">
                     <div style="width: 230px;">
                         <select class="slds-select" style="width: auto;" ng-disabled="searchCriteriaFields.length === 0" data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in pageSizes" id="pageSize">
-                        </select>&nbsp; Items per page.
+                        </select>&nbsp; {{'Items per page' | translate}}.
                     </div>
                     <div class="slds-align--absolute-center">
                         <div class="slds-button-group" role="group">
