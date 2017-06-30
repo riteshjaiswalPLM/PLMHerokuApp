@@ -58,38 +58,43 @@ admin.controller('AdminUserManageBulkUploadController', [
 
         $scope.uploadUsers = function () {
             var name = document.getElementsByName("uploads[]")[0].value;
-            $scope.upload.filename = name.substr(name.lastIndexOf("\\") + 1);
-
-            var file = $scope.upload.userFile;
-            $scope.upload.userFile = {};
-
-            $scope.blockUI.userUpload.start('Reading file ...');
-            $scope.upload.userFile = $scope.csvToJSON(file);
-            if ($scope.upload.userFile.length > 0) {
-                $scope.blockUI.userUpload.stop();
-                $scope.blockUI.userUpload.start('Uploading ...');
-                $scope.upload.username = $rootScope.user().username;
-
-                userUploadService.uploadUsers($scope.upload)
-                    .success(function (response) {
-                        $scope.blockUI.userUpload.stop();
-                        $scope.upload.userFile = undefined;
-                        if (response.success) {
-                            $dialog.alert(response.message);
-                            $scope.getUploadHistory();
-                        }
-                        else {
-                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                        }
-                    })
-                    .error(function (response) {
-                        $scope.blockUI.userUpload.stop();
-                        $dialog.alert('Error occured while uploading users.', 'Error', 'pficon pficon-error-circle-o');
-                    });
+            if (name.substr(name.length - 4).toLowerCase() != '.csv') {
+                $dialog.alert("Please upload valid CSV file");
             }
             else {
-                $scope.blockUI.userUpload.stop();
-                $dialog.alert("No records found in file.");
+                $scope.upload.filename = name.substr(name.lastIndexOf("\\") + 1);
+
+                var file = $scope.upload.userFile;
+                $scope.upload.userFile = {};
+
+                $scope.blockUI.userUpload.start('Reading file ...');
+                $scope.upload.userFile = $scope.csvToJSON(file);
+                if ($scope.upload.userFile.length > 0) {
+                    $scope.blockUI.userUpload.stop();
+                    $scope.blockUI.userUpload.start('Uploading ...');
+                    $scope.upload.username = $rootScope.user().username;
+
+                    userUploadService.uploadUsers($scope.upload)
+                        .success(function (response) {
+                            $scope.blockUI.userUpload.stop();
+                            $scope.upload.userFile = undefined;
+                            if (response.success) {
+                                $dialog.alert(response.message);
+                                $scope.getUploadHistory();
+                            }
+                            else {
+                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                            }
+                        })
+                        .error(function (response) {
+                            $scope.blockUI.userUpload.stop();
+                            $dialog.alert('Error occured while uploading users.', 'Error', 'pficon pficon-error-circle-o');
+                        });
+                }
+                else {
+                    $scope.blockUI.userUpload.stop();
+                    $dialog.alert("No records found in file.");
+                }
             }
         };
 

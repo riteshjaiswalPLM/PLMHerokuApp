@@ -308,6 +308,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                 var validate = function () {
                     userFieldConfigs.then(function (userFieldConfigData) {
                         var userFieldConfig = JSON.parse(JSON.stringify(userFieldConfigData));
+                        var matchflag = false;
                         records.forEach(function (record, index) {
                             var keys = Object.keys(record);
                             sfdcRecord = {};
@@ -459,8 +460,8 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                         var usernameexistinMobile = false;
                         var checkUsernameexistinMobile = function (username, callback) {
                             if (global.UserMapping.isMobileActive) {
-                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000";
-                                instanceurl = instanceurl + '/api/admin/user/checkusernameexist/';
+                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000/";
+                                instanceurl = instanceurl + 'api/admin/user/checkusernameexist/';
                                 console.log("URL: " + instanceurl);
 
                                 request({
@@ -784,6 +785,7 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                 var validate = function () {
                     userFieldConfigs.then(function (userFieldConfigData) {
                         var userFieldConfig = JSON.parse(JSON.stringify(userFieldConfigData));
+                        var matchflag = false;
                         records.forEach(function (record, index) {
                             var keys = Object.keys(record);
                             sfdcRecord = {};
@@ -935,8 +937,8 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                         var usernameexistinMobile = false;
                         var checkUsernameexistinMobile = function (username, callback) {
                             if (global.UserMapping.isMobileActive) {
-                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000";
-                                instanceurl = instanceurl + '/api/admin/user/checkusernameexist/';
+                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000/";
+                                instanceurl = instanceurl + 'api/admin/user/checkusernameexist/';
                                 console.log("URL: " + instanceurl);
 
                                 request({
@@ -1072,7 +1074,6 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                 }
 
                             }).end(function () {
-                                //analyze results 
                                 insertUploadHistory(totalInsert, totalUpdate, totalInvalid, totalFail);
                             });
                     });
