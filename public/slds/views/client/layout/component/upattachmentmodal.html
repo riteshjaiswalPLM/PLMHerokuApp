@@ -27,7 +27,7 @@
                                         accept		    = "{{data.allowedExt}}"
                                         style="cursor: pointer;"
                                         multiple>
-                                        <span>Add </span><i class="pficon-file"></i> 
+                                        <span>{{'Add' | translate}} </span><i class="pficon-file"></i> 
                                 </span>
                                 <span 	id 				="selectFile" 	
                                         data-ng-show	= "data.primaryDocument"
@@ -39,7 +39,7 @@
                                         accept		    = "{{data.allowedExtForPrime}}"
                                         style="cursor: pointer;    margin-left: 0px;"
                                         single>
-                                        <span>Add </span><i class="pficon-file"></i>
+                                        <span>{{'Add' | translate}} </span><i class="pficon-file"></i>
                                 </span> 
                             </div>
                         </div>
@@ -49,8 +49,8 @@
             <div class="slds-col slds-size--1-of-1">
                 <form class="slds-form--horizontal">
                     <div class="slds-form-element" style="margin-bottom: 5px;text-align: center;color:red;">
-                        <label style="text-align: center;" data-ng-show="!data.primaryDocument" class="">{{ data.allowedExt }} format are supported.</label>
-                        <label style="text-align: center;" data-ng-show="data.primaryDocument" class="">{{ data.allowedExtForPrime }} format are supported.</label>
+                        <label style="text-align: center;" data-ng-show="!data.primaryDocument" class="">{{ data.allowedExt }} {{'format are supported' | translate}}.</label>
+                        <label style="text-align: center;" data-ng-show="data.primaryDocument" class="">{{ data.allowedExtForPrime }} {{'format are supported'}}.</label>
                     </div>
                 </form>
             </div>
@@ -66,16 +66,16 @@
                     <div class="">
                         <div class="panel panel-default" style="margin-bottom: -8px;">
                             <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
-                                <h3 class="">Attachment Section</h3>
+                                <h3 class="">{{'Attachment Section'' | translate}}</h3>
                             </div>
                             <div class="slds-panel__section slds-grid slds-border--bottom" ng-if="data.files" data-ng-show="data.files.length > 0">
                                 <table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
                                     <thead>
                                         <tr class="slds-text-title--caps">
                                             <th  title=""></th>
-                                            <th  title="File">File</th>
-                                            <th  title="Size in Bytes">Size in Bytes</th>
-                                            <th  title="Upload">Upload</th>
+                                            <th  title="File">{{'File' | translate}}</th>
+                                            <th  title="Size in Bytes">{{'Size in Bytes'| translate}}</th>
+                                            <th  title="Upload">{{'Upload'|translate}}</th>
                                         </tr>
                                     </thead>
                                     <tbody >
@@ -90,7 +90,7 @@
                                                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"/>
                                                     </svg>
-                                                    Upload
+                                                    {{'Upload'|translate}}
                                                 </button>
                                                 <label class="slds-form-element__label " data-ng-if="data.primaryFileName == file.name" style="margin-bottom: 0;font-weight: 600;float: none;">Primary Document</label>
                                                 <!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
@@ -100,7 +100,7 @@
                                 </table>
                             </div>
                             <div class="slds-grid  slds-grid--align-center slds-border--bottom" style="padding:20px 0px;" ng-if="data.files" data-ng-show="data.files.length == 0">
-                                    <strong>No attachment found.</strong>
+                                    <strong>{{'No attachment found' | translate}}.</strong>
                             </div>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
                 </svg>
-                Save
+                {{'Save' | translate}}
             </button>
         </div>
     </div>

@@ -41,7 +41,7 @@ module.exports = {
         });
     }
 };
-var fixedTranslationArray = ["Back to List","Save","Cancel","Edit","Related lists","Search Criteria","Search","Search Results","No result found","Page size","Previous","Next","Loading","Select","None","Close","Refresh Results","OK","Profile","Settings","Logout","Dashboard","Bulk Operation","Items per page","Reset","Export","My Task","Home"], engLangId;
+var fixedTranslationArray = ["Back to List","Save","Cancel","Edit","Related lists","Search Criteria","Search","Search Results","No result found","Page size","Previous","Next","Loading","Select","None","Close","Refresh Results","OK","Profile","Settings","Logout","Dashboard","Bulk Operation","Items per page","Reset","Export","My Task","Home","Upload Primary Document","Add","format are supported","Upload","No attachment found","Attach File","Delete","Title","Size","ContentType","Download","Attachment Section","File","Size in Bytes","Recall","Add more","Request Field","Current Value","Proposed Value","Reload","New"], engLangId;
 
 var getFixedTranslationToCreate = function(){
     var fixedTranslationToCreate = [];

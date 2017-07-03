@@ -3,7 +3,7 @@
         <tbody  ng-if="type !=='detail' && !section.readonly">
             <tr>
                 <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields">
-                    <div ng-if="field.rendered">{{ field.label }}</div>
+                    <div ng-if="field.rendered">{{ field.label | translate }}</div>
                 </td>
                 <td style="border-top: 0px;"></td>
             </tr>
@@ -18,7 +18,7 @@
                                 <svg class="slds-button__icon" aria-hidden="true">
                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                 </svg>
-                                <span class="slds-assistive-text">Delete</span>
+                                <span class="slds-assistive-text" translate>Delete</span>
                             </button>
                         </div>
                     </div>
@@ -30,19 +30,19 @@
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"/>
                         </svg>
-                        Add more
+                        {{'Add more' | translate}}
                     </button>
                     <button class="slds-button slds-button--brand" type="button" ng-click="save()">
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"/>
                         </svg>
-                        Save
+                        {{'Save' | translate}}
                     </button>
                     <button class="slds-button slds-button--neutral " type="button" ng-click="init()">
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"/>
                         </svg>
-                        Reload
+                        {{'Reload' | translate }}
                     </button>
                 </td>
             </tr>
@@ -50,7 +50,7 @@
         <tbody ng-if="type ==='detail' || section.readonly" >
             <tr>
                 <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields">
-                   <div ng-if="field.rendered">{{ field.label }}</div>
+                   <div ng-if="field.rendered">{{ field.label | translate }}</div>
                 </td>
                 <td style="border-top: 0px;"></td>
             </tr>

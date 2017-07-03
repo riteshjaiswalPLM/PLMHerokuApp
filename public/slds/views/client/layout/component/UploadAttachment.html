@@ -16,7 +16,7 @@
 								accept		    = "{{allowedExt}}"
 								style="cursor: pointer;"
 								multiple>
-								<span>Add </span><i class="pficon-file"></i> 
+								<span>{{ 'Add' | translate }} </span><i class="pficon-file"></i> 
 						</span>
 						<span 	id 				="selectFile" 	
 								data-ng-show	= "primaryDoc.primaryDocument"
@@ -28,7 +28,7 @@
 								accept		    = "{{allowedExtForPrime}}"
 								style="cursor: pointer;    margin-left: 0px;"
 								single>
-								<span>Add </span><i class="pficon-file"></i>
+								<span>{{ 'Add' | translate }} </span><i class="pficon-file"></i>
 						</span> 
 					</div>
 				</div>
@@ -37,7 +37,7 @@
 		<div class="slds-size--1-of-{{allowAttachPrime ? 2 : 1}}">
 			<form class="slds-form--horizontal slds-p-horizontal--x-small">
 				<div class="slds-form-element">
-					<label data-ng-show="allowAttachPrime" class="slds-form-element__label " style="font-weight: 600;float: none;" for="uploadPrimary">Upload Primary Document</label>
+					<label data-ng-show="allowAttachPrime" class="slds-form-element__label " style="font-weight: 600;float: none;" for="uploadPrimary">{{ 'Upload Primary Document' | translate }}</label>
 					<div class="slds-form-element__control slds-p-left--small" data-ng-show="allowAttachPrime" >
 						<!--<span class="slds-checkbox">
 							<input type="checkbox" data-ng-show="allowAttachPrime"  id="uploadPrimary" ng-model="primaryDoc.primaryDocument" data-ng-click="primaryDocumentClicked(primaryDoc.primaryDocument);" data-ng-disabled="disablePrimaryDocuent"/>
@@ -58,7 +58,7 @@
 	<div class="slds-col slds-size--1-of-1">
 		<form class="slds-form--horizontal">
 			<div class="slds-form-element" style="margin-bottom: 5px;text-align: center;color:red;">
-				<label style="text-align: center;" data-ng-show="!primaryDoc.primaryDocument" class="">{{ allowedExt }} format are supported.</label>
+				<label style="text-align: center;" data-ng-show="!primaryDoc.primaryDocument" class="">{{ allowedExt }} {{'format are supported' |translate }}.</label>
 				<label style="text-align: center;" data-ng-show="primaryDoc.primaryDocument" class="">{{ allowedExtForPrime }} format are supported.</label>
 			</div>
 		</form>
@@ -84,7 +84,7 @@
 									<th  title=""></th>
 									<th  title="File">File</th>
 									<th  title="Size in Bytes">Size in Bytes</th>
-									<th  title="Upload">Upload</th>
+									<th  title="Upload">{{'Upload' | translate}}</th>
 								</tr>
 							</thead>
 							<tbody >
@@ -99,7 +99,7 @@
 											<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
 												<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"/>
 											</svg>
-											Upload
+											{{'Upload' | translate}}
 										</button>
 										<label class="slds-form-element__label " data-ng-if="primaryFileName == file.name" style="margin-bottom: 0;font-weight: 600;float: none;">Primary Document</label>
 										<!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
@@ -109,7 +109,7 @@
 						</table>
 					</div>
 					<div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="files" data-ng-show="files.length == 0">
-							<strong>No attachment found.</strong>
+							<strong>{{'No attachment found' | translate }}.</strong>
 					</div>
 				</div>
 			</div>
@@ -128,7 +128,7 @@
 								<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#file"/>
 								</svg>
-								Attach File
+								{{'Attach File' | translate }}
 							</button>
 						</center>
 					<!--<button type="button" class="btn btn-primary" ng-show="allowAddAttach == 'true'" ng-click="showUploadAttachmentModal()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
@@ -146,11 +146,11 @@
 							<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
 								<thead>
 									<tr class="slds-text-title--caps">
-										<th  title="" ng-if="type !== 'detail'">Delete</th>
-										<th  title="Title">Title</th>
-										<th  title="Size">Size</th>
-										<th  title="ContentType">ContentType</th>
-										<th style="text-align:center;width:100px;"  title="Download">Download</th>
+										<th  title="" ng-if="type !== 'detail'">{{'Delete' | translate }}</th>
+										<th  title="Title">{{'Title' | translate }}</th>
+										<th  title="Size">{{'Size' | translate }}</th>
+										<th  title="ContentType">{{'ContentType' | translate }}</th>
+										<th style="text-align:center;width:100px;"  title="Download">{{'Download' | translate}}</th>
 									</tr>
 								</thead>
 								<tbody >
@@ -169,7 +169,7 @@
 														<svg class="slds-button__icon" aria-hidden="true">
 															<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
 														</svg>
-														<span class="slds-assistive-text">Download</span>
+														<span class="slds-assistive-text">{{'Download' | translate }}</span>
 													</button>
 												</div>
 											</div>
@@ -180,7 +180,7 @@
 							</table>
 						</div>
 						<div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
-								<strong>No attachment found.</strong>
+								<strong>{{'No attachment found' | translate}}.</strong>
 						</div>
 					</div>
 				</div>

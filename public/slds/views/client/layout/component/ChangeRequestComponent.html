@@ -2,9 +2,9 @@
     <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="width: 100%;">
         <tbody ng-if="type !=='detail' && !section.readonly">
 			<tr class="slds-text-title--caps">
-				<th style="font-weight: 700;border-top: 0px;width:30%" title="Request Field">Request Field</th>
-				<th style="font-weight: 700;border-top: 0px;width:30%" title="Current Value">Current Value</th>
-				<th style="font-weight: 700;border-top: 0px;width:30%" title="Proposed Value">Proposed Value</th>
+				<th style="font-weight: 700;border-top: 0px;width:30%" title="Request Field">{{'Request Field' | translate}}</th>
+				<th style="font-weight: 700;border-top: 0px;width:30%" title="Current Value">{{'Current Value' | translate}}</th>
+				<th style="font-weight: 700;border-top: 0px;width:30%" title="Proposed Value">{{'Proposed Value' | translate}}</th>
 				<th style="font-weight: 700;border-top: 0px;width:10%"  ng-if="type !=='detail'"></th>
 			</tr>
 			<tr ng-repeat="item in items" ng-init="item.currentVal='';">
@@ -42,7 +42,7 @@
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"/>
                         </svg>
-                        Add more
+                        {{'Add more' | translate}}
                     </button>
 				</td>
 			</tr>
@@ -50,9 +50,9 @@
 		
 		<tbody ng-if="type ==='detail' || section.readonly">
 			<tr>
-				<th style="font-weight: 700;border-top: 0px;width:33%" title="Request Field">Request Field</td>
-				<th style="font-weight: 700;border-top: 0px;width:33%" title="Current Value">Current Value</td>
-				<th style="font-weight: 700;border-top: 0px;width:33%" title="Proposed Value">Proposed Value</td>
+				<th style="font-weight: 700;border-top: 0px;width:33%" title="Request Field">{{'Request Field' | translate}}</td>
+				<th style="font-weight: 700;border-top: 0px;width:33%" title="Current Value">{{'Current Value' | translate}}</td>
+				<th style="font-weight: 700;border-top: 0px;width:33%" title="Proposed Value">{{'Proposed Value' | translate}}</td>
 			</tr>
 			<tr  ng-if="supplierMaintenanceDetail[changeReqDetail.Current_Field__c] != supplierMaintenanceDetail[changeReqDetail.Proposed_Field__c]"  ng-repeat="changeReqDetail in changeRequestFieldsDetail" >
 				<td style="border-top: 0px" data-label="Request Field"> {{changeReqDetail.label}} </td>

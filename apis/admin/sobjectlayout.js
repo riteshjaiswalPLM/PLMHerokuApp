@@ -715,7 +715,7 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                             required: field.required,
                             active: field.active,
                             SObjectFieldId: field.SObjectField.id,
-                            SObjectLayoutId: field.SObjectLayoutId,
+                            SObjectLayoutId: relatedList.SObjectLayoutId,
                             SObjectLayoutRelatedListId: updatedRelatedList.id
                         });
                     });

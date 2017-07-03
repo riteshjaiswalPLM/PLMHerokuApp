@@ -107,6 +107,41 @@ module.exports = function(){
         });
     });
 
+    global.db.SObjectLayoutRelatedList.afterCreate(function(newSection){
+        getSObjectLayoutDetails(newSection.SObjectLayoutId, function(sObjectLayout){
+            global.db.Translation.build({
+                label: newSection.title, 
+                translation: newSection.title,
+                type: 'SObject-Section', 
+                LanguageId: global.languageconfig.English.id,
+                SObjectId: sObjectLayout.SObjectId,
+                SObjectLayoutSectionId: newSection.id
+            }).save();
+        })
+    });
+    global.db.SObjectLayoutRelatedList.afterUpdate(function(section){
+        global.db.Translation.update({
+            label: section.title, 
+            translation: section.title,
+            type: layoutSection.type, 
+            LanguageId: layoutSection.LanguageId,
+            SObjectId: sObjectLayout.SObjectId,
+            SObjectLayoutSectionId: section.id
+        },{
+            where: {
+                SObjectLayoutSectionId: section.id
+            }
+        });
+    });
+    global.db.SObjectLayoutRelatedList.beforeDestroy(function(sObjectLayoutSections){
+        global.db.Translation.destroy({
+            where: {
+                type: 'SObject-Section', 
+                SObjectLayoutSectionId: sObjectLayoutSections.id
+            }
+        });
+    });
+
     global.db.SObjectLayoutField.afterUpdate(function(sObjectLayoutField){
         console.log(sObjectLayoutField['_previousDataValues']);
         if(sObjectLayoutField.label !== sObjectLayoutField['_previousDataValues'].label){

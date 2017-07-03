@@ -11,7 +11,7 @@
                             ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
                             ng-click="applyOrderBy(field)" 
                             ng-repeat="field in model.SObjectLayoutFields">
-                            {{ field.label }} 
+                            {{ field.label | translate}} 
                         </th>
                     </tr>
                 </thead>
