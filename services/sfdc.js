@@ -66,7 +66,8 @@ if(!global.hasOwnProperty('sfdc')){
                 }, null);
             }else if(sfdc.environment !== null || sfdc.environment !== ''){
             	global.sfdc.jsForceConnection = new jsForce.Connection({
-                    loginUrl: (sfdc.environment === 'SANDBOX') ? 'https://test.salesforce.com' : 'https://login.salesforce.com'
+                    loginUrl: (sfdc.environment === 'SANDBOX') ? 'https://test.salesforce.com' : 'https://login.salesforce.com',
+                    maxRequest:30
                 });
                 console.log({
                     username: sfdc.username,

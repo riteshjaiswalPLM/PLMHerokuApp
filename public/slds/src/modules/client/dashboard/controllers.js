@@ -272,10 +272,16 @@ client.controller('ClientDashboardController', [
             $scope.data.InvoiceApproveFieldSelectAll = false;
         };
         $scope.callInvoiceApproveFieldSelectAll = function (sAllChkId, sObjectFields) {
+            var cnt = 0;
             if (sAllChkId) {
                 angular.forEach(sObjectFields, function (sObjField) {
-                    sObjField.isChecked = true;
+                    if (cnt < 30) {
+                        sObjField.isChecked = true;
+                    }
+                    cnt++;
                 });
+                $dialog.alert("Maximum 30 record allow at time for multi-approve process");
+                return;
             }
             else {
                 angular.forEach(sObjectFields, function (sObjField) {
@@ -294,37 +300,43 @@ client.controller('ClientDashboardController', [
             });
             $scope.data[sAllChkId] = isAllChecked;
         }
-        $scope.bulkOperationLookup = function (configuration,allowedType, sAllChkId, sObjectFields,component) {
+        $scope.bulkOperationLookup = function (configuration, allowedType, sAllChkId, sObjectFields, component) {
             var isField = undefined;
             var isChecked = false;
             var isCheckedField = '';
+            var cnt = 0;
             isChecked = $scope.data[sAllChkId];
             {
                 angular.forEach(sObjectFields, function (sObjField) {
                     if (sObjField.isChecked) {
+                        cnt++;
                         if (isField == undefined) {
-                            if(configuration.detailSobjectname!=null && configuration.detailSobjectname!=undefined){
+                            if (configuration.detailSobjectname != null && configuration.detailSobjectname != undefined) {
                                 isField = sObjField[configuration.relativeField.relationshipName];
                             }
-                            else{
+                            else {
                                 isField = sObjField;
                             }
-                        
+
                         }
                         isChecked = true;
-                        if(configuration.detailSobjectname!=null && configuration.detailSobjectname!=undefined){
+                        if (configuration.detailSobjectname != null && configuration.detailSobjectname != undefined) {
                             isCheckedField += sObjField[configuration.relativeField.name] + ",";
                         }
-                        else{
+                        else {
                             isCheckedField += sObjField.Id + ",";
                         }
                     }
                 });
             }
+            if (cnt > 30) {
+                $dialog.alert("Maximum 30 record allow at time for multi-approve process");
+                return;
+            }
             if (isChecked) {
-                $clientLookups.bulk({ data: configuration.multipleFields, model: isField,sObjectName:configuration.name,detailSobjectName:configuration.detailSobjectname,dataModel:isCheckedField}, function () {
-                    $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, allowedType,true);
-                    console.log("Test",loadData);
+                $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField }, function () {
+                    $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory + 'Component' + component.id, component.Component.catagory + component.id + 'Block', component.label, allowedType, true);
+                    $scope.data.InvoiceApproveFieldSelectAll = false;
                 });
             }
             else {

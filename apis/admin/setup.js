@@ -107,7 +107,8 @@ setupRouter.post('/sfdc/save', function(req, res){
 
     console.log(sfdcConfig);
     var jsForceConnection = new jsForce.Connection({
-        loginUrl: (sfdcConfig.environment === 'SANDBOX') ? 'https://test.salesforce.com' : 'https://login.salesforce.com'
+        loginUrl: (sfdcConfig.environment === 'SANDBOX') ? 'https://test.salesforce.com' : 'https://login.salesforce.com',
+        maxRequest:30
     });
     jsForceConnection.login(sfdcConfig.username,sfdcConfig.password + sfdcConfig.token, function (err, userInfo) {
         if(err){
