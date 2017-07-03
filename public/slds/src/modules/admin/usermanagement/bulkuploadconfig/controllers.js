@@ -78,8 +78,8 @@ admin.controller('AdminUserManageBulkUploadConfigController', [
                                 field.csvFieldFormat = field.datatypeFormat;
 
                                 if (field.type == 'datetime') {
-                                    field.csvfieldtimeformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf(" ") + 1);
-                                    field.datatypeFormat = field.datatypeFormat.substring(0, field.datatypeFormat.lastIndexOf(" "));
+                                    field.csvfieldtimeformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf(" ") + 1);
+                                    field.datatypeFormat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf(" "));
 
                                     if (field.datatypeFormat.indexOf('-') != -1) {
                                         field.csvfielddatesep = '-';

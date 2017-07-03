@@ -1,5 +1,9 @@
 module.exports = function (sequelize, DataTypes) {
     var UsersUploadHistory = sequelize.define("UsersUploadHistory", {
+        batchId: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         recordsinserted: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -47,6 +51,10 @@ module.exports = function (sequelize, DataTypes) {
                 else
                     this.getDataValue('uploadresult');
             }
+        },
+        status: {
+            type: DataTypes.STRING,
+            allowNull: false
         },
         createdby: {
             type: DataTypes.STRING,

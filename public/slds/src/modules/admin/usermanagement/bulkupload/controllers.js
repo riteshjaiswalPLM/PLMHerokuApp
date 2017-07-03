@@ -46,7 +46,7 @@ admin.controller('AdminUserManageBulkUploadController', [
                             //     }
                             // }
                             else {
-                                obj[headers[j]] = currentline[j];
+                                obj[headers[j]] = currentline[j].trim();
                             }
                         }
                         result.push(obj);

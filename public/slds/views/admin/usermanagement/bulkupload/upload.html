@@ -43,6 +43,7 @@
                                 style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
                                 <thead>
                                     <tr class="slds-text-title--caps">
+                                        <th style="white-space:normal !important;" title="Batch ID">Batch ID</th>
                                         <th style="white-space:normal !important;" title="File Name">File Name</th>
                                         <th style="white-space:normal !important;min-width: 180px !important;" title="Date">Date</th>
                                         <th style="white-space:normal !important;" title="Uploaded By">Uploaded By</th>
@@ -50,11 +51,13 @@
                                         <th style="white-space:normal !important;" title="Records Updated">Records Updated</th>
                                         <th style="white-space:normal !important;" title="Records Failed">Records Failed</th>
                                         <th style="white-space:normal !important;" title="Invalid Records">Invalid Records</th>
+                                        <th style="white-space:normal !important;" title="Status">Status</th>
                                         <th style="white-space:normal !important;" title="Result">Result</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="field in historyRecords">
+                                        <td>{{ field.batchId }}</td>
                                         <td>{{ field.filename }}</td>
                                         <td>
                                             {{ ($root.formateDateAndDateTime(field.createdAt,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') }}
@@ -64,6 +67,7 @@
                                         <td>{{ field.recordsupdated }}</td>
                                         <td>{{ field.recordsfailed }}</td>
                                         <td>{{ field.invalidrecords }}</td>
+                                        <td>{{ field.status }}</td>
                                         <td>
                                             <a ng-if="field.invalidrecords > 0 || field.recordsfailed > 0" href ng-click="getFile(field.id)"><span class="fa fa-chevron-circle-left"></span>View</a>
                                         </td>
