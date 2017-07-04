@@ -526,6 +526,14 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                                 }
                                                             });
                                                         }
+                                                        else {
+                                                            var keys = Object.keys(sfdcRecord);
+                                                            keys.forEach(function (key) {
+                                                                if (sfdcRecord[key] == "") {
+                                                                    sfdcRecord[key] = null;
+                                                                }
+                                                            });
+                                                        }
                                                         global.sfdc.sobject(global.UserMapping.SObject.name)
                                                             .create(record, function (err, ret) {
                                                                 if (err || !ret.success) {
@@ -552,6 +560,14 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                             keys.forEach(function (key) {
                                                                 if (record[key] == "") {
                                                                     delete record[key];
+                                                                }
+                                                            });
+                                                        }
+                                                        else {
+                                                            var keys = Object.keys(sfdcRecord);
+                                                            keys.forEach(function (key) {
+                                                                if (sfdcRecord[key] == "") {
+                                                                    sfdcRecord[key] = null;
                                                                 }
                                                             });
                                                         }
@@ -957,6 +973,14 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                                                                 }
                                                                             });
                                                                         }
+                                                                        else {
+                                                                            var keys = Object.keys(sfdcRecord);
+                                                                            keys.forEach(function (key) {
+                                                                                if (sfdcRecord[key] == "") {
+                                                                                    sfdcRecord[key] = null;
+                                                                                }
+                                                                            });
+                                                                        }
 
                                                                         global.sfdc.sobject(global.UserMapping.SObject.name)
                                                                             .create(sfdcRecord, function (err, ret) {
@@ -1003,6 +1027,14 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                                                             keys.forEach(function (key) {
                                                                                 if (sfdcRecord[key] == "") {
                                                                                     delete sfdcRecord[key];
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        else {
+                                                                            var keys = Object.keys(sfdcRecord);
+                                                                            keys.forEach(function (key) {
+                                                                                if (sfdcRecord[key] == "") {
+                                                                                    sfdcRecord[key] = null;
                                                                                 }
                                                                             });
                                                                         }
