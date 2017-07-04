@@ -280,7 +280,9 @@ client.controller('ClientDashboardController', [
                     }
                     cnt++;
                 });
-                $dialog.alert("Maximum 30 record allow at time for multi-approve process");
+                if (cnt > 30) {
+                    $dialog.alert("Maximum 30 record allow at time for multi-approve process");
+                }
                 return;
             }
             else {
