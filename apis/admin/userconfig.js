@@ -517,7 +517,12 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                             .execute(function (err, user) {
                                                 if (user) {
                                                     if (user.length == 0) {
-                                                        //Create new user
+                                                        //Add User Type = 'Requestor' if it is not provided in upload field mapping
+                                                        if (!sfdcRecord.hasOwnProperty('akritivesm__User_Type__c')) {
+                                                            sfdcRecord.akritivesm__User_Type__c = "Requestor";
+                                                        }
+
+                                                        //Code for Ignore Blank checkbox
                                                         if (req.body.ignoreBlank) {
                                                             var keys = Object.keys(record);
                                                             keys.forEach(function (key) {
@@ -534,6 +539,8 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                                 }
                                                             });
                                                         }
+
+                                                        //Create new user
                                                         global.sfdc.sobject(global.UserMapping.SObject.name)
                                                             .create(record, function (err, ret) {
                                                                 if (err || !ret.success) {
@@ -554,7 +561,7 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                             });
                                                     }
                                                     else {
-                                                        //Update existing user
+                                                        //Code for Ignore Blank checkbox
                                                         if (req.body.ignoreBlank) {
                                                             var keys = Object.keys(record);
                                                             keys.forEach(function (key) {
@@ -571,6 +578,8 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                                                                 }
                                                             });
                                                         }
+
+                                                        //Update existing user
                                                         record.Id = user[0].Id;
                                                         global.sfdc.sobject(global.UserMapping.SObject.name)
                                                             .update(record, function (err, ret) {
@@ -964,7 +973,12 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                                             .execute(function (err, user) {
                                                                 if (user) {
                                                                     if (user.length == 0) {
-                                                                        //Create new user
+                                                                        //Add User Type = 'Requestor' if it is not provided in upload field mapping
+                                                                        if (!sfdcRecord.hasOwnProperty('akritivesm__User_Type__c')) {
+                                                                            sfdcRecord.akritivesm__User_Type__c = "Requestor";
+                                                                        }
+
+                                                                        //Code for Ignore Blank checkbox
                                                                         if (req.body.ignoreBlank) {
                                                                             var keys = Object.keys(sfdcRecord);
                                                                             keys.forEach(function (key) {
@@ -982,6 +996,7 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                                                             });
                                                                         }
 
+                                                                        //Create new user
                                                                         global.sfdc.sobject(global.UserMapping.SObject.name)
                                                                             .create(sfdcRecord, function (err, ret) {
                                                                                 if (err || !ret.success) {
@@ -1021,7 +1036,7 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                                                             });
                                                                     }
                                                                     else {
-                                                                        //Update existing user
+                                                                        //Code for Ignore Blank checkbox
                                                                         if (req.body.ignoreBlank) {
                                                                             var keys = Object.keys(sfdcRecord);
                                                                             keys.forEach(function (key) {
@@ -1039,8 +1054,9 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                                                                             });
                                                                         }
 
+                                                                        //Update existing user
                                                                         sfdcRecord.Id = user[0].Id;
-
+                                                                        console.log("sfdcRecord: " + JSON.stringify(sfdcRecord));
                                                                         global.sfdc.sobject(global.UserMapping.SObject.name)
                                                                             .update(sfdcRecord, function (err, ret) {
                                                                                 if (err || !ret.success) {
