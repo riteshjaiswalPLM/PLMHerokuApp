@@ -18,6 +18,7 @@ module.exports = function(sequelize, DataTypes){
                 Translation.belongsTo(models.Language);
                 Translation.belongsTo(models.SObject);
                 Translation.belongsTo(models.SObjectLayoutSection);
+                Translation.belongsTo(models.Components);
             }
         }
     });

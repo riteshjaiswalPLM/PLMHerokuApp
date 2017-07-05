@@ -177,6 +177,97 @@ module.exports = function(){
             });
         });
     });
+
+    global.db.Components.afterCreate(function(newComponent){
+        global.db.Translation.build({
+            label: newComponent.title, 
+            translation: newComponent.title,
+            type: 'SObject-Section', 
+            LanguageId: global.languageconfig.English.id,
+            SObjectId: newComponent.SObjectId,
+            ComponentId: newComponent.id
+        }).save();
+    });
+    global.db.Components.afterBulkUpdate(function(component){
+        console.log('Component ',component)
+        if (component!=null && component.attributes!=null && component.attributes.title !=null && component.attributes.title !=undefined){
+            global.db.Translation.update({
+                label: component.attributes.title, 
+                translation: component.attributes.title,
+                SObjectId: component.SObjectId,
+                ComponentId: component.where.id
+            },{
+                where: {
+                    ComponentId: component.where.id
+                }
+            });
+        }
+    });
+    global.db.Components.beforeBulkDestroy(function(Component){
+        console.log('test11 ',Component);
+        global.db.Translation.destroy({
+            where: {
+                type: 'SObject-Section', 
+                ComponentId: Component.id
+            }
+        });
+    });
+    global.db.ComponentDetail.afterCreate(function(newComponent){
+        if(newComponent.configuration!=null && newComponent.configuration!=undefined){
+            if(newComponent.configuration.fields!=null && newComponent.configuration.fields!=undefined){
+                newComponent.configuration.fields.forEach(function(field){
+                    if(field.label!=null && field.label!=undefined && field.SObjectField!=null && field.SObjectField!=undefined){
+                        global.db.Translation.build({
+                            label: field.label, 
+                            translation: field.label,
+                            type: 'SObject-Label', 
+                            LanguageId: global.languageconfig.English.id,
+                            SObjectId: field.SObjectField.SObjectId,
+                            ComponentId: newComponent.ComponentId
+                        }).save();
+                    }
+                });
+            }
+        }
+    });
+
+    global.db.ComponentDetail.afterBulkUpdate(function(newComponent){
+        getComponentDetails(newComponent.where.id, function(componentDetail){
+            global.db.Translation.destroy({
+                where: {
+                    type: 'SObject-Label', 
+                    ComponentId: componentDetail.ComponentId
+                }
+            }).then(function(decRec){
+                console.log('et' ,componentDetail.configuration.fields)
+                if(componentDetail.configuration!=null && componentDetail.configuration!=undefined){
+                    if(componentDetail.configuration.fields!=null && componentDetail.configuration.fields!=undefined){
+                        componentDetail.configuration.fields.forEach(function(field){
+                            if(field.label!=null && field.label!=undefined && field.SObjectField!=null && field.SObjectField!=undefined){
+                                global.db.Translation.build({
+                                    label: field.label, 
+                                    translation: field.label,
+                                    type: 'SObject-Label', 
+                                    LanguageId: global.languageconfig.English.id,
+                                    SObjectId: field.SObjectField.SObjectId,
+                                    ComponentId: componentDetail.ComponentId
+                                }).save();
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
+    
+    global.db.ComponentDetail.beforeDestroy(function(Component){
+        global.db.Translation.destroy({
+            where: {
+                type: 'SObject-Label', 
+                ComponentId: Component.ComponentId
+            }
+        });
+    });
 };
 
 var getSObjectLayoutDetails = function(sObjectLayoutId, callback){
@@ -188,5 +279,16 @@ var getSObjectLayoutDetails = function(sObjectLayoutId, callback){
         } 
     }).then(function(sObjectLayout){
         callback && callback(sObjectLayout);
+    });
+};
+var getComponentDetails = function(ComponentDetailId, callback){
+    global.db.ComponentDetail.findOne({attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        where: {
+            id: ComponentDetailId
+        } 
+    }).then(function(componentDetail){
+        callback && callback(componentDetail);
     });
 };
