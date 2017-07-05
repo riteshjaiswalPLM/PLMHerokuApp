@@ -319,7 +319,6 @@ client.controller('ClientDashboardController', [
                             else {
                                 isField = sObjField;
                             }
-
                         }
                         isChecked = true;
                         if (configuration.detailSobjectname != null && configuration.detailSobjectname != undefined) {
@@ -336,10 +335,15 @@ client.controller('ClientDashboardController', [
                 return;
             }
             if (isChecked) {
-                $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField }, function () {
-                    $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory + 'Component' + component.id, component.Component.catagory + component.id + 'Block', component.label, allowedType, true);
-                    $scope.data.InvoiceApproveFieldSelectAll = false;
-                });
+                if (cnt == 0) {
+                    $dialog.alert("Please select at least one record");
+                }
+                if (cnt > 0) {
+                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField }, function () {
+                        $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory + 'Component' + component.id, component.Component.catagory + component.id + 'Block', component.label, allowedType, true);
+                        $scope.data.InvoiceApproveFieldSelectAll = false;
+                    });
+                }
             }
             else {
                 $dialog.alert("Please select at least one record");
