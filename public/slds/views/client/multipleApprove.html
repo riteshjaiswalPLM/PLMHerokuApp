@@ -9,31 +9,32 @@
             </button>
             <h2 id="modalTitle" class="slds-text-heading--medium" translate>Bulk Operation </h2>
         </div>
-        <div class="modal-body" block-ui="saveMultiUserAction">
-            <form class="form-horizontal">
-                <div class="slds-size--1-of-1">
-                    <div class="col-md-12">
-                        <div class="slds-form--horizontal">
-                            <table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped"
-                                style="margin-bottom:0px;max-height:300px ;">
-                                <thead>
-                                    <tr class="slds-form-element" ng-repeat="field in data">
-                                        <td ng-if="field.rendered != false">
-                                            <label class="slds-form-element__label" style="font-weight: 600;float: none;width:30%" for="{{field.SObjectField.name + $index}}"
-                                                translate>{{ field.label}}</label> 
-                                        </td>
-                                        <td ng-if="field.rendered != false" >
-                                            <div class="slds-form-element__control ">
-                                                <div field-readonly="{{field.readonly}}" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </thead>
-                            </table>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-col slds-size--1-of-1" block-ui="saveMultiUserAction">
+                <form class="form-horizontal">
+                    <div class="slds-size--1-of-1">
+                        <div class="col-md-12">
+                            <div class="slds-form--horizontal">
+                                <table class="slds-table slds-table--compaq slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
+                                    <thead>
+                                        <tr class="slds-form-element" ng-repeat="field in data">
+                                            <td ng-if="field.rendered != false">
+                                                <label class="slds-form-element__label" style="font-weight: 600;float: none;width:30%" for="{{field.SObjectField.name + $index}}"
+                                                    translate>{{ field.label}}</label>
+                                            </td>
+                                            <td ng-if="field.rendered != false">
+                                                <div class="slds-form-element__control ">
+                                                    <div field-readonly="{{field.readonly}}" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         <div class="slds-modal__footer">
             <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
@@ -43,7 +44,7 @@
                 </svg>
                 {{'Save' | translate}}
             </button>
-            
+
         </div>
     </div>
 </div>
