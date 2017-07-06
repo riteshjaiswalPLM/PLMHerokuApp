@@ -188,23 +188,38 @@ module.exports = function(){
             ComponentId: newComponent.id
         }).save();
     });
-    global.db.Components.afterBulkUpdate(function(component){
-        console.log('Component ',component)
-        if (component!=null && component.attributes!=null && component.attributes.title !=null && component.attributes.title !=undefined){
-            global.db.Translation.update({
-                label: component.attributes.title, 
-                translation: component.attributes.title,
-                SObjectId: component.SObjectId,
-                ComponentId: component.where.id
-            },{
-                where: {
-                    ComponentId: component.where.id
-                }
-            });
-        }
+    global.db.Components.afterBulkUpdate(function(components){
+        getComponent(components.where.id, function(component){
+            if (component!=null ){
+                global.db.Translation.update({
+                    label: component.title, 
+                    translation: component.title,
+                    SObjectId: component.SObjectId,
+                    ComponentId: component.id
+                },{
+                    where: {
+                        type: 'SObject-Section', 
+                        ComponentId: component.id
+                    }
+                }).then(function(result){
+                    if(result==0){
+                        global.db.Translation.build({
+                            label: component.title, 
+                            translation: component.title,
+                            type: 'SObject-Section', 
+                            LanguageId: global.languageconfig.English.id,
+                            SObjectId: component.SObjectId,
+                            ComponentId: component.id
+                        }).save();
+                    }
+                    else{
+                        console.log('Record Found')
+                    }
+                });
+            }
+        });
     });
     global.db.Components.beforeBulkDestroy(function(Component){
-        console.log('test11 ',Component);
         global.db.Translation.destroy({
             where: {
                 type: 'SObject-Section', 
@@ -239,7 +254,6 @@ module.exports = function(){
                     ComponentId: componentDetail.ComponentId
                 }
             }).then(function(decRec){
-                console.log('et' ,componentDetail.configuration.fields)
                 if(componentDetail.configuration!=null && componentDetail.configuration!=undefined){
                     if(componentDetail.configuration.fields!=null && componentDetail.configuration.fields!=undefined){
                         componentDetail.configuration.fields.forEach(function(field){
@@ -290,5 +304,16 @@ var getComponentDetails = function(ComponentDetailId, callback){
         } 
     }).then(function(componentDetail){
         callback && callback(componentDetail);
+    });
+};
+var getComponent = function(ComponentId, callback){
+    global.db.Components.findOne({attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        where: {
+            id: ComponentId
+        } 
+    }).then(function(component){
+        callback && callback(component);
     });
 };
