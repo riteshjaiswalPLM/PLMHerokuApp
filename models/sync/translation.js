@@ -41,7 +41,7 @@ module.exports = {
         });
     }
 };
-var fixedTranslationArray = ["Back to List","Save","Cancel","Edit","Related lists","Search Criteria","Search","Search Results","No result found","Page size","Previous","Next","Loading","Select","None","Close","Refresh Results","OK","Profile","Settings","Logout","Dashboard","Bulk Operation","Items per page","Reset","Export","My Task","Home","Upload Primary Document","Add","format are supported","Upload","No attachment found","Attach File","Delete","Title","Size","ContentType","Download","Attachment Section","File","Size in Bytes","Recall","Add more","Request Field","Current Value","Proposed Value","Reload","New"], engLangId;
+var fixedTranslationArray = ["Back to List","Save","Cancel","Edit","Related lists","Search Criteria","Search","Search Results","No result found","Page size","Previous","Next","Loading","Select","None","Close","Refresh Results","OK","Profile","Settings","Logout","Dashboard","Bulk Operation","Items per page","Reset","Export","My Task","Home","Upload Primary Document","Add","format are supported","Upload","No attachment found","Attach File","Delete","Title","Size","ContentType","Download","Attachment Section","File","Size in Bytes","Recall","Add more","Request Field","Current Value","Proposed Value","Reload","New","Manage Profile","Change Password","Other Settings","User Information","Profile","Select Default Language","Select Default Time Zone","Select Default Locale","Password Information","Current Password","New Password","Confirm new password","Valid password format","Password must contain atleast one","latter","number","special character","Password length must be between","5 - 19"], engLangId;
 
 var getFixedTranslationToCreate = function(){
     var fixedTranslationToCreate = [];
