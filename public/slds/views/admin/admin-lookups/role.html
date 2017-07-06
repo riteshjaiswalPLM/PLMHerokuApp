@@ -1,27 +1,35 @@
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="roleLookupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div  tabindex="-1" role="dialog" aria-labelledby="roleLookupModalLabel" data-backdrop="static" class="slds-modal slds-modal--large">
+    <div class="slds-modal__container">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
+            <div class="slds-modal__header">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                    <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Close</span>
                 </button>
-                <h4 class="modal-title" id="roleLookupModalLabel">{{ title }}</h4>
+                <h2 id="sObjectLookupModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
             </div>
-            <div class="modal-body" block-ui="loadRoles" style="height:300px;overflow: auto;padding:0px;">
-                <table class="table table-striped table-hover table-bordered" ng-if="roles.length > 0" style="margin-bottom:0px;">
+            <div class="slds-modal__content slds-p-around--medium" block-ui="loadRoles" style="height:300px;overflow: auto;padding:0px;">
+                <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" ng-if="roles.length > 0" style="margin-bottom:0px;">
                     <thead>
-                        <tr>
-                            <th style="width: 50px;">#</th>
-                            <th>Role</th>
-                            <th style="text-align: center;width: 100px;">Action</th>
+                        <tr class="slds-text-title--caps">
+                            <th class="slds-truncate" style="width: 50px;">#</th>
+                            <th class="slds-truncate">Role</th>
+                            <th class="slds-truncate" style="text-align: center;width: 100px;">Action</th>
                         </tr>
                     </thead>
                     <tbody >
-                        <tr ng-repeat="role in roles | filter: rolesFilter">
-                            <td>{{ $index + 1 }}</td>
-                            <td><strong>{{ role.name }}</strong></td>
-                            <td style="text-align: center;">
-                                <button class="btn btn-xs btn-primary" type="button" ng-click="selectAndClose(role)"><i class="fa fa-check"></i> Select</button>
+                        <tr class="slds-text-title--caps" ng-repeat="role in roles | filter: rolesFilter">
+                            <td class="slds-truncate">{{ $index + 1 }}</td>
+                            <td class="slds-truncate"><strong>{{ role.name }}</strong></td>
+                            <td class="slds-truncate" style="text-align: center;">
+                                <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(role)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Select</span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -33,12 +41,22 @@
                     <h1>No role added.</h1>
                 </div>
             </div>
-            <div class="modal-footer" style="margin-top: 0px;">
-                <div class="actions pull-left col-md-6" style="padding-left: 0px;">
-                    <input type="text" class="form-control " ng-model="rolesFilter" placeholder="Search ..." style="float: left;" />
+           
+            <div class="slds-modal__footer">
+                <div style="padding-left: 0px; float: left;">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                            <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                            </svg>
+                            <input type="text" class="slds-input" placeholder="Search..." ng-model="rolesFilter" />
+                        </div>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+                
+                <button class="slds-button slds-button--neutral" ng-click="close()" translate>Close</button>
             </div>
         </div>
     </div>
 </div>
+<div class="slds-backdrop"></div>

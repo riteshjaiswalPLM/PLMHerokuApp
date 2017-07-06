@@ -114,7 +114,7 @@
                                     <div class="slds-input-has-icon slds-grow">
                                         <input readonly type="text" 
                                             class="slds-lookup__search-input slds-input--bare" 
-                                            ng-model="usermapping.SObject.label" />
+                                            ng-model="usermapping.DefaultRole.name" />
                                     </div>
                                     <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
                                         <button ng-click="openRolesLookup()" 
@@ -137,9 +137,9 @@
                                 <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
                                     <option value="">-- None --</option>
                                 </select>
-                                <!--<select ng-if="enableEdit === true && !usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                <select ng-if="enableEdit === true && !usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
                                     <option value="">-- None --</option>
-                                </select>-->
+                                </select>
                                 <span>&nbsp;</span>
                                 <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.operator" ng-options="opr.value as opr.label for opr in [{label: 'Equel to',value: '==='},{label: 'Not Equel to',value: '!=='}]">
                                     <option value="">-- None --</option>
@@ -149,10 +149,10 @@
                                         ng-options="field.value as field.label for field in usermapping.activeCriteria.when.picklistValues">
                                     <option value="">-- None --</option>
                                 </select>
-                                <!--<select ng-if="enableEdit === true && usermapping.activeCriteria.when && usermapping.activeCriteria.when.type ==='boolean'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.value" 
+                                <select ng-if="enableEdit === true && usermapping.activeCriteria.when && usermapping.activeCriteria.when.type ==='boolean'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.value" 
                                         ng-options="val.value as val.label for val in [{label: 'True',value: true},{label: 'False',value: false}]">
                                     <option value="">-- None --</option>
-                                </select>-->
+                                </select>
                             </div>
                         </div>
                         <div class="slds-form-element">
@@ -162,9 +162,9 @@
                                 <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
                                     <option value="">-- None --</option>
                                 </select>
-                                <!--<select ng-if="enableEdit === true && !usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                <select ng-if="enableEdit === true && !usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
                                     <option value="">-- None --</option>
-                                </select>-->
+                                </select>
                                 <span>&nbsp;</span>
                                 <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.operator" ng-options="opr.value as opr.label for opr in [{label: 'Equel to',value: '==='},{label: 'Not Equel to',value: '!=='}]">
                                     <option value="">-- None --</option>
@@ -174,10 +174,10 @@
                                         ng-options="field.value as field.label for field in usermapping.syncCriteria.when.picklistValues">
                                     <option value="">-- None --</option>
                                 </select>
-                                <!--<select ng-if="enableEdit === true && usermapping.syncCriteria.when && usermapping.syncCriteria.when.type ==='boolean'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.value" 
+                                <select ng-if="enableEdit === true && usermapping.syncCriteria.when && usermapping.syncCriteria.when.type ==='boolean'" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.value" 
                                         ng-options="val.value as val.label for val in [{label: 'True',value: true},{label: 'False',value: false}]">
                                     <option value="">-- None --</option>
-                                </select>-->
+                                </select>
                             </div>
                         </div>
                         <div class="slds-form-element">
