@@ -17,6 +17,7 @@
     "express": "^4.13.4",
     "express-csv": "^0.6.0",
     "formidable": "^1.0.17",
+    "heroku-ssl-redirect": "0.0.4",
     "jsforce": "^1.6.5",
     "json2csv": "^3.7.3",
     "jsonwebtoken": "~6.2.0",
