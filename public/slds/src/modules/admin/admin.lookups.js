@@ -89,6 +89,48 @@ adminLookup.controller('SObjectLayoutLookupController',[
     }
 ]);
 
+adminLookup.controller('SObjectReportLookupController', [
+    '$scope', '$rootScope', '$element', '$dialog', 'reportService', 'blockUI', 'data', 'close',
+    function ($scope, $rootScope, $element, $dialog, reportService, blockUI, data, close) {
+        $scope.title = (data.title) ? data.title : 'Select sObject Report';
+
+        $scope.loadSObjectReports = function () {
+            var blockUi = blockUI.instances.get('loadSObjectReports');
+            if (!blockUi.state().blocking) {
+                blockUi.start('Loading local sobject report...');
+                reportService.loadReports({
+                    criteria: data.criteria
+                }).success(function (response) {
+                    blockUi.stop();
+                    if (response.success) {
+                        $scope.sObjectReports = response.data.reports;
+                    } else {
+                        $scope.close();
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                }).error(function (response) {
+                    blockUi.stop();
+                    $scope.close();
+                    $dialog.alert('Error occured while loading local sobjects report.', 'Error', 'pficon pficon-error-circle-o');
+                });
+            }
+        }
+
+        $scope.close = function () {
+            $element.modal('hide');
+        };
+        $scope.selectAndClose = function (sObjectReport) {
+            $element.modal('hide');
+            close(sObjectReport, 500);
+        };
+
+        $scope.init = function () {
+            $scope.loadSObjectReports();
+        };
+        $scope.init();
+    }
+]);
+
 adminLookup.controller('SObjectLookupsLookupController',[
             '$scope','$rootScope','$element','$dialog','lookupService','blockUI','data','close',
     function($scope , $rootScope , $element , $dialog , lookupService , blockUI , data , close){
@@ -330,6 +372,20 @@ adminLookup.factory('$adminLookups',['ModalService',function(ModalService){
                 modal.element.modal({backdrop: 'static', keyboard: false});
                 modal.close.then(function(sObjectLayout){
                     callback && callback(sObjectLayout);
+                });
+            });
+        },
+        sObjectReport: function(data, callback){
+            ModalService.showModal({
+                templateUrl: 'slds/views/admin/admin-lookups/sobjectreport.html',
+                controller:'SObjectReportLookupController',
+                inputs:{
+                    data: data  
+                } 
+            }).then(function(modal){
+                modal.element.modal({backdrop: 'static', keyboard: false});
+                modal.close.then(function(sObjectReport){
+                    callback && callback(sObjectReport);
                 });
             });
         },

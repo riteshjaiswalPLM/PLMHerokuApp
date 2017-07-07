@@ -34,6 +34,19 @@ admin.controller('AdminLayoutsController',['$scope','$rootScope','$state',functi
     };
     $scope.init();
 }]);
+admin.controller('AdminReportsController',['$scope','$rootScope','$state',function($scope,$rootScope,$state){
+    $scope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams,options){
+        if(toState.name === 'admin.reports' && fromState !== 'admin.reports.list'){
+            event.preventDefault();
+            $state.go('admin.reports.list');
+        }
+    });
+    $scope.init = function(){
+        console.log('AdminReportsController loaded!');
+        $state.go('admin.reports.list');
+    };
+    $scope.init();
+}]);
 admin.controller('AdminLookupsController',['$scope','$rootScope','$state',function($scope,$rootScope,$state){
     $scope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams,options){
         if(toState.name === 'admin.lookups' && fromState !== 'admin.lookups.list'){

@@ -229,64 +229,69 @@ sobjectRouter.post('/new', function(req, res){
                                     { type: 'Create',   SObjectId: newSObject.id, created: false, active: false ,events : [{"datatype":["void"],"type":"change","name":"showAlert"},{"datatype":["reference","picklist"],"type":"change","name":"reloadLayout"},{"datatype":["reference","picklist"],"type":"change","name":"disabledAndReloadLayout"}] },
                                     { type: 'Edit',     SObjectId: newSObject.id, created: false, active: false ,events : [{"datatype":["void"],"type":"change","name":"showAlert"},{"datatype":["reference","picklist"],"type":"change","name":"reloadLayout"},{"datatype":["reference","picklist"],"type":"change","name":"disabledAndReloadLayout"}] },
                                     { type: 'List',     SObjectId: newSObject.id, created: false, active: false }])
-                                .then(function(){
-                                    // CREATE DEFAULT LOOKUP FOR NEW SOBJECT
-                                    global.db.SObjectLookup
-                                        .build({
-                                            title: newSObject.labelPlural,
-                                            description: 'Default lookup for ' + newSObject.label,
-                                            active: true,
-                                            default: true,
-                                            sobjectname: newSObject.name,
-                                            SObjectId: newSObject.id
-                                        })
-                                        .save()
-                                        .then(function(newLookup){
-                                            // CREATE DEFAULT LOOKUP FIELDS
-                                            var lookup_SObjectFields = db.SObjectField.findAll({
-                                                where: {
-                                                    SObjectId: newSObject.id,
-                                                    $or: [
-                                                        { nameField: true },
-                                                        { name: 'OwnerId' }
-                                                    ]
-                                                }
-                                            });
-                                            lookup_SObjectFields.then(function(_lookup_SObjectFields){
-                                                var lookup_SObjectLayoutFields = [];
-                                                _lookup_SObjectFields.forEach(function(field,fieldIndex){
-                                                    lookup_SObjectLayoutFields.push({
-                                                        label: field.label,
-                                                        type: 'SObject-Lookup-Field',
-                                                        reference: (field.type ==='reference') ? 'Name' : null,
-                                                        SObjectFieldId: field.id,
-                                                        SObjectLookupId: newLookup.id,
-                                                        column: 0,
-                                                        order: fieldIndex
-                                                    });    
-                                                });
-                                                global.db.SObjectLayoutField.bulkCreate(lookup_SObjectLayoutFields).then(function(){
-                                                    // asyncCallBack();
-                                                    // RETURN RESPONSE JSON
-                                                    return res.json({
-                                                        success: true,
-                                                        data: {
-                                                            sObject: newSObject,
-                                                            sObjectFields: sObjectFields
+                                    .then(function(){
+                                        // CREATE SOBJECT REPORT
+                                        db.SObjectReport.create({
+                                            SObjectId: newSObject.id, created: false, active: false
+                                        }).then(function () {
+                                            // CREATE DEFAULT LOOKUP FOR NEW SOBJECT
+                                            global.db.SObjectLookup
+                                                .build({
+                                                    title: newSObject.labelPlural,
+                                                    description: 'Default lookup for ' + newSObject.label,
+                                                    active: true,
+                                                    default: true,
+                                                    sobjectname: newSObject.name,
+                                                    SObjectId: newSObject.id
+                                                })
+                                                .save()
+                                                .then(function(newLookup){
+                                                    // CREATE DEFAULT LOOKUP FIELDS
+                                                    var lookup_SObjectFields = db.SObjectField.findAll({
+                                                        where: {
+                                                            SObjectId: newSObject.id,
+                                                            $or: [
+                                                                { nameField: true },
+                                                                { name: 'OwnerId' }
+                                                            ]
                                                         }
                                                     });
+                                                    lookup_SObjectFields.then(function(_lookup_SObjectFields){
+                                                        var lookup_SObjectLayoutFields = [];
+                                                        _lookup_SObjectFields.forEach(function(field,fieldIndex){
+                                                            lookup_SObjectLayoutFields.push({
+                                                                label: field.label,
+                                                                type: 'SObject-Lookup-Field',
+                                                                reference: (field.type ==='reference') ? 'Name' : null,
+                                                                SObjectFieldId: field.id,
+                                                                SObjectLookupId: newLookup.id,
+                                                                column: 0,
+                                                                order: fieldIndex
+                                                            });
+                                                        });
+                                                        global.db.SObjectLayoutField.bulkCreate(lookup_SObjectLayoutFields).then(function(){
+                                                            // asyncCallBack();
+                                                            // RETURN RESPONSE JSON
+                                                            return res.json({
+                                                                success: true,
+                                                                data: {
+                                                                    sObject: newSObject,
+                                                                    sObjectFields: sObjectFields
+                                                                }
+                                                            });
+                                                        });
+                                                    });
                                                 });
-                                            });
                                         });
-                                    
-                                    // return res.json({
-                                    //     success: true,
-                                    //     data: {
-                                    //         sObject: newSObject,
-                                    //         sObjectFields: sObjectFields
-                                    //     }
-                                    // });
-                                });
+
+                                        // return res.json({
+                                        //     success: true,
+                                        //     data: {
+                                        //         sObject: newSObject,
+                                        //         sObjectFields: sObjectFields
+                                        //     }
+                                        // });
+                                    });
                             });
                         });
                 })

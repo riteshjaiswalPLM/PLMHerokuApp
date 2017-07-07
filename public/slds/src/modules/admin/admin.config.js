@@ -55,6 +55,25 @@ admin.config(function($stateProvider) {
             title: "Edit Layout"
         })
         
+        // Admin Reports
+        .state("admin.reports", {
+            templateUrl: "slds/views/admin/report/index.html",
+            controller: 'AdminReportsController'
+        })
+        .state("admin.reports.list", {
+            templateUrl: "slds/views/admin/report/list.html",
+            controller: "AdminReportsListController",
+            title: "Reports"
+        })
+        .state("admin.reports.edit", {
+            templateUrl: "slds/views/admin/report/edit.html",
+            controller: "AdminReportsEditController",
+            params: {
+                report: null
+            },
+            title: "Edit Report"
+        })
+
         // Admin Custom Lookups
         .state("admin.lookups", {
             templateUrl: "slds/views/admin/lookup/index.html",

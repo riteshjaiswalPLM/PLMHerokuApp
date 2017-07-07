@@ -1,0 +1,72 @@
+<div role="dialog" tabindex="-1" aria-labelledby="sObjectReportLookupModalLabel" data-backdrop="static" class="slds-modal slds-modal--large">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="sObjectReportLookupModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium" block-ui="loadSObjectReports" style="height:400px;overflow: auto;padding:0px;">
+            <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="SObject">SObject</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Api Name">Api Name</div>
+                        </th>
+                        <th scope="col" style="text-align: center;width: 200px">
+                            <div class="slds-truncate" title="Action">Action</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="filteredsObjectReports.length === 0 && sObjectReportsFilter">
+                        <td colspan="3" class="slds-blank-slate">
+                            <h1>No report available for search criteria.</h1>
+                        </td>
+                    </tr>
+                    <tr ng-if="sObjectReports.length === 0">
+                        <td colspan="3" class="slds-blank-slate">
+                            <h1>No report added for sObject.</h1>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="report in filteredsObjectReports = (sObjectReports | filter: sObjectReportsFilter)">
+                        <td data-label="SObject">
+                            <strong>{{ report.SObject.label }}<strong>
+                        </td>
+                        <td data-label="Api Name">{{ report.SObject.name }}</td>
+                        <td data-label="Action" style="text-align: center;">
+                            <div class="slds-truncate" >
+                                <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(report)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Select</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-modal__footer">
+            <div style="padding-left: 0px; float: left;">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        <input type="text" class="slds-input" placeholder="Search..." ng-model="sObjectReportsFilter" />
+                    </div>
+                </div>
+            </div>
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Close</button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop"></div>

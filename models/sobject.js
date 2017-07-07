@@ -87,6 +87,10 @@ module.exports = function(sequelize, DataTypes){
                     onDelete: 'CASCADE', 
                     hooks:true
                 });
+                SObject.hasMany(models.SObjectReport,{
+                    onDelete: 'CASCADE', 
+                    hooks:true
+                });
                 SObject.hasMany(models.Tab,{
                     onDelete: 'CASCADE', 
                     hooks:true
