@@ -258,19 +258,21 @@ componentRouter.post('/details', function(req, res){
                     exclude: ['createdAt','updatedAt']
                 }
             }
-        },{
-            model: db.SObject,
-            as: 'detailSObject',
-            attributes: {
-                exclude: ['createdAt','updatedAt']
-            },
-            include: {
-                model: db.SObjectField,
-                attributes: {
-                    exclude: ['createdAt','updatedAt']
-                }
-            }
-        },{
+        },
+        // {
+        //     model: db.SObject,
+        //     as: 'detailSObject',
+        //     attributes: {
+        //         exclude: ['createdAt','updatedAt']
+        //     },
+        //     include: {
+        //         model: db.SObjectField,
+        //         attributes: {
+        //             exclude: ['createdAt','updatedAt']
+        //         }
+        //     }
+        // },
+        {
             model: db.ComponentDetail,
             attributes: {
                 exclude: ['createdAt','updatedAt']
@@ -291,14 +293,9 @@ componentRouter.post('/details', function(req, res){
                 message: 'Error occured while loading component details.'
             });
         }else{
-            var referenceSObjectNames = [];
-            component.SObject.SObjectFields.forEach(function(field){
-                if(field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1){
-                    referenceSObjectNames.push(field.referenceTo[0]);
-                }
-            });
-            var referenceSObjects = db.SObject.findAll({
-                attributes: {
+
+           var detailSObject = db.SObject.findOne({
+               attributes: {
                     exclude: ['createdAt','updatedAt']
                 },
                 include: {
@@ -308,22 +305,46 @@ componentRouter.post('/details', function(req, res){
                     }
                 },
                 where: {
-                    name: {
-                        $in: referenceSObjectNames
-                    }
+                    id: component.detailSObjectId
                 }
-            });
-            referenceSObjects.then(function(refSObjects){
-                var _refSObjects = {};
-                refSObjects.forEach(function(refSObject){
-                    _refSObjects[refSObject.name] = refSObject;
-                });
-                return res.json({
-                    success: true,
-                    data: {
-                        component: component,
-                        refSObjects: _refSObjects
+           });
+           detailSObject.then(function(detailsobject){
+                var referenceSObjectNames = [];
+                component.SObject.SObjectFields.forEach(function(field){
+                    if(field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1){
+                        referenceSObjectNames.push(field.referenceTo[0]);
                     }
+                });
+                var referenceSObjects = db.SObject.findAll({
+                    attributes: {
+                        exclude: ['createdAt','updatedAt']
+                    },
+                    include: {
+                        model: db.SObjectField,
+                        attributes: {
+                            exclude: ['createdAt','updatedAt']
+                        }
+                    },
+                    where: {
+                        name: {
+                            $in: referenceSObjectNames
+                        }
+                    }
+                });
+                referenceSObjects.then(function(refSObjects){
+                    var _refSObjects = {};
+                    refSObjects.forEach(function(refSObject){
+                        _refSObjects[refSObject.name] = refSObject;
+                    });
+                    var componentData=JSON.parse(JSON.stringify(component));
+                    componentData["detailSObject"]=detailsobject;
+                    return res.json({
+                        success: true,
+                        data: {
+                            component: componentData,
+                            refSObjects: _refSObjects
+                        }
+                    });
                 });
             });
         }
