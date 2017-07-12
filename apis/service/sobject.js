@@ -322,8 +322,8 @@ sobjectRouter.post('/details', function(req, res){
     var queryObject = req.body;
     console.log(queryObject);
     var nameField="name";
-    if(sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("name") === -1){
-        sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].push('name');
+    if(sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("name") === -1 && sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("Name") === -1){
+        sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].push('Name');
     }
     global.sfdc
         .sobject(queryObject.sObject)
