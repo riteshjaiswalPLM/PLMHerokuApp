@@ -57,7 +57,7 @@
                 </div>
                 <div class="slds-p-horizontal--xx-small slds-scrollable-y">
                     <ul>
-                        <li ng-repeat="field in filteredLayoutSObjectFields = (layout.SObject.fields | filter: { recordid: false,SObjectField :{label :search.key} } | orderBy: 'label')">
+                        <li ng-repeat="field in filteredLayoutSObjectFields = (layout.SObject.fields | filter: { SObjectField :{label :search.key} } | orderBy: 'label')">
                             <a href="javascript:void(0);" title="{{field.SObjectField.name}}"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
                                 <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
                                     <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-4">
