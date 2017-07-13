@@ -176,11 +176,17 @@ reportRouter.post('/saveReport', function (req, res) {
     db.SObjectReportField.destroy({ where: { SObjectReportId: listReport.sObjectReportId } });
 
     if (fieldsToCreate.length > 0) {
-        db.SObjectReportField.bulkCreate(fieldsToCreate);
+        db.SObjectReportField.bulkCreate(fieldsToCreate).then(function () {
+            return res.json({
+                success: true
+            });
+        });
     }
-    return res.json({
-        success: true
-    });
+    else {
+        return res.json({
+            success: true
+        });
+    }
 });
 
 module.exports = reportRouter;
