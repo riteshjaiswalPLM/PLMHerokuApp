@@ -1,4 +1,4 @@
-<div ng-controller="ClientReportController" class="slds-tabs--default slds-tabs--secondary" block-ui="reportPageBlock">
+<div ng-if="reporttabs.length > 0" ng-controller="ClientReportController" class="slds-tabs--default slds-tabs--secondary" block-ui="reportPageBlock">
     <ul class="slds-tabs--default__nav slds-p-horizontal--large">
         <li ng-repeat="clientreport in reporttabs" class="slds-tabs--default__item" ui-sref-active="slds-active" role="presentation">
             <a class="slds-tabs--default__link" href="javascript:void(0);" role="tab" ng-click="loadReport(clientreport.id)">{{ clientreport.SObject.label }}</a>
@@ -139,4 +139,7 @@
             </div>
         </div>
     </div>
+</div>
+<div ng-if="reporttabs.length === 0" class="slds-tabs--default slds-tabs--secondary">
+    <h1 class="slds-blank-slate" style="padding:10px">No Reports Configured.</h1>
 </div>
