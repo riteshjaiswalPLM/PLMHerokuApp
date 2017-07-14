@@ -22,5 +22,10 @@ client.config(function($stateProvider) {
             templateUrl: 'slds/views/client/profile/other.html',
             controller: 'ClientProfileOtherController',
             title: 'Other Settings'
+        })
+        .state('client.reports', {
+            templateUrl: 'slds/views/client/report/index.html',
+            controller: 'ClientReportsController',
+            title: 'Reports'
         });
 });

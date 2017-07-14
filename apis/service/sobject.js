@@ -235,8 +235,10 @@ sobjectRouter.post('/export', function (req, res) {
                                     keys.splice(keys.indexOf(field.SObjectField.relationshipName), 1);
                                 }
                             } else {
-                                record[field.SObjectField.label] = record[key];
-                                delete record[key];
+                                if (field.SObjectField.label != key) {
+                                    record[field.SObjectField.label] = record[key];
+                                    delete record[key];
+                                }
                             }
                             fieldChanged = true;
                         }

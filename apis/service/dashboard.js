@@ -264,8 +264,10 @@ dashboardRouter.post('/exportData', function (req, res) {
                                             keysTobeDeleted.push(field.SObjectField.relationshipName);
                                         }
                                     } else {
-                                        record[field.SObjectField.label] = record[key];
-                                        delete record[key];
+                                        if (field.SObjectField.label != key) {
+                                            record[field.SObjectField.label] = record[key];
+                                            delete record[key];
+                                        }
                                     }
                                 }
                                 else {

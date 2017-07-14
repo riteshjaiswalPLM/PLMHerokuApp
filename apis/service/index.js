@@ -8,4 +8,5 @@ serviceRouter.use('/component',require('./component'));
 serviceRouter.use('/profile',require('./profile'));
 serviceRouter.use('/dashboard',require('./dashboard'));
 serviceRouter.use('/archived',require('./archival'));
+serviceRouter.use('/report',require('./report'));
 module.exports = serviceRouter;
