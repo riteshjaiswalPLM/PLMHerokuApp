@@ -1,48 +1,71 @@
 var express = require('express');
 var reportRouter = express.Router();
 
-reportRouter.post('/list', function (req, res) {
-    var criteria = (req.body) ? req.body.criteria : undefined;
-    var where = (criteria) ? criteria.where : undefined;
-    var UserMapping = db.UserMapping.findAll({
+reportRouter.post('/lookuplist', function (req, res) {
+    var SObjects = db.SObject.findAll({
         attributes: {
             exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+            id: {
+                $notIn: db.sequelize.literal(
+                    '( SELECT "SObjectId" FROM "SObjectReports" )'
+                )
+            }
+        },
+        order: [
+            ['label']
+        ]
+    });
+    SObjects.then(function (sObjects) {
+        if (sObjects === undefined || sObjects === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading reports for sObject.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: {
+                    reportsObjectsList: sObjects
+                }
+            });
+        }
+    });
+});
+
+reportRouter.post('/list', function (req, res) {
+    var SObjectReports = db.SObjectReport.findAll({
+        include: [{
+            model: db.SObject,
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        }],
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+            created: true
         },
         order: [
             ['id']
         ]
     });
-    UserMapping.then(function (userMapping) {
-        var SObjectReports = db.SObjectReport.findAll({
-            include: [{
-                model: db.SObject,
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
+    SObjectReports.then(function (sObjectReports) {
+        if (sObjectReports === undefined || sObjectReports === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading reports for sObject.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: {
+                    reports: sObjectReports
                 }
-            }],
-            attributes: {
-                exclude: ['createdAt', 'updatedAt']
-            },
-            where: (where) ? where : null,
-            order: [
-                ['id']
-            ]
-        });
-        SObjectReports.then(function (sObjectReports) {
-            if (sObjectReports === undefined || sObjectReports === null) {
-                return res.json({
-                    success: false,
-                    message: 'Error occured while loading reports for sObject.'
-                });
-            } else {
-                return res.json({
-                    success: true,
-                    data: {
-                        reports: sObjectReports
-                    }
-                });
-            }
-        });
+            });
+        }
     });
 });
 
@@ -54,18 +77,16 @@ reportRouter.post('/create', function (req, res) {
             message: 'No data found for report.'
         });
     } else {
-        //Update Existing Report
-        db.SObjectReport.update({
-            created: true
-        }, {
-                where: {
-                    id: reportToCreate.id
-                }
-            }).then(function () {
-                return res.json({
-                    success: true
-                });
+        //Create Report
+        db.SObjectReport.create({
+            created: true,
+            active: false,
+            SObjectId: reportToCreate.id
+        }).then(function () {
+            return res.json({
+                success: true
             });
+        });
     }
 });
 
@@ -86,25 +107,15 @@ reportRouter.post('/changeactive', function (req, res) {
 
 reportRouter.post('/delete', function (req, res) {
     var sObjectReport = req.body;
-    db.SObjectReport.update({
-        active: false,
-        created: false,
-        whereClause: null
-    }, {
-            where: {
-                id: sObjectReport.id
-            }
-        }).then(function () {
-            db.SObjectReportField.destroy({
-                where: {
-                    SObjectReportId: sObjectReport.id
-                }
-            }).then(function (deletedFieldsCount) {
-                return res.json({
-                    success: true
-                });
-            });
+    db.SObjectReport.destroy({
+        where: {
+            id: sObjectReport.id
+        }
+    }).then(function () {
+        return res.json({
+            success: true
         });
+    });
 });
 
 reportRouter.post('/fields', function (req, res) {

@@ -25,21 +25,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-if="filteredsObjectReports.length === 0 && sObjectReportsFilter">
+                    <tr ng-if="filteredsObjects.length === 0 && sObjectsFilter">
                         <td colspan="3" class="slds-blank-slate">
                             <h1>No report available for search criteria.</h1>
                         </td>
                     </tr>
-                    <tr ng-if="sObjectReports.length === 0">
+                    <tr ng-if="sObjects.length === 0">
                         <td colspan="3" class="slds-blank-slate">
                             <h1>No report added for sObject.</h1>
                         </td>
                     </tr>
-                    <tr ng-repeat="report in filteredsObjectReports = (sObjectReports | filter: sObjectReportsFilter)">
+                    <tr ng-repeat="report in filteredsObjects = (sObjects | filter: sObjectsFilter)">
                         <td data-label="SObject">
-                            <strong>{{ report.SObject.label }}<strong>
+                            <strong>{{ report.label }}<strong>
                         </td>
-                        <td data-label="Api Name">{{ report.SObject.name }}</td>
+                        <td data-label="Api Name">{{ report.name }}</td>
                         <td data-label="Action" style="text-align: center;">
                             <div class="slds-truncate" >
                                 <button class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--brand" ng-click="selectAndClose(report)">
@@ -61,7 +61,7 @@
                         <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
                             <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                         </svg>
-                        <input type="text" class="slds-input" placeholder="Search..." ng-model="sObjectReportsFilter" />
+                        <input type="text" class="slds-input" placeholder="Search..." ng-model="sObjectsFilter" />
                     </div>
                 </div>
             </div>

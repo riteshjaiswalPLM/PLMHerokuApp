@@ -2,8 +2,11 @@
 
 admin.factory('reportService', ['$http', function ($http) {
     return {
-        loadReports: function (body) {
-            return $http.post('/api/admin/sobjectreport/list', body);
+        showLookup: function () {
+            return $http.post('/api/admin/sobjectreport/lookuplist');
+        },
+        loadReports: function () {
+            return $http.post('/api/admin/sobjectreport/list');
         },
         createReport: function (report) {
             return $http.post('/api/admin/sobjectreport/create', report);

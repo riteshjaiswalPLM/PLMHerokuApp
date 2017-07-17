@@ -90,20 +90,18 @@ adminLookup.controller('SObjectLayoutLookupController',[
 ]);
 
 adminLookup.controller('SObjectReportLookupController', [
-    '$scope', '$rootScope', '$element', '$dialog', 'reportService', 'blockUI', 'data', 'close',
-    function ($scope, $rootScope, $element, $dialog, reportService, blockUI, data, close) {
-        $scope.title = (data.title) ? data.title : 'Select sObject Report';
+    '$scope', '$rootScope', '$element', '$dialog', 'reportService', 'blockUI', 'close',
+    function ($scope, $rootScope, $element, $dialog, reportService, blockUI, close) {
+        $scope.title = 'Select sObject Report';
 
         $scope.loadSObjectReports = function () {
             var blockUi = blockUI.instances.get('loadSObjectReports');
             if (!blockUi.state().blocking) {
                 blockUi.start('Loading local sobject report...');
-                reportService.loadReports({
-                    criteria: data.criteria
-                }).success(function (response) {
+                reportService.showLookup().success(function (response) {
                     blockUi.stop();
                     if (response.success) {
-                        $scope.sObjectReports = response.data.reports;
+                        $scope.sObjects = response.data.reportsObjectsList;
                     } else {
                         $scope.close();
                         $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
@@ -375,13 +373,10 @@ adminLookup.factory('$adminLookups',['ModalService',function(ModalService){
                 });
             });
         },
-        sObjectReport: function(data, callback){
+        sObjectReport: function(callback){
             ModalService.showModal({
                 templateUrl: 'slds/views/admin/admin-lookups/sobjectreport.html',
-                controller:'SObjectReportLookupController',
-                inputs:{
-                    data: data  
-                } 
+                controller:'SObjectReportLookupController'
             }).then(function(modal){
                 modal.element.modal({backdrop: 'static', keyboard: false});
                 modal.close.then(function(sObjectReport){

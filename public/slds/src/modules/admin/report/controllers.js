@@ -5,19 +5,10 @@ admin.controller('AdminReportsListController', [
     function ($scope, $state, reportService, blockUI, $dialog, $adminLookups) {
 
         $scope.openSObjectReportsLookup = function () {
-            var data = {
-                criteria: {
-                    where: {
-                        created: false
-                    }
-                }
-            };
-            $adminLookups.sObjectReport(data, function (sObjectReport) {
-                $scope.sObjectReport = sObjectReport;
-
+            $adminLookups.sObjectReport(function (reportsObject) {
                 if (!$scope.blockUI.loadReports.state().blocking) {
-                    $scope.blockUI.loadReports.start('Creating report for ' + sObjectReport.SObject.label + '...');
-                    reportService.createReport(sObjectReport)
+                    $scope.blockUI.loadReports.start('Creating report for ' + reportsObject.label + '...');
+                    reportService.createReport(reportsObject)
                         .success(function (response) {
                             $scope.blockUI.loadReports.stop();
                             if (response.success) {
@@ -37,23 +28,18 @@ admin.controller('AdminReportsListController', [
         $scope.loadReports = function () {
             if (!$scope.blockUI.loadReports.state().blocking) {
                 $scope.blockUI.loadReports.start('Loading reports...');
-                reportService.loadReports({
-                    criteria: {
-                        where: {
-                            created: true
+                reportService.loadReports()
+                    .success(function (response) {
+                        if (response.success) {
+                            $scope.reports = response.data.reports;
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                         }
-                    }
-                }).success(function (response) {
-                    if (response.success) {
-                        $scope.reports = response.data.reports;
-                    } else {
-                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                    }
-                    $scope.blockUI.loadReports.stop();
-                }).error(function (response) {
-                    $dialog.alert('Error occured while loading reports.', 'Error', 'pficon pficon-error-circle-o');
-                    $scope.blockUI.loadReports.stop();
-                });
+                        $scope.blockUI.loadReports.stop();
+                    }).error(function (response) {
+                        $dialog.alert('Error occured while loading reports.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.loadReports.stop();
+                    });
             }
         };
 
