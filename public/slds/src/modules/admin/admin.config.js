@@ -10,6 +10,13 @@ admin.config(function($stateProvider) {
             controller: 'AdminController',
         })
         
+        // Admin change password
+        .state('admin.changepassword', {
+            templateUrl: 'slds/views/admin/profile/changepassword.html',
+            controller: 'AdminProfileController',
+            title: 'Change Password'
+        })
+
         // Admin Dashboard
         .state('admin.dashboard', {
             templateUrl: 'slds/views/admin/dashboard.html',

@@ -19,5 +19,6 @@ adminRouter.use('/orgdetails',require('./orgdetails'));
 adminRouter.use('/dependentpicklist',require('./dependentpicklist'));
 adminRouter.use('/userconfig',require('./userconfig'));
 adminRouter.use('/sobjectreport',require('./sobjectreport'));
+adminRouter.use('/profile',require('./profile'));
 
 module.exports = adminRouter;
