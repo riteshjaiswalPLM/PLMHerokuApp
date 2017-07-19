@@ -35,6 +35,18 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.STRING,
          
         },
+        whereClause: {
+            type: DataTypes.TEXT,
+         
+        },
+        groupBy: {
+            type: DataTypes.TEXT,
+         
+        },
+        orderBy: {
+            type: DataTypes.TEXT,
+         
+        },
         criteria :{
             type: DataTypes.TEXT,
             defaultValue: function(){

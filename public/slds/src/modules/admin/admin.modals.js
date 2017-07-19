@@ -283,7 +283,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         };
         $scope.relatedList.SObject.fields = [];
         if($scope.relatedList.SObject.SObjectFields !== undefined){
-            var allowedTypes = ['string','double','date','currency','boolean','picklist','reference'];
+            var allowedTypes = ['string','double','date','currency','boolean','picklist','reference','id'];
             angular.forEach($scope.relatedList.SObject.SObjectFields, function(field){
                 if(field.SObjectField == undefined){
                     field.SObjectField = angular.copy(field);

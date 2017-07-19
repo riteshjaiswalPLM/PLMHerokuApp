@@ -89,13 +89,37 @@ sobjectRouter.post('/search', function(req, res){
     else{
             whereString = queryObject.whereFields;
     }
-    console.log(whereString);
+    if(queryObject.whereClauseString!=undefined && queryObject.whereClauseString!=null && queryObject.whereClauseString!=""){
+        if(typeof whereString =='object'){
+            var data="";
+            for(key in whereString){
+                if(data==""){
+                    data += key + " = '" + whereString[key] + "'";
+                }
+                else{
+                    data += " AND "+key + " = '" + whereString[key]+ "'";
+                }
+            }
+            whereString=data;
+
+        }
+        whereString=whereString==""?queryObject.whereClauseString:whereString+" AND "+queryObject.whereClauseString;    
+    }
+    var orderBy="";
+    if(queryObject.orderBy!=undefined && queryObject.orderBy!=null && queryObject.orderBy!=""){
+        orderBy=queryObject.orderBy.replace(/,+/g, ' ');
+    }
+    else{
+        orderBy="-CreatedDate";
+    }
+    console.log('WhereString',whereString);
     global.sfdc
         .sobject(queryObject.sObject.name)
         // .select(queryObject.selectFields.toString())
         .select(selectFields.toString())
         .where(whereString)
-        .orderby("CreatedDate", "DESC")
+        // .orderby("CreatedDate", "DESC")
+        .sort(orderBy)
         .limit(queryObject.limit+1)
         .offset(queryObject.limit * (queryObject.page - 1))
         .execute(function(err, records){

@@ -663,6 +663,9 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                     SObjectFieldId: relatedList.SObjectFieldId,
                     dispaySection : relatedList.dispaySection,
                     criteria: relatedList.criteria ? relatedList.criteria : undefined,
+                    whereClause: relatedList.whereClause,
+                    groupBy: relatedList.groupBy,
+                    orderBy: relatedList.orderBy,
                     requireAddMore: relatedList.requireAddMore,
                     MobileEditLayoutConfigId: editLayout.MobileEditLayoutConfigId
                 })
@@ -685,6 +688,9 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                     SObjectFieldId: relatedList.SObjectFieldId,
                     dispaySection:relatedList.dispaySection,
                     criteria: relatedList.criteria ? relatedList.criteria : undefined,
+                    whereClause: relatedList.whereClause,
+                    groupBy: relatedList.groupBy,
+                    orderBy: relatedList.orderBy,
                     requireAddMore: relatedList.requireAddMore,
                     MobileEditLayoutConfigId: editLayout.MobileEditLayoutConfigId
                 },{

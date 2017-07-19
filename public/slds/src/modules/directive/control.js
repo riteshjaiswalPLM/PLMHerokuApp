@@ -803,12 +803,27 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
         var orderBy = $filter('orderBy');
         $scope.search = function(page,pageSize){
             var whereFields ={};
+            var whereClauseString=$scope.model.whereClause;
             whereFields[$scope.model.SObjectField.name] = $scope.parentSObject.Id;
-            
+            if(whereClauseString!=undefined && whereClauseString!=null){
+                while(whereClauseString.indexOf("{")!=-1){
+                    if($scope.datamodel[whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))]!=null){
+                        whereClauseString=whereClauseString.substring(0,whereClauseString.indexOf("{"))
+                            +$scope.datamodel[whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))]
+                            +whereClauseString.substring(whereClauseString.indexOf("}")+1)
+                    }
+                    else{
+                        console.log(whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))+"Field not configured in layout")
+                    }
+                    
+                }
+            }
             var queryObject = {
                 sObject: $scope.model.SObject,
                 selectFields: $scope.model.SObjectLayoutFields,
                 whereFields: whereFields,
+                whereClauseString:whereClauseString,
+                orderBy:$scope.model.orderBy,
                 limit: pageSize,
                 page: page
             };  
@@ -881,6 +896,30 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
             console.log('LayoutRelatedListController loaded!');
             $scope.rendered = false;
             $scope.criteriaValidation($scope.model);
+            $scope.groupByData=$scope.model.groupBy!=undefined && $scope.model.groupBy!=''?"["+$scope.model.groupBy+"]":undefined;
+            if($scope.groupByData!=undefined){
+                $scope.pageSize=1000;
+                var groupByField=","+ $scope.model.groupBy+",";
+                groupByField=groupByField.replace(/-+/g, '');
+                var groupByFields={}
+                $scope.model.SObjectLayoutFields.forEach(function(field){
+                    if(groupByField.indexOf(","+field.SObjectField.name+",")!=-1){
+                        groupByFields[field.SObjectField.name]=field.label;
+                    }
+                });
+                $scope.groupFieldsLabel="";
+                groupByField.split(",").forEach(function(rec){
+                    if(rec!=undefined &&  rec!=""){
+                        if($scope.groupFieldsLabel==""){
+                            $scope.groupFieldsLabel=groupByFields[rec];
+                        }
+                        else{
+                            $scope.groupFieldsLabel+=","+groupByFields[rec];
+                        }
+                    }
+                });
+            }
+            // $scope.orderByData=$scope.model.orderBy!=undefined && $scope.model.orderBy!=undefined?$scope.model.orderBy.split(","):'';
             $scope.search(1,$scope.pageSize);
             $scope.sObjectMetaData=$scope.$parent.$parent.$parent.$parent.sObjectMetaData;
             // $dialog.alert(JSON.stringify($scope.parentSObject));

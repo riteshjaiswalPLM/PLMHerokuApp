@@ -139,7 +139,7 @@ var LocalesToCreate = [{name:"Arabic (United Arab Emirates)", code:"ar_AE", date
 {name:"English (Australia)", code:"en_AU", dateTimeFormat:"dddd, DD MMMM YYYY h:mm:ss a", dateFormat:"dddd, DD MMMM YYYY"},
 {name:"Vietnamese", code:"vi", dateTimeFormat:"HH:mm:ss dddd, [ngày] DD MMMM [n?m] YYYY", dateFormat:"dddd, [ngày] DD MMMM [n?m] YYYY"},
 {name:"Dutch (Netherlands)", code:"nl_NL", dateTimeFormat:"dddd DD MMMM YYYY H:mm:ss[ uur]", dateFormat:"dddd DD MMMM YYYY"},
-{name:"French (Canada)", code:"fr_CA", dateTimeFormat:"dddd DD MMMM YYYY H[ h ]mm", dateFormat:"dddd DD MMMM YYYY"},
+{name:"French (Canada)", code:"fr_CA", dateTimeFormat:"dddd DD MMMM YYYY H[ h ]mm[ m ]", dateFormat:"dddd DD MMMM YYYY"},
 {name:"Latvian (Latvia)", code:"lv_LV", dateTimeFormat:"dddd, YYYY, DD MMMM HH:mm:ss", dateFormat:"dddd, YYYY, DD MMMM"},
 {name:"German (Luxembourg)", code:"de_LU", dateTimeFormat:"dddd, DD. MMMM YYYY HH:mm[ Uhr ]", dateFormat:"dddd, DD. MMMM YYYY"},
 {name:"Spanish (Costa Rica)", code:"es_CR", dateTimeFormat:"dddd DD[ de ]MMMM[ de ]YYYY hh:mm:ss a", dateFormat:"dddd DD[ de ]MMMM[ de ]YYYY"},
