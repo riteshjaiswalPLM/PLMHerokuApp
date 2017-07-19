@@ -120,7 +120,7 @@ var getMobileConfig = function(callback){
                     attributes: ['id', 'whereClause'],
                     include: {
                         model: global.db.SObjectLayoutField,
-                        attributes: ['id', 'type', 'reference', 'hidden'],
+                        attributes: ['id', 'type', 'reference', 'hidden', 'fromfield', 'tofield'],
                         include: {
                             model: global.db.SObjectField,
                             attributes: ['name', ['relationshipName', 'relationName'], 'type'],
@@ -160,16 +160,28 @@ var getMobileConfig = function(callback){
                             objectSearchConfig[sObjectsSearchConfigField.name].defaultCriteria = "";
                         }
                         sObjectsSearchConfigField.SObjectLayouts[0].SObjectLayoutFields.forEach(function (Field) {
-                            if (Field.type === "Search-Criteria-Field") {
-                                objectSearchConfig[sObjectsSearchConfigField.name].crateria.push(Field.SObjectField.name);
-                            }
-                            else {
-                                objectSearchConfig[sObjectsSearchConfigField.name].result.push(Field.SObjectField.name);
-                                if (Field.hidden === false) {
-                                    if (Field.SObjectField.type === 'reference' && Field.reference !== undefined) {
-                                        objectSearchConfig[sObjectsSearchConfigField.name].displayFields.push(JSON.parse(JSON.stringify(Field.SObjectField))["relationName"] + '.' + Field.reference);
-                                    } else {
-                                        objectSearchConfig[sObjectsSearchConfigField.name].displayFields.push(Field.SObjectField.name);
+                            if (!(Field.fromfield === null && Field.tofield === true)) {
+                                if (Field.type === "Search-Criteria-Field") {
+                                    if (Field.fromfield === true) {
+                                        if (Field.SObjectField.type === "date" || Field.SObjectField.type === "datetime") {
+                                            objectSearchConfig[sObjectsSearchConfigField.name].crateria.push("DateRange," + Field.SObjectField.name);
+                                        }
+                                        else {
+                                            objectSearchConfig[sObjectsSearchConfigField.name].crateria.push("NumberRange," + Field.SObjectField.name);
+                                        }
+                                    }
+                                    else {
+                                        objectSearchConfig[sObjectsSearchConfigField.name].crateria.push(Field.SObjectField.name);
+                                    }
+                                }
+                                else {
+                                    objectSearchConfig[sObjectsSearchConfigField.name].result.push(Field.SObjectField.name);
+                                    if (Field.hidden === false) {
+                                        if (Field.SObjectField.type === 'reference' && Field.reference !== undefined) {
+                                            objectSearchConfig[sObjectsSearchConfigField.name].displayFields.push(JSON.parse(JSON.stringify(Field.SObjectField))["relationName"] + '.' + Field.reference);
+                                        } else {
+                                            objectSearchConfig[sObjectsSearchConfigField.name].displayFields.push(Field.SObjectField.name);
+                                        }
                                     }
                                 }
                             }
