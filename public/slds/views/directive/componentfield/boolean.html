@@ -18,6 +18,10 @@
                 ng-model="model[field.SObjectField.name]"
                 ng-required="field.required"
                 ng-if="!field.readonly && field.criteriaField === true">-->
+                
+        <span ng-if="field.readonly && model[field.SObjectField.name]==true" >Yes</span>
+        <span ng-if="field.readonly && model[field.SObjectField.name]==false" >No</span>
+        <!--<span ng-if="field.readonly" ng-bind="model[field.SObjectField.name] "></span>-->
         <slds-switch id="{{ field.SObjectField.name + index}}" ng-model="model[field.SObjectField.name]" on-text="True" off-text="False" 
                 show-texts="False"
                 ng-required="field.required"
@@ -26,5 +30,5 @@
                 show-texts="False"
                 ng-required="field.required"
                 ng-if="!field.readonly && field.criteriaField === true"/>
-        <span ng-if="field.readonly" ng-bind="model[field.SObjectField.name] "></span>
+        
 </div>

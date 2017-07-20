@@ -814,6 +814,7 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
                     }
                     else{
                         console.log(whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))+"Field not configured in layout")
+                        break;
                     }
                     
                 }
