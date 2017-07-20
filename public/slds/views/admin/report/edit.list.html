@@ -43,7 +43,8 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody dnd-drop="searchCriteriaFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchCriteriaFields" dnd-allowed-types="['sObjectField','searchCriteriaField']" id="searchCriteriaFieldsContainer">
+                <tbody dnd-drop="searchCriteriaFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchCriteriaFields"
+                    dnd-allowed-types="['sObjectField','searchCriteriaField']" id="searchCriteriaFieldsContainer">
                     <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
                         <th colspan="6" style="background: #e1d951; text-align: center;">
                             <div class="slds-truncate">Drop field here</div>
@@ -54,7 +55,8 @@
                             <div class="slds-truncate">No Criteria field added.</div>
                         </td>
                     </tr>
-                    <tr ng-repeat="field in searchCriteriaFields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchCriteriaFields.splice($index,1)" dnd-type="'searchCriteriaField'">
+                    <tr ng-repeat="field in searchCriteriaFields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchCriteriaFields.splice($index,1)"
+                        dnd-type="'searchCriteriaField'">
                         <td>
                             <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
                         </td>
@@ -133,7 +135,8 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody dnd-drop="searchResultFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchResultFields" dnd-allowed-types="['sObjectField','searchResultField']" id="searchResultFieldsContainer">
+                <tbody dnd-drop="searchResultFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchResultFields"
+                    dnd-allowed-types="['sObjectField','searchResultField']" id="searchResultFieldsContainer">
                     <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
                         <th colspan="6" style="background: #e1d951;">
                             <div class="slds-truncate slds-align--absolute-center">Drop field here</div>
@@ -144,7 +147,8 @@
                             <div class="slds-truncate slds-align--absolute-center">No Result field added.</div>
                         </td>
                     </tr>
-                    <tr ng-repeat="field in searchResultFields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchResultFields.splice($index,1)" dnd-type="'searchResultField'">
+                    <tr ng-repeat="field in searchResultFields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchResultFields.splice($index,1)"
+                        dnd-type="'searchResultField'">
                         <td>
                             <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
                         </td>
@@ -191,14 +195,37 @@
                 </div>
                 <div class="slds-media__body">
                     <h2>
-                        <span class="slds-text-heading--small">Where Clause</span>
+                        <span class="slds-text-heading--small">Report Details</span>
                     </h2>
                 </div>
             </header>
         </div>
         <div class="slds-card__body slds-p-around--x-small slds-border--top" style="margin-bottom: 0;background-color: white;">
             <div class="slds-button-group slds-align--absolute-center" role="group">
-                <textarea ng-model="report.whereClause" class="slds-input" style="resize: none; margin-top: 8px; margin-left:10%; margin-right: 10%;" rows="3">{{ report.whereClause }}</textarea>
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="slds-truncate" title="Report Name">Report Name</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                    <input type="text" class="slds-input input-xs" ng-model="report.reportName" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="slds-truncate" title="Where Clause">Where Clause</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                    <textarea ng-model="report.whereClause" class="slds-input" style="resize: none; margin-top: 8px; margin-right: 10%;" rows="3">{{ report.whereClause }}</textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </article>

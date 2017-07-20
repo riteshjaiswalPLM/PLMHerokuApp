@@ -1,5 +1,12 @@
 module.exports = function (sequelize, DataTypes) {
     var SObjectReport = sequelize.define("SObjectReport", {
+        reportName: {
+            type: DataTypes.STRING,
+            unique: true,
+            defaultValue: function () {
+                return 'Undefined';
+            }
+        },
         created: {
             type: DataTypes.BOOLEAN,
             defaultValue: function () {

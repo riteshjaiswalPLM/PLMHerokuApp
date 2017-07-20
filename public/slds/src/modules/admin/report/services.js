@@ -22,7 +22,7 @@ admin.factory('reportService', ['$http', function ($http) {
             delete newReport.SObject;
             return $http.post('/api/admin/sobjectreport/fields', newReport);
         },
-        saveReport: function (searchCriteriaFields, searchRecordFields, sObjectReportId, sObjectReportWhereClause) {
+        saveReport: function (searchCriteriaFields, searchRecordFields, sObjectReportId, sObjectReportName, sObjectReportWhereClause) {
             var _index = 0;
             angular.forEach(searchCriteriaFields, function (field, index) {
                 if (field.ControllerSObjectField !== undefined && field.ControllerSObjectField !== null) {
@@ -47,6 +47,7 @@ admin.factory('reportService', ['$http', function ($http) {
                 searchCriteriaFields: searchCriteriaFields,
                 searchRecordFields: searchRecordFields,
                 sObjectReportId: sObjectReportId,
+                sObjectReportName: sObjectReportName,
                 sObjectReportWhereClause: sObjectReportWhereClause
             };
             return $http.post('/api/admin/sobjectreport/saveReport', listReport);

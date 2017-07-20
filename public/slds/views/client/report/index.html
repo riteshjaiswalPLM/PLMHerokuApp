@@ -1,7 +1,7 @@
 <div ng-if="reporttabs.length > 0" ng-controller="ClientReportController" class="slds-tabs--default slds-tabs--secondary" block-ui="reportPageBlock">
     <ul class="slds-tabs--default__nav slds-p-horizontal--large">
         <li ng-repeat="clientreport in reporttabs" class="slds-tabs--default__item" ui-sref-active="slds-active" role="presentation">
-            <a class="slds-tabs--default__link" href="javascript:void(0);" role="tab" ng-click="loadReport(clientreport.id)">{{ clientreport.SObject.label }}</a>
+            <a class="slds-tabs--default__link" href="javascript:void(0);" role="tab" ng-click="loadReport(clientreport.id)">{{ clientreport.reportName }}</a>
         </li>
     </ul>
     <div ui-view class="slds-grid">
@@ -19,8 +19,8 @@
                             </div>
                             <div class="slds-media__body">
                                 <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p>
-                                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ reportData.SObject.label + ' ' + $root.title() }}">
-                                    {{ reportData.SObject.label + ' ' + $root.title() | translate }}
+                                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ reportData.reportName }}">
+                                    {{ reportData.reportName | translate }}
                                 </h1>
                             </div>
                         </div>

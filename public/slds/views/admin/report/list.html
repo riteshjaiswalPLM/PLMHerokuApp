@@ -47,13 +47,16 @@
         <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: calc(100vh - 260px);">
             <thead>
                 <tr class="slds-text-title--caps">
-                    <th scope="col">
+                    <th scope="col" style="width: 40%;">
+                        <div class="slds-truncate" title="Report Name">Report Name</div>
+                    </th>
+                    <th scope="col" style="width: 40%;">
                         <div class="slds-truncate" title="SObject">SObject</div>
                     </th>
-                    <th scope="col" style="text-align: center; width: 150px;">
+                    <th scope="col" style="width: 10%;">
                         <div class="slds-truncate" title="Active">Active</div>
                     </th>
-                    <th scope="col" style="text-align: center;width: 300px;">
+                    <th scope="col" style="text-align: center;width: 10%;">
                         <div class="slds-truncate" title="Actions">Actions</div>
                     </th>
                 </tr>
@@ -71,6 +74,9 @@
                     </td>
                 </tr>
                 <tr ng-repeat="report in $root.filteredReports = (reports | filter: reportsFilter)">
+                    <td data-label="Report Name">
+                        <div class="slds-truncate" title="{{ report.reportName }}">{{ report.reportName }}</div>
+                    </td>
                     <td data-label="SObject">
                         <div class="slds-truncate" title="{{ report.SObject.label }}">{{ report.SObject.label }}</div>
                     </td>

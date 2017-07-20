@@ -5,13 +5,15 @@ admin.controller('AdminReportsListController', [
     function ($scope, $state, reportService, blockUI, $dialog, $adminLookups) {
 
         $scope.openSObjectReportsLookup = function () {
-            $adminLookups.sObjectReport(function (reportsObject) {
+            $adminLookups.sObjectReport(function (data) {
                 if (!$scope.blockUI.loadReports.state().blocking) {
-                    $scope.blockUI.loadReports.start('Creating report for ' + reportsObject.label + '...');
-                    reportService.createReport(reportsObject)
+                    $scope.blockUI.loadReports.start('Creating report ...');
+                    reportService.createReport(data)
                         .success(function (response) {
                             $scope.blockUI.loadReports.stop();
                             if (response.success) {
+                                $scope.edit(response.data.report[0]);
+                            } else if (response.created) {
                                 $scope.loadReports();
                             } else {
                                 $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
@@ -305,15 +307,23 @@ admin.controller('AdminReportsEditController', [
         };
 
         $scope.saveReport = function () {
+            if ($scope.report.reportName === undefined || $scope.report.reportName === null || $scope.report.reportName === "") {
+                $dialog.alert("Please Enter Report Name.");
+                return;
+            }
+            else if (!(/^[a-zA-Z0-9 ]+$/).test($scope.report.reportName)) {
+                $dialog.alert("Report Name can be Alphanumeric.");
+                return;
+            }
             if (!$scope.blockUI.editListReport.state().blocking && $scope.report.SObject != null) {
                 $scope.blockUI.editListReport.start('Saving ...');
-                reportService.saveReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.whereClause)
+                reportService.saveReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.reportName, $scope.report.whereClause)
                     .success(function (response) {
                         $scope.blockUI.editListReport.stop();
-                        if (response.success === true) {
-                            $scope.loadListReportFields();
+                        if (response.success) {
+                            $scope.returnToList();
                         } else {
-                            $dialog.alert('Error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                         }
                     })
                     .error(function (response) {
