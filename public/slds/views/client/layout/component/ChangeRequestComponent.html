@@ -1,5 +1,5 @@
-<div block-ui = "ChangeRequestComponentBlock" style="min-height: 100px;" class="slds-scrollable"  >
-    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="width: 100%;">
+<div block-ui = "ChangeRequestComponentBlock" style="min-height: 70px;" class="slds-scrollable"  >
+    <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="width: 100%;">
         <tbody ng-if="type !=='detail' && !section.readonly">
 			<tr class="slds-text-title--caps">
 				<th style="font-weight: 700;border-top: 0px;width:30%" title="Request Field">{{'Request Field' | translate}}</th>
@@ -61,5 +61,7 @@
 			</tr>
 		</tbody>
     </table>
-       
+    <div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="items.length==0 && type ==='detail' || section.readonly"" >
+            <strong>{{'No result found' | translate}}.</strong>
+    </div>   
 </div>

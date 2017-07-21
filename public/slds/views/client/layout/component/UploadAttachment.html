@@ -1,10 +1,10 @@
 <div ng-if="type === 'create'">
-	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:100px"> 
+	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:70px"> 
 	<div class="slds-grid" >
 		<div class="slds-size--1-of-{{allowAttachPrime ? 2 : 1}}">
 			<form class="slds-form--horizontal slds-p-horizontal--x-small">
 				<div class="slds-form-element" >
-					<label class="slds-form-element__label slds-form-element__label" style="font-weight: 600;float: none;" for="selectFile">Select the File to be attached</label>
+					<label class="slds-form-element__label slds-form-element__label" style="font-weight: 600;float: none;" for="selectFile">{{'Select the File to be attached' | translate}}</label>
 					<div class="slds-form-element__control slds-p-left--small">
 						<span 	id 				="selectFile"
 								data-ng-show	= "!primaryDoc.primaryDocument"
@@ -118,8 +118,8 @@
 	</div>
 </div>
 <div ng-if="type !== 'create'" >
-	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:100px"> 
-		<div class="slds-col slds-size--1-of-1" >
+	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:70px"> 
+		<div class="slds-col slds-size--1-of-1" ng-if="type !== 'detail'" style="padding: 10px 0px">
 			<form class="slds-form--horizontal">
 				<div class="slds-form-element">
 						<center>
