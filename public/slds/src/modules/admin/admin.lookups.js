@@ -132,6 +132,10 @@ adminLookup.controller('SObjectReportLookupController', [
                 $dialog.alert("Report Name can be Alphanumeric.");
                 return;
             }
+            else if ($scope.data.reportName.length > 255) {
+                $dialog.alert("Report Name is too long.");
+                return;
+            }
             $element.modal('hide');
             var data = {
                 reportsObjectId: $scope.report.id,
