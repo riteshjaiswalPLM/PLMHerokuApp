@@ -315,6 +315,10 @@ admin.controller('AdminReportsEditController', [
                 $dialog.alert("Report Name can be Alphanumeric.");
                 return;
             }
+            else if ($scope.report.reportName.length > 255) {
+                $dialog.alert("Report Name is too long.");
+                return;
+            }
             if (!$scope.blockUI.editListReport.state().blocking && $scope.report.SObject != null) {
                 $scope.blockUI.editListReport.start('Saving ...');
                 reportService.saveReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.reportName, $scope.report.whereClause)

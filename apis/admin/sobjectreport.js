@@ -110,7 +110,7 @@ reportRouter.post('/create', function (req, res) {
                 }
             });
         }).catch(function (err) {
-            if (err.name === "SequelizeUniqueConstraintError" && err.errors[0].message === "reportName must be unique") {
+            if (err.name === "SequelizeUniqueConstraintError" && err.errors[0].message === "lower(reportName::text) must be unique") {
                 return res.json({
                     success: false,
                     created: false,
@@ -239,7 +239,7 @@ reportRouter.post('/saveReport', function (req, res) {
             }
         })
         .catch(function (err) {
-            if (err.name === "SequelizeUniqueConstraintError" && err.errors[0].message === "reportName must be unique") {
+            if (err.name === "SequelizeUniqueConstraintError" && err.errors[0].message === "lower(reportName::text) must be unique") {
                 return res.json({
                     success: false,
                     message: "Report name must be unique."

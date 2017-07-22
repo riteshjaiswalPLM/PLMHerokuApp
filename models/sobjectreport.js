@@ -2,7 +2,6 @@ module.exports = function (sequelize, DataTypes) {
     var SObjectReport = sequelize.define("SObjectReport", {
         reportName: {
             type: DataTypes.STRING,
-            unique: true,
             defaultValue: function () {
                 return 'Undefined';
             }
@@ -25,7 +24,11 @@ module.exports = function (sequelize, DataTypes) {
                 return undefined;
             }
         }
-    }, {
+    },
+        {
+            indexes: [
+                { name: 'unique_name', unique: true, fields: [sequelize.fn('lower', sequelize.col('reportName'))] }
+            ],
             classMethods: {
                 associate: function (models) {
                     SObjectReport.belongsTo(models.SObject);
