@@ -33,8 +33,8 @@
             <a href="#" ng-click="refresh();"><span class="pficon pficon-refresh"></span> {{'Refresh Results' | translate}}</a>
         </div>
         <h1><i class="{{icon}}"></i>&nbsp;&nbsp;{{ $root.title() | translate}}</h1>
-    </div>-->
-    <div style="height: calc(100vh - 156px);" class="slds-scrollable--y">
+    </div>--> 
+        <div style="height: calc(100vh - 156px);" class="slds-scrollable--y">
         <div id="accordion-markup-outer" style="margin:20px;">
             <div class="slds-form--stacked slds-grow" ng-repeat="container in containersMetaData | orderBy: 'order'" style="border: 1px solid #d8dde6;margin-bottom: 10px">
                 <div ng-init="$index === 0?container.isCollapse=true:container.isCollapse=false" ng-click="showHideContainers(container,containersMetaData);"
@@ -83,7 +83,7 @@
                                             <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
                                             </svg>
-                                            {{'Bulk Operation' | translate}}
+                                            {{component.Component.ComponentDetail.configuration.bulkOperationTitle | translate}}
                                         </button>
                                         </div>
                                     </div>
@@ -123,12 +123,16 @@
                                                         'date') ? (result[field.SObjectField.name] | date: 'mediumDate')
                                                         : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
                                                         | date: 'medium') : result[field.SObjectField.name] }}">
-                                                        {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
+                                                        <div align="center" ng-if="field.SObjectField.type === 'reference' && field.SObjectField.relationshipName==='Tracker_Id__r' && result[field.SObjectField.relationshipName][field.reference]!=null && field.reference.indexOf('Primary_Document_ID__c')!==-1">
+                                                            <a title=""  href="#" ng-click="openAttachment(result[field.SObjectField.relationshipName][field.reference])"><img src="/resources/images/icon-pdf.png" alt="View File" style="height: 19px;"/></a>
+                                                        </div>
+                                                        <label ng-if="!(field.SObjectField.type === 'reference' && field.SObjectField.relationshipName==='Tracker_Id__r' && result[field.SObjectField.relationshipName][field.reference]!=null && field.reference.indexOf('Primary_Document_ID__c')!==-1)">{{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
                                                         === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
                                                         | number: field.SObjectField.scale) : (field.SObjectField.type ===
                                                         'date') ? (result[field.SObjectField.name] | date: 'mediumDate')
                                                         : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
                                                         | date: 'medium') : result[field.SObjectField.name] }}
+                                                        </label>
                                                     </td>
                                                     <td ng-if="component.Component.ComponentDetail.recordActions && component.Component.ComponentDetail.recordActions.length > 0"
                                                         class="slds-truncate td-actions">

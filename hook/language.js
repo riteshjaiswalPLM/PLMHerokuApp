@@ -250,7 +250,9 @@ module.exports = function(){
         getComponentDetails(newComponent.where.id, function(componentDetail){
             global.db.Translation.destroy({
                 where: {
-                    type: 'SObject-Label', 
+                    type: {
+                        $in :['SObject-Label','Fixed-Label']
+                    }, 
                     ComponentId: componentDetail.ComponentId
                 }
             }).then(function(decRec){
@@ -269,6 +271,16 @@ module.exports = function(){
                             }
                         });
                     }
+                    if(componentDetail.configuration.bulkOperationTitle!=null && componentDetail.configuration.bulkOperationTitle!=undefined){
+                        global.db.Translation.build({
+                                    label: componentDetail.configuration.bulkOperationTitle, 
+                                    translation: componentDetail.configuration.bulkOperationTitle,
+                                    type: 'Fixed-Label', 
+                                    LanguageId: global.languageconfig.English.id,
+                                    ComponentId: componentDetail.ComponentId
+                                }).save();
+                    }
+
                 }
             });
         });

@@ -1,6 +1,13 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var CryptoJS = require('crypto-js');
+var timestamp = require('unix-timestamp');
+var path = require('path');
+var os = require('os');
+var fs = require('fs');
+var http = require('http');
+var request = require('request');
+var mime = require('mime');
 var authRouter = express.Router();
 
 authRouter.post('/getOrgDetail', function (req, res) {
@@ -95,4 +102,50 @@ authRouter.post('/getOrgDetail', function (req, res) {
     });
 });
 
+authRouter.get('/getAttachmentFile', function (req, res) {
+    if(req.query.id!=undefined && req.query.id!=null ){
+    global.sfdc
+        .sobject("Attachment")
+        .select("Name,Body,ContentType,BodyLength")
+        .where({id:req.query.id})
+        .limit(100)
+        .execute(function(err, records){
+
+            if(err ){
+                 return res.json({
+                    success: false,
+                    message: 'Error occured while open Attachment.\n' + err.name + ' : ' + err.message,
+                    error: err
+                });
+            }
+             if(records.length==0 ){
+                 return res.json({
+                    success: false,
+                    message: ' Attachment Not Exist.',
+                    error: err
+                });
+            }
+            
+            var config = {
+                method: 'GET',
+                uri: global.sfdc.instanceUrl+records[0].Body,
+                headers: {
+                    "Authorization": "Bearer "+global.sfdc.accessToken,
+                    
+                }
+            };
+            var stream = request(config).pipe(fs.createWriteStream(os.tmpdir()+'/'+records[0].Name, {autoClose: true}));
+            stream.on('finish',function(){
+                fs.createReadStream(os.tmpdir()+'/'+records[0].Name, { bufferSize: 64 * 1024 }).pipe(res);
+            });
+        });
+    }
+    else{
+        return res.json({
+            success: false,
+            message: 'Invalid Request.',
+            error: 'Mandatory Parameter Missing '
+        });
+    }
+});
 module.exports = authRouter;

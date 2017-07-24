@@ -177,7 +177,8 @@ languageRouter.post('/automatelanguagetranslation', function(req, res){
                                 type: language.aspect === 'Field Label' ? 'SObject-Label' : language.aspect === 'Fixed Label' ? 'Fixed-Label' : 'SObject-Section',
                                 LanguageId: language.id,
                                 SObjectId: language.aspect === 'Fixed Label' ? null : language.SObject.id,
-                                SObjectLayoutSectionId: translation.SObjectLayoutSectionId
+                                SObjectLayoutSectionId: translation.SObjectLayoutSectionId,
+                                ComponentId:translation.ComponentId
                             });
                             if(translations.length == freshTranslation.length && freshTranslation.length == translationReqCounter){
                                 db.Translation.bulkCreate(freshTranslation).then(function() {

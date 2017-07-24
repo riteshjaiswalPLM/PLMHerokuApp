@@ -190,6 +190,7 @@ clientLookup.controller('BulkOperationController', [
         };
 
         $scope.initModalController = function () {
+            $scope.bulkOperationTitle=data.bulkOperationTitle;
             $scope.data = data.data;
             $scope.model = data.model;
             $scope.detailSobjectName = data.detailSobjectName;

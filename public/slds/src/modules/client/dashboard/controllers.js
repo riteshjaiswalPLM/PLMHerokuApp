@@ -44,6 +44,30 @@ client.controller('ClientDashboardController', [
                 }
             }
         };
+
+        $scope.openAttachment = function(id){
+            // _newWindow=window.open("api/salesforce/getAttachmentFile?id="+id,"_blank",'width=400,height=400')
+            // _newWindow.document.title = "My New Title";
+            var url= "api/salesforce/getAttachmentFile?id="+id
+            var title="My New Title"
+            var w=window.innerWidth/2;
+            var h=window.innerHeight-100;
+            // Fixes dual-screen position                         Most browsers      Firefox
+            var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+            var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+            var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+            var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+            var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+            var top = ((height / 2) - (h / 2)) + dualScreenTop;
+            var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+            newWindow.document.title = "Document"
+            // Puts focus on the newWindow
+            if (window.focus) {
+                newWindow.focus();
+            }
+		};
         $scope.applyOrderBy = function (field, records) {
             if ($scope.searchResult[records] && $scope.searchResult[records].length > 0) {
                 $scope.predicate = field.SObjectField.name;
@@ -339,7 +363,7 @@ client.controller('ClientDashboardController', [
                     $dialog.alert("Please select at least one record");
                 }
                 if (cnt > 0) {
-                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField }, function () {
+                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField,bulkOperationTitle:configuration.bulkOperationTitle }, function () {
                         $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory + 'Component' + component.id, component.Component.catagory + component.id + 'Block', component.label, allowedType, true);
                         $scope.data.InvoiceApproveFieldSelectAll = false;
                     });

@@ -83,7 +83,15 @@
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;" ng-init="component.multipleApprove = component.multipleApprove === undefined ? false : component.multipleApprove">
                             <label class="slds-form-element__label" for="MultipleApprove">Bulk Operation ?</label>
-                            <slds-switch id="MultipleApprove" ng-model="component.multipleApprove" on-text="Yes" off-text="No" show-texts="false" />
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__control" style="float: left;" style="float: left">
+                                    <slds-switch id="MultipleApprove"  ng-model="component.multipleApprove" on-text="Yes" off-text="No" show-texts="false" ></slds-switch>
+                                </div>
+                                <div class="slds-form-element__control" style="float: left">
+                                    <input ng-if="component.multipleApprove" type="text" id="componentbulkOperationTitle" class="slds-input" placeholder="Bulk Operation Title" ng-model="component.ComponentDetails[0].configuration.bulkOperationTitle" />
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
