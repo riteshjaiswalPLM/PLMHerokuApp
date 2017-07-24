@@ -1,30 +1,27 @@
 'use strict';
 
 admin.controller('AdminReportsListController', [
-    '$scope', '$state', 'reportService', 'blockUI', '$dialog', '$adminLookups',
-    function ($scope, $state, reportService, blockUI, $dialog, $adminLookups) {
+    '$scope', '$state', 'reportService', 'blockUI', '$dialog',
+    function ($scope, $state, reportService, blockUI, $dialog) {
 
-        $scope.openSObjectReportsLookup = function () {
-            $adminLookups.sObjectReport(function (data) {
-                if (!$scope.blockUI.loadReports.state().blocking) {
-                    $scope.blockUI.loadReports.start('Creating report ...');
-                    reportService.createReport(data)
-                        .success(function (response) {
-                            $scope.blockUI.loadReports.stop();
-                            if (response.success) {
-                                $scope.edit(response.data.report[0]);
-                            } else if (response.created) {
-                                $scope.loadReports();
-                            } else {
-                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                            }
-                        })
-                        .error(function (response) {
-                            $dialog.alert('Error occured while creating report.', 'Error', 'pficon pficon-error-circle-o');
-                            $scope.blockUI.loadReports.stop();
-                        });
-                }
-            });
+        $scope.createReport = function () {
+            if (!$scope.blockUI.loadReports.state().blocking) {
+                $scope.blockUI.loadReports.start('Creating report ...');
+                reportService.sObjectList()
+                    .success(function (response) {
+                        $scope.blockUI.loadReports.stop();
+                        if (response.success) {
+                            $scope.sObjects = response.data.reportsObjectsList;
+                            $state.go('admin.reports.edit', { sObjects: response.data.reportsObjectsList, oper: 'Create' });
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Error occured while creating report.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.loadReports.stop();
+                    });
+            }
         };
 
         $scope.loadReports = function () {
@@ -89,7 +86,7 @@ admin.controller('AdminReportsListController', [
         };
 
         $scope.edit = function (report) {
-            $state.go('admin.reports.edit', { report: report });
+            $state.go('admin.reports.edit', { report: report, oper: 'Edit' });
         };
 
         $scope.initBlockUiBlocks = function () {
@@ -107,10 +104,13 @@ admin.controller('AdminReportsListController', [
     }]);
 
 admin.controller('AdminReportsEditController', [
-    '$scope', '$state', '$stateParams', 'reportService', 'sobjectService', 'blockUI', '$dialog', '$adminLookups',
-    function ($scope, $state, $stateParams, reportService, sobjectService, blockUI, $dialog, $adminLookups) {
+    '$scope', '$state', '$stateParams', 'reportService', 'sobjectService', 'blockUI', '$dialog',
+    function ($scope, $state, $stateParams, reportService, sobjectService, blockUI, $dialog) {
 
-        $scope.loadSObjectFields = function () {
+        $scope.loadSObjectFields = function (reportSObject) {
+            if (reportSObject !== null && reportSObject !== undefined) {
+                $scope.report = reportSObject;
+            }
             if (!$scope.blockUI.sObjectFields.state().blocking && $scope.report.SObject != null) {
                 $scope.blockUI.sObjectFields.start('Loading ...');
                 sobjectService.loadSObjectFields($scope.report.SObject)
@@ -176,33 +176,6 @@ admin.controller('AdminReportsEditController', [
                     });
             }
         };
-
-        // $scope.components = function () {
-        //     if ($scope.componentsValues === undefined) {
-        //         $scope.componentsValues = [{
-        //             title: 'One Column Section',
-        //             deleted: false,
-        //             readonly: false,
-        //             active: true,
-        //             isComponent: false,
-        //             SObjectReportId: undefined,
-        //             columns: [
-        //                 []
-        //             ]
-        //         }, {
-        //             title: 'Two Columns Section',
-        //             deleted: false,
-        //             readonly: false,
-        //             active: true,
-        //             isComponent: false,
-        //             SObjectReportId: undefined,
-        //             columns: [
-        //                 [], []
-        //             ]
-        //         }];
-        //     }
-        //     return $scope.componentsValues;
-        // };
 
         $scope.returnToList = function () {
             $state.go('admin.reports.list');
@@ -319,21 +292,43 @@ admin.controller('AdminReportsEditController', [
                 $dialog.alert("Report Name is too long.");
                 return;
             }
+            if ($scope.searchResultFields.length == 0) {
+                $dialog.alert("Please configure at least one field for 'Report Display Fields' section.");
+                return;
+            }
             if (!$scope.blockUI.editListReport.state().blocking && $scope.report.SObject != null) {
-                $scope.blockUI.editListReport.start('Saving ...');
-                reportService.saveReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.reportName, $scope.report.whereClause)
-                    .success(function (response) {
-                        $scope.blockUI.editListReport.stop();
-                        if (response.success) {
-                            $scope.returnToList();
-                        } else {
-                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                        }
-                    })
-                    .error(function (response) {
-                        $scope.blockUI.editListReport.stop();
-                        $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
-                    });
+                if ($scope.oper == 'Create') {
+                    $scope.blockUI.editListReport.start('Saving ...');
+                    reportService.createReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report, $scope.report.reportName, $scope.report.whereClause)
+                        .success(function (response) {
+                            $scope.blockUI.editListReport.stop();
+                            if (response.success) {
+                                $scope.returnToList();
+                            } else {
+                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                            }
+                        })
+                        .error(function (response) {
+                            $scope.blockUI.editListReport.stop();
+                            $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
+                        });
+                }
+                else if ($scope.oper == 'Edit') {
+                    $scope.blockUI.editListReport.start('Saving ...');
+                    reportService.editReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.reportName, $scope.report.whereClause)
+                        .success(function (response) {
+                            $scope.blockUI.editListReport.stop();
+                            if (response.success) {
+                                $scope.returnToList();
+                            } else {
+                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                            }
+                        })
+                        .error(function (response) {
+                            $scope.blockUI.editListReport.stop();
+                            $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
+                        });
+                }
             }
         };
 
@@ -347,10 +342,16 @@ admin.controller('AdminReportsEditController', [
         $scope.init = function () {
             console.log('AdminReportsEditController loaded!');
             $scope.initBlockUiBlocks();
+            $scope.sObjects = $stateParams.sObjects;
             $scope.report = $stateParams.report;
+            $scope.oper = $stateParams.oper;
             $scope.templateUrl = 'slds/views/admin/report/edit.list.html';
-            $scope.loadSObjectFields();
-            $scope.loadListReportFields();
+            $scope.searchCriteriaFields = [];
+            $scope.searchResultFields = [];
+            if ($scope.report !== null && $scope.report !== undefined) {
+                $scope.loadSObjectFields();
+                $scope.loadListReportFields();
+            }
         };
         $scope.init();
 

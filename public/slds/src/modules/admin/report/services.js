@@ -2,8 +2,8 @@
 
 admin.factory('reportService', ['$http', function ($http) {
     return {
-        showLookup: function () {
-            return $http.post('/api/admin/sobjectreport/lookuplist');
+        sObjectList: function () {
+            return $http.post('/api/admin/sobjectreport/sObjectList');
         },
         loadReports: function () {
             return $http.post('/api/admin/sobjectreport/list');
@@ -22,7 +22,37 @@ admin.factory('reportService', ['$http', function ($http) {
             delete newReport.SObject;
             return $http.post('/api/admin/sobjectreport/fields', newReport);
         },
-        saveReport: function (searchCriteriaFields, searchRecordFields, sObjectReportId, sObjectReportName, sObjectReportWhereClause) {
+        createReport: function (searchCriteriaFields, searchRecordFields, sObjectReport, sObjectReportName, sObjectReportWhereClause) {
+            var _index = 0;
+            angular.forEach(searchCriteriaFields, function (field, index) {
+                if (field.ControllerSObjectField !== undefined && field.ControllerSObjectField !== null) {
+                    delete field.ControllerSObjectField;
+                }
+                if (!field.deleted) {
+                    field.order = _index;
+                    _index++;
+                }
+            });
+            _index = 0;
+            angular.forEach(searchRecordFields, function (field, index) {
+                if (field.ControllerSObjectField !== undefined && field.ControllerSObjectField !== null) {
+                    delete field.ControllerSObjectField;
+                }
+                if (!field.deleted) {
+                    field.order = _index;
+                    _index++;
+                }
+            });
+            var listReport = {
+                searchCriteriaFields: searchCriteriaFields,
+                searchRecordFields: searchRecordFields,
+                sObjectReport: sObjectReport,
+                sObjectReportName: sObjectReportName,
+                sObjectReportWhereClause: sObjectReportWhereClause
+            };
+            return $http.post('/api/admin/sobjectreport/createReport', listReport);
+        },
+        editReport: function (searchCriteriaFields, searchRecordFields, sObjectReportId, sObjectReportName, sObjectReportWhereClause) {
             var _index = 0;
             angular.forEach(searchCriteriaFields, function (field, index) {
                 if (field.ControllerSObjectField !== undefined && field.ControllerSObjectField !== null) {
@@ -50,7 +80,7 @@ admin.factory('reportService', ['$http', function ($http) {
                 sObjectReportName: sObjectReportName,
                 sObjectReportWhereClause: sObjectReportWhereClause
             };
-            return $http.post('/api/admin/sobjectreport/saveReport', listReport);
+            return $http.post('/api/admin/sobjectreport/editReport', listReport);
         }
     };
 }]);

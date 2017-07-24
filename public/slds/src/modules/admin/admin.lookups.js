@@ -89,68 +89,6 @@ adminLookup.controller('SObjectLayoutLookupController', [
     }
 ]);
 
-adminLookup.controller('SObjectReportLookupController', [
-    '$scope', '$rootScope', '$element', '$dialog', 'reportService', 'blockUI', 'close',
-    function ($scope, $rootScope, $element, $dialog, reportService, blockUI, close) {
-        $scope.title = 'Configure Report';
-
-        $scope.loadSObjectReports = function () {
-            var blockUi = blockUI.instances.get('loadSObjectReports');
-            if (!blockUi.state().blocking) {
-                blockUi.start('Loading local sobject report...');
-                reportService.showLookup().success(function (response) {
-                    blockUi.stop();
-                    if (response.success) {
-                        $scope.sObjects = response.data.reportsObjectsList;
-                        $scope.report = {};
-                        $scope.data = {};
-                    } else {
-                        $scope.close();
-                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                    }
-                }).error(function (response) {
-                    blockUi.stop();
-                    $scope.close();
-                    $dialog.alert('Error occured while loading local sobjects report.', 'Error', 'pficon pficon-error-circle-o');
-                });
-            }
-        }
-
-        $scope.close = function () {
-            $element.modal('hide');
-        };
-        $scope.selectAndClose = function () {
-            if ($scope.report.id === undefined || $scope.report.id === null || $scope.report.id === "") {
-                $dialog.alert("Please Select SObject.");
-                return;
-            }
-            if ($scope.data.reportName === undefined || $scope.data.reportName === null || $scope.data.reportName === "") {
-                $dialog.alert("Please Enter Report Name.");
-                return;
-            }
-            else if (!(/^[a-zA-Z0-9 ]+$/).test($scope.data.reportName)) {
-                $dialog.alert("Report Name can be Alphanumeric.");
-                return;
-            }
-            else if ($scope.data.reportName.length > 255) {
-                $dialog.alert("Report Name is too long.");
-                return;
-            }
-            $element.modal('hide');
-            var data = {
-                reportsObjectId: $scope.report.id,
-                reportName: $scope.data.reportName
-            }
-            close(data, 500);
-        };
-
-        $scope.init = function () {
-            $scope.loadSObjectReports();
-        };
-        $scope.init();
-    }
-]);
-
 adminLookup.controller('SObjectLookupsLookupController', [
     '$scope', '$rootScope', '$element', '$dialog', 'lookupService', 'blockUI', 'data', 'close',
     function ($scope, $rootScope, $element, $dialog, lookupService, blockUI, data, close) {
@@ -392,17 +330,6 @@ adminLookup.factory('$adminLookups', ['ModalService', function (ModalService) {
                 modal.element.modal({ backdrop: 'static', keyboard: false });
                 modal.close.then(function (sObjectLayout) {
                     callback && callback(sObjectLayout);
-                });
-            });
-        },
-        sObjectReport: function (callback) {
-            ModalService.showModal({
-                templateUrl: 'slds/views/admin/admin-lookups/sobjectreport.html',
-                controller: 'SObjectReportLookupController'
-            }).then(function (modal) {
-                modal.element.modal({ backdrop: 'static', keyboard: false });
-                modal.close.then(function (sObjectReport) {
-                    callback && callback(sObjectReport);
                 });
             });
         },

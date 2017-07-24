@@ -5,6 +5,59 @@
                 <div class="slds-media__figure">
                     <span class="slds-icon_container slds-icon-standard-contact">
                         <svg class="slds-icon slds-icon--small slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading--small">SObject</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-p-around--x-small slds-border--top" style="margin-bottom: 0;background-color: white;">
+            <div class="slds-button-group slds-align--absolute-center" role="group">
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="slds-truncate" title="SObject">SObject</div>
+                            </td>
+                            <td ng-if="oper === 'Create'">
+                                <div class="slds-form-element__control">
+                                    <select class="slds-select" ng-model="report.SObject" ng-options="rep as rep.label for rep in sObjects" ng-change="loadSObjectFields(report)">
+                                        <option value="">-- None --</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td ng-if="oper === 'Edit'">
+                                <div class="slds-form-element__control">
+                                    <label>{{ report.SObject.label }}</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="slds-truncate" title="Report Name">Report Name</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                    <input type="text" class="slds-input input-xs" ng-model="report.reportName" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact">
+                        <svg class="slds-icon slds-icon--small slds-p-around--xx-small" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                         </svg>
                     </span>
@@ -204,16 +257,6 @@
             <div class="slds-button-group slds-align--absolute-center" role="group">
                 <table class="slds-table slds-table--bordered slds-table--cell-buffer">
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="slds-truncate" title="Report Name">Report Name</div>
-                            </td>
-                            <td>
-                                <div class="slds-truncate">
-                                    <input type="text" class="slds-input input-xs" ng-model="report.reportName" />
-                                </div>
-                            </td>
-                        </tr>
                         <tr>
                             <td>
                                 <div class="slds-truncate" title="Where Clause">Where Clause</div>

@@ -1,7 +1,7 @@
 var express = require('express');
 var reportRouter = express.Router();
 
-reportRouter.post('/lookuplist', function (req, res) {
+reportRouter.post('/sObjectList', function (req, res) {
     var SObjects = db.SObject.findAll({
         attributes: {
             exclude: ['createdAt', 'updatedAt']
@@ -60,72 +60,6 @@ reportRouter.post('/list', function (req, res) {
             });
         }
     });
-});
-
-reportRouter.post('/create', function (req, res) {
-    var reportToCreate = req.body;
-    if (reportToCreate === null || reportToCreate === undefined) {
-        return res.json({
-            success: false,
-            created: false,
-            message: 'No data found for report.'
-        });
-    } else {
-        //Create Report
-        db.SObjectReport.create({
-            reportName: reportToCreate.reportName,
-            created: true,
-            active: false,
-            SObjectId: reportToCreate.reportsObjectId
-        }).then(function (report) {
-            var SObjectReport = db.SObjectReport.findAll({
-                include: [{
-                    model: db.SObject,
-                    attributes: {
-                        exclude: ['createdAt', 'updatedAt']
-                    }
-                }],
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
-                },
-                where: {
-                    id: report.id
-                }
-            });
-            SObjectReport.then(function (sObjectReport) {
-                if (sObjectReport === undefined || sObjectReport === null) {
-                    return res.json({
-                        success: false,
-                        created: true,
-                        message: 'Error occured while fetching report for sObject.'
-                    });
-                } else {
-                    return res.json({
-                        success: true,
-                        created: true,
-                        data: {
-                            report: sObjectReport
-                        }
-                    });
-                }
-            });
-        }).catch(function (err) {
-            if (err.name === "SequelizeUniqueConstraintError" && err.errors[0].message === "lower(reportName::text) must be unique") {
-                return res.json({
-                    success: false,
-                    created: false,
-                    message: "Report name must be unique."
-                });
-            }
-            else {
-                return res.json({
-                    success: false,
-                    created: false,
-                    message: err.message
-                });
-            }
-        });
-    }
 });
 
 reportRouter.post('/changeactive', function (req, res) {
@@ -193,7 +127,64 @@ reportRouter.post('/fields', function (req, res) {
     });
 });
 
-reportRouter.post('/saveReport', function (req, res) {
+reportRouter.post('/createReport', function (req, res) {
+    var listReport = req.body;
+    var reportName = listReport.sObjectReportName;
+    var reportWhereClause = listReport.sObjectReportWhereClause;
+    var fieldsToCreate = [];
+    var fieldsToProcess = listReport.searchCriteriaFields.concat(listReport.searchRecordFields);
+
+    //Create Report
+    db.SObjectReport.create({
+        reportName: reportName,
+        whereClause: reportWhereClause,
+        created: true,
+        active: false,
+        SObjectId: listReport.sObjectReport.SObject.id
+    }).then(function (report) {
+        fieldsToProcess.forEach(function (field, index) {
+            fieldsToCreate.push({
+                label: (field.label) ? field.label : field.SObjectField.label,
+                SObjectFieldId: field.SObjectField.id,
+                type: field.type,
+                reference: (field.SObjectField.type === 'reference') ? field.reference : null,
+                order: field.order,
+                SObjectReportId: report.id,
+                fromfield: field.fromfield,
+                tofield: field.tofield
+            });
+        });
+
+        if (fieldsToCreate.length > 0) {
+            db.SObjectReportField.bulkCreate(fieldsToCreate).then(function () {
+                return res.json({
+                    success: true
+                });
+            });
+        }
+        else {
+            return res.json({
+                success: true
+            });
+        }
+    })
+        .catch(function (err) {
+            if (err.name === "SequelizeUniqueConstraintError" && err.errors[0].message === "lower(reportName::text) must be unique") {
+                return res.json({
+                    success: false,
+                    message: "Report name must be unique."
+                });
+            }
+            else {
+                return res.json({
+                    success: false,
+                    message: err.message
+                });
+            }
+        });
+});
+
+reportRouter.post('/editReport', function (req, res) {
     var listReport = req.body;
     var reportName = listReport.sObjectReportName;
     var reportWhereClause = listReport.sObjectReportWhereClause;
@@ -213,7 +204,7 @@ reportRouter.post('/saveReport', function (req, res) {
         });
     });
 
-    //Save where clause for the report
+    //Update Report
     db.SObjectReport.update({
         reportName: reportName,
         whereClause: reportWhereClause

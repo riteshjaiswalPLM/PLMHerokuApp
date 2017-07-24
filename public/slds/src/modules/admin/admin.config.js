@@ -76,7 +76,9 @@ admin.config(function($stateProvider) {
             templateUrl: "slds/views/admin/report/edit.html",
             controller: "AdminReportsEditController",
             params: {
-                report: null
+                sObjects: null,
+                report: null,
+                oper: null
             },
             title: "Edit Report"
         })
