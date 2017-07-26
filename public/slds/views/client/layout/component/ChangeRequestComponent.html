@@ -61,7 +61,7 @@
 			</tr>
 		</tbody>
     </table>
-    <div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="items.length==0 && type ==='detail' || section.readonly"" >
+    <div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="items.length==0 && (type ==='detail' || section.readonly)" >
             <strong>{{'No result found' | translate}}.</strong>
     </div>   
 </div>
