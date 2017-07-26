@@ -138,6 +138,7 @@ admin.controller('AdminReportsEditController', [
                                 };
                                 $scope.report.SObject.fields.push(SObjectReportField);
                             });
+                            $scope.sObjectDisabled = true;
                         } else {
                             $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                         }
@@ -280,54 +281,56 @@ admin.controller('AdminReportsEditController', [
         };
 
         $scope.saveReport = function () {
-            if ($scope.report.reportName === undefined || $scope.report.reportName === null || $scope.report.reportName === "") {
-                $dialog.alert("Please Enter Report Name.");
-                return;
-            }
-            else if (!(/^[a-zA-Z0-9 ]+$/).test($scope.report.reportName)) {
-                $dialog.alert("Report Name can be Alphanumeric.");
-                return;
-            }
-            else if ($scope.report.reportName.length > 255) {
-                $dialog.alert("Report Name is too long.");
-                return;
-            }
-            if ($scope.searchResultFields.length == 0) {
-                $dialog.alert("Please configure at least one field for 'Report Display Fields' section.");
-                return;
-            }
-            if (!$scope.blockUI.editListReport.state().blocking && $scope.report.SObject != null) {
-                if ($scope.oper == 'Create') {
-                    $scope.blockUI.editListReport.start('Saving ...');
-                    reportService.createReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report, $scope.report.reportName, $scope.report.whereClause)
-                        .success(function (response) {
-                            $scope.blockUI.editListReport.stop();
-                            if (response.success) {
-                                $scope.returnToList();
-                            } else {
-                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                            }
-                        })
-                        .error(function (response) {
-                            $scope.blockUI.editListReport.stop();
-                            $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
-                        });
+            if ($scope.report !== undefined && $scope.report !== null) {
+                if ($scope.report.reportName === undefined || $scope.report.reportName === null || $scope.report.reportName === "") {
+                    $dialog.alert("Please Enter Report Name.");
+                    return;
                 }
-                else if ($scope.oper == 'Edit') {
-                    $scope.blockUI.editListReport.start('Saving ...');
-                    reportService.editReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.reportName, $scope.report.whereClause)
-                        .success(function (response) {
-                            $scope.blockUI.editListReport.stop();
-                            if (response.success) {
-                                $scope.returnToList();
-                            } else {
-                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                            }
-                        })
-                        .error(function (response) {
-                            $scope.blockUI.editListReport.stop();
-                            $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
-                        });
+                else if (!(/^[a-zA-Z0-9 ]+$/).test($scope.report.reportName)) {
+                    $dialog.alert("Report Name can be Alphanumeric.");
+                    return;
+                }
+                else if ($scope.report.reportName.length > 255) {
+                    $dialog.alert("Report Name is too long.");
+                    return;
+                }
+                if ($scope.searchResultFields.length == 0) {
+                    $dialog.alert("Please configure at least one field for 'Report Display Fields' section.");
+                    return;
+                }
+                if (!$scope.blockUI.editListReport.state().blocking && $scope.report.SObject != null) {
+                    if ($scope.oper == 'Create') {
+                        $scope.blockUI.editListReport.start('Saving ...');
+                        reportService.createReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report, $scope.report.reportName, $scope.report.whereClause)
+                            .success(function (response) {
+                                $scope.blockUI.editListReport.stop();
+                                if (response.success) {
+                                    $scope.returnToList();
+                                } else {
+                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                                }
+                            })
+                            .error(function (response) {
+                                $scope.blockUI.editListReport.stop();
+                                $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
+                            });
+                    }
+                    else if ($scope.oper == 'Edit') {
+                        $scope.blockUI.editListReport.start('Saving ...');
+                        reportService.editReport($scope.searchCriteriaFields, $scope.searchResultFields, $scope.report.id, $scope.report.reportName, $scope.report.whereClause)
+                            .success(function (response) {
+                                $scope.blockUI.editListReport.stop();
+                                if (response.success) {
+                                    $scope.returnToList();
+                                } else {
+                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                                }
+                            })
+                            .error(function (response) {
+                                $scope.blockUI.editListReport.stop();
+                                $dialog.alert('Server error occured while saving report.', 'Error', 'pficon pficon-error-circle-o');
+                            });
+                    }
                 }
             }
         };
@@ -348,6 +351,7 @@ admin.controller('AdminReportsEditController', [
             $scope.templateUrl = 'slds/views/admin/report/edit.list.html';
             $scope.searchCriteriaFields = [];
             $scope.searchResultFields = [];
+            $scope.sObjectDisabled = false;
             if ($scope.report !== null && $scope.report !== undefined) {
                 $scope.loadSObjectFields();
                 $scope.loadListReportFields();

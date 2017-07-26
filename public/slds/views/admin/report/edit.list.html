@@ -26,7 +26,7 @@
                             </td>
                             <td ng-if="oper === 'Create'">
                                 <div class="slds-form-element__control">
-                                    <select class="slds-select" ng-model="report.SObject" ng-options="rep as rep.label for rep in sObjects" ng-change="loadSObjectFields(report)">
+                                    <select class="slds-select" ng-model="report.SObject" ng-options="rep as rep.label for rep in sObjects" ng-change="loadSObjectFields(report)" ng-disabled="sObjectDisabled">
                                         <option value="">-- None --</option>
                                     </select>
                                 </div>
