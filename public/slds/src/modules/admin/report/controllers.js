@@ -112,6 +112,7 @@ admin.controller('AdminReportsEditController', [
                 $scope.report = reportSObject;
             }
             if (!$scope.blockUI.sObjectFields.state().blocking && $scope.report.SObject != null) {
+                $scope.sObjectDisabled = true;
                 $scope.blockUI.sObjectFields.start('Loading ...');
                 sobjectService.loadSObjectFields($scope.report.SObject)
                     .success(function (response) {
@@ -138,14 +139,15 @@ admin.controller('AdminReportsEditController', [
                                 };
                                 $scope.report.SObject.fields.push(SObjectReportField);
                             });
-                            $scope.sObjectDisabled = true;
                         } else {
                             $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                            $scope.sObjectDisabled = false;
                         }
                         $scope.blockUI.sObjectFields.stop();
                     })
                     .error(function (response) {
                         $dialog.alert('Error occured while loading sobject fields.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.sObjectDisabled = false;
                         $scope.blockUI.sObjectFields.stop();
                     });
             }
