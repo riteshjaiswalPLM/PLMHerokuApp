@@ -247,7 +247,12 @@ admin.controller('AdminMobileLayoutsEditController',[
             return $scope.componentsValues;
         };
         $scope.returnToList = function(){
-            $state.go('admin.mobile.layout.list');  
+            if($scope.showSideBar){
+                $scope.backToLayoutConfig()
+            }
+            else{
+                $state.go('admin.mobile.layout.list');  
+            }
         };
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
