@@ -74,7 +74,10 @@ reportRouter.post('/loadReport', function (req, res) {
                 },
                 where: {
                     SObjectReportId: reportid
-                }
+                },
+                order: [
+                    ['order']
+                ]
             });
             ReportFields.then(function (fields) {
                 if (fields === undefined || fields === null) {
