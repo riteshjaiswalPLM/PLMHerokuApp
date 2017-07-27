@@ -58,7 +58,7 @@
                 <div class="slds-p-horizontal--xx-small slds-scrollable-y">
                     <ul>
                         <li ng-repeat="field in filteredLayoutSObjectFields = (layout.SObject.fields | filter: { SObjectField :{label :search.key} } | orderBy: 'label')">
-                            <a href="javascript:void(0);" title="{{field.SObjectField.name}}"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                            <a dnd-draggable="field" dnd-effect-allowed="copy" draggable="true" dnd-type="'sObjectField'" href="javascript:void(0);" title="{{field.SObjectField.name}}"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
                                 <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
                                     <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-4">
                                         <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
@@ -99,7 +99,7 @@
                 <div class="slds-p-horizontal--xx-small slds-scrollable-y">
                     <ul>
                         <li ng-repeat="component in filteredComponents = (components() | filter: componentFilter)">
-                            <a href="javascript:void(0);"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                            <a dnd-draggable="component" dnd-effect-allowed="copy" draggable="true" dnd-type="'layoutSection'" href="javascript:void(0);"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
                                 <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
                                     <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-7">
                                         <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
@@ -139,7 +139,7 @@
                 <div class="slds-p-horizontal--xx-small slds-scrollable-y" block-ui="childSObjects">
                     <ul>
                         <li ng-repeat="relatedList in filteredLayoutRelatedLists = (layoutRelatedLists | filter: relatedListFilter)">
-                            <a href="javascript:void(0);"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
+                            <a class="slds-app-launcher__tile-body" dnd-draggable="relatedList" dnd-effect-allowed="copy" draggable="true" dnd-type="'relatedList'" href="javascript:void(0);"  class="slds-app-launcher__tile slds-text-link--reset" style="margin: .25rem 0;">
                                 <div class="slds-app-launcher__tile-figure" style="padding: .30rem;">
                                     <span class="slds-avatar slds-avatar--small slds-align--absolute-center slds-icon-custom-30">
                                         <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
