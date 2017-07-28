@@ -10,8 +10,9 @@ module.exports = {
         var timezone = require('./timezone');
         var locale = require('./locale');
         var ssoconfig = require('./ssoconfig');
+        var template = require('./template');
         
-        var objectsToSync = [application, sfdc, icon, user, language, translation, timezone, locale, ssoconfig];
+        var objectsToSync = [application, sfdc, icon, user, language, translation, timezone, locale, ssoconfig,template];
         
         async.each(objectsToSync, function(object, callback){
             object.sync(models, function(err){
