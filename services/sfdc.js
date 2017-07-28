@@ -48,7 +48,7 @@ if(!global.hasOwnProperty('sfdc')){
             console.log('on refresh :: ', accessToken);
             global.sfdc.accessToken = accessToken;
         });
-         
+       
         console.info(">>> NEW CONNECTION ESTABLISHED ---------------------------- >>>");
         console.info(">>> accessToken   : " + global.sfdc.accessToken);
         console.info(">>> instanceUrl   : " + global.sfdc.instanceUrl);
@@ -366,7 +366,7 @@ if(!global.hasOwnProperty('sfdc')){
                             {
                                 console.log('in sync',createdUser.username);
                                 var instanceurl=process.env.INSTANCE_URL || "https://localhost:3000"
-                                syncWithMiddleware('/api/mobusers','post',{username:createdUser.username,password:createdUser.password,instanceurl:instanceurl,isEncryptionEnabled :true},function(result){
+                                syncWithMiddleware('/api/mobusers','post',{username:createdUser.username,password:createdUser.password,instanceurl:instanceurl,isEncryptionEnabled :true,organization_id:global.sfdc.orgId},function(result){
                                     if(result){
                                         console.log('>>>>>>>>>>>>>>>>> User created successfully');
                                     }
@@ -494,7 +494,7 @@ if(!global.hasOwnProperty('sfdc')){
         saveAndSubscribeUserSyncTopic: saveAndSubscribeUserSyncTopic,
         subscribeUserSyncTopic: subscribeUserSyncTopic
     };
-
+    
     var syncWithMiddleware = function(urlPath,method,json,callback){
         var baseURL = process.env.MOBILE_AUTH_INSTANCE_URL || 'https://esm-mob-auth-v3.herokuapp.com';
         request({
