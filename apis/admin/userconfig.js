@@ -460,8 +460,8 @@ userconfigRouter.post('/uploadUsers', function (req, res) {
                         var usernameexistinMobile = false;
                         var checkUsernameexistinMobile = function (username, callback) {
                             if (global.UserMapping.isMobileActive) {
-                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000/";
-                                instanceurl = instanceurl + 'api/admin/user/checkusernameexist/';
+                                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000";
+                                instanceurl = instanceurl + '/api/admin/user/checkusernameexist/';
                                 console.log("URL: " + instanceurl);
 
                                 request({
@@ -1167,8 +1167,8 @@ userconfigRouter.post('/uploadUsersInSync', function (req, res) {
                             var usernameexistinMobile = false;
                             var checkUsernameexistinMobile = function (username, callback) {
                                 if (global.UserMapping.isMobileActive) {
-                                    var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000/";
-                                    instanceurl = instanceurl + 'api/admin/user/checkusernameexist/';
+                                    var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000";
+                                    instanceurl = instanceurl + '/api/admin/user/checkusernameexist/';
                                     console.log("URL: " + instanceurl);
 
                                     request({
