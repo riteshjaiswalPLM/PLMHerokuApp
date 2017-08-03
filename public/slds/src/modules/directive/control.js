@@ -75,6 +75,11 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                         }
                     }
                 }
+                if ($scope.field.SObjectField.type === 'multipicklist') {
+                    if (oldValue == newValue && $scope.field.value !== undefined && $scope.field.value !== null && $scope.field.value !== "") {
+                        $scope.field.value = $scope.field.value.toString().split(';');
+                    }
+                }
             });
 
             $scope.$watch(function(scope){
