@@ -4,7 +4,7 @@ client.controller('ClientReportsController', [
     '$scope', '$rootScope', '$controller', '$state', '$dialog', 'clientReportService',
     function ($scope, $rootScope, $controller, $state, $dialog, clientReportService) {
 
-        $scope.reporttabs = function () {
+        $scope.loadReportTabs = function () {
             clientReportService.reporttabs()
                 .success(function (response) {
                     if (response.success) {
@@ -21,7 +21,7 @@ client.controller('ClientReportsController', [
 
         $scope.init = function () {
             console.log('ClientReportsController loaded!');
-            $scope.reporttabs();
+            $scope.loadReportTabs();
         };
         $scope.init();
     }
