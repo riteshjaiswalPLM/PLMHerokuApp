@@ -807,49 +807,52 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
     function($scope , $rootScope , $filter , $dialog , blockUI , clientSObjectService,CriteriaHelper){
         var orderBy = $filter('orderBy');
         $scope.search = function(page,pageSize){
-            var whereFields ={};
-            var whereClauseString=$scope.model.whereClause;
-            whereFields[$scope.model.SObjectField.name] = $scope.parentSObject.Id;
-            if(whereClauseString!=undefined && whereClauseString!=null){
-                while(whereClauseString.indexOf("{")!=-1){
-                    if($scope.datamodel[whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))]!=null){
-                        whereClauseString=whereClauseString.substring(0,whereClauseString.indexOf("{"))
-                            +$scope.datamodel[whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))]
-                            +whereClauseString.substring(whereClauseString.indexOf("}")+1)
+            if($scope.rendered)
+            {
+                var whereFields ={};
+                var whereClauseString=$scope.model.whereClause;
+                whereFields[$scope.model.SObjectField.name] = $scope.parentSObject.Id;
+                if(whereClauseString!=undefined && whereClauseString!=null){
+                    while(whereClauseString.indexOf("{")!=-1){
+                        if($scope.datamodel[whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))]!=null){
+                            whereClauseString=whereClauseString.substring(0,whereClauseString.indexOf("{"))
+                                +$scope.datamodel[whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))]
+                                +whereClauseString.substring(whereClauseString.indexOf("}")+1)
+                        }
+                        else{
+                            console.log(whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))+"Field not configured in layout")
+                            break;
+                        }
+                        
                     }
-                    else{
-                        console.log(whereClauseString.substring(whereClauseString.indexOf("{")+1,whereClauseString.indexOf("}"))+"Field not configured in layout")
-                        break;
-                    }
-                    
                 }
+                var queryObject = {
+                    sObject: $scope.model.SObject,
+                    selectFields: $scope.model.SObjectLayoutFields,
+                    whereFields: whereFields,
+                    whereClauseString:whereClauseString,
+                    orderBy:$scope.model.orderBy,
+                    limit: pageSize,
+                    page: page
+                };  
+                
+                $scope.blockUI.start();
+                clientSObjectService.search(queryObject)
+                    .success(function(response){
+                        if(response.success){
+                            $scope.searchResult = response.data.searchResult;
+                            $scope.currentPage = response.data.currentPage;
+                            $scope.hasMore = response.data.hasMore;
+                        }else{
+                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                        }
+                        $scope.blockUI.stop();
+                    })
+                    .error(function(response){
+                        $dialog.alert('Server error occured while querying data.','Error','pficon pficon-error-circle-o');
+                        $scope.blockUI.stop();
+                    });
             }
-            var queryObject = {
-                sObject: $scope.model.SObject,
-                selectFields: $scope.model.SObjectLayoutFields,
-                whereFields: whereFields,
-                whereClauseString:whereClauseString,
-                orderBy:$scope.model.orderBy,
-                limit: pageSize,
-                page: page
-            };  
-            
-            $scope.blockUI.start();
-            clientSObjectService.search(queryObject)
-                .success(function(response){
-                    if(response.success){
-                        $scope.searchResult = response.data.searchResult;
-                        $scope.currentPage = response.data.currentPage;
-                        $scope.hasMore = response.data.hasMore;
-                    }else{
-                        $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                    }
-                    $scope.blockUI.stop();
-                })
-                .error(function(response){
-                    $dialog.alert('Server error occured while querying data.','Error','pficon pficon-error-circle-o');
-                    $scope.blockUI.stop();
-                });
         };
         $scope.applyOrderBy = function(field){
             if($scope.searchResult && $scope.searchResult.length > 0){
