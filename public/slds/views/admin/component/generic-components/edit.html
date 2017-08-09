@@ -58,6 +58,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="slds-form-element__group" ng-if="component.catagory == 'LineItemComponent'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="detailSObject">Line Item SObject</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="hidden" ng-model="component.detailSObject">
+                                    <input readonly type="text" id="detailSObject" class="slds-lookup__search-input slds-input--bare" ng-model="component.detailSObject.label" />
+                                </div>
+                                <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none" ng-if="stateAction === 'Create'">
+                                    <button ng-click="openLineItemSObjectsLookup()" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for Line Item SObjects">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Open lookup modal for Line Item SObjects</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="slds-form-element__group">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
@@ -210,7 +231,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval'">
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval' || component.catagory == 'LineItemComponent'">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">
                             <label class="slds-form-element__label" for="relativeField">Select Relative Field</label>

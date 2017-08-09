@@ -43,6 +43,9 @@ module.exports = function(sequelize, DataTypes){
         defaultValue: {
             type: DataTypes.STRING
         },
+        defaultValueLabel: {
+            type: DataTypes.STRING
+        },
         readonly: {
             type: DataTypes.BOOLEAN,
             defaultValue: function(){

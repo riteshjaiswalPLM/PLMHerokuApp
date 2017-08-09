@@ -279,19 +279,34 @@ admin.controller('AdminGenericComponentsEditController',[
                             			});
                             		}
                                 });
-                            	genericComponentService.getUserSObject()
-                            		.success(function(response){
-                            			if(response.success === true){
-                            				$scope.UserSObject = response.data.userSObject;
-                            			}
-                            			else{
-                            				$dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                            			}
-                            		})
-                            		.error(function(){
-                            			$dialog.alert('Server Error occured while loading component details.','Error','pficon pficon-error-circle-o');
-                            		});
                             }
+                            if ($scope.component.catagory === 'LineItemComponent') {
+                                $scope.refSObjects = response.data.refSObjects;
+                                $scope.connectingFieldMap = {};
+                                $scope.component.detailSObject.SObjectFields.forEach(function (field) {
+                                    if (field.type === 'reference' && field.referenceTo) {
+                                        field.referenceTo.forEach(function (reference) {
+                                            if ($scope.connectingFieldMap[reference] === undefined)
+                                                $scope.connectingFieldMap[reference] = [];
+                                            $scope.connectingFieldMap[reference].push(field)
+                                            if ($scope.referenceSObjectNames.indexOf(reference) === -1)
+                                                $scope.referenceSObjectNames.push(reference);
+                                        });
+                                    }
+                                });
+                            }
+                            genericComponentService.getUserSObject()
+                            	.success(function(response){
+                            		if(response.success === true){
+                            			$scope.UserSObject = response.data.userSObject;
+                            		}
+                            		else{
+                            			$dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                            		}
+                            	})
+                            	.error(function(){
+                            		$dialog.alert('Server Error occured while loading component details.','Error','pficon pficon-error-circle-o');
+                            	});
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                         }
@@ -360,9 +375,23 @@ admin.controller('AdminGenericComponentsEditController',[
             $adminLookups.sObject(whereClause,function(sObject){
             	if(sObject === undefined){
                     $scope.component.SObject = sObject;
+                    if ($scope.component.ComponentDetails == undefined || $scope.component.ComponentDetails == null) {
+                        $scope.component.ComponentDetails = [];
+                        $scope.component.ComponentDetails.push({});
+                    }
+                    if ($scope.component.ComponentDetails[0].configuration == undefined || $scope.component.ComponentDetails[0].configuration == null) {
+                        $scope.component.ComponentDetails[0].configuration = {};
+                    }
                     $scope.component.ComponentDetails[0].configuration.fields = [];
                 }else if($scope.component.SObject == null || $scope.component.SObject.name !== sObject.name){
                     $scope.component.SObject = sObject;
+                    if ($scope.component.ComponentDetails == undefined || $scope.component.ComponentDetails == null) {
+                        $scope.component.ComponentDetails = [];
+                        $scope.component.ComponentDetails.push({});
+                    }
+                    if ($scope.component.ComponentDetails[0].configuration == undefined || $scope.component.ComponentDetails[0].configuration == null) {
+                        $scope.component.ComponentDetails[0].configuration = {};
+                    }
                     $scope.component.ComponentDetails[0].configuration.fields = [];
                     if($scope.component.catagory === 'MultiLevelApproval'){
                     	var referenceSObjectNames = [];
@@ -420,6 +449,34 @@ admin.controller('AdminGenericComponentsEditController',[
                 }
             });
         };
+        $scope.openLineItemSObjectsLookup = function () {
+            $adminLookups.sObject({
+                criteria: {
+                    includeFields: true
+                }
+            }, function (sObject) {
+                $scope.component.SObject = undefined;
+                if (sObject !== undefined) {
+                    $scope.connectingFieldMap = {};
+                    sObject.SObjectFields.forEach(function (field) {
+                        if (field.type === 'reference' && field.referenceTo) {
+                            field.referenceTo.forEach(function (reference) {
+                                if ($scope.connectingFieldMap[reference] === undefined)
+                                    $scope.connectingFieldMap[reference] = [];
+                                $scope.connectingFieldMap[reference].push(field)
+                                if ($scope.referenceSObjectNames.indexOf(reference) === -1)
+                                    $scope.referenceSObjectNames.push(reference);
+                            });
+                        }
+                    });
+                }
+                if (sObject === undefined) {
+                    $scope.component.detailSObject = sObject;
+                } else if ($scope.component.detailSObject == null || $scope.component.detailSObject.name !== sObject.name) {
+                    $scope.component.detailSObject = sObject;
+                }
+            });
+        };
         $scope.addToComponentFields = function(field){
         	var duplicate = [];
             $scope.component.ComponentDetails[0].configuration.fields.forEach(function(_field){
@@ -458,7 +515,7 @@ admin.controller('AdminGenericComponentsEditController',[
         $scope.cancel = function(){
             $state.go('admin.components.generic.list');  
         };
-        $scope.validateComponentBeforeSave = function(){
+        $scope.validateComponentMultiLevelBeforeSave = function(){
         	if(!$scope.component.approvalDetailSObject){
     			$dialog.alert('Please select Approval Detail SObject.','Error','pficon pficon-error-circle-o');
     			return false;
@@ -515,14 +572,34 @@ admin.controller('AdminGenericComponentsEditController',[
             }
             return true;
         };
+        $scope.validateComponentLineItemBeforeSave = function(){
+        	if(!$scope.component.detailSObject){
+    			$dialog.alert('Please select Line Item SObject.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+    		if(!$scope.component.SObject){
+    			$dialog.alert('Please select SObject.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+    		if(!$scope.component.ComponentDetails[0].configuration.connectingField || $scope.component.ComponentDetails[0].configuration.connectingField === null || $scope.component.ComponentDetails[0].configuration.connectingField === ""){
+    			$dialog.alert('Please select relative field.','Error','pficon pficon-error-circle-o');
+    			return false;
+    		}
+            return true;
+        };
         $scope.saveComponent = function(){
             if(!$scope.blockUI.layoutBlock.state().blocking){
             	if($scope.component.catagory === 'MultiLevelApproval'){
-            		if(!$scope.validateComponentBeforeSave()){
+            		if(!$scope.validateComponentMultiLevelBeforeSave()){
             			return;
             		}
             		if($scope.component.ComponentDetails[0].configuration.allowAddFinalApprover === true && $scope.component.ComponentDetails[0].configuration.finalApproverAllowedCount === undefined){
             			$dialog.alert('Please enter final approver count.','Error','pficon pficon-error-circle-o');
+            			return;
+            		}
+            	}
+                if($scope.component.catagory === 'LineItemComponent'){
+            		if(!$scope.validateComponentLineItemBeforeSave()){
             			return;
             		}
             	}
@@ -542,6 +619,11 @@ admin.controller('AdminGenericComponentsEditController',[
                         componentToSave.ComponentDetails[0].configuration.recallCriteria = {group: { operator: '&&', rules: [] }};
                     }
                 	delete componentToSave.approvalDetailSObject;
+                }
+                if ($scope.component.catagory === 'LineItemComponent') {
+                    componentToSave.detailSObjectId = componentToSave.detailSObject.id;
+                    componentToSave.ComponentDetails[0].configuration.detailSObjectName = componentToSave.detailSObject.name;
+                    delete componentToSave.detailSObject;
                 }
                 delete componentToSave.SObject;
                 

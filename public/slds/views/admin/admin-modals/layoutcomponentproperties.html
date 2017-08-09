@@ -1,0 +1,265 @@
+<div role="dialog" tabindex="-1" aria-labelledby="sectionPropertiesModalLabel" data-backdrop="static" class="slds-modal">
+    <div class="slds-modal__container" style="width: 95%; max-width: 90rem !important">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="sectionPropertiesModalLabel" class="slds-text-heading--medium" translate>{{ title }}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-form--horizontal">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" style="width: 25% !important" for="sectionTitle">Title</label>
+                    <div class="slds-form-element__control" style="width: 74% !important">
+                        <input type="text" id="sectionTitle" class="slds-input" placeholder="{{sectionTitle}}" ng-model="section.title">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" style="width: 25% !important" for="sectionReadonly">Readonly ?</label>
+                    <div class="slds-form-element__control" style="width: 74% !important">
+                        <slds-switch id="sectionReadonly" switch-change="onChangeReadonlySwitch()" ng-model="section.readonly" on-text="Yes" off-text="No" />
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" style="width: 25% !important" for="sectionActive">Active ?</label>
+                    <div class="slds-form-element__control" style="width: 74% !important">
+                        <slds-switch id="sectionActive" ng-model="section.active" on-text="Yes" off-text="No" />
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" style="width: 25% !important" for="sectionActive">Allow Add More</label>
+                    <div class="slds-form-element__control" style="width: 74% !important">
+                        <slds-switch id="sectionAddMore" switch-change="onChangeAddMoreSwitch()" ng-model="section.addmore" on-text="Yes" off-text="No" />
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" style="width: 25% !important" for="filterCondition">Filter Condition</label>
+                    <div class="slds-form-element__control" style="width: 74% !important">
+                        <criteria-builder id="filterCondition" group="section.criteria.group" fields="section.rowcriteriafields"></criteria-builder>
+                    </div>
+                </div>
+            </div>
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><label class="slds-text-heading--small">Section Fields</label></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Label">Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display Label">Display Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Reference">Reference</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Hidden">Hidden</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Read Only">Read Only</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Required">Required</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Default Value">Default Value</div>
+                                </th>
+                                <th scope="col" style="width: 150px;">
+                                    <div class="slds-truncate" title="Type">Type</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 100px">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dnd-list="section.sectionComponentFields" dnd-allowed-types="['sectionListField']">
+                            <tr ng-if="section.sectionComponentFields.length === 0">
+                                <td colspan="10" class="slds-blank-slate">No field added.</td>
+                            </tr>
+                            <tr class="dndPlaceholder" style="display: table-row !important">
+                                <th colspan="10" style="background: #e1d951; text-align: center;">
+                                    Move here
+                                </th>
+                            </tr>
+                            <tr ng-repeat="field in section.sectionComponentFields | filter: {deleted: false}" dnd-draggable="field" dnd-effect-allowed="move"
+                                dnd-moved="section.sectionComponentFields.splice($index,1)" dnd-type="'sectionListField'">
+                                <td>{{ $index + 1 }}</td>
+                                <td data-label="Label">{{ field.SObjectField.label }}</td>
+                                <td data-label="Display Label">
+                                    <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                                </td>
+                                <td data-label="Reference" reference-field-selector field="field" ref-sobjects="section.refSObjects"></td>
+                                <td data-label="Hidden">
+                                    <slds-switch id="isHidden" switch-change="onChangeHidden(field);" ng-model="field.hidden" on-text="Yes" off-text="No" />
+                                </td>
+                                <td data-label="Read Only">
+                                    <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly" on-text="Yes" off-text="No" />
+                                </td>
+                                <td data-label="Required">
+                                    <slds-switch id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required" on-text="Yes" off-text="No" />
+                                </td>
+                                <td data-label="Default Value">
+                                    <div field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field"></div>
+                                </td>
+                                <td data-label="Type">
+                                    <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
+                                </td>
+                                <td data-label="Action" style="text-align: center;">
+                                    <div class="slds-truncate">
+                                        <button ng-click="section.sectionComponentFields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-modal__footer">
+                    <div style="padding-left: 0px;">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label class="slds-form-element__label" for="lineItemFields">{{section.Component.child.label}} Fields</label>
+                                <span class="slds-form-element__static">
+                                <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in section.childSobjectFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </span>
+                                <span class="slds-form-element__addon">
+                                <button class="slds-button slds-button--brand" ng-click="addToComponentFields(fieldToAdd)">
+                                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>
+                                    Add
+                                </button>
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><label class="slds-text-heading--small">Calculation Fields</label></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Parent Field">Parent Field</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Child Field">Child Field</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 100px">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dnd-list="section.sectionComponentAmtFields" dnd-allowed-types="['sectionListAmtField']">
+                            <tr ng-if="section.sectionComponentAmtFields.length === 0">
+                                <td colspan="4" class="slds-blank-slate">No field added.</td>
+                            </tr>
+                            <tr class="dndPlaceholder" style="display: table-row !important">
+                                <th colspan="4" style="background: #e1d951; text-align: center;">
+                                    Move here
+                                </th>
+                            </tr>
+                            <tr ng-repeat="field in section.sectionComponentAmtFields | filter: {deleted: false}" dnd-draggable="field" dnd-effect-allowed="move"
+                                dnd-moved="section.sectionComponentAmtFields.splice($index,1)" dnd-type="'sectionListAmtField'">
+                                <td>{{ $index + 1 }}</td>
+                                <td data-label="Parent Field">
+                                    {{ field.parentSObjectField.label }} [{{ field.parentSObjectField.type + ((field.parentSObjectField.calculated) ? ' | formula' : '') }}]
+                                </td>
+                                <td data-label="Child Field">
+                                    {{ field.childSObjectField.label }} [{{ field.childSObjectField.type + ((field.childSObjectField.calculated) ? ' | formula' : '') }}]
+                                </td>
+                                <td data-label="Action" style="text-align: center;">
+                                    <div class="slds-truncate">
+                                        <button ng-click="section.sectionComponentAmtFields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-modal__footer">
+                    <div style="padding-left: 0px;">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label class="slds-form-element__label" for="parentAmtFields">{{section.Component.parent.label}} Fields</label>
+                                <select id="parentAmtFields" class="slds-select" style="width: 30% !important" ng-model="parentFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + '] (' + field.name + ')') for field in section.parentSObjectAmountFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <label class="slds-form-element__label" for="childAmtFields">{{section.Component.child.label}} Fields</label>
+                                <select id="childAmtFields" class="slds-select" style="width: 30% !important" ng-model="childFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + '] (' + field.name + ')') for field in section.childSObjectAmountFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <button class="slds-button slds-button--brand" ng-disabled="!parentFieldToAdd || !childFieldToAdd" ng-click="addToComponentAmtFields(parentFieldToAdd, childFieldToAdd)">
+                                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop"></div>

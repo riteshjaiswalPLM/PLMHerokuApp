@@ -21,10 +21,14 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 return 'slds/views/directive/layoutfield/'+$scope.field.SObjectField.type+'.html';
             };
             // if($scope.model !== undefined && $scope.field !== undefined){
-            if($scope.field.SObjectField.type === 'boolean' && $scope.field.defaultValue !== undefined){
-                $scope.field.defaultValue = $scope.field.defaultValue === 'true';
+            if ($scope.field.SObjectField.type ===  'boolean'  && $scope.field.defaultValue !==  undefined) {
+                if (typeof  $scope.field.defaultValue ===  'string')
+                    $scope.field.defaultValue = $scope.field.defaultValue ===  'true';
             }
-            
+            if ($scope.model[$scope.field.SObjectField.name] === undefined) {
+                $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
+            }
+
             $scope.doNotRender = function(){
                 $scope.field.rendered = false;
             };
@@ -89,8 +93,9 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                     if($scope.model)
                         $scope.model[$scope.field.SObjectField.name] = newValue;
                 }else if(newValue === undefined){
-                    if($scope.model)
-                        $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
+                     if($scope.model)
+                         $scope.model[$scope.field.SObjectField.name] = "";
+                         //$scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
                         if($scope.field.SObjectField.type === 'reference' && $scope.field.currentUserSelected && $scope.field.currentUserSelected==true ){
                             var userData=JSON.parse($rootScope.user().userdata);
                             $scope.model[$scope.field.SObjectField.name] = userData['Id'];

@@ -99,7 +99,20 @@ admin.factory('layoutService',['$http',function($http){
                         });
                     }
                     else{
-                        
+                        var fieldOrder = 0;
+                        angular.forEach(section.sectionComponentFields, function (field) {
+                            if (!field.deleted) {
+                                field.order = fieldOrder;
+                                fieldOrder++;
+                            }
+                        });
+                        fieldOrder = 0;
+                        angular.forEach(section.sectionComponentAmtFields, function (field) {
+                            if (!field.deleted) {
+                                field.order = fieldOrder;
+                                fieldOrder++;
+                            }
+                        });
                     }
                 }
             });

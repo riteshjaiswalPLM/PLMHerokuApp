@@ -58,6 +58,21 @@ module.exports = function(sequelize, DataTypes){
                 else
                     this.getDataValue('criteria');
             }
+        },
+        componentConfig: {
+            type: DataTypes.TEXT,
+            defaultValue: function () {
+                return undefined;
+            },
+            set: function (value) {
+                this.setDataValue('componentConfig', JSON.stringify(value));
+            },
+            get: function () {
+                if (this.getDataValue('componentConfig') !== undefined)
+                    return JSON.parse(this.getDataValue('componentConfig'));
+                else
+                    this.getDataValue('componentConfig');
+            }
         }
     },{
         classMethods: {

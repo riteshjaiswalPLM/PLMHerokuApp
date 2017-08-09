@@ -21,6 +21,20 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 });
             });
         },
+        layoutComponentProperties: function (data, callback) {
+            ModalService.showModal({
+                templateUrl: 'slds/views/admin/admin-modals/layoutcomponentproperties.html',
+                controller: 'LayoutComponentPropertiesModalController',
+                inputs: {
+                    data: data
+                }
+            }).then(function (modal) {
+                modal.element.modal({ backdrop: 'static', keyboard: false });
+                modal.close.then(function (section) {
+                    callback && callback(section);
+                });
+            });
+        },
         relatedListProperties: function(data, callback){
             ModalService.showModal({
                 templateUrl: 'slds/views/admin/admin-modals/layoutrelatedlistproperties.html',
@@ -147,6 +161,164 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         
         $scope.init = function(){
             console.log('LayoutSectionPropertiesModalController loaded!');
+        };
+        $scope.init();
+    }
+]).controller('LayoutComponentPropertiesModalController',[
+            '$scope','$rootScope','$element','$dialog','$timeout','blockUI','data','close','sobjectService',
+    function($scope , $rootScope , $element , $dialog , $timeout , blockUI , data , close , sobjectService){
+        $scope.title = (data.title) ? data.title : 'Section Properties';
+        $scope.section = (data.section) ? data.section : {};
+        $scope.section.readonly = $scope.section.readonly;
+        $scope.sectionTitle = $scope.section.title;
+        $scope.rowcriteriafields = ($scope.section.rowcriteriafields) ? $scope.section.rowcriteriafields : [];
+        if ($scope.section.sectionComponentFields === undefined || $scope.section.sectionComponentFields === null) {
+            $scope.section.sectionComponentFields = [];
+        }
+        if ($scope.section.sectionComponentAmtFields === undefined || $scope.section.sectionComponentAmtFields === null) {
+            $scope.section.sectionComponentAmtFields = [];
+        }
+
+        $scope.addToComponentFields = function (fieldToAdd) {
+            if (fieldToAdd) {
+                var duplicate = false;
+                angular.forEach($scope.section.sectionComponentFields, function (field, fieldIndex) {
+                    if (field.SObjectField.type !== 'reference' && field.SObjectField.name === fieldToAdd.name && !duplicate && !field.deleted) {
+                        duplicate = true;
+                    }
+                });
+                if (!duplicate) {
+                    $scope.section.sectionComponentFields.push({
+                        SObjectField: fieldToAdd,
+                        label: fieldToAdd.label,
+                        type: 'Layout-Section-Field',
+                        hidden: false,
+                        deleted: false,
+                        readonly: $scope.section.readonly,
+                        required: false
+                    });
+                } else {
+                    $dialog.alert('Duplicate field!', 'Warning', 'pficon pficon-warning-triangle-o');
+                }
+            }
+        };
+
+        $scope.addToComponentAmtFields = function (parentfield, childfield) {
+            if (parentfield && childfield) {
+                $scope.section.sectionComponentAmtFields.push({
+                    parentSObjectField: parentfield,
+                    childSObjectField: childfield,
+                    type: 'Layout-Section-Amount-Field',
+                    deleted: false
+                });
+            }
+        };
+
+        $scope.onChangeReadonlySwitch = function () {
+            if ($scope.section.readonly === true) {
+                $scope.section.addmore = false;
+            }
+        }
+        $scope.onChangeAddMoreSwitch = function () {
+            if ($scope.section.addmore === true) {
+                $scope.section.readonly = false;
+            }
+        }
+        $scope.close = function () {
+            $element.modal('hide');
+        };
+        $scope.save = function () {
+            if ($scope.section.sectionComponentFields.length === 0) {
+                $dialog.alert('Please add fields.\nNo fields added.', 'Warning', 'pficon pficon-warning-triangle-o');
+                return;
+            }
+            var duplicate = false;
+            angular.forEach($scope.section.sectionComponentFields, function (field, index) {
+                if (field.SObjectField.type === 'reference') {
+                    angular.forEach($scope.section.sectionComponentFields, function (_field, _index) {
+                        if (_field.SObjectField.type === 'reference') {
+                            if (!duplicate) {
+                                if (_index !== index && _field.SObjectField.id === field.SObjectField.id && _field.reference === field.reference) {
+                                    duplicate = true;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            if (duplicate === true) {
+                $dialog.alert('Duplicate field found in reference.', 'Error', 'pficon pficon-error-circle-o');
+                return;
+            }
+            $scope.section.title = ($scope.section.title) ? $scope.section.title : $scope.sectionTitle;
+            $scope.section.rowcriteriafields = $scope.rowcriteriafields;
+            angular.forEach($scope.section.sectionComponentFields, function (field, fieldIndex) {
+                field.defaultValue = field.value;
+                if (field.SObjectField.type === 'reference') {
+                    if (field[field.SObjectField.relationshipName] !== undefined) {
+                        field.defaultValueLabel = field[field.SObjectField.relationshipName][field.reference];
+                    }
+                }
+            });
+
+            $element.modal('hide');
+            close($scope.section, 500);
+        }
+
+        $scope.$watch('field.readonly', function (newValue, oldValue) {
+            if (newValue) {
+                $scope.field.required = false;
+                $scope.field.hidden = false;
+            }
+        })
+
+        $scope.$watch('field.required', function (newValue, oldValue) {
+            if (newValue) {
+                $scope.field.readonly = false;
+                $scope.field.hidden = false;
+            }
+        })
+
+        $scope.$watch('field.hidden', function (newValue, oldValue) {
+            if (newValue) {
+                $scope.field.readonly = false;
+                $scope.field.required = false;
+            }
+        })
+
+        $scope.onChangeHidden = function (field) {
+            if (field.hidden)
+            {
+                field.required = false;
+                field.readonly = false;
+            }
+        }
+
+        $scope.onChangeReadonly = function (field) {
+            if (field.readonly)
+            {
+                field.required = false;
+                field.hidden = false;
+            }
+        }
+
+        $scope.onChangeRequired = function (field) {
+            if (field.required)
+            {
+                field.readonly = false;
+                field.hidden = false;
+            }
+        }
+
+        $scope.section.criteria = ($scope.section.criteria) ? $scope.section.criteria : {
+            group: {
+                operator: '&&',
+                rules: []
+            }
+        };
+
+        $scope.init = function () {
+            console.log('LayoutComponentPropertiesModalController loaded!');
         };
         $scope.init();
     }

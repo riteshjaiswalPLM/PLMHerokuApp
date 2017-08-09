@@ -532,20 +532,93 @@ admin.controller('AdminLayoutsEditEditController',[
             '$scope','$state','$stateParams','layoutService','sobjectService','blockUI','$dialog','$timeout','$adminLookups','$adminModals',
     function($scope , $state , $stateParams , layoutService , sobjectService , blockUI , $dialog , $timeout , $adminLookups , $adminModals){
         $scope.openSectionPropertiesModal = function(section,index){
-            $adminModals.layoutSectionProperties({
-                layout: angular.copy($scope.layout),
-                section: angular.copy(section)
-            },function(newSection){
-                $scope.layoutSections[index] = newSection;
-            });
+            if (section.isComponent && section.Component.catagory == "LineItemComponent") {
+                var parentcall = false, childcall = false;
+                sobjectService.loadSObjectFields(section.Component.SObject)
+                    .success(function (response) {
+                        if (response.success) {
+                            parentcall = true;
+                            section.parentSobjectFields = [];
+                            section.parentSObjectAmountFields = [];
+                            angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
+                                field.SObjectField = angular.copy(field);
+                                section.parentSobjectFields.push(field);
+                                if (field.type == "currency" || field.type == "double") {
+                                    section.parentSObjectAmountFields.push(field);
+                                }
+                            });
+                            section.criteria = angular.copy(section.rowLevelCriteria);
+
+                            if (childcall) {
+                                $adminModals.layoutComponentProperties({
+                                    section: angular.copy(section)
+                                }, function (newSection) {
+                                    $scope.layoutSections[index] = newSection;
+                                    $scope.layoutSections[index].rowLevelCriteria = angular.copy($scope.layoutSections[index].criteria);
+                                });
+                            }
+                        }
+                        else {
+                            parentcall = true;
+                        }
+                    });
+                sobjectService.loadSObjectFields(section.Component.detailSObject)
+                    .success(function (response) {
+                        if (response.success) {
+                            childcall = true;
+                            section.rowcriteriafields = [];
+                            section.childSobjectFields = [];
+                            section.childSObjectAmountFields = [];
+                            section.refSObjects = response.data.refSObjects;
+                            angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
+                                field.SObjectField = angular.copy(field);
+                                section.childSobjectFields.push(field);
+                                if (field.type == "currency" || field.type == "double") {
+                                    section.childSObjectAmountFields.push(field);
+                                }
+                                if (field.type != "datetime" && field.type != "multipicklist") {
+                                    section.rowcriteriafields.push(field);
+                                }
+                            });
+                            section.criteria = angular.copy(section.rowLevelCriteria);
+                            if (parentcall) {
+                                $adminModals.layoutComponentProperties({
+                                    section: angular.copy(section)
+                                }, function (newSection) {
+                                    $scope.layoutSections[index] = newSection;
+                                    $scope.layoutSections[index].rowLevelCriteria = angular.copy($scope.layoutSections[index].criteria);
+                                });
+                            }
+                        }
+                        else {
+                            childcall = true;
+                        }
+                    });
+            }
+            else {
+                $adminModals.layoutSectionProperties({
+                    layout: angular.copy($scope.layout),
+                    section: angular.copy(section)
+                }, function (newSection) {
+                    $scope.layoutSections[index] = newSection;
+                });
+            }
         };
         $scope.openSectionCriteriaModal = function(section,index){
+            if (section.Component && section.Component.name !== undefined && section.Component.name !== null && section.Component.catagory == "LineItemComponent") {
+                section.criteria = angular.copy(section.sectionLevelCriteria);
+            }
             $adminModals.criteriaModal({
                 title: 'Section Criteria | ' + section.title,
                 fields: $scope.$parent.$parent.layout.SObject.fields,
                 criteria: $scope.layoutSections[index].criteria ? $scope.layoutSections[index].criteria : null
             },function(criteria){
-                $scope.layoutSections[index].criteria = criteria;
+                if ($scope.layoutSections[index].Component && $scope.layoutSections[index].Component.name !== undefined && $scope.layoutSections[index].Component.name !== null && $scope.layoutSections[index].Component.catagory == "LineItemComponent") {
+                    $scope.layoutSections[index].sectionLevelCriteria = criteria;
+                }
+                else {
+                    $scope.layoutSections[index].criteria = criteria;
+                }
             });
         };
         $scope.openFieldCriteriaModal = function(field){
@@ -699,6 +772,11 @@ admin.controller('AdminLayoutsEditEditController',[
                     .success(function(response){
                         if(response.success === true){
                             $scope.layoutSections = response.data.sObjectLayoutSections;
+                            angular.forEach($scope.layoutSections, function (section, index) {
+                                if (section.Component && section.Component.name !== undefined && section.Component.name !== null && section.Component.catagory == "LineItemComponent") {
+                                    section.sectionLevelCriteria = angular.copy(section.criteria);
+                                }
+                            });
                             layoutService.loadLayoutRelatedLists($scope.layout)
                                 .success(function(response2){
                                     if(response2.success === true){

@@ -128,6 +128,23 @@ layoutRouter.post('/contents', function(req, res){
             }
         },{
             model: db.Components,
+            include: [{
+                model: db.SObject,
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                }
+            },{
+                model: db.SObject,
+                as: 'detailSObject',
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                }
+            },{
+                model: db.ComponentDetail,
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                }
+            }],
             attributes: {
                 exclude: ['createdAt','updatedAt']
             }
@@ -151,11 +168,40 @@ layoutRouter.post('/contents', function(req, res){
         }else{
             var layoutSections = JSON.parse(JSON.stringify(sObjectLayoutSections));
             layoutSections.forEach(function(section){
-                section.columns = (section.columns === 1) ? [[]] : [[],[]] ;
-                section.SObjectLayoutFields.forEach(function(field){
-                    section.columns[field.column-1].push(field);
-                });
-                delete section.SObjectLayoutFields;
+                if (section.isComponent && section.componentName == "LineItemComponent") {
+                    section.sectionComponentFields = section.SObjectLayoutFields;
+                    delete section.SObjectLayoutFields;
+                    var configJSON = JSON.parse(JSON.stringify(section.componentConfig));
+                    section.addmore = configJSON.addmore;
+                    section.rowLevelCriteria = configJSON.rowLevelCriteria;
+                    section.sectionComponentAmtFields = configJSON.sectionComponentAmtFields;
+                    delete section.componentConfig;
+                    section.sectionComponentFields.forEach(function (field) {
+                        if (field.SObjectField.type == "double") {
+                            if (field.defaultValue != undefined && field.defaultValue != null) {
+                                field.defaultValue = parseFloat(field.defaultValue);
+                            }
+                        }
+                        if (field.SObjectField.type == "int") {
+                            if (field.defaultValue != undefined && field.defaultValue != null) {
+                                field.defaultValue = parseInt(field.defaultValue);
+                            }
+                        }
+                        //field.value = field.defaultValue;
+                        if (field.SObjectField.type == "reference") {
+                            if (field.defaultValueLabel != undefined && field.defaultValueLabel != null) {
+                                field.labelValue = field.defaultValueLabel;
+                            }
+                        }
+                    });
+                }
+                else {
+                    section.columns = (section.columns === 1) ? [[]] : [[],[]] ;
+                    section.SObjectLayoutFields.forEach(function(field){
+                        section.columns[field.column-1].push(field);
+                    });
+                    delete section.SObjectLayoutFields;
+                }
                 if(section.isComponent && section.Component === null && section.ComponentId === null){
                     var fileName=section.componentName.toLowerCase().replace(/\s/g,"-");
                     staticcomponentconfig.list.forEach(function (component) {
@@ -462,7 +508,7 @@ layoutRouter.post('/saveeditlayout', function(req, res){
     var editLayout = req.body;
     var fieldsToCreate = [], fieldsToUpdate = [];
     var sectionCreated = 0, sectionUpdated = 0;
-    
+
     var createOrUpdateSection = function(section,callback){
         if(section.id === undefined && section.deleted === false){
             // CREATE SECTION
@@ -479,6 +525,11 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                     ComponentId: section.isComponent ? section.Component ? section.Component.id : null : null,
                     componentName: section.isComponent && section.Component.name ? section.Component.name : (section.isComponent && section.Component.catagory ? section.Component.catagory : null),
                     criteria: section.criteria ? section.criteria : undefined,
+                    componentConfig: {
+                        addmore: section.addmore,
+                        rowLevelCriteria: section.rowLevelCriteria ? section.rowLevelCriteria : undefined,
+                        sectionComponentAmtFields: section.sectionComponentAmtFields ? section.sectionComponentAmtFields : undefined
+                    },
                     MobileEditLayoutConfigId: section.MobileEditLayoutConfigId ? section.MobileEditLayoutConfigId : null
                 })
                 .save()
@@ -501,6 +552,11 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                     ComponentId: section.isComponent ? section.Component ? section.Component.id : null : null,
                     componentName: section.isComponent && section.Component.name ? section.Component.name : (section.isComponent && section.Component.catagory ? section.Component.catagory : null),
                     criteria: section.criteria ? section.criteria : undefined,
+                    componentConfig: {
+                        addmore: section.addmore,
+                        rowLevelCriteria: section.rowLevelCriteria ? section.rowLevelCriteria : undefined,
+                        sectionComponentAmtFields: section.sectionComponentAmtFields ? section.sectionComponentAmtFields : undefined
+                    },
                     MobileEditLayoutConfigId: section.MobileEditLayoutConfigId ? section.MobileEditLayoutConfigId : null
                 },{
                     where: {
@@ -515,6 +571,9 @@ layoutRouter.post('/saveeditlayout', function(req, res){
     
     async.each(editLayout.layoutSections,
         function(section,callback){
+            if (section.isComponent && section.Component !== undefined && section.Component !== null && section.Component.catagory == "LineItemComponent") {
+                section.criteria = section.sectionLevelCriteria;
+            }
             createOrUpdateSection(section,function(updatedSection){
                 if(!section.isComponent){
                     section.columns.forEach(function(fields,columnIndex){
@@ -572,6 +631,72 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                                 });
                             }
                         });
+                    });
+                }
+                else {
+                    db.SObjectLayoutField.update({
+                        deleted: true
+                    }, {
+                            where: {
+                                SObjectLayoutSectionId: updatedSection.id
+                            }
+                        });
+                    section.sectionComponentFields.forEach(function (field) {
+                        if (field.id === undefined && field.deleted === false) {
+                            fieldsToCreate.push({
+                                label: (field.label) ? field.label : field.SObjectField.label,
+                                type: field.type,
+                                hidden: field.hidden,
+                                deleted: false,
+                                order: field.order,
+                                reference: (field.SObjectField.type === 'reference') ? (field.reference) ? field.reference : 'Name' : null,
+                                enable: (field.enable) ? true : false,
+                                column: field.column,
+                                readonly: (field.SObjectField.calculated || editLayout.type === 'Details') ? true : field.readonly,
+                                defaultValue: field.defaultValue,
+                                defaultValueLabel: (field.defaultValueLabel) ? field.defaultValueLabel : null,
+                                active: field.active,
+                                SObjectFieldId: field.SObjectField.id,
+                                SObjectLayoutId: updatedSection.SObjectLayoutId,
+                                SObjectLayoutSectionId: updatedSection.id,
+                                SObjectLookupId: (field.SObjectLookupId) ? field.SObjectLookupId : null,
+                                ControllerSObjectFieldId: (field.ControllerSObjectFieldId) ? field.ControllerSObjectFieldId : null,
+                                event: (field.event) ? field.event : undefined,
+                                criteria: field.criteria ? field.criteria : undefined,
+                                requiredCriteria: field.requiredCriteria ? field.requiredCriteria : undefined,
+                                required: (editLayout.type === 'Details') ? false : field.required,
+                                currentUserSelected: (field.currentUserSelected) ? field.currentUserSelected : false,
+                                excludeCurrentUser: (field.excludeCurrentUser) ? field.excludeCurrentUser : false
+                            });
+                        }
+                        else {
+                            fieldsToUpdate.push({
+                                id: field.id,
+                                label: (field.label) ? field.label : field.SObjectField.label,
+                                type: field.type,
+                                hidden: field.hidden,
+                                deleted: field.deleted,
+                                order: field.order,
+                                reference: (field.SObjectField.type === 'reference') ? (field.reference) ? field.reference : 'Name' : null,
+                                enable: (field.enable) ? true : false,
+                                column: field.column,
+                                readonly: (field.SObjectField.calculated || editLayout.type === 'Details') ? true : field.readonly,
+                                defaultValue: field.defaultValue,
+                                defaultValueLabel: (field.defaultValueLabel) ? field.defaultValueLabel : null,
+                                active: field.active,
+                                SObjectFieldId: field.SObjectField.id,
+                                SObjectLayoutId: updatedSection.SObjectLayoutId,
+                                SObjectLayoutSectionId: updatedSection.id,
+                                SObjectLookupId: (field.SObjectLookupId) ? field.SObjectLookupId : null,
+                                ControllerSObjectFieldId: (field.ControllerSObjectFieldId) ? field.ControllerSObjectFieldId : null,
+                                event: (field.event) ? field.event : undefined,
+                                criteria: field.criteria ? field.criteria : undefined,
+                                requiredCriteria: field.requiredCriteria ? field.requiredCriteria : undefined,
+                                required: (editLayout.type === 'Details') ? false : field.required,
+                                currentUserSelected: (field.currentUserSelected) ? field.currentUserSelected : false,
+                                excludeCurrentUser: (field.excludeCurrentUser) ? field.excludeCurrentUser : false
+                            });
+                        }
                     });
                 }
                 callback();

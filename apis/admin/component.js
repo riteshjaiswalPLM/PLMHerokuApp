@@ -140,6 +140,12 @@ componentRouter.post('/getcomponentsforsobject', function(req, res){
                 exclude: ['createdAt','updatedAt']
             }
         },{
+            model: db.SObject,
+            as: 'detailSObject',
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        },{
             model: db.ComponentDetail,
             attributes: {
                 exclude: ['createdAt','updatedAt']
@@ -152,7 +158,7 @@ componentRouter.post('/getcomponentsforsobject', function(req, res){
         where: {
             SObjectId: sObject.id,
             active: true,
-            catagory: {$notIn: ['DashboardMyTask','DashboardChart']} 
+            catagory: {$notIn: ['DashboardMyTask','DashboardChart']}
         }
     });
     components.then(function(components) {
@@ -162,14 +168,14 @@ componentRouter.post('/getcomponentsforsobject', function(req, res){
                 message: 'Error occured while loading child sobjects.'
             });
         }else{
-            return res.json({
-                success: true,
-                data: {
-                    components: components
-                    // sObjectFields: sObjectFields
-                }
-            });
-        }
+                return res.json({
+                    success: true,
+                    data: {
+                        components: components
+                        // sObjectFields: sObjectFields
+                    }
+                });
+         }
     });
 });
 
@@ -259,19 +265,19 @@ componentRouter.post('/details', function(req, res){
                 }
             }
         },
-        // {
-        //     model: db.SObject,
-        //     as: 'detailSObject',
-        //     attributes: {
-        //         exclude: ['createdAt','updatedAt']
-        //     },
-        //     include: {
-        //         model: db.SObjectField,
-        //         attributes: {
-        //             exclude: ['createdAt','updatedAt']
-        //         }
-        //     }
-        // },
+        {
+            model: db.SObject,
+            as: 'detailSObject',
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            },
+            include: {
+                model: db.SObjectField,
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                }
+            }
+        },
         {
             model: db.ComponentDetail,
             attributes: {
@@ -366,7 +372,7 @@ componentRouter.post('/save', function(req, res){
                     active: component.active,
                     multipleApprove: component.multipleApprove,
                     catagory: component.catagory,
-                    sobjectname: component.sobjectname,
+                    //sobjectname: component.sobjectname,
                     SObjectId: component.SObjectId,
                     detailSObjectId: component.detailSObjectId,
                     forMobile: componentModel.forMobile,
