@@ -1,0 +1,217 @@
+<div ng-controller="AdminArchivalLayoutsEditListController" block-ui="editListLayout">
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact">
+                        <svg class="slds-icon slds-icon--small slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading--small">Search Criteria Fields</span>
+                    </h2>
+                </div>
+            </header>
+            <div class="slds-no-flex">
+                <span class="slds-badge">{{ searchCriteriaFields.length }}</span>
+            </div>
+        </div>
+        <div class="slds-card__body" style="margin-bottom: 0;">
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col" style="width: 50px;">
+                            <div class="slds-truncate" title="Index">#</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Label">Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Display Label">Display Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Reference">Reference</div>
+                        </th>
+                        <th scope="col" style="width: 200px;">
+                            <div class="slds-truncate" title="Type">Type</div>
+                        </th>
+                        <th scope="col" style="text-align: center; width: 50px;">
+                            <div class="slds-truncate" title="Actions">Actions</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody dnd-drop="searchCriteriaFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchCriteriaFields"
+                    dnd-allowed-types="['sObjectField','searchCriteriaField']" id="searchCriteriaFieldsContainer">
+                    <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
+                        <th colspan="6" style="background: #e1d951; text-align: center;">
+                            <div class="slds-truncate">Drop field here</div>
+                        </th>
+                    </tr>
+                    <tr ng-if="searchCriteriaFields.length === 0">
+                        <td colspan="6" class="slds-blank-slate" style="text-align: center;">
+                            <div class="slds-truncate">No Criteria field added.</div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="field in searchCriteriaFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move"
+                        dnd-moved="searchCriteriaFields.splice($index,1)" dnd-type="'searchCriteriaField'">
+                        <td>
+                            <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{{ field.SObjectField.label }}">{{ field.SObjectField.label }}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">
+                                <input type="text" class="slds-input input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                            </div>
+                        </td>
+                        <th scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                        <td>
+                            <div class="slds-truncate" title="{{ field.SObjectField.type }}">
+                                <span class="slds-badge">{{ field.SObjectField.type }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate slds-align--absolute-center" title="Delete">
+                                <div class="slds-button-group" role="group">
+                                    <button ng-click="removeAndReorder(searchCriteriaFields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact">
+                        <svg class="slds-icon slds-icon--small slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#matrix"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading--small">Search Result Fields</span>
+                    </h2>
+                </div>
+            </header>
+            <div class="slds-no-flex">
+                <span class="slds-badge">{{ searchResultFields.length }}</span>
+            </div>
+        </div>
+        <div class="slds-card__body" style="margin-bottom: 0;">
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col" style="width: 50px;">
+                            <div class="slds-truncate" title="Index">#</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Label">Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Display Label">Display Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Reference">Reference</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Hidden">Hidden</div>
+                        </th>
+                        <th scope="col" style="width: 200px;">
+                            <div class="slds-truncate" title="Type">Type</div>
+                        </th>
+                        <th scope="col" style="text-align: center; width: 50px;">
+                            <div class="slds-truncate" title="Actions">Actions</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody dnd-drop="searchResultFieldsDropCallBack(event, index, item, external, type, 'sObjectField')" dnd-list="searchResultFields"
+                    dnd-allowed-types="['sObjectField','searchResultField']" id="searchResultFieldsContainer">
+                    <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
+                        <th colspan="6" style="background: #e1d951;">
+                            <div class="slds-truncate slds-align--absolute-center">Drop field here</div>
+                        </th>
+                    </tr>
+                    <tr ng-if="searchResultFields.length === 0">
+                        <td colspan="6" class="slds-blank-slate">
+                            <div class="slds-truncate slds-align--absolute-center">No Result field added.</div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="field in searchResultFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchResultFields.splice($index,1)"
+                        dnd-type="'searchResultField'">
+                        <td>
+                            <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{{ field.SObjectField.label }}">{{ field.SObjectField.label }}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">
+                                <input type="text" class="slds-input input-xs" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                            </div>
+                        </td>
+                        <th scope="row" reference-field-selector field="field" ref-sobjects="refSObjects"></th>
+                        <td ng-init="field.hidden = field.hidden === undefined ? false : field.hidden">
+                            <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field)" ng-model="field.hidden" on-text="Yes" off-text="No"
+                            />
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{{ field.SObjectField.type }}">
+                                <span class="slds-badge">{{ field.SObjectField.type }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate slds-align--absolute-center" title="Delete">
+                                <div class="slds-button-group" role="group">
+                                    <button ng-click="removeAndReorder(searchResultFields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact">
+                        <svg class="slds-icon slds-icon--small slds-p-around--xx-small" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                        </svg>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2>
+                        <span class="slds-text-heading--small">Where Clause</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-p-around--x-small slds-border--top" style="margin-bottom: 0;background-color: white;">
+            <div class="slds-button-group slds-align--absolute-center" role="group">
+                <textarea ng-model="layout.whereClause" class="slds-input" style="resize: none; margin-top: 8px; margin-left:10%; margin-right: 10%;"
+                    rows="3">{{ layout.whereClause }}</textarea>
+            </div>
+        </div>
+    </article>
+</div>

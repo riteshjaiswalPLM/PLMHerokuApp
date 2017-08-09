@@ -1,3 +1,4 @@
+
 'use strict';
 
 admin.config(function($stateProvider) {
@@ -9,8 +10,7 @@ admin.config(function($stateProvider) {
             templateUrl: 'slds/views/app.admin.html',
             controller: 'AdminController',
         })
-        
-        // Admin change password
+         // Admin change password
         .state('admin.changepassword', {
             templateUrl: 'slds/views/admin/profile/changepassword.html',
             controller: 'AdminProfileController',
@@ -82,7 +82,6 @@ admin.config(function($stateProvider) {
             },
             title: "Edit Report"
         })
-
         // Admin Custom Lookups
         .state("admin.lookups", {
             templateUrl: "slds/views/admin/lookup/index.html",
@@ -172,6 +171,11 @@ admin.config(function($stateProvider) {
             controller: "AdminSetupSfdcController",
             title: "Salesforce Org"
         })
+        //Admin Archival Routes
+        .state("admin.archival", {
+            templateUrl: "slds/views/admin/archival/index.html",
+            controller: "AdminArchivalController"
+        })
         //-- SOBJECTS SETUP
         .state("admin.setup.sobjects", {
             templateUrl: "slds/views/admin/setup/sobject/index.html",
@@ -194,6 +198,26 @@ admin.config(function($stateProvider) {
                 sObject: null
             },
             title: "SObjects details"
+        })
+        
+
+        //-- LAYOUTS ARCHIVAL
+        .state("admin.archival.layouts", {
+            templateUrl: "slds/views/admin/archival/layouts/index.html",
+            controller: 'AdminArchivalLayoutsController'
+        })
+        .state("admin.archival.layouts.list", {
+            templateUrl: "slds/views/admin/archival/layouts/list.html",
+            controller: "AdminArchivalLayoutsListController",
+            title: "SObjects"
+        })   
+        .state("admin.archival.layouts.edit", {
+            templateUrl: "slds/views/admin/archival/layouts/edit.html",
+            controller: "AdminArchivalLayoutsEditController",
+            params:{
+                layout: null
+            },
+            title: "Edit Layout"
         })
         //-- USER MAPPING SETUP
         .state("admin.setup.usermapping",{

@@ -1,10 +1,21 @@
 /**
  * Admin Controllers
  */
-admin.controller('AdminController',['$scope','$rootScope','$state',function($scope,$rootScope,$state){
-    $scope.init = function(){
+admin.controller('AdminController',['$scope','$rootScope','$state','$http',function($scope,$rootScope,$state,$http){
+    $scope.init = function(){ 
+        $scope.isArchivalActive=false;
         console.log('AdminController loaded!');
-        $state.go('admin.tabs');
+        $http.post('/api/admin/archival/checkArchivalActive',{})
+        .success(function (response) {
+            $scope.isArchivalActive = response.success;
+        })
+        .error(function (response) {
+           
+            console.log('Error in checking archival sobject')
+            // $dialog.alert('Error occured while loading salesforce sobjects.', 'Error', 'pficon pficon-error-circle-o');
+        });
+          $state.go('admin.tabs');
+       
     };
     $scope.init();
 }]);
@@ -83,6 +94,19 @@ admin.controller('AdminSetupController',['$scope','$rootScope','$state',function
     $scope.init = function(){
         console.log('AdminSetupController loaded!');
         $state.go('admin.setup.sfdc');
+    };
+    $scope.init();
+}]);
+admin.controller('AdminArchivalController',['$scope','$rootScope','$state',function($scope,$rootScope,$state){
+    $scope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams,options){
+        if(toState.name === 'admin.archival' && fromState !== 'admin.archival.layouts'){
+            event.preventDefault();
+            $state.go('admin.archival.layouts');
+        }
+    });
+    $scope.init = function(){
+        console.log('AdminArchivalController loaded!');
+        $state.go('admin.archival.layouts');
     };
     $scope.init();
 }]);

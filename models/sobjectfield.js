@@ -178,6 +178,10 @@ module.exports = function(sequelize, DataTypes){
         classMethods: {
             associate: function(models){
                 SObjectField.belongsTo(models.SObject);
+                SObjectField.hasMany(models.ArchivalSobjectField,{
+                    onDelete: 'CASCADE',
+                    hooks:true
+                });
             }
         }
     });

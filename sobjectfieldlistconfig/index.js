@@ -15,7 +15,7 @@ sObjectFieldListConfig.refreshConfig = ()=>{
         },
         where: {
             type :{
-                $ne : 'Mobile'
+                $notIn : ['Mobile','Archival']
             },
             // created: true,
             // active: true

@@ -1,0 +1,285 @@
+<div ng-if="showSideBar === false">
+    <div block-ui="editEditLayout">
+        <div class="slds-form--horizontal">
+            <div class="slds-form-element" ng-repeat="field in governingFields | orderBy: 'name'">
+                <label class="slds-form-element__label" for="field.name">{{field.label}}</label>
+                <div class="slds-form-element__control">
+                    <select id="field.name" class="slds-select" ng-model="mobileEditLayoutConfig.governingFieldValue[field.name]">
+                            <option value="">-- None --</option>
+                            <option ng-repeat="picklistValue in field.picklistValues | orderBy:'label'" ng-selected="mobileEditLayoutConfig.governingFieldValue[field.name] === picklistValue.value" value="{{picklistValue.value}}">{{picklistValue.label}}</option>
+                        </select>
+                </div>
+            </div>
+            <div class="slds-form-element slds-form-element__control" align="center">
+                <button class="slds-button slds-button--brand" ng-click="saveMobileEditLayoutConfig(mobileEditLayoutConfig)" ng-if="governingFields && governingFields.length > 0">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                        </svg>
+                        Save
+                    </button>
+                <button class="slds-button slds-button--neutral" ng-click="cancelMobileEditLayoutConfig()" ng-if="governingFields && governingFields.length > 0"
+                    translate>Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-12" block-ui="EditMobileLayoutConfigBlockUI" style="min-height:100px;border: 1px solid #3F9C35;margin-top:10px">
+        <div class="slds-grid slds-page-header " style="margin: 0.3rem;padding: 0.3rem;background-color: #3F9C35;">
+            <div class="slds-col slds-align-middle">
+                <p class="slds-text-title--caps slds-line-height--reset ng-binding" style="color:white"><b>Mobile layout configurations</b></p>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-bottom">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                        </svg>
+                        <input class="slds-input ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search Sobject..." ng-model="sObjectsFilter"
+                            type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-scrollable" style="padding:0px;">
+            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
+                ng-if="mobileEditLayoutConfigs.length > 0" style="margin-bottom:0px;height: calc(100vh - 339px);">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th style="white-space:normal !important;text-align: center;min-width: 30px;width: 30px;" title="#"></th>
+                        <th style="white-space:normal !important;" title="Governing Values">Governing Values</th>
+                        <th style="white-space:normal !important;" title="Active">Active</th>
+                        <th style="white-space:normal !important;text-align: center;min-width: 150px;width: 220px;" title="Actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="mobileEditLayoutConfiguration in mobileEditLayoutConfigs" ng-dblclick="editGoverningValue(mobileEditLayoutConfiguration)">
+                        <td class="slds-truncate" title="Invalid Layout">
+                            <svg class="slds-button__icon" style="color:red" aria-hidden="true" title="Invalid Layout" ng-if="isLayoutValidOrNot(mobileEditLayoutConfiguration)">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#error"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Invalid Layout</span>
+                        </td>
+                        <td class="slds-truncate"> <strong>{{ getDisplayText(mobileEditLayoutConfiguration.governingFieldValue) }}<strong></td>
+                                <td class="slds-truncate" style="text-align: center;">
+                                    <slds-switch id="fieldRequired" switch-change="changeMobileEditLayoutConfigActive(mobileEditLayoutConfiguration)" ng-model="mobileEditLayoutConfiguration.active" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || section.readonly"/>
+                                </td>
+                                <td data-label="Action" style="white-space:normal !important;">
+                                        <div class="slds-truncate slds-align--absolute-center" >
+                                            <div class="slds-button-group" role="group">
+                                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="manageLayout(mobileEditLayoutConfiguration)">
+                                                    <svg class="slds-button__icon" aria-hidden="true">
+                                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                                    </svg>
+                                                    <span class="slds-assistive-text">Manage Layout</span>
+                                                </button>
+                                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-click="deleteMobileEditLayoutConfig(mobileEditLayoutConfiguration)">
+                                                    <svg class="slds-button__icon" aria-hidden="true">
+                                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                    </svg>
+                                                    <span class="slds-assistive-text">Delete</span>
+                                                </button>
+                                            </div>
+                                        </div>  
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="slds-col slds-has-flexi-truncate"  ng-if="governingFields.length > 0 && mobileEditLayoutConfigs.length === 0">
+                        <div class=" slds-no-space slds-grow" align="center" style="padding-top:100px ">
+                            <div style="padding:20px 0px">
+                                <span class="slds-icon_container slds-icon-standard-user">
+                                    <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="">
+                                <h1 style="margin:0px" class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ 'No Layout Configuration added.' }}">No Layout Configuration added.</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-has-flexi-truncate"  ng-if="governingFields && governingFields.length === 0">
+                        <div class=" slds-no-space slds-grow" align="center" style="padding-top:100px ">
+                            <div style="padding:20px 0px">
+                                <span class="slds-icon_container slds-icon-standard-user">
+                                    <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="">
+                                <h1 style="margin:0px" class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ 'No Governing fields has configured.' }}">No Governing fields has configured.</h1>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+</div>
+<div ng-if="showSideBar === true">
+    <div  block-ui="editEditLayoutWithSideBar">
+        <h3 class="slds-section__title">Layout Sections</h3>
+        <div class="layout-section-container" 
+                dnd-drop="sectionsDropCallBack(event, index, item, external, type)" 
+                dnd-list="layoutSections" 
+                dnd-allowed-types="['layoutSection']">
+            <div class="dndPlaceholder" style="background-color: #6a89e5 !important;">
+                Drop section here
+            </div>
+            <div    class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small"
+                    ng-repeat="section in layoutSections | filter: {deleted: false }"
+                    dnd-draggable="section"
+                    dnd-effect-allowed="move" 
+                    dnd-moved="layoutSections.splice($index,1)"
+                    dnd-type="'layoutSection'"
+                    ng-init="sectionIndex = $index">
+                <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+                        <h3>{{ section.title }}
+                            <span class="slds-float--right">
+                                <div class="slds-button-group" role="group">
+                                    <button ng-click="removeAndReorder(layoutSections,section,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                    <button ng-click="openSectionPropertiesModal(section,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Properties</span>
+                                    </button>
+                                </div>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
+                        <div ng-if="section.isComponent" class="slds-align--absolute-center">
+                            {{section.Component.desc}}
+                        </div>
+                        <div    ng-if="!section.isComponent" 
+                                ng-repeat="fields in section.columns" 
+                                ng-init="columnIndex = $index" 
+                                class="slds-size--1-of-{{section.columns.length}}">
+                            <div    class="slds-form--horizontal" 
+                                    dnd-list="fields" 
+                                    dnd-drop="fieldsDropCallBack(event, index, item, external, type, section, $index+1)"
+                                    dnd-allowed-types="['sObjectField']"
+                                    style="min-height: 20px;" >
+                                <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
+                                    Drop field here
+                                </div>
+                                <div    class="slds-form-element slds-form-element--draggable"
+                                        ng-repeat="field in fields | filter: {deleted: false }" 
+                                        dnd-draggable="field" 
+                                        dnd-effect-allowed="move" 
+                                        dnd-moved="fields.splice($index,1)" 
+                                        dnd-type="'sObjectField'",
+                                        ng-init="fieldIndex = $index">
+                                    <label class="slds-form-element__label" style="font-weight: 600;float: none;">
+                                        <a href pf-tooltip data-placement="{{(section.columns.length === 1) ? 'top' : (columnIndex === 0) ? 'right' :'left'}}" ng-if="field.error" style="color: red;" title="{{field.error}}"><i class="fa fa-exclamation-circle"></i></a>
+                                        {{ field.label }}
+                                    </label>
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-has-flexi-truncate">
+                                                <label class="slds-form-element__label slds-p-left--small" style="margin-top:.2rem;margin-bottom: 0;">
+                                                    Sample {{ field.SObjectField.label }}
+                                                </label>
+                                            </div>
+                                            <div class="slds-col slds-no-flex slds-grid slds-align-middle">
+                                                <div class="slds-button-group slds-field-actions" role="group">
+                                                    <button ng-click="removeFieldsStore(section,field);removeAndReorder(fields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                                        <svg class="slds-button__icon" aria-hidden="true">
+                                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                                        </svg>
+                                                        <span class="slds-assistive-text">Delete</span>
+                                                    </button>
+                                                    <button ng-click="openFieldPropertiesModal(section,sectionIndex,columnIndex,field,fieldIndex)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                                        <svg class="slds-button__icon" aria-hidden="true">
+                                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                                        </svg>
+                                                        <span class="slds-assistive-text">Properties</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="slds-section__title" ng-if="layout.type !== 'Create'">Related Lists</h3>
+        <div class="layout-section-container" ng-if="layout.type !== 'Create'"
+                dnd-drop="relatedListsDropCallBack(event, index, item, external, type,'2')" 
+                dnd-list="relatedLists"
+                dnd-allowed-types="['relatedList']">
+            <div class="dndPlaceholder" style="background-color: #f59f71 !important;">
+                Drop related list here
+            </div>
+            <div    class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small"
+                    ng-repeat="relatedList in relatedLists | filter: {deleted: false,dispaySection :'2'}"
+                    dnd-draggable="relatedList"
+                    dnd-effect-allowed="move" 
+                    dnd-moved="relatedLists.splice(relatedLists.indexOf(relatedList),1)"
+                    dnd-type="'relatedList'"
+                    ng-init="relatedListIndex = relatedLists.indexOf(relatedList)">
+                <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+                        <h3>{{ relatedList.title }}
+                            <span class="slds-float--right">
+                                <div class="slds-button-group" role="group">
+                                    <button ng-click="removeAndReorder(relatedLists,relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                    <!--<button ng-click="openRelatedListCriteriaModal(relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Criteria</span>
+                                    </button>-->
+                                    <button ng-click="openRelatedListPropertiesModal(relatedList,relatedLists.indexOf(relatedList))" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#custom_apps"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Properties</span>
+                                    </button>
+                                </div>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="slds-panel__section slds-grid slds-p-vertical--none slds-p-horizontal--none slds-border--top slds-border--left slds-border--right slds-border--bottom">
+                        <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                            <thead>
+                                <tr class="slds-text-title--caps">
+                                    <th scope="col" ng-repeat="field in relatedList.SObjectLayoutFields">
+                                        <div class="slds-truncate">{{ field.label }}</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="i in [1,2,3,4,5]">
+                                    <td ng-repeat="field in relatedList.SObjectLayoutFields">
+                                        <div class="slds-truncate" title="{{ field.label + ' - ' + i }}">
+                                            {{ field.label + ' - ' + i }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

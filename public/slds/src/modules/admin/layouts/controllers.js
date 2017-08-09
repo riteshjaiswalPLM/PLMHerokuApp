@@ -10,7 +10,8 @@ admin.controller('AdminLayoutsListController',[
                     where: {
                         created: false,
                         type : {
-                            $ne: 'Mobile'
+                            //$ne: 'Mobile'
+                            $notIn : ['Mobile','Archival']
                         }
                     }
                 }
@@ -45,7 +46,8 @@ admin.controller('AdminLayoutsListController',[
                         where: {
                             created: true,
                             type : {
-                                $ne: 'Mobile'
+                                //$ne: 'Mobile'
+                                $notIn : ['Mobile','Archival']
                             }
                         }
                     }

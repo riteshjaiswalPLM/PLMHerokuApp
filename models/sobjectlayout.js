@@ -2,7 +2,7 @@ module.exports = function(sequelize, DataTypes){
     var SObjectLayout = sequelize.define("SObjectLayout",{
         type: {
             type: DataTypes.ENUM,
-            values: ['Create','Edit','List','Details','Mobile']
+            values: ['Create','Edit','List','Details','Mobile','Archival']
         },
         created: {
             type: DataTypes.BOOLEAN,
@@ -62,6 +62,7 @@ module.exports = function(sequelize, DataTypes){
         classMethods: {
             associate: function(models){
                 SObjectLayout.belongsTo(models.SObject);
+                SObjectLayout.belongsTo(models.ArchivalSobject);
                 
                 SObjectLayout.hasMany(models.SObjectLayoutField, {
                     onDelete: 'CASCADE', 
@@ -83,6 +84,7 @@ module.exports = function(sequelize, DataTypes){
                     onDelete: 'CASCADE', 
                     hooks: true
                 });
+                
             }
         }
     });

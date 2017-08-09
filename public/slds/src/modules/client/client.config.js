@@ -27,5 +27,10 @@ client.config(function($stateProvider) {
             templateUrl: 'slds/views/client/report/index.html',
             controller: 'ClientReportsController',
             title: 'Reports'
+        })
+        .state('client.archival', {
+            templateUrl: 'slds/views/client/archival/index.html',
+            controller: 'ClientArchivalsController',
+            title: 'Archival'
         });
 });

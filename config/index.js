@@ -45,7 +45,7 @@ if(!global.hasOwnProperty('config')){
             tabICON: 'fa fa-archive',
             sldsicon: 'summary',
             sldstabICON: 'summary',
-            active: true,
+            active: false,
             showRefreshResult: true
         }
     };

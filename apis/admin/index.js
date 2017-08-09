@@ -1,3 +1,4 @@
+
 var express = require('express');
 var adminRouter = express.Router();
 
@@ -20,5 +21,5 @@ adminRouter.use('/dependentpicklist',require('./dependentpicklist'));
 adminRouter.use('/userconfig',require('./userconfig'));
 adminRouter.use('/sobjectreport',require('./sobjectreport'));
 adminRouter.use('/profile',require('./profile'));
-
+adminRouter.use('/archival',require('./archival'));
 module.exports = adminRouter;
