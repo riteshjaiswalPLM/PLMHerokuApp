@@ -850,4 +850,150 @@ componentRouter.post('/saveapprovers', (req, res)=>{
     });
 });
 
+componentRouter.post('/getlineitemdata', function(req, res){
+    var invoiceData = req.body;
+    var queryFields = [];
+    var whareClause = "";
+    var lookupFieldName=invoiceData.componentConfig.ComponentDetails[0].configuration.connectingField;
+     
+    invoiceData.fields.forEach(function(field){
+        if(queryFields.indexOf(field.SObjectField.name) === -1){
+            queryFields.push(field.SObjectField.name);
+            if(field.SObjectField.type === 'reference'){
+                if(field.SObjectField.reference === undefined){
+                    queryFields.push(field.SObjectField.relationshipName + '.Name');
+                }else{
+                    queryFields.push(field.SObjectField.relationshipName + '.' +field.SObjectField.reference);
+                }
+            }
+        }
+    });
+    whareClause=lookupFieldName+" = '"+invoiceData.invoiceId+"'";
+    whareClause+=' AND '+invoiceData.rowLevelCriteria;
+    global.sfdc
+    .sobject(invoiceData.componentConfig.ComponentDetails[0].configuration.detailSObjectName)
+    .select(queryFields.toString())
+    .where(whareClause)
+    .execute(function(err, records){
+        if(err){
+            return res.json({
+                success: false,
+                message: 'Error occured while loading invoice line item.',
+                error: err
+            });
+        }
+        else if(records.length === 0){
+            return res.json({
+                success: true,
+                data: {
+                    dataModelList: [],
+                    invoiceAmount: 0
+                }
+            });
+        }
+
+        return res.json({
+            success: true,
+            data: {
+                dataModelList: records
+            }
+        });
+    });
+});
+componentRouter.post('/savelineitemdata', function(req, res){
+    var lineItemData = req.body.dataModelList;
+    var sObject = req.body.sObject;
+    var parentID = req.body.parentID;
+    var listToBeDeleted = [], listToBeUpdated = [], listToBeInserted = [];
+    var lookupFieldName=req.body.lookupFieldName;
+    var othercharageFieldName=req.body.othercharageFieldName;
+    var isOtherCharage=req.body.isOtherCharage;
+     
+
+    var updateLineItems = function(){
+        if(listToBeUpdated.length > 0){
+            global.sfdc.sobject(sObject).update(listToBeUpdated, function(err, ret) {
+                if(err){
+                    return res.json({
+                        success: false,
+                        message: 'Error occured while saving invoice line item.',
+                        err:err.toString()
+                    });
+                }
+                deleteLineItems();
+            });
+        }
+        else{
+            deleteLineItems();
+        }
+    };
+
+    var deleteLineItems = function(){
+        if(listToBeDeleted.length > 0){
+            global.sfdc.sobject(sObject).destroy(listToBeDeleted, function(err, ret) {
+                if(err){
+                    return res.json({
+                        success: false,
+                        message: 'Error occured while saving invoice line item.',
+                        err:err.toString()
+                    });
+                }
+                return res.json({
+                    success: true
+                });
+                
+            });
+        }
+        else{
+            return res.json({
+                success: true
+            });
+        }
+    };
+
+    lineItemData.forEach(function(costAllocationLineItem){
+        if(costAllocationLineItem.hasOwnProperty('attributes') && costAllocationLineItem.attributes != null){
+            var id = costAllocationLineItem.attributes.url.substr(costAllocationLineItem.attributes.url.lastIndexOf("/")+1, costAllocationLineItem.attributes.url.length); 
+            if(costAllocationLineItem.isDeleted && costAllocationLineItem.isPersisted){
+                listToBeDeleted.push(id);
+            }
+            else if(!costAllocationLineItem.isDeleted && costAllocationLineItem.isPersisted){
+                var updatedValueObj = {};
+                for (var key in costAllocationLineItem){
+                    if(key.indexOf('__c') > -1){
+                        updatedValueObj[key] = costAllocationLineItem[key];
+                    }
+                }
+                updatedValueObj.Id = id;
+                listToBeUpdated.push(updatedValueObj); 
+            }
+        }
+        else if(!costAllocationLineItem.isPersisted && !costAllocationLineItem.isDeleted){
+            var valueObj = {};
+            for (var key in costAllocationLineItem){
+                if(key.indexOf('__c') > -1){
+                    valueObj[key] = costAllocationLineItem[key];
+                }
+            };
+            valueObj[lookupFieldName]=parentID;
+            listToBeInserted.push(valueObj);
+        }
+    });
+    if(listToBeInserted.length > 0){
+        global.sfdc.sobject(sObject).create(listToBeInserted, function(err, ret) {
+            if(err){
+                return res.json({
+                    success: false,
+                    message: 'Error occured while saving invoice line item.',
+                    err:err.toString()
+                });
+            }
+            updateLineItems();
+        });
+    }
+    else{
+        updateLineItems();
+    }
+  
+});
 module.exports = componentRouter;

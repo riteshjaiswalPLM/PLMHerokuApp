@@ -1,0 +1,68 @@
+<div block-ui = "LineItemComponentBlock{{section.id}}" style="min-height: 70px;"  class="slds-scrollable"  >
+    <table  ng-if="dataModelList.length>0" class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="width: 100%;">
+        <tbody  ng-if="type !=='detail' && !section.readonly">
+            <tr>
+                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in invoiceData.fields" ng-hide="field.hidden">
+                    <div >{{ field.label | translate }}</div>
+                </td>
+                <td style="border-top: 0px;"></td>
+            </tr>
+            <tr ng-repeat="dataModel in dataModelList | filter: {isDeleted: false} track by $index">
+                <td class="{{ 'td-'+field.SObjectField.type }} sobject-layout-field" style="border-top: 0px;" ng-hide="field.hidden" ng-repeat="field in section.columns[0]">
+                    <div field-readonly="field.readonly" sobject-component-field field="field" parent-ctrl="ctrl" model="dataModel" index="$index" criteria="field.criteria"></div>
+                </td>
+                <td style="text-align: right;border-top: 0px">
+                    <div class="slds-truncate slds-align--absolute-center" >
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="dataModel['isDeleted'] = true" >
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                </svg>
+                                <span class="slds-assistive-text" translate>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="{{ invoiceData.fields.length + 1 }}" style="text-align: center;border-top: 0px;">
+                    <button class="slds-button slds-button--brand" type="button" ng-click="addItems()" ng-if="section.componentConfig.addmore==true">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"/>
+                        </svg>
+                        {{'Add more' | translate}}
+                    </button>
+                    <button class="slds-button slds-button--brand" type="button" ng-click="save()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"/>
+                        </svg>
+                        {{'Save' | translate}}
+                    </button>
+                    <button class="slds-button slds-button--neutral " type="button" ng-click="init()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"/>
+                        </svg>
+                        {{'Reload' | translate }}
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-if="type ==='detail' || section.readonly" >
+            <tr>
+                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in invoiceData.fields" ng-hide="field.hidden">
+                   <div >{{ field.label | translate }}</div>
+                </td>
+                
+            </tr>
+            <tr ng-repeat="dataModel in dataModelList | filter: {isDeleted: false} track by $index">
+                <td  style="border-top: 0px" ng-repeat="field in invoiceData.fields" ng-hide="field.hidden">
+                    <div field-readonly="true" sobject-component-field field="field" parent-ctrl="ctrl" model="dataModel" index="$index" criteria="field.criteria"></div>
+                    <!--{{ (field.SObjectField.relationshipName !== null) ? dataModel[field.SObjectField.relationshipName].Name : dataModel[field.SObjectField.name]}}-->
+                </td>
+            </tr>
+         </tbody>
+    </table>
+    <div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="dataModelList.length==0" >
+            <strong>{{'No result found' | translate}}.</strong>
+    </div>  
+</div>

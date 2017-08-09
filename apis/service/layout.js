@@ -117,9 +117,17 @@ layoutRouter.post('/metadata', function(req, res){
                 var layoutSections = JSON.parse(JSON.stringify(resultMetadata));
                 layoutSections.forEach(function(section){
                     section.columns = (section.columns === 1) ? [[]] : [[],[]] ;
-                    section.SObjectLayoutFields.forEach(function(field){
-                        section.columns[field.column-1].push(field);
-                    });
+                    if(section.isComponent){
+                        section.columns = [[]];
+                        section.SObjectLayoutFields.forEach(function(field){
+                            section.columns[field.column].push(field);
+                        });
+                    }
+                    else{
+                        section.SObjectLayoutFields.forEach(function(field){
+                            section.columns[field.column-1].push(field);
+                        });
+                    }
                     delete section.SObjectLayoutFields;
 
                     if(section.isComponent && section.Component === null && section.ComponentId === null){

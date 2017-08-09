@@ -198,7 +198,71 @@ app.factory('CriteriaHelper', function($filter,$rootScope){
 		}
 		return exp;
 	};
-	
+	var createGroupExpressionForField = function (criteria, exp, operator) {
+		exp += "(";
+		angular.forEach(criteria.group.rules, function (rule) {
+			if (rule.group) {
+				exp += createGroupExpressionForField(rule, "", rule.group.operator);
+			} else {
+				exp += createRuleExpressionForField(rule);
+			}
+			switch (operator) { // &&,||
+				case "&&":
+					operator = "AND";
+					break;
+				case "||":
+					operator = "OR";
+					break;
+			}
+			exp += " " + operator + " ";
+		})
+		exp = exp.slice(0, -4);
+		if (exp !== "")
+			exp += ")";
+		return exp;
+	}
+	var createRuleExpressionForField = function (rule) {
+		var exp = "";
+		if (rule.field) {
+			var modelValue = rule.field.SObjectField.name;
+			var ruleValue = rule.data[rule.field.SObjectField.name];
+			var type = rule.field.SObjectField.type;
+
+			switch (type) { // double,currency,string,email,picklist,boolean,reference
+				case "double":
+				case "currency":
+					modelValue = (modelValue) ? modelValue : 0;
+					ruleValue = (ruleValue) ? ruleValue : 0;
+					break;
+
+				case "string":
+				case "email":
+				case "picklist":
+				case "reference":
+					modelValue = (modelValue) ? modelValue : "";
+					ruleValue = (ruleValue) ? "'" + ruleValue + "'" : "''"
+					break;
+
+				case "boolean":
+					modelValue = (modelValue) ? modelValue : false;
+					ruleValue = (ruleValue) ? ruleValue : false;
+					break;
+
+				case "date":
+					modelValue = (modelValue) ? modelValue : "";
+					ruleValue = (ruleValue) ? ruleValue.toString().replace("T00:00:00.000Z", "") : "";
+					break;
+			}
+			var jsoncondition = rule.condition;
+			switch (rule.condition) { // ==,<>,<,>,<=,>=
+				case "==":
+					jsoncondition = "=";
+					break;
+			}
+			exp += "(" + modelValue + " " + jsoncondition + " " + ruleValue + ")";
+		}
+		return exp;
+	};
 	return {
 		validate: function(criteria,model,throwException){
 			var strCriteria = JSON.stringify(angular.copy(criteria));
@@ -219,6 +283,16 @@ app.factory('CriteriaHelper', function($filter,$rootScope){
 				result = false;
 			}
 			return result;
+		},
+		criteriaCondition: function (criteria) {
+			var strCriteria = JSON.stringify(angular.copy(criteria));
+			var strGroupNode = JSON.stringify(this.groupNode());
+			if (strCriteria == strGroupNode) {
+				criteria = null;
+				return null;
+			}
+
+			return createGroupExpressionForField(criteria, "", criteria.group.operator);
 		},
 		conditionList: function(){
 			return  [{ sign: '==', 		label: 'equal',						types : 'string,double,date,currency,boolean,picklist' },

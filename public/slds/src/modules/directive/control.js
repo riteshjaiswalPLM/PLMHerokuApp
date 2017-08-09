@@ -21,14 +21,14 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 return 'slds/views/directive/layoutfield/'+$scope.field.SObjectField.type+'.html';
             };
             // if($scope.model !== undefined && $scope.field !== undefined){
-            if ($scope.field.SObjectField.type ===  'boolean'  && $scope.field.defaultValue !==  undefined) {
+             if ($scope.field.SObjectField.type ===  'boolean'  && $scope.field.defaultValue !==  undefined) {
                 if (typeof  $scope.field.defaultValue ===  'string')
                     $scope.field.defaultValue = $scope.field.defaultValue ===  'true';
             }
             if ($scope.model[$scope.field.SObjectField.name] === undefined) {
                 $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
             }
-
+            
             $scope.doNotRender = function(){
                 $scope.field.rendered = false;
             };
@@ -93,8 +93,8 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                     if($scope.model)
                         $scope.model[$scope.field.SObjectField.name] = newValue;
                 }else if(newValue === undefined){
-                     if($scope.model)
-                         $scope.model[$scope.field.SObjectField.name] = "";
+                    if($scope.model)
+                        $scope.model[$scope.field.SObjectField.name] = "";
                          //$scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
                         if($scope.field.SObjectField.type === 'reference' && $scope.field.currentUserSelected && $scope.field.currentUserSelected==true ){
                             var userData=JSON.parse($rootScope.user().userdata);
@@ -318,7 +318,8 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                 }
                 return 'slds/views/directive/componentfield/'+$scope.field.SObjectField.type+'.html';
             };
-
+            if($scope.model[$scope.field.SObjectField.name]===undefined)
+                $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
             $scope.readonly = false;
             if($scope.field && $scope.field.readonly){
                 $scope.readonly = $scope.field.readonly;
@@ -397,12 +398,13 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
 
             if($scope.model !== undefined && $scope.field !== undefined){
                 if($scope.field.SObjectField.type === 'boolean' && $scope.field.defaultValue !== undefined){
-                    $scope.field.defaultValue = $scope.field.defaultValue === 'true';
+                    if(typeof $scope.field.defaultValue === 'string')
+                        $scope.field.defaultValue = $scope.field.defaultValue === 'true';
                 }
                 
                 if($scope.model[$scope.field.SObjectField.name] !== undefined){
                     $scope.$watch('model.'+$scope.field.SObjectField.name,function(newValue, oldValue){
-                        $scope.model[$scope.field.value] = newValue;
+                        $scope.model[$scope.field.SObjectField.name] = newValue;
                         if($scope.field.SObjectField.type === 'reference'){
                             if($scope.model[$scope.field.SObjectField.relationshipName] !== undefined && $scope.model[$scope.field.SObjectField.relationshipName] !== null){
                                 $scope.field.labelValue = $scope.model[$scope.field.SObjectField.relationshipName][$scope.field.reference];
@@ -414,7 +416,7 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                     if(newValue !== undefined && newValue !== oldValue){
                         $scope.model[$scope.field.SObjectField.name] = newValue;
                     }else if(newValue === undefined){
-                        $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
+                     //   $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
                     }
                 });
                 
