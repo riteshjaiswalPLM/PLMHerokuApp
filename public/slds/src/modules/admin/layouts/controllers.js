@@ -605,7 +605,7 @@ admin.controller('AdminLayoutsEditEditController',[
             }
         };
         $scope.openSectionCriteriaModal = function(section,index){
-            if (section.Component && section.Component.name !== undefined && section.Component.name !== null && section.Component.catagory == "LineItemComponent") {
+            if (section.Component && section.Component.catagory !== undefined && section.Component.catagory !== null && section.Component.catagory == "LineItemComponent") {
                 section.criteria = angular.copy(section.sectionLevelCriteria);
             }
             $adminModals.criteriaModal({
@@ -613,7 +613,7 @@ admin.controller('AdminLayoutsEditEditController',[
                 fields: $scope.$parent.$parent.layout.SObject.fields,
                 criteria: $scope.layoutSections[index].criteria ? $scope.layoutSections[index].criteria : null
             },function(criteria){
-                if ($scope.layoutSections[index].Component && $scope.layoutSections[index].Component.name !== undefined && $scope.layoutSections[index].Component.name !== null && $scope.layoutSections[index].Component.catagory == "LineItemComponent") {
+                if ($scope.layoutSections[index].Component && $scope.layoutSections[index].Component.catagory !== undefined && $scope.layoutSections[index].Component.catagory !== null && $scope.layoutSections[index].Component.catagory == "LineItemComponent") {
                     $scope.layoutSections[index].sectionLevelCriteria = criteria;
                 }
                 else {
