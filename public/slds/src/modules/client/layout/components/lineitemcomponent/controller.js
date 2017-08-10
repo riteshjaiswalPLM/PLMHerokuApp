@@ -129,8 +129,8 @@ client.controller('LineItemComponentController',[
 						headerAmt = 0;
 					}
 					if (criteriaSum[field.childSObjectField.name + '-' + findex] !== undefined && criteriaSum[field.childSObjectField.name + '-' + findex] != headerAmt) {
-						//errorMessages[$scope.section.title + "-" + field.childSObjectField.name + "-" + field.childSObjectField.label] = "Total amount of " + $scope.section.title + "-" + field.childSObjectField.label + "(" + field.childSObjectField.name + ") must be " + headerAmt;
-						errorMessages[$scope.section.title + "-" + field.childSObjectField.name + "-" + field.childSObjectField.label] = "Total amount (" + criteriaSum[field.childSObjectField.name + '-' + findex] + ") of " + $scope.section.title + "-" + field.childSObjectField.label + " field must be " + headerAmt;
+						errorMessages[$scope.section.title + "-" + field.childSObjectField.name + "-" + field.childSObjectField.label] =  $scope.section.title+ " total of " + field.childSObjectField.label +" field must be " + headerAmt;
+						//errorMessages[$scope.section.title + "-" + field.childSObjectField.name + "-" + field.childSObjectField.label] = "Total amount (" + criteriaSum[field.childSObjectField.name + '-' + findex] + ") of " + $scope.section.title + "-" + field.childSObjectField.label + " field must be " + headerAmt;
 						fieldRequire = true;
 					}
 				});
