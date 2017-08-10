@@ -74,10 +74,10 @@ client.controller('LineItemComponentController',[
 					
 					if(field.SObjectField.type === 'reference'){
 						if(field.SObjectField.reference === undefined){
-							$scope.newfields[field.SObjectField.relationshipName]={'Name':field.defaultValue};
+							$scope.newfields[field.SObjectField.relationshipName]={'Name':field.defaultValueLabel};
 						}else{
 							var refField=field.SObjectField.reference;
-							$scope.newfields[field.SObjectField.relationshipName]={refField	 :field.defaultValue};
+							$scope.newfields[field.SObjectField.relationshipName]={refField	 :field.defaultValueLabel};
 						}
 					}
 				}
@@ -149,7 +149,7 @@ client.controller('LineItemComponentController',[
 			}
 		};
 
-		$scope.ctrl.CostAllocationComponentValidate= function(callback){
+		$scope.ctrl.LineItemComponentValidate= function(callback){
 			var message=$scope.isValid();
 			if(message===""){
 				callback({
@@ -174,7 +174,7 @@ client.controller('LineItemComponentController',[
 				return false;
 			}
 		}
-		$scope.ctrl.CostAllocationComponentSave= function(callback){
+		$scope.ctrl.LineItemComponentSave= function(callback){
 			$scope.save();
 		}
 		$scope.save = function(){
