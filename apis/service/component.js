@@ -972,7 +972,7 @@ componentRouter.post('/savelineitemdata', function(req, res){
         else if(!costAllocationLineItem.isPersisted && !costAllocationLineItem.isDeleted){
             var valueObj = {};
             for (var key in costAllocationLineItem){
-                if(key.indexOf('__c') > -1){
+                if(key.indexOf('__c') > -1 || key=="CurrencyIsoCode"){
                     valueObj[key] = costAllocationLineItem[key];
                 }
             };
