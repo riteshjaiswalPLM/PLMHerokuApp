@@ -743,8 +743,18 @@ client.controller('ClientSectionLayoutController',[
                                 }
                             });
                         }
+                        if(section.Component.catagory && $scope[section.Component.catagory+'Validate'+section.id]){
+                            $scope[section.Component.catagory+'Validate'+section.id](function(result){
+                                if(!result.success){
+                                    validationMessage+=result.message;
+                                }
+                            });
+                        }
                         if(section.Component.name && $scope[section.Component.name.replace(/\s/g,"")+'Save']){
                             componentSaveCall.push(section.Component.name.replace(/\s/g,"")+'Save');
+                        }
+                        if(section.Component.catagory && $scope[section.Component.catagory+'Save'+section.id]){
+                            componentSaveCall.push(section.Component.catagory+'Save'+section.id);
                         }
                     }
                     

@@ -95,16 +95,16 @@ client.controller('LineItemComponentController',[
 			angular.forEach($scope.dataModelList,function(model){
 				if(model.isDeleted == false){
 					angular.forEach($scope.invoiceData.fields,function(sObject){
-						if(sObject.rendered && sObject.required && (model[sObject.SObjectField.name] == null || model[sObject.SObjectField.name] == '' )){
+						if(sObject.hidden==false && sObject.required && (model[sObject.SObjectField.name] == null || model[sObject.SObjectField.name] == '' )){
 							errorMessages[sObject.label]=sObject.label +" must be required.";
 							fieldRequire=true;
 						}
-						if(sObject.rendered===false){
-							delete model[sObject.SObjectField.name];
-							if(sObject.SObjectField.type === 'reference'){
-								delete model[sObject.SObjectField.relationshipName];
-							}
-						}
+						// if(sObject.rendered===false){
+						// 	delete model[sObject.SObjectField.name];
+						// 	if(sObject.SObjectField.type === 'reference'){
+						// 		delete model[sObject.SObjectField.relationshipName];
+						// 	}
+						// }
 					});
 				}
 				
@@ -149,7 +149,7 @@ client.controller('LineItemComponentController',[
 			}
 		};
 
-		$scope.ctrl.LineItemComponentValidate= function(callback){
+		$scope.ctrl["LineItemComponentValidate"+$scope.section.id]= function(callback){
 			var message=$scope.isValid();
 			if(message===""){
 				callback({
@@ -174,7 +174,7 @@ client.controller('LineItemComponentController',[
 				return false;
 			}
 		}
-		$scope.ctrl.LineItemComponentSave= function(callback){
+		$scope.ctrl["LineItemComponentSave"+$scope.section.id]= function(callback){
 			$scope.save();
 		}
 		$scope.save = function(){

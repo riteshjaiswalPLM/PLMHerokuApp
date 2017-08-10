@@ -25,7 +25,7 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 if (typeof  $scope.field.defaultValue ===  'string')
                     $scope.field.defaultValue = $scope.field.defaultValue ===  'true';
             }
-            if ($scope.model[$scope.field.SObjectField.name] === undefined) {
+            if ($scope.field.SObjectField && $scope.model && $scope.model[$scope.field.SObjectField.name] === undefined) {
                 $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
             }
             
@@ -313,12 +313,12 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
         replace: true,
         controller: function($scope,$dialog,ModalService){
             $scope.getTemplateUrl = function(){
-                if($scope.field.rendered == undefined){
+                if($scope.field.rendered === undefined){
                    $scope.field.rendered = true; 
                 }
                 return 'slds/views/directive/componentfield/'+$scope.field.SObjectField.type+'.html';
             };
-            if($scope.model[$scope.field.SObjectField.name]===undefined)
+            if($scope.field.SObjectField && $scope.model && $scope.model[$scope.field.SObjectField.name]===undefined)
                 $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
             $scope.readonly = false;
             if($scope.field && $scope.field.readonly){
@@ -416,6 +416,7 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                     if(newValue !== undefined && newValue !== oldValue){
                         $scope.model[$scope.field.SObjectField.name] = newValue;
                     }else if(newValue === undefined){
+                        $scope.model[$scope.field.SObjectField.name] = newValue
                      //   $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
                     }
                 });
