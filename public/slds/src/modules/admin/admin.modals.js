@@ -188,15 +188,21 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     }
                 });
                 if (!duplicate) {
-                    $scope.section.sectionComponentFields.push({
-                        SObjectField: fieldToAdd,
+                    var newField={
+                        SObjectField: angular.copy(fieldToAdd),
                         label: fieldToAdd.label,
                         type: 'Layout-Section-Field',
                         hidden: false,
                         deleted: false,
                         readonly: $scope.section.readonly,
                         required: false
-                    });
+                    }
+                    if (newField.SObjectField.SObjectField.type=='picklist' && newField.SObjectField.SObjectField.name=='CurrencyIsoCode'){
+                        newField.SObjectField.picklistValues.push({label:"Parent Value",value:"{CurrencyIsoCode}",active: true, defaultValue: false, validFor: null})
+                        newField.SObjectField.SObjectField.picklistValues.push({label:"Parent Value",value:"{CurrencyIsoCode}",active: true, defaultValue: false, validFor: null})
+                    }
+                    $scope.section.sectionComponentFields.push(newField);
+                    
                 } else {
                     $dialog.alert('Duplicate field!', 'Warning', 'pficon pficon-warning-triangle-o');
                 }
@@ -319,6 +325,13 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
 
         $scope.init = function () {
             console.log('LayoutComponentPropertiesModalController loaded!');
+            if($scope.section && $scope.section.sectionComponentFields ){
+                angular.forEach($scope.section.sectionComponentFields, function (field, fieldIndex) {
+                    if (field.SObjectField.type=='picklist' && field.SObjectField.name=='CurrencyIsoCode'){
+                        field.SObjectField.picklistValues.push({label:"Parent Value",value:"{CurrencyIsoCode}",active: true, defaultValue: false, validFor: null})
+                    }
+                });
+            }
         };
         $scope.init();
     }
