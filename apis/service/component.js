@@ -869,7 +869,8 @@ componentRouter.post('/getlineitemdata', function(req, res){
         }
     });
     whareClause=lookupFieldName+" = '"+invoiceData.invoiceId+"'";
-    whareClause+=' AND '+invoiceData.rowLevelCriteria;
+    if(invoiceData.rowLevelCriteria!=null && invoiceData.rowLevelCriteria!=undefined && invoiceData.rowLevelCriteria!="")
+        whareClause+=' AND '+invoiceData.rowLevelCriteria;
     global.sfdc
     .sobject(invoiceData.componentConfig.ComponentDetails[0].configuration.detailSObjectName)
     .select(queryFields.toString())
