@@ -143,7 +143,7 @@
                     <div style="padding-left: 0px;">
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
-                                <label class="slds-form-element__label" for="lineItemFields">{{section.Component.child.label}} Fields</label>
+                                <label class="slds-form-element__label" for="lineItemFields">{{section.Component.detailSObject.label}} Fields</label>
                                 <span class="slds-form-element__static">
                                 <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in section.childSobjectFields | orderBy:'label'">
                                     <option value="">-- None --</option>
@@ -231,11 +231,11 @@
                     <div style="padding-left: 0px;">
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
-                                <label class="slds-form-element__label" for="parentAmtFields">{{section.Component.parent.label}} Fields</label>
+                                <label class="slds-form-element__label" for="parentAmtFields">{{section.Component.SObject.label}} Fields</label>
                                 <select id="parentAmtFields" class="slds-select" style="width: 30% !important" ng-model="parentFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + '] (' + field.name + ')') for field in section.parentSObjectAmountFields | orderBy:'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <label class="slds-form-element__label" for="childAmtFields">{{section.Component.child.label}} Fields</label>
+                                <label class="slds-form-element__label" for="childAmtFields">{{section.Component.detailSObject.label}} Fields</label>
                                 <select id="childAmtFields" class="slds-select" style="width: 30% !important" ng-model="childFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + '] (' + field.name + ')') for field in section.childSObjectAmountFields | orderBy:'label'">
                                     <option value="">-- None --</option>
                                 </select>

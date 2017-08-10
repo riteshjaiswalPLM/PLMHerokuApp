@@ -534,66 +534,71 @@ admin.controller('AdminLayoutsEditEditController',[
         $scope.openSectionPropertiesModal = function(section,index){
             if (section.isComponent && section.Component.catagory == "LineItemComponent") {
                 var parentcall = false, childcall = false;
-                sobjectService.loadSObjectFields(section.Component.SObject)
-                    .success(function (response) {
-                        if (response.success) {
-                            parentcall = true;
-                            section.parentSobjectFields = [];
-                            section.parentSObjectAmountFields = [];
-                            angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
-                                field.SObjectField = angular.copy(field);
-                                section.parentSobjectFields.push(field);
-                                if (field.type == "currency" || field.type == "double") {
-                                    section.parentSObjectAmountFields.push(field);
-                                }
-                            });
-                            section.criteria = angular.copy(section.rowLevelCriteria);
+                if (!$scope.blockUI.editEditLayout.state().blocking && $scope.layout.SObject != null) {
+                    $scope.blockUI.editEditLayout.start('Loading ...');
+                    sobjectService.loadSObjectFields(section.Component.SObject)
+                        .success(function (response) {
+                            if (response.success) {
+                                parentcall = true;
+                                section.parentSobjectFields = [];
+                                section.parentSObjectAmountFields = [];
+                                angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
+                                    field.SObjectField = angular.copy(field);
+                                    section.parentSobjectFields.push(field);
+                                    if (field.type == "currency" || field.type == "double") {
+                                        section.parentSObjectAmountFields.push(field);
+                                    }
+                                });
+                                section.criteria = angular.copy(section.rowLevelCriteria);
 
-                            if (childcall) {
-                                $adminModals.layoutComponentProperties({
-                                    section: angular.copy(section)
-                                }, function (newSection) {
-                                    $scope.layoutSections[index] = newSection;
-                                    $scope.layoutSections[index].rowLevelCriteria = angular.copy($scope.layoutSections[index].criteria);
-                                });
-                            }
-                        }
-                        else {
-                            parentcall = true;
-                        }
-                    });
-                sobjectService.loadSObjectFields(section.Component.detailSObject)
-                    .success(function (response) {
-                        if (response.success) {
-                            childcall = true;
-                            section.rowcriteriafields = [];
-                            section.childSobjectFields = [];
-                            section.childSObjectAmountFields = [];
-                            section.refSObjects = response.data.refSObjects;
-                            angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
-                                field.SObjectField = angular.copy(field);
-                                section.childSobjectFields.push(field);
-                                if (field.type == "currency" || field.type == "double") {
-                                    section.childSObjectAmountFields.push(field);
+                                if (childcall) {
+                                    $scope.blockUI.editEditLayout.stop();
+                                    $adminModals.layoutComponentProperties({
+                                        section: angular.copy(section)
+                                    }, function (newSection) {
+                                        $scope.layoutSections[index] = newSection;
+                                        $scope.layoutSections[index].rowLevelCriteria = angular.copy($scope.layoutSections[index].criteria);
+                                    });
                                 }
-                                if (field.type != "datetime" && field.type != "multipicklist") {
-                                    section.rowcriteriafields.push(field);
-                                }
-                            });
-                            section.criteria = angular.copy(section.rowLevelCriteria);
-                            if (parentcall) {
-                                $adminModals.layoutComponentProperties({
-                                    section: angular.copy(section)
-                                }, function (newSection) {
-                                    $scope.layoutSections[index] = newSection;
-                                    $scope.layoutSections[index].rowLevelCriteria = angular.copy($scope.layoutSections[index].criteria);
-                                });
                             }
-                        }
-                        else {
-                            childcall = true;
-                        }
-                    });
+                            else {
+                                parentcall = true;
+                            }
+                        });
+                    sobjectService.loadSObjectFields(section.Component.detailSObject)
+                        .success(function (response) {
+                            if (response.success) {
+                                childcall = true;
+                                section.rowcriteriafields = [];
+                                section.childSobjectFields = [];
+                                section.childSObjectAmountFields = [];
+                                section.refSObjects = response.data.refSObjects;
+                                angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
+                                    field.SObjectField = angular.copy(field);
+                                    section.childSobjectFields.push(field);
+                                    if (field.type == "currency" || field.type == "double") {
+                                        section.childSObjectAmountFields.push(field);
+                                    }
+                                    if (field.type != "datetime" && field.type != "multipicklist") {
+                                        section.rowcriteriafields.push(field);
+                                    }
+                                });
+                                section.criteria = angular.copy(section.rowLevelCriteria);
+                                if (parentcall) {
+                                    $scope.blockUI.editEditLayout.stop();
+                                    $adminModals.layoutComponentProperties({
+                                        section: angular.copy(section)
+                                    }, function (newSection) {
+                                        $scope.layoutSections[index] = newSection;
+                                        $scope.layoutSections[index].rowLevelCriteria = angular.copy($scope.layoutSections[index].criteria);
+                                    });
+                                }
+                            }
+                            else {
+                                childcall = true;
+                            }
+                        });
+                }
             }
             else {
                 $adminModals.layoutSectionProperties({
