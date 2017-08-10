@@ -773,7 +773,7 @@ admin.controller('AdminLayoutsEditEditController',[
                         if(response.success === true){
                             $scope.layoutSections = response.data.sObjectLayoutSections;
                             angular.forEach($scope.layoutSections, function (section, index) {
-                                if (section.Component && section.Component.name !== undefined && section.Component.name !== null && section.Component.catagory == "LineItemComponent") {
+                                if (section.Component && section.Component.catagory !== undefined && section.Component.catagory !== null && section.Component.catagory == "LineItemComponent") {
                                     section.sectionLevelCriteria = angular.copy(section.criteria);
                                 }
                             });
