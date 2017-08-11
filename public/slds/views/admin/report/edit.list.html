@@ -108,7 +108,7 @@
                             <div class="slds-truncate">No Criteria field added.</div>
                         </td>
                     </tr>
-                    <tr ng-repeat="field in searchCriteriaFields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchCriteriaFields.splice($index,1)"
+                    <tr ng-repeat="field in searchCriteriaFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchCriteriaFields.splice($index,1)"
                         dnd-type="'searchCriteriaField'">
                         <td>
                             <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>
@@ -200,7 +200,7 @@
                             <div class="slds-truncate slds-align--absolute-center">No Result field added.</div>
                         </td>
                     </tr>
-                    <tr ng-repeat="field in searchResultFields" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchResultFields.splice($index,1)"
+                    <tr ng-repeat="field in searchResultFields | filter: {deleted: false }" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="searchResultFields.splice($index,1)"
                         dnd-type="'searchResultField'">
                         <td>
                             <div class="slds-truncate" title="{{ $index + 1 }}">{{ $index + 1 }}</div>

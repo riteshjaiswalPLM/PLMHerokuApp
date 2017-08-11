@@ -21,6 +21,12 @@ module.exports = function (sequelize, DataTypes) {
                 return 0;
             }
         },
+        deleted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function () {
+                return false;
+            }
+        },
         fromfield: {
             type: DataTypes.BOOLEAN,
         },
