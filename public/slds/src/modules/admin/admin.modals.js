@@ -211,12 +211,23 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
 
         $scope.addToComponentAmtFields = function (parentfield, childfield) {
             if (parentfield && childfield) {
-                $scope.section.sectionComponentAmtFields.push({
-                    parentSObjectField: parentfield,
-                    childSObjectField: childfield,
-                    type: 'Layout-Section-Amount-Field',
-                    deleted: false
+                var duplicate = false;
+                angular.forEach($scope.section.sectionComponentAmtFields, function (field) {
+                    if (field.parentSObjectField.name == parentfield.name && field.childSObjectField.name == childfield.name) {
+                        duplicate = true;
+                    }
                 });
+                if (!duplicate) {
+                    $scope.section.sectionComponentAmtFields.push({
+                        parentSObjectField: parentfield,
+                        childSObjectField: childfield,
+                        type: 'Layout-Section-Amount-Field',
+                        deleted: false
+                    });
+                }
+                else {
+                    $dialog.alert('Duplicate field!', 'Warning', 'pficon pficon-warning-triangle-o');
+                }
             }
         };
 
