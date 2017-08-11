@@ -25,6 +25,8 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $http
                 return false; // ... don't block it.
             }
         };
+
+        blockUIConfig.template='<style>.block-ui-message{background-image: url("/resources/images/mainLoder.gif") !important ;background: none;color: black;background-repeat: no-repeat;height:55px;width:55px} .LineItemComponentBlock</style><div class=\"block-ui-overlay\"></div><div class=\"block-ui-message-container\" aria-live=\"assertive\" aria-atomic=\"true\"><div class=\"block-ui-message\" ng-class=\"$_blockUiMessageClass\"></div></div>';
     };
     blockUiConfiguration();
     

@@ -1,5 +1,17 @@
+<style>
+    .UploadAttachment .block-ui-message{
+        background-image: url("/resources/images/newSpinner.gif") !important ;
+            background: none;
+            height: 16px !important;
+            color: black;
+            background-repeat: no-repeat;
+            padding: 0px;
+            font-size: 13px;
+            padding-left: 23px;
+    }
+</style>
 <div ng-if="type === 'create'">
-	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:70px"> 
+	<div class="slds-col slds-size--1-of-1 UploadAttachment" block-ui="AttachmentBlock" style="min-height:70px"> 
 	<div class="slds-grid" >
 		<div class="slds-size--1-of-{{allowAttachPrime ? 2 : 1}}">
 			<form class="slds-form--horizontal slds-p-horizontal--x-small">
@@ -73,18 +85,18 @@
 	<div class="slds-col slds-size--1-of-1">
 		<form class="">
 			<div class="">
-				<div class="panel panel-default" style="margin-bottom: -8px;">
+				<div class="panel panel-default" >
 					<div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
 						<h3 class="" translate>Attachment Section</h3>
 					</div>
-					<div class="slds-panel__section slds-grid slds-border--bottom" ng-if="files" data-ng-show="files.length > 0">
+					<div class="slds-panel__section slds-grid " ng-if="files" data-ng-show="files.length > 0">
 						<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
 							<thead>
 								<tr class="slds-text-title--caps">
-									<th  title=""></th>
-									<th  title="File">{{'File' | translate}}</th>
-									<th  title="Size in Bytes">{{'Size in Bytes' | translate}}</th>
-									<th  title="Upload">{{'Upload' | translate}}</th>
+									<th style="font-weight: 600;"  title=""></th>
+									<th style="font-weight: 600;" title="File">{{'File' | translate}}</th>
+									<th style="font-weight: 600;" title="Size in Bytes">{{'Size in Bytes' | translate}}</th>
+									<th style="font-weight: 600;" title="Upload">{{'Upload' | translate}}</th>
 								</tr>
 							</thead>
 							<tbody >
@@ -108,7 +120,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="files" data-ng-show="files.length == 0">
+					<div class="slds-grid  slds-grid--align-center " ng-if="files" data-ng-show="files.length == 0">
 							<strong>{{'No attachment found' | translate }}.</strong>
 					</div>
 				</div>
@@ -118,38 +130,23 @@
 	</div>
 </div>
 <div ng-if="type !== 'create'" >
-	<div class="slds-col slds-size--1-of-1" block-ui="AttachmentBlock" style="min-height:70px"> 
-		<div class="slds-col slds-size--1-of-1" ng-if="type !== 'detail'" style="padding: 10px 0px">
-			<form class="slds-form--horizontal">
-				<div class="slds-form-element">
-						<center>
-							<!--<button type="button" class="btn btn-primary" ng-disabled="type === 'detail'" ng-click="openAttachmentLookup()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
-							<button class="slds-button slds-button--brand" ng-if="type !== 'detail'" type="button" ng-click="openAttachmentLookup()">
-								<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#file"/>
-								</svg>
-								{{'Attach File' | translate }}
-							</button>
-						</center>
-					<!--<button type="button" class="btn btn-primary" ng-show="allowAddAttach == 'true'" ng-click="showUploadAttachmentModal()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
-				</div>
-			</form>
-		</div>
+	<div class="slds-col slds-size--1-of-1 UploadAttachment" block-ui="AttachmentBlock" style="min-height:70px"> 
+		
 		<div class="slds-col slds-size--1-of-1">
 			<form class="slds-form--horizontal">
 				<div class="slds-form-element">
-					<div class="panel panel-default" style="margin-bottom: -8px;">
+					<div class="panel panel-default">
 						<!--<div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
 							<h3 >Attachments</h3>
 						</div>-->
-						<div class="slds-panel__section slds-grid slds-border--bottom" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length > 0">
+						<div class=" slds-grid " ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length > 0">
 							<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
 								<thead>
 									<tr class="slds-text-title--caps">
-										<th  title="" ng-if="type !== 'detail'">{{'Delete' | translate }}</th>
-										<th  title="Title">{{'Title' | translate }}</th>
-										<th  title="Size">{{'Size' | translate }}</th>
-										<th  title="ContentType">{{'ContentType' | translate }}</th>
+										<th style="font-weight: 600;"  title="" ng-if="type !== 'detail'">{{'Delete' | translate }}</th>
+										<th style="font-weight: 600;" title="Title">{{'Title' | translate }}</th>
+										<th style="font-weight: 600;" title="Size">{{'Size' | translate }}</th>
+										<th style="font-weight: 600;" title="ContentType">{{'ContentType' | translate }}</th>
 										<th style="text-align:center;width:100px;"  title="Download">{{'Download' | translate}}</th>
 									</tr>
 								</thead>
@@ -179,10 +176,26 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
+						<div class="slds-grid  slds-grid--align-center "  ng-if="attachments" data-ng-show="(attachments | filter: {IsDeleted: false}).length == 0">
 								<strong>{{'No attachment found' | translate}}.</strong>
 						</div>
 					</div>
+				</div>
+			</form>
+		</div>
+		<div class="slds-col slds-size--1-of-1" ng-if="type !== 'detail'" style="padding: 10px 0px">
+			<form class="slds-form--horizontal">
+				<div class="slds-form-element">
+						<center>
+							<!--<button type="button" class="btn btn-primary" ng-disabled="type === 'detail'" ng-click="openAttachmentLookup()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
+							<button class="slds-button slds-button--brand" ng-if="type !== 'detail'" type="button" ng-click="openAttachmentLookup()">
+								<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#file"/>
+								</svg>
+								{{'Attach File' | translate }}
+							</button>
+						</center>
+					<!--<button type="button" class="btn btn-primary" ng-show="allowAddAttach == 'true'" ng-click="showUploadAttachmentModal()" style="margin-left:32%;"><i class="icon icon-file"></i> Attach File</button>-->
 				</div>
 			</form>
 		</div>

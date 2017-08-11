@@ -1,14 +1,29 @@
-<div block-ui = "CostAllocationComponentBlock" style="min-height: 70px;"  class="slds-scrollable"  >
-    <table  ng-if="dataModelList.length>0" class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="width: 100%;">
+<style>
+    .CostAllocationComponent .block-ui-message{
+        background-image: url("/resources/images/newSpinner.gif") !important ;
+            background: none;
+            height: 16px !important;
+            color: black;
+            background-repeat: no-repeat;
+            padding: 0px;
+            font-size: 13px;
+            padding-left: 23px;
+    }
+    .CostAllocationComponent .block-ui-message-container{
+            top: 29% !important;
+    }
+</style>
+<div id="" block-ui = "CostAllocationComponentBlock" style="min-height: 22px;"  class="slds-scrollable CostAllocationComponent"  >
+    <table  ng-if="dataModelList.length>0" class="slds-table slds-table--compaq  slds-table--cell-buffer slds-table--striped" style="width: 100%;">
         <tbody  ng-if="type !=='detail' && !section.readonly">
             <tr>
-                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields">
+                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields" ng-show="field.rendered">
                     <div ng-if="field.rendered">{{ field.label | translate }}</div>
                 </td>
                 <td style="border-top: 0px;"></td>
             </tr>
             <tr ng-repeat="dataModel in dataModelList | filter: {isDeleted: false} track by $index">
-                <td class="{{ 'td-'+field.SObjectField.type }} sobject-layout-field" style="border-top: 0px;" ng-repeat="field in section.Component.fields">
+                <td class="{{ 'td-'+field.SObjectField.type }} sobject-layout-field" style="border-top: 0px;" ng-show="field.rendered" ng-repeat="field in section.Component.fields">
                     <div field-readonly="field.readonly" sobject-component-field field="field" parent-ctrl="ctrl" model="dataModel" index="$index" criteria="field.criteria"></div>
                 </td>
                 <td style="text-align: right;border-top: 0px">
@@ -49,20 +64,20 @@
         </tbody>
         <tbody ng-if="type ==='detail' || section.readonly" >
             <tr>
-                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields">
+                <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in section.Component.fields" ng-show="field.rendered">
                    <div ng-if="field.rendered">{{ field.label | translate }}</div>
                 </td>
                 
             </tr>
             <tr ng-repeat="dataModel in dataModelList | filter: {isDeleted: false} track by $index">
-                <td  style="border-top: 0px" ng-repeat="field in section.Component.fields">
+                <td  style="border-top: 0px" ng-repeat="field in section.Component.fields" ng-show="field.rendered">
                     <div field-readonly="true" sobject-component-field field="field" parent-ctrl="ctrl" model="dataModel" index="$index" criteria="field.criteria"></div>
                     <!--{{ (field.SObjectField.relationshipName !== null) ? dataModel[field.SObjectField.relationshipName].Name : dataModel[field.SObjectField.name]}}-->
                 </td>
             </tr>
          </tbody>
     </table>
-    <div class="slds-grid  slds-grid--align-center " style="padding:20px 0px;" ng-if="dataModelList.length==0" >
+    <div class="slds-grid  slds-grid--align-center "  ng-if="dataModelList.length==0" >
             <strong>{{'No result found' | translate}}.</strong>
     </div>  
 </div>

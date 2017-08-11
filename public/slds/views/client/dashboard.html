@@ -38,7 +38,7 @@
         <div id="accordion-markup-outer" style="margin:20px;">
             <div class="slds-form--stacked slds-grow" ng-repeat="container in containersMetaData | orderBy: 'order'" style="border: 1px solid #d8dde6;margin-bottom: 10px">
                 <div ng-init="$index === 0?container.isCollapse=true:container.isCollapse=false" ng-click="showHideContainers(container,containersMetaData);"
-                    class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+                    class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 1px solid #d8dde6">
                     <h3>{{container.label | translate}}</h3>
                 </div>
                 <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y" style="margin-bottom:0px">
@@ -61,13 +61,13 @@
                                     <div class="slds-col slds-has-flexi-truncate">
                                         <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
                                             class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
-                                            style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+                                            style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 1px solid #d8dde6">
                                             <h3>{{component.label | translate}}</h3>
                                         </div>
                                     </div>
                                     <div class="slds-col slds-no-flex slds-grid slds-align-top">
                                         <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
-                                            style="cursor:pointer;border-bottom: 3px solid #d8dde6">
+                                            style="cursor:pointer;border-bottom: 1px solid #d8dde6;height:32px">
                                             <button title="Export" class="slds-button slds-button--brand " style="border-bottom:0px;padding:0px 10px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)"
                                                 ng-disabled="btnExportDis">
                                                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" style="margin:0px">
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="slds-col slds-no-flex slds-grid slds-align-top" style=" margin-left: 5px;">
                                         <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
-                                            style="cursor:pointer;border-bottom: 3px solid #d8dde6">
+                                            style="cursor:pointer;border-bottom: 1px solid #d8dde6;height:32px">
                                             <button class="slds-button slds-button--brand" ng-show="component.Component.multipleApprove" type="button" ng-click="bulkOperationLookup(component.Component.ComponentDetail.configuration,container.allowedType,'InvoiceApproveFieldSelectAll', searchResult[component.Component.catagory+'Component'+component.id],component)">
                                             <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
@@ -92,7 +92,7 @@
                                 <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y;" style="margin-bottom:0px">
                                     <div class="slds-is-{{component.isCollapse ? 'expanded' : 'collapsed'}}" style="padding:0px;overflow: auto;max-height:250px"
                                         id="{{'collepseComponent_'+component.id}}" block-ui="{{component.Component.catagory+component.id+'Block'}}">
-                                        <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}}">
+                                        <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="border-bottom: 0px;border-top: 0px;max-height:{{searchResult[component.Component.catagory+'Component'+component.id].length>0?'250px':'auto'}};">
                                             <thead>
                                                 <tr class="slds-text-title--caps">
                                                     <th> <input type="checkbox" ng-show="component.Component.multipleApprove"

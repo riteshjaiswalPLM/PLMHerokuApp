@@ -1,9 +1,9 @@
-<div block-ui="relatedList_{{ model.id }}_{{index}}" class="slds-form--stacked slds-grow" ng-if="rendered" style="margin: 0px 1px;margin-bottom:5px;border: 2px solid #d8dde6;">
-    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+<div block-ui="relatedList_{{ model.id }}_{{index}}" class="slds-form--stacked slds-grow" ng-if="rendered" style="border:1px solid #d8dde6;margin-bottom:3px">
+    <div class="slds-panel__section slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;">
             <h3 translate>{{ model.title }}</h3>
     </div>
     <div >
-        <div class="slds-panel__section slds-grid slds-p-around--none slds-border--bottom" style="max-height:250px;overflow:auto" >
+        <div class="slds-panel__section slds-grid slds-p-around--none " style="max-height:250px;overflow:auto" >
             <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"  >
                 <thead>
                     <tr class="slds-text-title--caps">
@@ -65,7 +65,7 @@
                 </tbody>
             </table>
         </div>
-         <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" style="padding-top: 5px;padding-bottom: 5px;" ng-if="model.groupBy == undefined || model.groupBy == '' ">
+         <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" style="padding-top: 3px;padding-bottom: 3px;" ng-if="model.groupBy == undefined || model.groupBy == '' ">
             <div style="width: 230px;">
                 <select class="slds-select" data-style="btn-default page-dropdown"  ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in [25,50,100,200]" id="pageSize">
                 </select>

@@ -16,12 +16,12 @@
     </div>
 </div>-->
 
-<div class="slds-form--stacked slds-grow" ng-if="section.rendered">
-    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+<div class="slds-form--stacked slds-grow" ng-if="section.rendered" style="border: 1px solid #d8dde6; margin-bottom: 3px;">
+    <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;">
         <h3 translate>{{ section.title}}</h3>
     </div>
-    <div ng-if="section.isComponent" class="slds-panel__section slds-grid slds-border--bottom" type="{{type}}" component section="section" ctrl="baseCtrl" style="padding:0px"></div>
-    <div ng-if="!section.isComponent" class="slds-panel__section slds-grid slds-p-vertical--x-small slds-p-horizontal--meduim slds-border--bottom">
+    <div ng-if="section.isComponent" class="slds-panel__section slds-grid " type="{{type}}" component section="section" ctrl="baseCtrl" style="padding:0px;padding-bottom:3px"></div>
+    <div ng-if="!section.isComponent" class="slds-panel__section slds-grid slds-p-vertical--x-small slds-p-horizontal--meduim ">
         <div class="slds-size--1-of-{{section.columns.length}}" ng-if="!section.isComponent" ng-repeat="(fIndex, fields) in section.columns">
             <div class="slds-form--horizontal slds-p-horizontal--x-small">
                 <div class="slds-form-element" ng-repeat="field in fields">
