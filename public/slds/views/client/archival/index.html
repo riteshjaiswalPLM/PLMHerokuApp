@@ -1,4 +1,5 @@
-<div ng-if="archivaltabs.length > 0" ng-controller="ClientArchivalController" class="slds-tabs--default slds-tabs--secondary" block-ui="reportPageBlock">
+<div ng-if="archivaltabs.length > 0" ng-controller="ClientArchivalController" class="slds-tabs--default slds-tabs--secondary"
+    block-ui="reportPageBlock">
     <ul class="slds-tabs--default__nav slds-p-horizontal--large">
         <li ng-repeat="clientreport in archivaltabs" class="slds-tabs--default__item" ui-sref-active="slds-active" role="presentation">
             <a class="slds-tabs--default__link" href="javascript:void(0);" role="tab" ng-click="loadLayout(clientreport.id)">{{ clientreport.SObject.label }}</a>
@@ -93,7 +94,7 @@
                             <thead>
                                 <tr class="slds-text-title--caps">
                                     <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
-                                        ng-click="applyOrderBy(field)" ng-repeat="field in resultFields">
+                                        ng-click="applyOrderBy(field)" ng-repeat="field in resultFields" ng-hide="field.hidden">
                                         <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                                     </th>
                                 </tr>
@@ -110,7 +111,7 @@
                                             : (field.SObjectField.type === 'datetime')
                                                 ? (result[field.SObjectField.name] | date: 'medium')
                                                 : result[field.SObjectField.name] }}" class="{{ 'td-'+field.SObjectField.type }}"
-                                        ng-repeat="field in resultFields">
+                                        ng-repeat="field in resultFields " ng-hide="field.hidden">
                                         <div class="slds-truncate">
                                             {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
                                             === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.ArchivalSobjectFields[0].name]
