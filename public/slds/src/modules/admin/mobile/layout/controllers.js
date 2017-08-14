@@ -746,8 +746,12 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             item.enable = (item.enable !== undefined) ? item.enable : true;
             
             angular.forEach(section.columns,function(fields){
+                var fieldIndex = 0;
                 angular.forEach(fields,function(field,fieldOrder){
-                    field.order = fieldOrder;
+                    if (!field.deleted) {
+                        field.order = fieldIndex;
+                        fieldIndex++;
+                    }
                 });
             });
             // angular.forEach(section.columns[columnNumber-1],function(field,fieldIndex){
@@ -758,13 +762,20 @@ admin.controller('AdminMobileLayoutsEditEditController',[
         };
         $scope.isDuplicate = function(fields,item){
             var duplicate = false;
-            angular.forEach(fields,function(field,index){
+            for (var index = 0; index < fields.length; index++) {
                 if(!duplicate){
-                    if(field.SObjectField.id === item.SObjectField.id && item.type === null && !field.deleted){
-                        duplicate = true;
+                    if (fields[index].SObjectField.id === item.SObjectField.id && !fields[index].deleted) {
+                        if (item.type === null) {
+                            duplicate = true;
+                        }
+                        else {
+                            fields[index].deleted = true;
+                            fields.splice(index, 1);
+                            index--;
+                        }
                     }
                 }
-            });
+            }
             return duplicate;
         };
         $scope.loadEditLayoutContents = function(){
