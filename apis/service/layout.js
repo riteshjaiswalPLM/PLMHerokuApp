@@ -30,7 +30,8 @@ layoutRouter.post('/metadata', function(req, res){
             },
             where: {
                 type :{
-                    $ne : 'Mobile'
+                   // $ne : 'Mobile'
+                   $notIn : ['Mobile','Archival']
                 }
             }
         }

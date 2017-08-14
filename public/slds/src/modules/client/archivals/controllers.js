@@ -28,8 +28,8 @@ client.controller('ClientArchivalsController', [
 ]);
 
 client.controller('ClientArchivalController', [
-    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter', '$appCache', 'blockUI', 'clientArchivalService',
-    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $appCache, blockUI, clientArchivalService) {
+    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter','$timeout', '$appCache', 'blockUI', 'clientArchivalService',
+    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $timeout,$appCache, blockUI, clientArchivalService) {
 
         $scope.loadLayout = function (LayoutId) {
             if (!$scope.blockUI.reportPageBlock.state().blocking) {

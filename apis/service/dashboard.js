@@ -104,7 +104,7 @@ dashboardRouter.post('/getdashboardcomponentmetadata', function(req, res){
                 component.ComponentDetails[0].dataValues.recordActions = [];
                 var sObject = (component.detailSObject !== undefined && component.detailSObject !== null) ? component.detailSObject : component.SObject;  
                 sObject.SObjectLayouts.forEach(function(_sObjLayout){
-                    if(_sObjLayout.created && _sObjLayout.active && _sObjLayout.type !== 'List' && _sObjLayout.type !== 'Mobile' && _sObjLayout.type !== 'Create'){
+                    if(_sObjLayout.created && _sObjLayout.active && _sObjLayout.type !== 'List' && _sObjLayout.type !== 'Mobile' && _sObjLayout.type !== 'Create' && _sObjLayout.type !=='Archival'){
                         var action = {
                             type: 'record',
                             label: _sObjLayout.type,
