@@ -31,9 +31,9 @@
                             </div>
                         </td>                            
                     </tr>
-                    <tr ng-if="searchResult.length === 0">
+                    <!--<tr ng-if="searchResult.length === 0">
                         <td colspan="{{model.SObjectLayoutFields.length}}" class="slds-blank-slate"   style="padding:5px;text-align:center" translate>No Record found.</td>
-                    </tr>
+                    </tr>-->
                 </tbody>
                  <tbody ng-repeat="(key,resultData) in searchResult| groupBy : groupByData " ng-if="model.groupBy != undefined && model.groupBy != '' ">
                     <tr  class="search-result-tr"  style="background-color:#D5DDF3" >
@@ -59,7 +59,10 @@
                             </div>
                         </td>                            
                     </tr>
-                    <tr ng-if="resultData.length === 0">
+                    
+                </tbody>
+                <tbody ng-if="searchResult.length === 0">
+                    <tr ng-if="searchResult.length === 0">
                         <td colspan="{{model.SObjectLayoutFields.length}}" class="slds-blank-slate"   style="padding:5px;text-align:center" translate>No Record found.</td>
                     </tr>
                 </tbody>
