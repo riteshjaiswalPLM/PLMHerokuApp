@@ -67,6 +67,21 @@ module.exports = function(sequelize, DataTypes){
             defaultValue: function(){
                 return false;
             }
+        },
+        amountCriteriaConfig: {
+            type: DataTypes.TEXT,
+            defaultValue: function () {
+                return undefined;
+            },
+            set: function (value) {
+                this.setDataValue('amountCriteriaConfig', JSON.stringify(value));
+            },
+            get: function () {
+                if (this.getDataValue('amountCriteriaConfig') !== undefined)
+                    return JSON.parse(this.getDataValue('amountCriteriaConfig'));
+                else
+                    this.getDataValue('amountCriteriaConfig');
+            }
         }
     },{
         classMethods: {

@@ -66,98 +66,207 @@
                     </div>
                 </div>
             </div>
-            <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
-                <thead>
-                    <tr class="slds-text-title--caps">
-                        <th scope="col" style="width: 50px;">
-                            <div class="slds-truncate">#</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Label">Label</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Display Label">Display Label</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Reference">Reference</div>
-                        </th>
-                        <th scope="col" ng-if="forMobile === true">
-                            <div class="slds-truncate" title="Read Only">Read Only</div>
-                        </th>
-                        <th scope="col" ng-if="forMobile === true">
-                            <div class="slds-truncate" title="Required">Required</div>
-                        </th>
-                        <th scope="col" style="width: 150px;">
-                            <div class="slds-truncate" title="Type">Type</div>
-                        </th>
-                        <th scope="col" style="text-align: center;width: 100px">
-                            <div class="slds-truncate" title="Action">Action</div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody dnd-list="relatedListFields" dnd-allowed-types="['relatedListField']">
-                    <tr ng-if="relatedListFields.length === 0">
-                        <td colspan="6" class="slds-blank-slate">No field added.</td>
-                    </tr>
-                    <tr class="dndPlaceholder" style="display: table-row !important">
-                        <th colspan="6" style="background: #e1d951; text-align: center;" >
-                            Move here
-                        </th>
-                    </tr>
-                    <tr ng-repeat="field in relatedListFields | filter: {deleted: false }"
-                        dnd-draggable="field" 
-                        dnd-effect-allowed="move" 
-                        dnd-moved="relatedListFields.splice($index,1)" 
-                        dnd-type="'relatedListField'">
-                        <td>{{ $index + 1 }}</td>
-                        <td data-label="Label">{{ field.SObjectField.label }}</td>
-                        <td data-label="Display Label">
-                            <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
-                        </td>
-                        <td data-label="Reference" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
-                        <td ng-if="forMobile === true" data-label="Read Only">
-                            <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly" on-text="Yes" off-text="No" />
-                        </td>
-                        <td ng-if="forMobile === true" data-label="Required">
-                            <slds-switch id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required" on-text="Yes" off-text="No" />
-                        </td>
-                        <td data-label="Type">
-                            <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
-                        </td>
-                        <td data-label="Action" style="text-align: center;">
-                            <div class="slds-truncate" >
-                                <button title="Delete" class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--destructive" ng-click="relatedListFields.splice($index,1)">
-                                    <svg class="slds-button__icon" aria-hidden="true">
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+            <article class="slds-card" style="margin: 1%;">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                    <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                        <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
                                     </svg>
-                                    <span class="slds-assistive-text">Delete</span>
-                                </button>
+                                </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><label class="slds-text-heading--small">Related List Fields</label></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Label">Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Display Label">Display Label</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Reference">Reference</div>
+                                </th>
+                                <th scope="col" ng-if="forMobile === true">
+                                    <div class="slds-truncate" title="Read Only">Read Only</div>
+                                </th>
+                                <th scope="col" ng-if="forMobile === true">
+                                    <div class="slds-truncate" title="Required">Required</div>
+                                </th>
+                                <th scope="col" style="width: 150px;">
+                                    <div class="slds-truncate" title="Type">Type</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 100px">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dnd-list="relatedListFields" dnd-allowed-types="['relatedListField']">
+                            <tr ng-if="relatedListFields.length === 0">
+                                <td colspan="6" class="slds-blank-slate">No field added.</td>
+                            </tr>
+                            <tr class="dndPlaceholder" style="display: table-row !important">
+                                <th colspan="6" style="background: #e1d951; text-align: center;" >
+                                    Move here
+                                </th>
+                            </tr>
+                            <tr ng-repeat="field in relatedListFields | filter: {deleted: false }"
+                                dnd-draggable="field" 
+                                dnd-effect-allowed="move" 
+                                dnd-moved="relatedListFields.splice($index,1)" 
+                                dnd-type="'relatedListField'">
+                                <td>{{ $index + 1 }}</td>
+                                <td data-label="Label">{{ field.SObjectField.label }}</td>
+                                <td data-label="Display Label">
+                                    <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
+                                </td>
+                                <td data-label="Reference" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
+                                <td ng-if="forMobile === true" data-label="Read Only">
+                                    <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly" on-text="Yes" off-text="No" />
+                                </td>
+                                <td ng-if="forMobile === true" data-label="Required">
+                                    <slds-switch id="isRequired" switch-change="onChangeRequired(field);" ng-model="field.required" on-text="Yes" off-text="No" />
+                                </td>
+                                <td data-label="Type">
+                                    <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
+                                </td>
+                                <td data-label="Action" style="text-align: center;">
+                                    <div class="slds-truncate" >
+                                        <button title="Delete" class="slds-button slds-action-button slds-button--icon slds-button--icon-inverse slds-button--destructive" ng-click="relatedListFields.splice($index,1)">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-modal__footer">
+                    <div style="padding-left: 0px;">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label class="slds-form-element__label" for="lineItemFields">{{relatedList.SObject.label}} Fields</label>
+                                <span class="slds-form-element__static">
+                                    <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in relatedList.SObject.SObjectFields | orderBy:'label'">
+                                        <option value="">-- None --</option>
+                                    </select>
+                                </span>
+                                <span class="slds-form-element__addon">
+                                    <button class="slds-button slds-button--brand" ng-click="addToRelatedListFields(fieldToAdd)">
+                                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                        </svg>
+                                        Add
+                                    </button>
+                                </span>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="slds-modal__footer">
-            <div style="padding-left: 0px; float: left;">
-                <div class="slds-form-element">
-                    <div class="slds-form-element__control">
-                        <span class="slds-form-element__static">
-                            <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in relatedList.SObject.SObjectFields ">
-                                <option value="">-- None --</option>
-                            </select>
-                        </span>
-                        <span class="slds-form-element__addon">
-                            <button class="slds-button slds-button--brand" ng-click="addToRelatedListFields(fieldToAdd)">
-                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
-                                </svg>
-                                Add
-                            </button>
-                        </span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </article>
+            <article class="slds-card" style="margin: 1%;" ng-if="forMobile === true && relatedList.SObject.name.indexOf('Invoice_Line_Item__c') !== -1">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-custom108">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/custom-sprite/svg/symbols.svg#custom108"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><label class="slds-text-heading--small">Calculation Fields</label></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col" style="width: 50px;">
+                                    <div class="slds-truncate">#</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Parent Field">Parent Field</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Child Field">Child Field</div>
+                                </th>
+                                <th scope="col" style="text-align: center;width: 100px">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody dnd-list="relatedList.relatedListAmtFields" dnd-allowed-types="['relatedListAmtField']">
+                            <tr ng-if="relatedList.relatedListAmtFields.length === 0">
+                                <td colspan="4" class="slds-blank-slate">No field added.</td>
+                            </tr>
+                            <tr class="dndPlaceholder" style="display: table-row !important">
+                                <th colspan="4" style="background: #e1d951; text-align: center;">
+                                    Move here
+                                </th>
+                            </tr>
+                            <tr ng-repeat="field in relatedList.relatedListAmtFields | filter: {deleted: false}" dnd-draggable="field" dnd-effect-allowed="move"
+                                dnd-moved="relatedList.relatedListAmtFields.splice($index,1)" dnd-type="'relatedListAmtField'">
+                                <td>{{ $index + 1 }}</td>
+                                <td data-label="Parent Field">
+                                    {{ field.parentSObjectField.label }} [{{ field.parentSObjectField.type + ((field.parentSObjectField.calculated) ? ' | formula' : '') }}]
+                                </td>
+                                <td data-label="Child Field">
+                                    {{ field.childSObjectField.label }} [{{ field.childSObjectField.type + ((field.childSObjectField.calculated) ? ' | formula' : '') }}]
+                                </td>
+                                <td data-label="Action" style="text-align: center;">
+                                    <div class="slds-truncate">
+                                        <button ng-click="relatedList.relatedListAmtFields.splice($index,1)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-modal__footer">
+                    <div style="padding-left: 0px;">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label class="slds-form-element__label" for="parentAmtFields">{{layout.SObject.label}} Fields</label>
+                                <select id="parentAmtFields" class="slds-select" style="width: 30% !important" ng-model="parentFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + '] (' + field.name + ')') for field in relatedList.parentSObjectAmountFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <label class="slds-form-element__label" for="childAmtFields">{{relatedList.SObject.label}} Fields</label>
+                                <select id="childAmtFields" class="slds-select" style="width: 30% !important" ng-model="childFieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + '] (' + field.name + ')') for field in relatedList.childSObjectAmountFields | orderBy:'label'">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <button class="slds-button slds-button--brand" ng-disabled="!parentFieldToAdd || !childFieldToAdd" ng-click="addToRelatedListAmtFields(parentFieldToAdd, childFieldToAdd)">
+                                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                    </svg>
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="slds-modal__footer">
             <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
             <button class="slds-button slds-button--brand" ng-click="save()">
                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">

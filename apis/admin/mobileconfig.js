@@ -476,7 +476,7 @@ var getMobileConfig = function(callback){
                                         order: ['order']
                                     },{
                                         model: db.SObjectLayoutRelatedList,
-                                        attributes: ['id','title','requireAddMore','criteria','readonly'],
+                                        attributes: ['id','title','requireAddMore','criteria','readonly','amountCriteriaConfig'],
                                         required: false,
                                         include: [{
                                             model: db.SObject,
@@ -578,6 +578,16 @@ var getMobileConfig = function(callback){
                                             relatedListConfig.refrenceField = relatedList.SObjectField.name;
                                             relatedListConfig.isEditable = !relatedList.readonly;
                                             relatedListConfig.filterCondition = createGroupExpression(relatedList.criteria,"",relatedList.criteria.group.operator);
+                                            if (relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
+                                                relatedListConfig.calculation = [];
+                                                if (relatedList.amountCriteriaConfig !== undefined && relatedList.amountCriteriaConfig !== null && relatedList.amountCriteriaConfig.relatedListAmtFields.length > 0) {
+                                                    relatedList.amountCriteriaConfig.relatedListAmtFields.forEach(function (config) {
+                                                        relatedListConfig.calculation.push({
+                                                            [config.parentSObjectField.name]: config.childSObjectField.name
+                                                        });
+                                                    });
+                                                }
+                                            }
                                             relatedList.SObjectLayoutFields.sort((a, b)=>{
                                                 if(a.order < b.order)
                                                     return -1;

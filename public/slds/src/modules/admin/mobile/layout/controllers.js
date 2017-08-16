@@ -660,12 +660,44 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             });
         };
         $scope.openRelatedListPropertiesModal = function(relatedList,index){
-            $adminModals.relatedListProperties({
-                layout: angular.copy($scope.layout),
-                relatedList: angular.copy(relatedList)
-            },function(newRelatedList){
-                $scope.relatedLists[index] = newRelatedList;
-            });
+            if (relatedList.SObject && relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
+                if (!$scope.blockUI.editEditLayout.state().blocking && $scope.layout.SObject != null) {
+                    $scope.blockUI.editEditLayout.start('Loading ...');
+                    sobjectService.loadSObjectFields($scope.layout.SObject)
+                        .success(function (response) {
+                            if (response.success) {
+                                relatedList.parentSObjectAmountFields = [];
+                                if (relatedList.relatedListAmtFields === undefined || relatedList.relatedListAmtFields === null) {
+                                    relatedList.relatedListAmtFields = [];
+                                }
+                                angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
+                                    if (field.SObjectField == undefined) {
+                                        field.SObjectField = angular.copy(field);
+                                    }
+                                    if (field.type == "currency" || field.type == "double") {
+                                        relatedList.parentSObjectAmountFields.push(field);
+                                    }
+                                });
+
+                                $scope.blockUI.editEditLayout.stop();
+                                $adminModals.relatedListProperties({
+                                    layout: angular.copy($scope.layout),
+                                    relatedList: angular.copy(relatedList)
+                                }, function (newRelatedList) {
+                                    $scope.relatedLists[index] = newRelatedList;
+                                });
+                            }
+                        });
+                }
+            }
+            else {
+                $adminModals.relatedListProperties({
+                    layout: angular.copy($scope.layout),
+                    relatedList: angular.copy(relatedList)
+                },function(newRelatedList){
+                    $scope.relatedLists[index] = newRelatedList;
+                });
+            }
         };
         $scope.openFieldPropertiesModal = function(section,sectionIndex,columnIndex,field,fieldIndex){
             $adminModals.layoutFieldProperties({
@@ -790,6 +822,13 @@ admin.controller('AdminMobileLayoutsEditEditController',[
                                 .success(function(response2){
                                     if(response2.success === true){
                                         $scope.relatedLists = response2.data.sObjectLayoutRelatedLists;
+                                        angular.forEach($scope.relatedLists, function (relatedlist, index) {
+                                            if (relatedlist.SObject && relatedlist.SObject.name.indexOf("Invoice_Line_Item__c") > -1
+                                                && relatedlist.amountCriteriaConfig !== undefined && relatedlist.amountCriteriaConfig !== null) {
+                                                relatedlist.relatedListAmtFields = relatedlist.amountCriteriaConfig.relatedListAmtFields;
+                                            }
+                                            delete relatedlist.amountCriteriaConfig;
+                                        });
                                     }else{
                                         $dialog.alert('Error occured while loading layout related lists.','Error','pficon pficon-error-circle-o');
                                     }

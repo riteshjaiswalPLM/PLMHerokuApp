@@ -435,6 +435,27 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 });
             }
         }
+        $scope.addToRelatedListAmtFields = function (parentfield, childfield) {
+            if (parentfield && childfield) {
+                var duplicate = false;
+                angular.forEach($scope.relatedList.relatedListAmtFields, function (field) {
+                    if (field.parentSObjectField.name == parentfield.name && field.childSObjectField.name == childfield.name) {
+                        duplicate = true;
+                    }
+                });
+                if (!duplicate) {
+                    $scope.relatedList.relatedListAmtFields.push({
+                        parentSObjectField: parentfield,
+                        childSObjectField: childfield,
+                        type: 'RelatedList-Amount-Field',
+                        deleted: false
+                    });
+                }
+                else {
+                    $dialog.alert('Duplicate field!', 'Warning', 'pficon pficon-warning-triangle-o');
+                }
+            }
+        };
         $scope.close = function(){
             $element.modal('hide');
         };
@@ -478,6 +499,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             }
         };
         $scope.relatedList.SObject.fields = [];
+        $scope.relatedList.childSObjectAmountFields = [];
         if($scope.relatedList.SObject.SObjectFields !== undefined){
             var allowedTypes = ['string','double','date','currency','boolean','picklist','reference','id'];
             angular.forEach($scope.relatedList.SObject.SObjectFields, function(field){
@@ -490,6 +512,9 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     && field.SObjectField.encrypted === false){
                         field.criteriaField = true;
                         $scope.relatedList.SObject.fields.push(field);
+                }
+                if (field.type == "currency" || field.type == "double") {
+                    $scope.relatedList.childSObjectAmountFields.push(field);
                 }
             });
         }
