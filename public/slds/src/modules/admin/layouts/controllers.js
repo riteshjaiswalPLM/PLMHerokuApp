@@ -543,7 +543,9 @@ admin.controller('AdminLayoutsEditEditController',[
                                 section.parentSobjectFields = [];
                                 section.parentSObjectAmountFields = [];
                                 angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
-                                    field.SObjectField = angular.copy(field);
+                                    if (field.SObjectField == undefined) {
+                                        field.SObjectField = angular.copy(field);
+                                    }
                                     section.parentSobjectFields.push(field);
                                     if (field.type == "currency" || field.type == "double") {
                                         section.parentSObjectAmountFields.push(field);
