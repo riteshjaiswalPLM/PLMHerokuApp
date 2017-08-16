@@ -310,7 +310,7 @@ admin.controller('AdminLayoutsEditController',[
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
                 item.deleted = true;
-                if(item.id === undefined || item.type == "Layout-Section-Field"){
+                if(item.id === undefined || item.type == "Layout-Section-Field" || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field"){
                     items.splice(index,1);
                 }
                 
@@ -475,10 +475,24 @@ admin.controller('AdminLayoutsEditListController',[
                 actionButton.criteria = criteria;
             });
         };
+        $scope.removeFieldsAndStore = function (type, item) {
+            if (type == "CriteriaField") {
+                if ($scope.searchCriteriaDeletedFields == undefined) {
+                    $scope.searchCriteriaDeletedFields = [];
+                }
+                $scope.searchCriteriaDeletedFields.push(item);
+            }
+            if (type == "ResultField") {
+                if ($scope.searchResultDeletedFields == undefined) {
+                    $scope.searchResultDeletedFields = [];
+                }
+                $scope.searchResultDeletedFields.push(item);
+            }
+        }
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editListLayout.start('Saving ...');
-                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id,$scope.layout.whereClause)
+                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id,$scope.layout.whereClause,$scope.searchCriteriaDeletedFields,$scope.searchResultDeletedFields)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){
