@@ -1,4 +1,4 @@
-<div ng-controller="AdminMobileLayoutsEditListController" block-ui="editListLayout">
+<div block-ui="editListLayout">
     <article class="slds-card">
         <div class="slds-card__header slds-grid">
             <header class="slds-media slds-media--center slds-has-flexi-truncate">
@@ -58,7 +58,7 @@
                         <td>
                             <div class="slds-truncate slds-align--absolute-center" title="Delete">
                                 <div class="slds-button-group" role="group">
-                                    <button ng-click="removeAndReorder(searchCriteriaFields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <button ng-click="removeFieldsAndStore('CriteriaField',field);removeAndReorder(searchCriteriaFields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                         </svg>
@@ -135,7 +135,7 @@
                         <td>
                             <div class="slds-truncate slds-align--absolute-center" title="Delete">
                                 <div class="slds-button-group" role="group">
-                                    <button ng-click="removeAndReorder(searchResultFields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <button ng-click="removeFieldsAndStore('ResultField',field);removeAndReorder(searchResultFields,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                         </svg>

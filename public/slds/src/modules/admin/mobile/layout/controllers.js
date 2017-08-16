@@ -257,7 +257,7 @@ admin.controller('AdminMobileLayoutsEditController',[
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
                 item.deleted = true;
-                if(item.id === undefined){
+                if(item.id === undefined || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field"){
                     items.splice(index,1);
                 }
                 
@@ -417,6 +417,20 @@ admin.controller('AdminMobileLayoutsEditListController',[
                 actionButton.criteria = criteria;
             });
         };
+        $scope.removeFieldsAndStore = function (type, item) {
+            if (type == "CriteriaField") {
+                if ($scope.searchCriteriaDeletedFields == undefined) {
+                    $scope.searchCriteriaDeletedFields = [];
+                }
+                $scope.searchCriteriaDeletedFields.push(item);
+            }
+            if (type == "ResultField") {
+                if ($scope.searchResultDeletedFields == undefined) {
+                    $scope.searchResultDeletedFields = [];
+                }
+                $scope.searchResultDeletedFields.push(item);
+            }
+        }
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
                 var duplicate = false;
@@ -441,7 +455,7 @@ admin.controller('AdminMobileLayoutsEditListController',[
                     return;
                 }
                 $scope.blockUI.editListLayout.start('Saving ...');
-                mobileLayoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.whereClause)
+                mobileLayoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.whereClause,$scope.searchCriteriaDeletedFields,$scope.searchResultDeletedFields)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){
