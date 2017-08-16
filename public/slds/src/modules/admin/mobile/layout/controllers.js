@@ -877,6 +877,34 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             }
         };
         $scope.isValidLayout = function(){
+            if ($scope.layoutSections.length == 0) {
+                $dialog.alert('Please add atleast one layout section with atleast one field.', 'Error', 'pficon pficon-error-circle-o');
+                return false;
+            }
+            else {
+                var deleted = true;
+                angular.forEach($scope.layoutSections, function (section) {
+                    if (!section.deleted) {
+                        deleted = false;
+                    }
+                });
+                if (deleted) {
+                    $dialog.alert('Please add atleast one layout section with atleast one field.', 'Error', 'pficon pficon-error-circle-o');
+                    return false;
+                }
+            }
+
+            angular.forEach($scope.layoutSections, function (section) {
+                if (!section.isComponent) {
+                    angular.forEach(section.columns, function (fields) {
+                        if (fields.length == 0) {
+                            $dialog.alert('Please add atleast one field in each layout section.', 'Error', 'pficon pficon-error-circle-o');
+                            return false;
+                        }
+                    });
+                }
+            });
+
             var errorCount = 0;
             angular.forEach($scope.layoutSections, function(section){
                 if(!section.isComponent){
