@@ -901,6 +901,18 @@ admin.controller('AdminMobileLayoutsEditEditController',[
                             $dialog.alert('Please add atleast one field in each layout section.', 'Error', 'pficon pficon-error-circle-o');
                             return false;
                         }
+                        else {
+                            var fdeleted = true;
+                            angular.forEach(fields, function (field) {
+                                if (!field.deleted) {
+                                    fdeleted = false;
+                                }
+                            });
+                            if (fdeleted) {
+                                $dialog.alert('Please add atleast one field in each layout section.', 'Error', 'pficon pficon-error-circle-o');
+                                return false;
+                            }
+                        }
                     });
                 }
             });
