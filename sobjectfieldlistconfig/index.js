@@ -181,156 +181,156 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                                                 }
                                             });
                                         }
-                                        if(section.Component.ComponentDetails[0].configuration.allowAddMoreCriteria !== null){
+                                        if (section.Component.ComponentDetails[0].configuration.allowAddMoreCriteria !== null) {
                                             var fieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.allowAddMoreCriteria, [], layoutListMeta.layout.SObject.name);
-                                            fieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                            fieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                             var newfieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.allowAddMoreCriteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                            newfieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                            newfieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                     sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                         }
-                                        if(section.Component.ComponentDetails[0].configuration.deleteCriteria !== null){
+                                        if (section.Component.ComponentDetails[0].configuration.deleteCriteria !== null) {
                                             var fieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.deleteCriteria, [], layoutListMeta.layout.SObject.name);
-                                            fieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                            fieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                             var newfieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.deleteCriteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                            newfieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                            newfieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                     sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                         }
-                                        if(section.Component.ComponentDetails[0].configuration.recallCriteria !== null){
+                                        if (section.Component.ComponentDetails[0].configuration.recallCriteria !== null) {
                                             var fieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.recallCriteria, [], layoutListMeta.layout.SObject.name);
-                                            fieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                            fieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                             var newfieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.recallCriteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                            newfieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                            newfieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                     sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                         }
-                                        section.Component.ComponentDetails[0].configuration.fields.forEach((field)=>{
-                                            if(field.criteria !== null){
+                                        section.Component.ComponentDetails[0].configuration.fields.forEach((field) => {
+                                            if (field.criteria !== null) {
                                                 var fieldList = extractFieldFromCriteria(field.criteria, [], layoutListMeta.layout.SObject.name);
-                                                fieldList.forEach((fieldFromCriteria)=>{
-                                                    if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                                fieldList.forEach((fieldFromCriteria) => {
+                                                    if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                     }
                                                 });
                                                 var newfieldList = extractFieldFromCriteria(field.criteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                                newfieldList.forEach((fieldFromCriteria)=>{
-                                                    if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                                newfieldList.forEach((fieldFromCriteria) => {
+                                                    if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                         sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                     }
                                                 });
                                             }
-                                            if(field.readOnly === true && field.readOnlyCriteria !== null){
+                                            if (field.readOnly === true && field.readOnlyCriteria !== null) {
                                                 var fieldList = extractFieldFromCriteria(field.readOnlyCriteria, [], layoutListMeta.layout.SObject.name);
-                                                fieldList.forEach((fieldFromCriteria)=>{
-                                                    if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                                fieldList.forEach((fieldFromCriteria) => {
+                                                    if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                     }
                                                 });
                                                 var newfieldList = extractFieldFromCriteria(field.readOnlyCriteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                                newfieldList.forEach((fieldFromCriteria)=>{
-                                                    if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                                newfieldList.forEach((fieldFromCriteria) => {
+                                                    if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                         sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                     }
                                                 });
                                             }
-                                            if(field.isRequired === true && field.requiredCriteria !== null){
+                                            if (field.isRequired === true && field.requiredCriteria !== null) {
                                                 var fieldList = extractFieldFromCriteria(field.requiredCriteria, [], layoutListMeta.layout.SObject.name);
-                                                fieldList.forEach((fieldFromCriteria)=>{
-                                                    if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                                fieldList.forEach((fieldFromCriteria) => {
+                                                    if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                     }
                                                 });
                                                 var newfieldList = extractFieldFromCriteria(field.requiredCriteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                                newfieldList.forEach((fieldFromCriteria)=>{
-                                                    if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                                newfieldList.forEach((fieldFromCriteria) => {
+                                                    if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                         sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                     }
                                                 });
                                             }
-                                            if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(field.SObjectField.name) === -1){
+                                            if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(field.SObjectField.name) === -1) {
                                                 sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(field.SObjectField.name);
                                             }
-                                            if(field.SObjectField.type === 'reference' && sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(field.SObjectField.relationshipName+'.'+field.reference) === -1){
-                                                sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(field.SObjectField.relationshipName+'.'+field.reference)
+                                            if (field.SObjectField.type === 'reference' && sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(field.SObjectField.relationshipName + '.' + field.reference) === -1) {
+                                                sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(field.SObjectField.relationshipName + '.' + field.reference)
                                             }
                                         });
                                     }
                                 }
                             }
-                            else{
-                                section.SObjectLayoutFields.forEach((field)=>{
-                                    if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(field.SObjectField.name) === -1){
-                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(field.SObjectField.name);
-                                        if(field.SObjectField.type === 'reference'){
-                                            sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(field.SObjectField.relationshipName+'.'+field.reference);
+                            else {
+                                section.SObjectLayoutFields.forEach((field) => {
+                                    if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(field.SObjectField.name) === -1) {
+                                        sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(field.SObjectField.name);
+                                        if (field.SObjectField.type === 'reference') {
+                                            sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(field.SObjectField.relationshipName + '.' + field.reference);
                                         }
                                     }
-                                    if(field.criteria !== null){
-                                        var fieldList = extractFieldFromCriteria(field.criteria,[]);
-                                        fieldList.forEach((fieldFromCriteria)=>{
-                                            if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                    if (field.criteria !== null) {
+                                        var fieldList = extractFieldFromCriteria(field.criteria, []);
+                                        fieldList.forEach((fieldFromCriteria) => {
+                                            if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                             }
                                         });
                                     }
-                                    if(field.requiredCriteria !== null){
-                                        var fieldList = extractFieldFromCriteria(field.requiredCriteria,[]);
-                                        fieldList.forEach((fieldFromCriteria)=>{
-                                            if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                    if (field.requiredCriteria !== null) {
+                                        var fieldList = extractFieldFromCriteria(field.requiredCriteria, []);
+                                        fieldList.forEach((fieldFromCriteria) => {
+                                            if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                             }
                                         });
                                     }
                                 });
-                                if(section.criteria !== null){
-                                    var fieldList = extractFieldFromCriteria(section.criteria,[]);
-                                    fieldList.forEach((fieldFromCriteria)=>{
-                                        if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                            sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                if (section.criteria !== null) {
+                                    var fieldList = extractFieldFromCriteria(section.criteria, []);
+                                    fieldList.forEach((fieldFromCriteria) => {
+                                        if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                            sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                         }
                                     });
                                 }
                             }
                         });
-                        if(layoutListMeta.layout.type !== 'Create'){
-                            layoutListMeta.relatedListMetaData.then((resultRelatedListMetaData)=>{
+                        if (layoutListMeta.layout.type !== 'Create') {
+                            layoutListMeta.relatedListMetaData.then((resultRelatedListMetaData) => {
                                 // console.log(resultRelatedListMetaData);
-                                resultRelatedListMetaData.forEach((resultRelatedListMeta)=>{
-                                    if(resultRelatedListMeta.criteria != null){
-                                        var fieldList = extractFieldFromCriteria(resultRelatedListMeta.criteria,[]);
-                                        fieldList.forEach((fieldFromCriteria)=>{
-                                            if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                resultRelatedListMetaData.forEach((resultRelatedListMeta) => {
+                                    if (resultRelatedListMeta.criteria != null) {
+                                        var fieldList = extractFieldFromCriteria(resultRelatedListMeta.criteria, []);
+                                        fieldList.forEach((fieldFromCriteria) => {
+                                            if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                             }
-                                        }); 
+                                        });
                                     }
-                                    resultRelatedListMeta.SObjectLayoutFields.forEach((field)=>{
-                                        if(field.criteria != null){
-                                            var fieldList = extractFieldFromCriteria(field.criteria,[]);
-                                            fieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                    resultRelatedListMeta.SObjectLayoutFields.forEach((field) => {
+                                        if (field.criteria != null) {
+                                            var fieldList = extractFieldFromCriteria(field.criteria, []);
+                                            fieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                 }
-                                            }); 
+                                            });
                                         }
                                     });
                                 });
@@ -340,46 +340,46 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                 });
                 callback();
             },
-            ()=>{
-                // console.log(sObjectFieldListConfig.FieldListMap);
-            });
+                () => {
+                    // console.log(sObjectFieldListConfig.FieldListMap);
+                });
         });
     });
-    
+
 };
 
-var extractFieldFromCriteria = function(criteria, field, sObjectName){
+var extractFieldFromCriteria = function (criteria, field, sObjectName) {
     _sObjectName = sObjectName;
     var strCriteria = JSON.stringify(criteria);
     var andGroupNode = {
-        type		:'GROUP',
-        operator	:'&&',
-        rules		:[{
-            type		:'RULE',
-            field		:null
+        type: 'GROUP',
+        operator: '&&',
+        rules: [{
+            type: 'RULE',
+            field: null
         }]
     }, orGroupNode = {
-        type		:'GROUP',
-        operator	:'||',
-        rules		:[{
-            type		:'RULE',
-            field		:null
+        type: 'GROUP',
+        operator: '||',
+        rules: [{
+            type: 'RULE',
+            field: null
         }]
     }
-    if(strCriteria == andGroupNode || strCriteria == orGroupNode){
+    if (strCriteria == andGroupNode || strCriteria == orGroupNode) {
         return null;
     }
-    criteria.group.rules.forEach(function(rule){
-        if(rule.group){
+    criteria.group.rules.forEach(function (rule) {
+        if (rule.group) {
             extractFieldFromCriteria(rule, field);
-        }else{
+        } else {
             var contd = true;
-            if(rule.SObjectName !== undefined){
-                if(rule.SObjectName.split('-')[0] !== _sObjectName){
+            if (rule.SObjectName !== undefined) {
+                if (rule.SObjectName.split('-')[0] !== _sObjectName) {
                     contd = false;
                 }
             }
-            if(rule.field && contd === true){
+            if (rule.field && contd === true) {
                 field.push(rule.field);
             }
         }
@@ -387,30 +387,81 @@ var extractFieldFromCriteria = function(criteria, field, sObjectName){
     return field;
 }
 
-sObjectFieldListConfig.refreshFieldLabelMappingConfig = ()=>{
+sObjectFieldListConfig.refreshFieldLabelMappingConfig = () => {
     var sObjectDetails = db.SObject.findAll({
         attributes: {
-            exclude: ['createdAt','updatedAt']
+            exclude: ['createdAt', 'updatedAt']
         },
         include: {
             model: db.SObjectField,
             attributes: {
-                exclude: ['createdAt','updatedAt']
+                exclude: ['createdAt', 'updatedAt']
             },
         },
     });
-    sObjectDetails.then(function(_sObjectDetails){
-        var sobjectFieldMap={}
-        _sObjectDetails.forEach(function(sObject){
-            var fieldsNameLabelMapping={};
-            sObject.SObjectFields.forEach(function(fields){
-                fieldsNameLabelMapping[fields.name]=fields.label;
+    sObjectDetails.then(function (_sObjectDetails) {
+        var sobjectFieldMap = {}
+        _sObjectDetails.forEach(function (sObject) {
+            var fieldsNameLabelMapping = {};
+            sObject.SObjectFields.forEach(function (fields) {
+                fieldsNameLabelMapping[fields.name] = fields.label;
             });
-            sobjectFieldMap[sObject.name]=fieldsNameLabelMapping;
+            sobjectFieldMap[sObject.name] = fieldsNameLabelMapping;
         });
-        sObjectFieldListConfig.sObjectFieldLabelMapping=sobjectFieldMap;
+        sObjectFieldListConfig.sObjectFieldLabelMapping = sobjectFieldMap;
     });
 }
 sObjectFieldListConfig.refreshConfig();
 sObjectFieldListConfig.refreshFieldLabelMappingConfig();
+global.config.archivalConfig.refreshConfig = () => {
+    var archivalConfig = db.ArchivalConfig.findOne({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+            AWSS3Url: {
+                $ne: ''
+            }
+        }
+    })
+    archivalConfig.then(function (archivalConfig) {
+        if (archivalConfig != null && archivalConfig != undefined) {
+            global.config.archivalConfig.AWSS3Url = archivalConfig.AWSS3Url;
+            global.config.archivalConfig.AWSS3Secret = archivalConfig.AWSS3Secret;
+            db.SObjectLayout.count({
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                where: {
+                    type: 'Archival',
+                    active: true
+                }
+            }).then(function (cnt) {
+                if (cnt > 0) {
+                    global.config.archivalConfig.active = true;
+                }
+                else {
+                    global.config.archivalConfig.active = false;
+                }
+            });
+        }
+        else {
+            global.config.archivalConfig.active = false;
+            global.config.archivalConfig.AWSS3Url = "";
+            global.config.archivalConfig.AWSS3Secret = "";
+        }
+    });
+    var archivalSystemConfig = db.ArchivalSystemConfig.findOne({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+    })
+    archivalSystemConfig.then(function (archivalSystemConfig) {
+        console.log("archivalSystemConfig:::", archivalSystemConfig);
+        if (archivalSystemConfig != null && archivalSystemConfig != undefined) {
+            global.config.archivalConfig.ImplementationName = archivalSystemConfig.ImplementationName;
+        }
+    });
+}
+global.config.archivalConfig.refreshConfig();
 module.exports = sObjectFieldListConfig;

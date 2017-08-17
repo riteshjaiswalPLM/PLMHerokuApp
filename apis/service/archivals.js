@@ -173,11 +173,14 @@ archivalRouter.post('/search', function (req, res) {
         console.log("req.body.whereFields", whereCluase)
         var headers = {
             "Content-type": "application/json; charset=utf8",
-            "Authorization": "Basic ZXNtRGV2VXNlcjpha3JpdGl2QDEyMw==",
-            "impl": "esmDev"
+            //"Authorization": "Basic ZXNtRGV2VXNlcjpha3JpdGl2QDEyMw==",
+            "Authorization": "Basic "+global.config.archivalConfig.AWSS3Secret,
+            //"impl": "esmDev"
+            "impl" : global.config.archivalConfig.ImplementationName
         }
         request.post({
-            url: "http://54.88.100.146:8080/AkritivArchiveApp/archive/process/search",
+            //url: "http://54.88.100.146:8080/AkritivArchiveApp/archive/process/search",
+            url:global.config.archivalConfig.AWSS3Url,
             headers: headers,
             json: {
                 columns: [],

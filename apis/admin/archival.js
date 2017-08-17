@@ -39,7 +39,6 @@ archivalRouter.post('/sync', function (req, res) {
                             .build({
                                 AWSS3Url: records[0].arcsol__AWSS3Url__c,
                                 AWSS3Secret: records[0].arcsol__AWSS3Secret__c,
-
                             })
                             .save()
                             .then(function (newArchivalConfig) {
@@ -51,6 +50,7 @@ archivalRouter.post('/sync', function (req, res) {
                                 });
 
                             });
+                        global.config.archivalConfig.refreshConfig();
                         return saveArchivalDetail(records, req, res);
                     }
                     else {
@@ -67,20 +67,129 @@ archivalRouter.post('/sync', function (req, res) {
                                     success: true,
                                     data: {
                                         message: "sync done"
-
                                     }
 
                                 });
 
                             });
+                        global.config.archivalConfig.refreshConfig();
                         return saveArchivalDetail(records, req, res);
                     }
                 });
             }
         });
+    // ARCHIVAL SYSTEM CONFIG
+    global.sfdc
+        .sobject("arcsol__Archival_System_Config__c")
+        // .select('arcsol__ArchivalNamespace__c,arcsol__ArchiveFieldHistoryBatchSize__c,arcsol__ArchiveLargeAttachmentBatchSize__c, arcsol__ArchiveSObjectToS3batchSize__c, arcsol__Comma_Separated_List_of_Emails__c, arcsol__DeleteAlreadyArchivedRecordsBatchSize__c, arcsol__Down_for_maintenance__c, arcsol__Enable_Parenthetical_Currency_Conversion__c, arcsol__Enable_Server_Side_Encryption_S3__c, arcsol__Field_History_File_Size__c, arcsol__GenericArchiveAttachmentBatchSize__c, arcsol__GenericArchiveNotesBatchSize__c, arcsol__GenericArchiveRelatedItemsBatchSize__c, arcsol__GenericArchiveToRDSBatchSize__c, arcsol__ImplementationName__c, arcsol__MarkChildEligibityForDeleteBatchSize__c, arcsol__MarkParentEligibityForDeleteBatchSize__c, arcsol__MarkRecordsEligibleForDeleteBatchSize__c, arcsol__MarkRelatedItemsCountOnParentSize__c, arcsol__Parent_Batch_Size_for_Attachments__c, arcsol__Parent_Batch_Size_for_Notes__c, arcsol__VisibilityExportToCSV__c')
+        .select('*')
+        .where({SetupOwnerId : global.sfdc.orgId})
+        .execute(function (err, records) {
+            console.log('data:::', records);
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: err.toString(),
+                    error: err,
+                    err: err.toString()
+                });
+            }
+            else if (records === undefined || records === null || records.length === 0) {
+                return res.json({
+                    success: false,
+                    message: 'No such record found!'
+                });
+            }
+            else {
+                db.ArchivalSystemConfig.findOne({
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
+                }).then(function (archivalSystemConfig) {
+                    console.log("ArchivalSystemConfig::", archivalSystemConfig);
+                    if (archivalSystemConfig === undefined || archivalSystemConfig === null) {
+                        global.db.ArchivalSystemConfig
+                            .build({
+                                ArchivalNamespace: records[0].arcsol__ArchivalNamespace__c,
+                                ArchiveFieldHistoryBatchSize: records[0].arcsol__ArchiveFieldHistoryBatchSize__c,
+                                ArchiveLargeAttachmentBatchSize: records[0].arcsol__ArchiveLargeAttachmentBatchSize__c,
+                                ArchiveSObjectToS3batchSize: records[0].arcsol__ArchiveSObjectToS3batchSize__c,
+                                CommaSeparatedListofEmails: records[0].arcsol__Comma_Separated_List_of_Emails__c,
+                                DeleteAlreadyArchivedRecordsBatchSize: records[0].arcsol__DeleteAlreadyArchivedRecordsBatchSize__c,
+                                Downformaintenance: records[0].arcsol__Down_for_maintenance__c,
+                                EnableParentheticalCurrencyConversion: records[0].arcsol__Enable_Parenthetical_Currency_Conversion__c,
+                                EnableServerSideEncryptionS3: records[0].arcsol__Enable_Server_Side_Encryption_S3__c,
+                                FieldHistoryFileSize: records[0].arcsol__Field_History_File_Size__c,
+                                GenericArchiveRelatedItemsBatchSize: records[0].arcsol__GenericArchiveAttachmentBatchSize__c,
+                                GenericArchiveNotesBatchSize: records[0].arcsol__GenericArchiveNotesBatchSize__c,
+                                GenericArchiveRelatedItemsBatchSize: records[0].arcsol__GenericArchiveRelatedItemsBatchSize__c,
+                                GenericArchiveToRDSBatchSize: records[0].arcsol__GenericArchiveToRDSBatchSize__c,
+                                ImplementationName: records[0].arcsol__ImplementationName__c,
+                                MarkChildEligibityForDeleteBatchSize: records[0].arcsol__MarkChildEligibityForDeleteBatchSize__c,
+                                MarkParentEligibityForDeleteBatchSize: records[0].arcsol__MarkParentEligibityForDeleteBatchSize__c,
+                                MarkRecordsEligibleForDeleteBatchSize: records[0].arcsol__MarkRecordsEligibleForDeleteBatchSize__c,
+                                MarkRelatedItemsCountOnParentSize: records[0].arcsol__MarkRelatedItemsCountOnParentSize__c,
+                                ParentBatchSizeforAttachments: records[0].arcsol__Parent_Batch_Size_for_Attachments__c,
+                                ParentBatchSizeforNotes: records[0].arcsol__Parent_Batch_Size_for_Notes__c,
+                                VisibilityExportToCSV: records[0].arcsol__VisibilityExportToCSV__c,
+                            })
+                            .save()
+                            .then(function (newArchivalSystemConfig) {
+                                return res.json({
+                                    success: true,
+                                    data: {
+                                        message: "sync done"
+                                    }
+                                });
+
+                            });
+                        return saveArchivalDetail(records, req, res);
+                    }
+                    else {
+                        global.db.ArchivalSystemConfig
+                            .update({
+                                ArchivalNamespace: records[0].arcsol__ArchivalNamespace__c,
+                                ArchiveFieldHistoryBatchSize: records[0].arcsol__ArchiveFieldHistoryBatchSize__c,
+                                ArchiveLargeAttachmentBatchSize: records[0].arcsol__ArchiveLargeAttachmentBatchSize__c,
+                                ArchiveSObjectToS3batchSize: records[0].arcsol__ArchiveSObjectToS3batchSize__c,
+                                CommaSeparatedListofEmails: records[0].arcsol__Comma_Separated_List_of_Emails__c,
+                                DeleteAlreadyArchivedRecordsBatchSize: records[0].arcsol__DeleteAlreadyArchivedRecordsBatchSize__c,
+                                Downformaintenance: records[0].arcsol__Down_for_maintenance__c,
+                                EnableParentheticalCurrencyConversion: records[0].arcsol__Enable_Parenthetical_Currency_Conversion__c,
+                                EnableServerSideEncryptionS3: records[0].arcsol__Enable_Server_Side_Encryption_S3__c,
+                                FieldHistoryFileSize: records[0].arcsol__Field_History_File_Size__c,
+                                GenericArchiveRelatedItemsBatchSize: records[0].arcsol__GenericArchiveAttachmentBatchSize__c,
+                                GenericArchiveNotesBatchSize: records[0].arcsol__GenericArchiveNotesBatchSize__c,
+                                GenericArchiveRelatedItemsBatchSize: records[0].arcsol__GenericArchiveRelatedItemsBatchSize__c,
+                                GenericArchiveToRDSBatchSize: records[0].arcsol__GenericArchiveToRDSBatchSize__c,
+                                ImplementationName: records[0].arcsol__ImplementationName__c,
+                                MarkChildEligibityForDeleteBatchSize: records[0].arcsol__MarkChildEligibityForDeleteBatchSize__c,
+                                MarkParentEligibityForDeleteBatchSize: records[0].arcsol__MarkParentEligibityForDeleteBatchSize__c,
+                                MarkRecordsEligibleForDeleteBatchSize: records[0].arcsol__MarkRecordsEligibleForDeleteBatchSize__c,
+                                MarkRelatedItemsCountOnParentSize: records[0].arcsol__MarkRelatedItemsCountOnParentSize__c,
+                                ParentBatchSizeforAttachments: records[0].arcsol__Parent_Batch_Size_for_Attachments__c,
+                                ParentBatchSizeforNotes: records[0].arcsol__Parent_Batch_Size_for_Notes__c,
+                                VisibilityExportToCSV: records[0].arcsol__VisibilityExportToCSV__c,
+                            }, {
+                                where: {
+                                    id: archivalSystemConfig.id
+                                }
+                            }).then(function () {
+                                return res.json({
+                                    success: true,
+                                    data: {
+                                        message: "sync done"
+                                    }
+
+                                });
+                            });
+                        return saveArchivalDetail(records, req, res);
+                    }
+                    
+                });
+            }
+        });
 });
-
-
 
 //ARCHIVAL SOBJECT
 
@@ -413,6 +522,7 @@ archivalRouter.post('/changeactive', function (req, res) {
                 id: sObjectLayout.id
             }
         }).then(function () {
+            global.config.archivalConfig.refreshConfig();
             return res.json({
                 success: true
             });

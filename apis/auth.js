@@ -253,8 +253,10 @@ authRouter.post('/states', function(req, res){
                         states.push({
                             dynamic: true,
                             name: 'client.archival',
-                            controller: 'ClientArchivalController',
-                            templateUrl: viewPrefix + 'views/client/archival.html',
+                            //controller: 'ClientArchivalController', ClientArchivalsController
+                            controller: 'ClientArchivalsController',
+                            //templateUrl: viewPrefix + 'views/client/archival.html',
+                            templateUrl: viewPrefix + 'views/client/index.html',
                             title: global.config.archivalConfig.title,
                             params:{
                                 icon: global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'icon'],
