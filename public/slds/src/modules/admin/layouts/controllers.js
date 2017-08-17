@@ -301,6 +301,61 @@ admin.controller('AdminLayoutsEditController',[
         $scope.returnToList = function(){
             $state.go('admin.layouts.list');  
         };
+        $scope.removeFieldsStoreAndReorder = function (section, items, item, index) {
+            var subRemoveAndReorder = function (items, item, index) {
+                item.deleted = true;
+                if (item.id === undefined || item.type == "Layout-Section-Field" || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field") {
+                    items.splice(index, 1);
+                }
+
+                var itemIndex = 0;
+                angular.forEach(items, function (i, _index) {
+                    if (!i.deleted) {
+                        i.order = itemIndex;
+                        itemIndex++;
+                    }
+                });
+
+                if (item.columns !== undefined && angular.isArray(item.columns)) {
+                    angular.forEach(item.columns, function (fields) {
+                        angular.forEach(fields, function (field, fieldIndex) {
+                            field.deleted = true;
+                        });
+                    });
+                }
+            }
+            if (item.fromfield || item.tofield) {
+                $dialog.confirm({
+                    title: 'Want to remove field?',
+                    yes: 'Yes', no: 'No',
+                    message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
+                    class: 'destructive',
+                    headerClass: 'error'
+                }, function (confirm) {
+                    if (confirm) {
+                        var toFromPair = [{ item: item, index: index }];
+                        angular.forEach(items, function (i, _index) {
+                            if (i.SObjectField.name === item.SObjectField.name && index != _index) {
+                                if (index < _index) {
+                                    toFromPair.push({ item: i, index: _index - 1 });
+                                }
+                                else {
+                                    toFromPair.push({ item: i, index: _index });
+                                }
+                            }
+                        });
+                        $scope.removeFieldsStore(section, toFromPair[0].item);
+                        $scope.removeFieldsStore(section, toFromPair[1].item);
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
+                    }
+                });
+            }
+            else {
+                $scope.removeFieldsStore(section, item);
+                subRemoveAndReorder(items, item, index);
+            }
+        }
         $scope.removeFieldsStore=function(section,item){
             if(section.deletedFields==undefined){
                 section.deletedFields=[];
@@ -448,6 +503,8 @@ admin.controller('AdminLayoutsEditListController',[
                         if(response.success){
                             $scope.searchCriteriaFields = [];
                             $scope.searchResultFields = [];
+                            $scope.searchCriteriaDeletedFields = [];
+                            $scope.searchResultDeletedFields = [];
                             angular.forEach(response.data.sObjectLayoutFields,function(field){
                                 if(field.type === 'Search-Criteria-Field'){
                                     $scope.searchCriteriaFields.push(field);
@@ -475,6 +532,61 @@ admin.controller('AdminLayoutsEditListController',[
                 actionButton.criteria = criteria;
             });
         };
+        $scope.removeFieldsAndStoreAndReorder = function (type, items, item, index) {
+            var subRemoveAndReorder = function (items, item, index) {
+                item.deleted = true;
+                if (item.id === undefined || item.type == "Layout-Section-Field" || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field") {
+                    items.splice(index, 1);
+                }
+
+                var itemIndex = 0;
+                angular.forEach(items, function (i, _index) {
+                    if (!i.deleted) {
+                        i.order = itemIndex;
+                        itemIndex++;
+                    }
+                });
+
+                if (item.columns !== undefined && angular.isArray(item.columns)) {
+                    angular.forEach(item.columns, function (fields) {
+                        angular.forEach(fields, function (field, fieldIndex) {
+                            field.deleted = true;
+                        });
+                    });
+                }
+            }
+            if (item.fromfield || item.tofield) {
+                $dialog.confirm({
+                    title: 'Want to remove field?',
+                    yes: 'Yes', no: 'No',
+                    message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
+                    class: 'destructive',
+                    headerClass: 'error'
+                }, function (confirm) {
+                    if (confirm) {
+                        var toFromPair = [{ item: item, index: index }];
+                        angular.forEach(items, function (i, _index) {
+                            if (i.SObjectField.name === item.SObjectField.name && index != _index) {
+                                if (index < _index) {
+                                    toFromPair.push({ item: i, index: _index - 1 });
+                                }
+                                else {
+                                    toFromPair.push({ item: i, index: _index });
+                                }
+                            }
+                        });
+                        $scope.removeFieldsAndStore(type, toFromPair[0].item);
+                        $scope.removeFieldsAndStore(type, toFromPair[1].item);
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
+                    }
+                });
+            }
+            else {
+                $scope.removeFieldsAndStore(type, item);
+                subRemoveAndReorder(items, item, index);
+            }
+        }
         $scope.removeFieldsAndStore = function (type, item) {
             if (type == "CriteriaField") {
                 if ($scope.searchCriteriaDeletedFields == undefined) {
