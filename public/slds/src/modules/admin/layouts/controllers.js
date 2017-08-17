@@ -822,33 +822,75 @@ admin.controller('AdminLayoutsEditEditController',[
                     });
             }
         };
+        $scope.isValidRelatedLists = function () {
+            var titleTooLong = false;
+            angular.forEach($scope.relatedLists, function (relatedList) {
+                if (!relatedList.deleted) {
+                    if (relatedList.title.length > 255) {
+                        titleTooLong = true;
+                    }
+                }
+                else {
+                    if (relatedList.title.length > 255) {
+                        relatedList.title = "Deleted Related List";
+                    }
+                }
+            });
+            if (titleTooLong) {
+                $dialog.alert('Related List Title is too long. No more than 255 characters allowed.');
+                return false;
+            }
+            else {
+                return true;
+            }
+        };
         $scope.saveLayoutRelatedLists = function(){
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 if($scope.relatedLists !== undefined && $scope.relatedLists.length > 0){
-                    $scope.blockUI.editEditLayout.start('Saving layout related lists...');
-                    layoutService.saveLayoutRelatedLists({ 
-                        relatedLists: $scope.relatedLists,
-                        type: $scope.layout.type,
-                        id: $scope.layout.id
-                    })
-                    .success(function(response){
-                        $scope.blockUI.editEditLayout.stop();
-                        if(response.success === true){
-                            $scope.loadEditLayoutContents();
-                        }else{
-                            $dialog.alert('Error occured while saving layout related lists.','Error','pficon pficon-error-circle-o');
-                        }
-                    })
-                    .error(function(response){
-                        $scope.blockUI.editEditLayout.stop();
-                        $dialog.alert('Server error occured while saving layout related lists.','Error','pficon pficon-error-circle-o');
-                    });
+                    if ($scope.isValidRelatedLists()) {
+                        $scope.blockUI.editEditLayout.start('Saving layout related lists...');
+                        layoutService.saveLayoutRelatedLists({
+                            relatedLists: $scope.relatedLists,
+                            type: $scope.layout.type,
+                            id: $scope.layout.id
+                        })
+                            .success(function(response){
+                                $scope.blockUI.editEditLayout.stop();
+                                if(response.success === true){
+                                    $scope.loadEditLayoutContents();
+                                }else{
+                                    $dialog.alert('Error occured while saving layout related lists.','Error','pficon pficon-error-circle-o');
+                                }
+                            })
+                            .error(function(response){
+                                $scope.blockUI.editEditLayout.stop();
+                                $dialog.alert('Server error occured while saving layout related lists.','Error','pficon pficon-error-circle-o');
+                            });
+                    }
                 }else{
                     $scope.loadEditLayoutContents();
                 }
             }
         };
         $scope.isValidLayout = function(){
+            var titleTooLong = false;
+            angular.forEach($scope.layoutSections, function (section) {
+                if (!section.deleted) {
+                    if (section.title.length > 255) {
+                        titleTooLong = true;
+                    }
+                }
+                else {
+                    if (section.title.length > 255) {
+                        section.title = "Deleted Section";
+                    }
+                }
+            });
+            if (titleTooLong) {
+                $dialog.alert('Section Title is too long. No more than 255 characters allowed.');
+                return false;
+            }
+
             var errorCount = 0;
             angular.forEach($scope.layoutSections, function(section){
                 if(!section.isComponent){
