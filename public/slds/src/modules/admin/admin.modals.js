@@ -373,9 +373,6 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     if(field.SObjectField.type !== 'reference' && field.SObjectField.name === fieldToAdd.name && !duplicate && !field.deleted){
                         duplicate = true;
                     }
-                    if(field.SObjectField.type === 'reference' && fieldToAdd.id === field.SObjectField.id && ((fieldToAdd.reference === undefined && field.reference === 'Name') || (fieldToAdd.reference !== undefined && field.reference === fieldToAdd.reference)) && !duplicate && !field.deleted){
-                        duplicate = true;
-                    }
                 });
                 if(!duplicate){
                     $scope.relatedListFields.push({
@@ -462,6 +459,24 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.save = function(){
             if($scope.forMobile === true && $scope.relatedListFields.length === 0){
                 $dialog.alert('Please add fields.\nNo fields added.','Warning','pficon pficon-warning-triangle-o');
+                return;
+            }
+            var duplicate = false;
+            angular.forEach($scope.relatedListFields, function (field, index) {
+                if (field.SObjectField.type === 'reference') {
+                    angular.forEach($scope.relatedListFields, function (_field, _index) {
+                        if (_field.SObjectField.type === 'reference') {
+                            if (!duplicate) {
+                                if (_index !== index && _field.SObjectField.id === field.SObjectField.id && _field.reference === field.reference) {
+                                    duplicate = true;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            if (duplicate === true) {
+                $dialog.alert('Duplicate field found in reference.', 'Error', 'pficon pficon-error-circle-o');
                 return;
             }
             $scope.relatedList.title = ($scope.relatedList.title) ? $scope.relatedList.title : $scope.relatedListTitle;
