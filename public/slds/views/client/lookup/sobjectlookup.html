@@ -78,6 +78,17 @@
                     </button>
                 </div>
             </div>
+            <div style="padding-left: 0px; float: left;display: flex;margin-left: 15px">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        <input type="text" class="slds-input" placeholder="Search..." ng-model="sObjectLookupFilter"  ng-keyup="$event.keyCode == 13 ? loadLookupData(1, pageSize) : null" />
+                    </div>
+                </div>
+            </div>
+
             <button class="slds-button slds-button--neutral" ng-click="selectAndClose()" translate>None</button>
             <button class="slds-button slds-button--neutral" ng-click="close()" translate>Close</button>
         </div>
