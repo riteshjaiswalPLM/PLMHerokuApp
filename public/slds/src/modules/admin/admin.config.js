@@ -119,7 +119,8 @@ admin.config(function($stateProvider) {
             templateUrl: "slds/views/admin/usermanagement/users/create.html",
             controller: "AdminUserManagementUsersCreateController",
             params:{
-                userData: null
+                userData: null,
+                userMapping: null
             },
             title: "Create Users"
         })
@@ -127,7 +128,8 @@ admin.config(function($stateProvider) {
             templateUrl: "slds/views/admin/usermanagement/users/edit.html",
             controller: "AdminUserManagementUsersEditController",
             params:{
-                userData: null
+                userData: null,
+                userMapping: null
             },
             title: "Edit Users"
         })

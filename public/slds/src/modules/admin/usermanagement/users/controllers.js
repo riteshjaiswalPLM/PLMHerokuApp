@@ -17,6 +17,19 @@ admin.controller('AdminUserManagementUsersController',['$scope','$rootScope','$s
 admin.controller('AdminUserManagementUsersListController',[
         '$scope','$rootScope','$state','userService','$dialog','blockUI','ModalService',
 function($scope , $rootScope , $state , userService , $dialog , blockUI , ModalService){
+    $scope.getUserMapping = function () {
+        userService.getUserMapping()
+            .success(function (response) {
+                if (response.success) {
+                    $scope.userMapping = response.userMapping;
+                } else {
+                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                }
+            })
+            .error(function (response) {
+                $dialog.alert('Error occured while fetching User Mapping.', 'Error', 'pficon pficon-error-circle-o');
+            });
+    };
     $scope.loadUsers = function(){
         if(!$scope.blockUI.loadUsers.state().blocking){
             $scope.blockUI.loadUsers.start('Loading Users...');
@@ -36,10 +49,10 @@ function($scope , $rootScope , $state , userService , $dialog , blockUI , ModalS
         }
     };
     $scope.createUsers = function(){
-          $state.go('admin.usermanagement.users.create',{});  
+          $state.go('admin.usermanagement.users.create',{userMapping:$scope.userMapping});  
     }
     $scope.editUser = function(user){
-          $state.go('admin.usermanagement.users.edit',{userData:user});  
+          $state.go('admin.usermanagement.users.edit',{userData:user,userMapping:$scope.userMapping});  
     }
     $scope.syncUsers = function(){
         if(!$scope.blockUI.loadUsers.state().blocking){
@@ -67,6 +80,7 @@ function($scope , $rootScope , $state , userService , $dialog , blockUI , ModalS
     $scope.init = function(){
         console.log('AdminUserManagementUsersListController loaded!');
         $scope.initBlockUiBlocks();
+        $scope.getUserMapping();
         $scope.loadUsers();
     };
     $scope.init();
@@ -107,11 +121,11 @@ admin.controller('AdminUserManagementUsersCreateController',[
                                         angular.forEach(section.columns,function(fields, columnIndex){
                                             angular.forEach(fields,function(field,fieldIndex){
                                                 if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true
-                                                    && field.SObjectField.name.indexOf('User_Name__c') !== -1){
+                                                    && field.SObjectField.name == $stateParams.userMapping.UsernameField.name){
                                                     username = field.value;
                                                 }
                                                 if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true
-                                                    && field.SObjectField.name.indexOf('Email__c') !== -1){
+                                                    && field.SObjectField.name == $stateParams.userMapping.EmailField.name){
                                                     emailFieldVal = field.value;
                                                 }
                                             });
@@ -212,11 +226,11 @@ admin.controller('AdminUserManagementUsersEditController',[
                                         angular.forEach(section.columns,function(fields, columnIndex){
                                             angular.forEach(fields,function(field,fieldIndex){
                                                 if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true
-                                                    && field.SObjectField.name.indexOf('User_Name__c') !== -1){
+                                                    && field.SObjectField.name == $stateParams.userMapping.UsernameField.name){
                                                     username = field.value;
                                                 }
                                                 if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true
-                                                    && field.SObjectField.name.indexOf('Email__c') !== -1){
+                                                    && field.SObjectField.name == $stateParams.userMapping.EmailField.name){
                                                     emailFieldVal = field.value;
                                                 }
                                             });

@@ -2,6 +2,21 @@ var express = require('express');
 var userRouter = express.Router();
 var request = require('request');
 
+userRouter.post('/getUserMapping', function (req, res) {
+    sfdc.getUserMapping(null, function (err, UserMapping) {
+        console.info('getUserMapping...........');
+        if (err) {
+            return res.json({ success: false, message: err.message });
+        } else {
+            global.UserMapping = UserMapping;
+            return res.json({
+                success: true,
+                userMapping: global.UserMapping
+            });
+        }
+    });
+});
+
 userRouter.post('/list', function (req, res) {
     var Users = db
         .User

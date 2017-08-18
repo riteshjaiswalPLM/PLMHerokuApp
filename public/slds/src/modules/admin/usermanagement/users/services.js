@@ -2,6 +2,9 @@
 
 admin.factory('userService',['$http',function($http){
     return {
+        getUserMapping: function () {
+            return $http.post('/api/admin/user/getUserMapping');
+        },
         loadUsers: function(body){
             return $http.post('/api/admin/user/list',body);
         },
