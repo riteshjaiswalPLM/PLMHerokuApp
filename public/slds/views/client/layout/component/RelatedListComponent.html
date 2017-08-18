@@ -1,0 +1,57 @@
+<div block-ui="RelatedListComponentBlock{{section.id}}" class="slds-form--stacked slds-grow" style="margin-bottom:3px">
+    <div>
+        <div class="slds-panel__section slds-grid slds-p-around--none " style="max-height:250px;overflow:auto">
+            <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="border-top: 0px">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th style="font-weight: 600" scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.name}" ng-repeat="field in section.Component.ComponentDetails[0].configuration.fields">
+                            {{ field.label | translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="result in searchResult " class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                        <td class="{{ 'td-'+field.SObjectField.type }}" ng-repeat="field in section.Component.ComponentDetails[0].configuration.fields">
+                            <div class="slds-truncate">
+                                {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
+                                === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
+                                | number: field.SObjectField.scale) : (field.SObjectField.type === 'date') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate') : (field.SObjectField.type
+                                === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') : (field.SObjectField.name
+                                == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined) ? sObjectMetaData[result[field.SObjectField.name]]
+                                : result[field.SObjectField.name] }}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-if="searchResult.length === 0">
+                    <tr ng-if="searchResult.length === 0">
+                        <td colspan="{{section.Component.ComponentDetails[0].configuration.fields.length}}" class="slds-blank-slate" style="padding:5px;text-align:center" translate>No Record found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" style="padding-top: 3px;padding-bottom: 3px;">
+            <div style="width: 230px;">
+                <select class="slds-select" data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in [25,50,100,200]" id="pageSize">
+                </select>
+            </div>
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)" ng-click="search(currentPage - 1, pageSize)">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                    </svg>
+                    {{'Previous' | translate}}
+                </button>
+                <button class="slds-button slds-p-horizontal--medium">{{currentPage}}</button>
+                <button class="slds-button slds-button--neutral" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize" ng-click="search(currentPage + 1, pageSize)">
+                    {{'Next' | translate}}
+                    <svg class="slds-button__icon slds-button__icon--right" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
