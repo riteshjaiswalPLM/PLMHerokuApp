@@ -242,6 +242,7 @@ admin.controller('AdminSetupSObjectsManageController',[
         });
         if (sObjectsToSync.length <= 0) {
             $dialog.alert("Please select Salesforce sObjects tobe added");
+            return;
         }
 
         $scope.currentSObjectIndex = 0;

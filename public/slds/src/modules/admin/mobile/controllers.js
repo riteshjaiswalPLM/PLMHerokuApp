@@ -218,6 +218,7 @@ admin.controller('AdminMobileSObjectsManageController',[
         });
         if (sObjectsToSync.length <= 0) {
             $dialog.alert("Please select Local sObjects tobe added");
+            return;
         }
 
         $scope.currentSObjectIndex = 0;
