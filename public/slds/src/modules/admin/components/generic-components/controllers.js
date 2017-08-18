@@ -455,17 +455,21 @@ admin.controller('AdminGenericComponentsEditController',[
                     includeFields: true
                 }
             }, function (sObject) {
-                $scope.component.SObject = undefined;
+                if ($scope.component.catagory === 'LineItemComponent') {
+                    $scope.component.SObject = undefined;
+                }
                 if (sObject !== undefined) {
                     $scope.connectingFieldMap = {};
                     sObject.SObjectFields.forEach(function (field) {
                         if (field.type === 'reference' && field.referenceTo) {
                             field.referenceTo.forEach(function (reference) {
-                                if ($scope.connectingFieldMap[reference] === undefined)
+                                if ($scope.connectingFieldMap[reference] === undefined) {
                                     $scope.connectingFieldMap[reference] = [];
-                                $scope.connectingFieldMap[reference].push(field)
-                                if ($scope.referenceSObjectNames.indexOf(reference) === -1)
+                                }
+                                $scope.connectingFieldMap[reference].push(field);
+                                if ($scope.component.catagory === 'LineItemComponent' && $scope.referenceSObjectNames.indexOf(reference) === -1) {
                                     $scope.referenceSObjectNames.push(reference);
+                                }
                             });
                         }
                     });
@@ -587,6 +591,35 @@ admin.controller('AdminGenericComponentsEditController',[
     		}
             return true;
         };
+        $scope.validateComponentRelatedListBeforeSave = function () {
+            if (!$scope.component.detailSObject) {
+                $dialog.alert('Please select Line Item SObject.', 'Error', 'pficon pficon-error-circle-o');
+                return false;
+            }
+            if (!$scope.component.SObject) {
+                $dialog.alert('Please select SObject.', 'Error', 'pficon pficon-error-circle-o');
+                return false;
+            }
+            var duplicate = false;
+            angular.forEach($scope.component.ComponentDetails[0].configuration.fields, function (field, index) {
+                if (field.SObjectField.type === 'reference') {
+                    angular.forEach($scope.component.ComponentDetails[0].configuration.fields, function (_field, _index) {
+                        if (_field.SObjectField.type === 'reference') {
+                            if (!duplicate) {
+                                if (_index !== index && _field.SObjectField.id === field.SObjectField.id && _field.reference === field.reference) {
+                                    duplicate = true;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            if (duplicate === true) {
+                $dialog.alert('Duplicate field found in reference.', 'Error', 'pficon pficon-error-circle-o');
+                return false;
+            }
+            return true;
+        };
         $scope.saveComponent = function(){
             if(!$scope.blockUI.layoutBlock.state().blocking){
             	if($scope.component.catagory === 'MultiLevelApproval'){
@@ -598,11 +631,16 @@ admin.controller('AdminGenericComponentsEditController',[
             			return;
             		}
             	}
-                if($scope.component.catagory === 'LineItemComponent'){
-            		if(!$scope.validateComponentLineItemBeforeSave()){
-            			return;
-            		}
-            	}
+                if ($scope.component.catagory === 'LineItemComponent') {
+                    if (!$scope.validateComponentLineItemBeforeSave()) {
+                        return;
+                    }
+                }
+                if ($scope.component.catagory === 'RelatedListComponent') {
+                    if (!$scope.validateComponentRelatedListBeforeSave()) {
+                        return;
+                    }
+                }
                 var componentToSave = angular.copy($scope.component);
                 componentToSave.sobjectname = componentToSave.SObject.name;
                 componentToSave.SObjectId = componentToSave.SObject.id;
@@ -620,7 +658,7 @@ admin.controller('AdminGenericComponentsEditController',[
                     }
                 	delete componentToSave.approvalDetailSObject;
                 }
-                if ($scope.component.catagory === 'LineItemComponent') {
+                if ($scope.component.catagory === 'LineItemComponent' || $scope.component.catagory === 'RelatedListComponent') {
                     componentToSave.detailSObjectId = componentToSave.detailSObject.id;
                     componentToSave.ComponentDetails[0].configuration.detailSObjectName = componentToSave.detailSObject.name;
                     delete componentToSave.detailSObject;
@@ -643,6 +681,9 @@ admin.controller('AdminGenericComponentsEditController',[
                                         $scope.newCompnent = {}
                                         $scope.newCompnent.catagory = componentToSave.catagory;
                                         $scope.component = angular.copy($scope.newCompnent);
+                                        if ($scope.component.active == undefined) {
+                                            $scope.component.active = false;
+                                        }
                                     }else{
                                         $state.go('admin.components.generic.list');
                                     }
@@ -667,7 +708,7 @@ admin.controller('AdminGenericComponentsEditController',[
             };
         };
         $scope.init = function(){
-            console.log('AdminComponentsEditController loaded!');
+            console.log('AdminGenericComponentsEditController loaded!');
             $scope.initBlockUiBlocks();
             $scope.allowedExtentions=[]; 
             $scope.allowedExtentionsForPrime=[];

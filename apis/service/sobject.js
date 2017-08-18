@@ -86,8 +86,8 @@ sobjectRouter.post('/search', function(req, res){
         });
         whereString=whereString.substr(0, whereString.length-4);
     }
-    else{
-            whereString = queryObject.whereFields;
+    else if (queryObject.whereFields != undefined && queryObject.whereFields != null && queryObject.whereFields != "") {
+        whereString = queryObject.whereFields;
     }
     if(queryObject.whereClauseString!=undefined && queryObject.whereClauseString!=null && queryObject.whereClauseString!=""){
         if(typeof whereString =='object'){

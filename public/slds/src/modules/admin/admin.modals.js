@@ -141,6 +141,9 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.layout = (data.layout) ? data.layout : {};
         $scope.section = (data.section) ? data.section : {};
         $scope.section.readonly =  $scope.section.readonly || $scope.layout.type === 'Details';
+        if (data.section && data.section.isComponent && data.section.Component.catagory == "RelatedListComponent") {
+            $scope.section.readonly = true;
+        }
         $scope.sectionTitle = $scope.section.title;
         $scope.close = function(){
             $element.modal('hide');

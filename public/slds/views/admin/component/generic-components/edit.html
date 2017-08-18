@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-form-element__group" ng-if="component.catagory == 'LineItemComponent'">
+                <div class="slds-form-element__group" ng-if="component.catagory == 'LineItemComponent' || component.catagory == 'RelatedListComponent'">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
                             <label class="slds-form-element__label" for="detailSObject">Line Item SObject</label>
@@ -244,6 +244,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'RelatedListComponent'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="whereClause">Where Clause</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <textarea ng-model="component.ComponentDetails[0].configuration.whereClause" style="resize: none;" class="slds-textarea" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="slds-form-element__group" ng-if="component.catagory == 'MultiLevelApproval'" ng-init="component.ComponentDetails[0].configuration.allowAddMore = (component.ComponentDetails[0].configuration.allowAddMore  === undefined) ? false : component.ComponentDetails[0].configuration.allowAddMore">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">
@@ -368,7 +378,7 @@
             </fieldset>
         </div>
     </div>
-    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large" ng-if="component.catagory == 'MultiLevelApproval'" ng-init="component.ComponentDetails[0].configuration.fields = component.ComponentDetails[0].configuration.fields ? component.ComponentDetails[0].configuration.fields : []">
+    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large" ng-if="component.catagory == 'MultiLevelApproval' || component.catagory == 'RelatedListComponent'" ng-init="component.ComponentDetails[0].configuration.fields = component.ComponentDetails[0].configuration.fields ? component.ComponentDetails[0].configuration.fields : []">
         <article class="slds-card slds-size--1-of-1 " >
             <div class="slds-card__header slds-grid">
                 <header class="slds-media slds-media--center slds-has-flexi-truncate">
@@ -380,7 +390,8 @@
                         </span>
                     </div>
                     <div class="slds-media__body">
-                        <h2><span class="slds-text-heading--small">Approval fields</span></h2>
+                        <h2><span class="slds-text-heading--small" ng-if="component.catagory == 'MultiLevelApproval'">Approval fields</span></h2>
+                        <h2><span class="slds-text-heading--small" ng-if="component.catagory == 'RelatedListComponent'">Component Fields</span></h2>
                     </div>
                 </header>
             </div>
@@ -403,13 +414,13 @@
                             <th scope="col" >
                                 <div class="slds-truncate" title="Type">Type</div>
                             </th>
-                            <th scope="col" >
+                            <th scope="col" ng-if="component.catagory == 'MultiLevelApproval'">
                                 <div class="slds-truncate" title="Default value">Default value</div>
                             </th>
-                            <th scope="col" >
+                            <th scope="col" ng-if="component.catagory == 'MultiLevelApproval'">
                                 <div class="slds-truncate" title="Read Only">Read Only</div>
                             </th>
-                            <th scope="col" >
+                            <th scope="col" ng-if="component.catagory == 'MultiLevelApproval'">
                                 <div class="slds-truncate" title="Required">Required</div>
                             </th>
                             <th scope="col" style="text-align: center; width: 50px;" >
@@ -440,10 +451,10 @@
                             <td data-label="Type">
                                 <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
                             </td>
-                            <td data-label="Default value">
+                            <td data-label="Default value" ng-if="component.catagory == 'MultiLevelApproval'">
                                 <div field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field.data"></div>
                             </td>
-                            <td data-label="Read Only" ng-init="field.readOnly = field.readOnly ? field.readOnly : false">
+                            <td data-label="Read Only" ng-init="field.readOnly = field.readOnly ? field.readOnly : false" ng-if="component.catagory == 'MultiLevelApproval'">
                                 <div class="slds-form-element__control" style="float: left;">
                                     <slds-switch ng-model="field.readOnly"  show-texts="false" on-text="Yes" off-text="No"/>
                                 </div>
@@ -457,7 +468,7 @@
                                 </div>
                                 <!--<a href pf-tooltip data-placement="left" title="Read Only Criteria" ng-click="openFieldReadOnlyCriteriaModal(field,$index)"><i class="fa fa-cogs"></i></a>-->
                             </td>
-                            <td data-label="Required"  ng-init="field.isRequired = field.isRequired ? field.isRequired : false">
+                            <td data-label="Required"  ng-init="field.isRequired = field.isRequired ? field.isRequired : false" ng-if="component.catagory == 'MultiLevelApproval'">
                                 <div class="slds-form-element__control" style="float: left;">
                                     <slds-switch ng-model="field.isRequired"  show-texts="false" on-text="Yes" off-text="No"/>
                                 </div>
@@ -481,7 +492,7 @@
                                             <span class="slds-assistive-text">Delete</span>
                                         </button>
                                     </div>
-                                    <div class="slds-form-element__control" style="float: left;">
+                                    <div class="slds-form-element__control" style="float: left;" ng-if="component.catagory == 'MultiLevelApproval'">
                                         <button  ng-click="openFieldCriteriaModal(field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
                                             <svg class="slds-button__icon" aria-hidden="true">
                                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#magicwand"></use>
@@ -496,9 +507,19 @@
                 </table>
             </div>
             <div class="slds-card__footer">
-                <form class="slds-form--inline">
+                <form class="slds-form--inline" ng-if="component.catagory == 'MultiLevelApproval'">
                     <div class="slds-form-element" style="float: left;">
                         <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in component.approvalDetailSObject.SObjectFields | orderBy:'label'">
+                            <option value="">-- None --</option>
+                        </select>
+                    </div>
+                    <div class="slds-form-element" style="float: left;">
+                        <button type="button" ng-click="addToComponentFields(fieldToAdd)" class="slds-button slds-button--brand">Add</button>
+                    </div>
+                </form>
+                <form class="slds-form--inline" ng-if="component.catagory == 'RelatedListComponent'">
+                    <div class="slds-form-element" style="float: left;">
+                        <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in component.detailSObject.SObjectFields | orderBy:'label'">
                             <option value="">-- None --</option>
                         </select>
                     </div>

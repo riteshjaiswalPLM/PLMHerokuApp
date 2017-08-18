@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes){
         },
         catagory: {
             type: DataTypes.ENUM,
-            values: ['UploadAttachment','MultiLevelApproval','DashboardMyTask','DashboardChart','LineItemComponent']
+            values: ['UploadAttachment','MultiLevelApproval','DashboardMyTask','DashboardChart','LineItemComponent','RelatedListComponent']
         },
         forMobile: {
             type: DataTypes.BOOLEAN,
