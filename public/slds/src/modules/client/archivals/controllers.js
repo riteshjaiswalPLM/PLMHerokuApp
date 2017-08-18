@@ -28,8 +28,8 @@ client.controller('ClientArchivalsController', [
 ]);
 
 client.controller('ClientArchivalController', [
-    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter','$timeout', '$appCache', 'blockUI', 'clientArchivalService',
-    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $timeout,$appCache, blockUI, clientArchivalService) {
+    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter', '$timeout', '$appCache', 'blockUI', 'clientArchivalService',
+    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $timeout, $appCache, blockUI, clientArchivalService) {
 
         $scope.loadLayout = function (LayoutId) {
             if (!$scope.blockUI.reportPageBlock.state().blocking) {
@@ -128,6 +128,9 @@ client.controller('ClientArchivalController', [
                                     var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
                                     data[field.SObjectField.name] = dataValue;
                                     whereClauseFields[field.SObjectField.name] = dataValue;
+                                }
+                                else if (fieldType && fieldType === "string") {
+                                     whereClauseFields[field.SObjectField.name] = '%'+field.value+'%';
                                 }
                                 else {
                                     data[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join(';') : field.value;
