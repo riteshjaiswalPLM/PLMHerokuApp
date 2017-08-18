@@ -474,6 +474,7 @@ admin.controller('AdminMobileLayoutsEditListController',[
             }
         }
         $scope.removeFieldsAndStore = function (type, item) {
+            item.deleted = true;
             if (type == "CriteriaField") {
                 if ($scope.searchCriteriaDeletedFields == undefined) {
                     $scope.searchCriteriaDeletedFields = [];

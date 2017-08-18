@@ -357,6 +357,7 @@ admin.controller('AdminLayoutsEditController',[
             }
         }
         $scope.removeFieldsStore=function(section,item){
+            item.deleted = true;
             if(section.deletedFields==undefined){
                 section.deletedFields=[];
             }
@@ -588,6 +589,7 @@ admin.controller('AdminLayoutsEditListController',[
             }
         }
         $scope.removeFieldsAndStore = function (type, item) {
+            item.deleted = true;
             if (type == "CriteriaField") {
                 if ($scope.searchCriteriaDeletedFields == undefined) {
                     $scope.searchCriteriaDeletedFields = [];
