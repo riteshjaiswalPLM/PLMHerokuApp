@@ -3,7 +3,7 @@ client.controller('ClientArchivalsController', [
     '$scope', '$rootScope', '$controller', '$state', '$dialog', 'clientArchivalService',
     function ($scope, $rootScope, $controller, $state, $dialog, clientArchivalService) {
 
-        $scope.archivaltabs = function () {
+        $scope.loadArchivaltabs = function () {
             clientArchivalService.archivaltabs()
 
                 .success(function (response) {
@@ -21,7 +21,7 @@ client.controller('ClientArchivalsController', [
 
         $scope.init = function () {
             console.log('ClientArchivalsController loaded!');
-            $scope.archivaltabs();
+            $scope.loadArchivaltabs();
         };
         $scope.init();
     }

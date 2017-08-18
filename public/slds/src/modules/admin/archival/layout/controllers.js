@@ -123,7 +123,6 @@ admin.controller('AdminArchivalLayoutsListController', [
                 if (confirm) {
                     $scope.blockUI.synchronizeLayouts.start('Synchronizing archivalConfigs with Salesforce...');
                     archivalService.syncArchivalConfigs(soobjectList).
-                        console.log("soobjectList", soobjectList);
                     success(function (response) {
                         $scope.blockUI.synchronizeLayouts.stop();
                     }).
