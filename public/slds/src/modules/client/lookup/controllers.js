@@ -9,6 +9,7 @@ client.controller('ClientSObjectLookupController',[
                 $scope.lookupCache = {
                     metadata: undefined,
                     searchResult: undefined,
+                    sObjectLookupFilter: "",
                     currentPage: 1,
                     pageSize: 25,
                     hasMore: false,
@@ -55,6 +56,7 @@ client.controller('ClientSObjectLookupController',[
                         }
                         $scope.currentPage = $scope.lookupCache.currentPage;
                         $scope.pageSize = $scope.lookupCache.pageSize;
+                        $scope.sObjectLookupFilter = $scope.lookupCache.sObjectLookupFilter;
                         if($scope.lookupCache.orderByField){
                             $scope.applyOrderBy($scope.lookupCache.orderByField);
                         }
@@ -146,6 +148,7 @@ client.controller('ClientSObjectLookupController',[
                             $scope.lookupCache.currentPage = $scope.currentPage;
                             $scope.lookupCache.pageSize = pageSize;
                             $scope.lookupCache.hasMore = $scope.hasMore;
+                            $scope.lookupCache.sObjectLookupFilter = $scope.sObjectLookupFilter;
                             $appCache.put($scope.lookupCacheId, $scope.lookupCache);
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
