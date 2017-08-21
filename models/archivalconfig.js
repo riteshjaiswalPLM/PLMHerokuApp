@@ -4,8 +4,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         AWSEC2Url: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.STRING
         },
         AWSS3Bucket: {
             type: DataTypes.STRING
@@ -17,8 +16,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         AWSS3Secret: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.STRING
         },
         AWSS3Service: {
             type: DataTypes.STRING
@@ -31,8 +29,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         EnableSSEncryption: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
+            type: DataTypes.BOOLEAN
         },
     })
     return ArchivalConfig;
