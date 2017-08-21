@@ -154,7 +154,20 @@ dashboardRouter.post('/loadData', function(req, res){
             }
         });
         if(config.whereClause){
-            whereClause = config.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? config.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : config.whereClause
+            if (config.whereClause.match(/{LOGGED_IN_USER\..+}/g)) {
+                whereClause = config.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? config.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : config.whereClause;
+                while (whereClause.match(/{LOGGED_IN_USER\..+}/g)) {
+                    try {
+                        whereClause = whereClause.replace(whereClause.substring(whereClause.indexOf('{LOGGED_IN_USER.'), whereClause.indexOf('}') + 1), JSON.parse(JSON.parse(req.cookies.user).userdata)[whereClause.substring(whereClause.indexOf('{LOGGED_IN_USER.') + 16, whereClause.indexOf('}'))]);
+                    }
+                    catch (err) {
+                        console.log('err', err)
+                    }
+                }
+            }
+            else {
+                whereClause = config.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? config.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : config.whereClause
+            }
         }
         global.sfdc
         .sobject(config.name)
