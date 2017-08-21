@@ -4,7 +4,8 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         AWSEC2Url: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         AWSS3Bucket: {
             type: DataTypes.STRING
