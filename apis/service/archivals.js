@@ -180,7 +180,7 @@ archivalRouter.post('/search', function (req, res) {
         }
         request.post({
             //url: "http://54.88.100.146:8080/AkritivArchiveApp/archive/process/search",
-            url:global.config.archivalConfig.AWSS3Url,
+            url:global.config.archivalConfig.AWSEC2Url,
             headers: headers,
             json: {
                 columns: [],

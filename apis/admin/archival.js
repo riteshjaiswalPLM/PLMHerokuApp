@@ -9,7 +9,9 @@ archivalRouter.post('/sync', function (req, res) {
     // ARCHIVAL CONFIG
     global.sfdc
         .sobject("arcsol__AWS_S3_RDS__c")
-        .select('arcsol__AWSS3Url__c,arcsol__AWSS3Secret__c	')
+        //.select('arcsol__AWSS3Url__c,arcsol__AWSS3Secret__c	')
+        //.select('arcsol__AWSEC2Url__c,arcsol__AWSS3Secret__c	')
+        .select('*')
         .where({ Name: "Heroku_Config" })
         .execute(function (err, records) {
             console.log('daaa', records);
@@ -37,8 +39,16 @@ archivalRouter.post('/sync', function (req, res) {
                     if (archivalConfig === undefined || archivalConfig === null) {
                         global.db.ArchivalConfig
                             .build({
-                                AWSS3Url: records[0].arcsol__AWSS3Url__c,
+                                ArchivalNamespace: records[0].arcsol__ArchivalNamespace__c,
+                                AWSEC2Url: records[0].arcsol__AWSEC2Url__c,
+                                AWSS3Bucket: records[0].arcsol__AWSS3Bucket__c,
+                                AAWSS3Key: records[0].arcsol__AWSS3Key__c,
+                                AAWSS3Region: records[0].arcsol__AWSS3Region__c,
                                 AWSS3Secret: records[0].arcsol__AWSS3Secret__c,
+                                AWSS3Service: records[0].arcsol__AWSS3Service__c,
+                                AWSS3Url: records[0].arcsol__AWSS3Url__c,
+                                BatchSizeConfiguration: records[0].arcsol__BatchSizeConfiguration__c,
+                                EnableSSEncryption: records[0].arcsol__EnableSSEncryption__c,
                             })
                             .save()
                             .then(function (newArchivalConfig) {
@@ -56,8 +66,16 @@ archivalRouter.post('/sync', function (req, res) {
                     else {
                         global.db.ArchivalConfig
                             .update({
-                                AWSS3Url: records[0].arcsol__AWSS3Url__c,
+                                ArchivalNamespace: records[0].arcsol__ArchivalNamespace__c,
+                                AWSEC2Url: records[0].arcsol__AWSEC2Url__c,
+                                AWSS3Bucket: records[0].arcsol__AWSS3Bucket__c,
+                                AAWSS3Key: records[0].arcsol__AWSS3Key__c,
+                                AAWSS3Region: records[0].arcsol__AWSS3Region__c,
                                 AWSS3Secret: records[0].arcsol__AWSS3Secret__c,
+                                AWSS3Service: records[0].arcsol__AWSS3Service__c,
+                                AWSS3Url: records[0].arcsol__AWSS3Url__c,
+                                BatchSizeConfiguration: records[0].arcsol__BatchSizeConfiguration__c,
+                                EnableSSEncryption: records[0].arcsol__EnableSSEncryption__c,
                             }, {
                                 where: {
                                     id: archivalConfig.id
@@ -83,7 +101,7 @@ archivalRouter.post('/sync', function (req, res) {
         .sobject("arcsol__Archival_System_Config__c")
         // .select('arcsol__ArchivalNamespace__c,arcsol__ArchiveFieldHistoryBatchSize__c,arcsol__ArchiveLargeAttachmentBatchSize__c, arcsol__ArchiveSObjectToS3batchSize__c, arcsol__Comma_Separated_List_of_Emails__c, arcsol__DeleteAlreadyArchivedRecordsBatchSize__c, arcsol__Down_for_maintenance__c, arcsol__Enable_Parenthetical_Currency_Conversion__c, arcsol__Enable_Server_Side_Encryption_S3__c, arcsol__Field_History_File_Size__c, arcsol__GenericArchiveAttachmentBatchSize__c, arcsol__GenericArchiveNotesBatchSize__c, arcsol__GenericArchiveRelatedItemsBatchSize__c, arcsol__GenericArchiveToRDSBatchSize__c, arcsol__ImplementationName__c, arcsol__MarkChildEligibityForDeleteBatchSize__c, arcsol__MarkParentEligibityForDeleteBatchSize__c, arcsol__MarkRecordsEligibleForDeleteBatchSize__c, arcsol__MarkRelatedItemsCountOnParentSize__c, arcsol__Parent_Batch_Size_for_Attachments__c, arcsol__Parent_Batch_Size_for_Notes__c, arcsol__VisibilityExportToCSV__c')
         .select('*')
-        .where({SetupOwnerId : global.sfdc.orgId})
+        .where({ SetupOwnerId: global.sfdc.orgId })
         .execute(function (err, records) {
             console.log('data:::', records);
             if (err) {
@@ -185,7 +203,7 @@ archivalRouter.post('/sync', function (req, res) {
                             });
                         return saveArchivalDetail(records, req, res);
                     }
-                    
+
                 });
             }
         });

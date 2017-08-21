@@ -1,46 +1,46 @@
-sObjectFieldListConfig ={};
-sObjectFieldListConfig.FieldListMap={};
-sObjectFieldListConfig.sObjectFieldLabelMapping={};
-sObjectFieldListConfig.refreshConfig = ()=>{
+sObjectFieldListConfig = {};
+sObjectFieldListConfig.FieldListMap = {};
+sObjectFieldListConfig.sObjectFieldLabelMapping = {};
+sObjectFieldListConfig.refreshConfig = () => {
     var layoutListMetaArray = [];
     var sObjectDetails = db.SObjectLayout.findAll({
         attributes: {
-            exclude: ['createdAt','updatedAt']
+            exclude: ['createdAt', 'updatedAt']
         },
-        include:{
+        include: {
             model: db.SObject,
-            attributes:{
+            attributes: {
                 include: ['name']
             }
         },
         where: {
-            type :{
-                $notIn : ['Mobile','Archival']
+            type: {
+                $notIn: ['Mobile', 'Archival']
             },
             // created: true,
             // active: true
         },
         order: ['SObjectId']
-    }).then((layouts)=>{
+    }).then((layouts) => {
         // console.log(layouts);
         var layoutMetaData, relatedListMetaData;
-        async.each(layouts, (layout, callback)=>{
-            sObjectFieldListConfig.FieldListMap[layout.SObject.name+'-'+layout.type] = ['Id'];
-            if(layout.type === 'List'){
+        async.each(layouts, (layout, callback) => {
+            sObjectFieldListConfig.FieldListMap[layout.SObject.name + '-' + layout.type] = ['Id'];
+            if (layout.type === 'List') {
                 layoutMetaData = db.SObjectLayoutField.findAll({
                     include: [{
                         model: db.SObjectField,
                         attributes: {
-                            exclude: ['createdAt','updatedAt']
+                            exclude: ['createdAt', 'updatedAt']
                         }
                     }],
                     attributes: {
-                        exclude: ['createdAt','updatedAt']
+                        exclude: ['createdAt', 'updatedAt']
                     },
                     where: {
                         SObjectLayoutId: layout.id,
                         type: {
-                            $in: ['Search-Criteria-Field','Search-Result-Field']
+                            $in: ['Search-Criteria-Field', 'Search-Result-Field']
                         }
                     },
                     order: [
@@ -49,39 +49,39 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                 });
                 relatedListMetaData = undefined;
             }
-            else if(layout.type === 'Edit' || layout.type === 'Details' || layout.type === 'Create'){
+            else if (layout.type === 'Edit' || layout.type === 'Details' || layout.type === 'Create') {
                 layoutMetaData = db.SObjectLayoutSection.findAll({
                     include: [{
                         model: db.SObjectLayoutField,
                         include: [{
                             model: db.SObjectField,
                             attributes: {
-                                exclude: ['createdAt','updatedAt']
+                                exclude: ['createdAt', 'updatedAt']
                             }
-                        },{
+                        }, {
                             model: db.SObjectField,
                             as: 'ControllerSObjectField',
                             attributes: {
-                                exclude: ['createdAt','updatedAt']
+                                exclude: ['createdAt', 'updatedAt']
                             }
                         }],
                         attributes: {
-                            exclude: ['createdAt','updatedAt']
+                            exclude: ['createdAt', 'updatedAt']
                         }
-                    },{
+                    }, {
                         model: db.Components,
                         include: [{
                             model: db.ComponentDetail,
                             attributes: {
-                                exclude: ['createdAt','updatedAt']
+                                exclude: ['createdAt', 'updatedAt']
                             }
                         }],
                         attributes: {
-                            exclude: ['createdAt','updatedAt']
+                            exclude: ['createdAt', 'updatedAt']
                         }
                     }],
                     attributes: {
-                        exclude: ['createdAt','updatedAt']
+                        exclude: ['createdAt', 'updatedAt']
                     },
                     where: {
                         SObjectLayoutId: layout.id,
@@ -93,32 +93,32 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                     ]
                 });
 
-                if(layout.type !== 'Create'){
+                if (layout.type !== 'Create') {
                     relatedListMetaData = global.db.SObjectLayoutRelatedList.findAll({
                         include: [{
                             model: db.SObjectLayoutField,
                             include: {
                                 model: db.SObjectField,
                                 attributes: {
-                                    exclude: ['createdAt','updatedAt']
+                                    exclude: ['createdAt', 'updatedAt']
                                 }
                             },
                             attributes: {
-                                exclude: ['createdAt','updatedAt']
+                                exclude: ['createdAt', 'updatedAt']
                             }
-                        },{
+                        }, {
                             model: db.SObject,
                             attributes: {
-                                exclude: ['createdAt','updatedAt']
+                                exclude: ['createdAt', 'updatedAt']
                             }
-                        },{
+                        }, {
                             model: db.SObjectField,
                             attributes: {
-                                exclude: ['createdAt','updatedAt']
+                                exclude: ['createdAt', 'updatedAt']
                             }
                         }],
                         attributes: {
-                            exclude: ['createdAt','updatedAt']
+                            exclude: ['createdAt', 'updatedAt']
                         },
                         where: {
                             SObjectLayoutId: layout.id,
@@ -130,31 +130,31 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                         ]
                     });
                 }
-                else{
+                else {
                     relatedListMetaData = undefined;
                 }
             }
-            layoutListMetaArray.push({layout: layout, layoutMetaData: layoutMetaData, relatedListMetaData: relatedListMetaData});
+            layoutListMetaArray.push({ layout: layout, layoutMetaData: layoutMetaData, relatedListMetaData: relatedListMetaData });
 
             callback();
-        },()=>{
+        }, () => {
             // console.log(layoutListMetaArray);
-            async.each(layoutListMetaArray,(layoutListMeta, callback)=>{
-                layoutListMeta.layoutMetaData.then((resultMetaData)=>{
-                    if(layoutListMeta.layout.type !== 'List'){
+            async.each(layoutListMetaArray, (layoutListMeta, callback) => {
+                layoutListMeta.layoutMetaData.then((resultMetaData) => {
+                    if (layoutListMeta.layout.type !== 'List') {
                         var layoutSections = JSON.parse(JSON.stringify(resultMetaData));
-                        layoutSections.forEach(function(section){
-                            if(section.isComponent){
-                                if(section.Component === null && section.ComponentId === null){
-                                    var fileName=section.componentName.toLowerCase().replace(/\s/g,"-");
+                        layoutSections.forEach(function (section) {
+                            if (section.isComponent) {
+                                if (section.Component === null && section.ComponentId === null) {
+                                    var fileName = section.componentName.toLowerCase().replace(/\s/g, "-");
                                     staticcomponentconfig.list.forEach(function (component) {
                                         if (component.name == fileName) {
-                                            JSON.parse(component.config).fields.forEach((field)=>{
-                                                if(field.criteria !== undefined){
-                                                    var fieldList = extractFieldFromCriteria(field.criteria,[]);
-                                                    fieldList.forEach((fieldFromCriteria)=>{
-                                                        if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                            sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                            JSON.parse(component.config).fields.forEach((field) => {
+                                                if (field.criteria !== undefined) {
+                                                    var fieldList = extractFieldFromCriteria(field.criteria, []);
+                                                    fieldList.forEach((fieldFromCriteria) => {
+                                                        if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                            sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                         }
                                                     });
                                                 }
@@ -162,21 +162,21 @@ sObjectFieldListConfig.refreshConfig = ()=>{
                                         }
                                     });
                                 }
-                                else if(section.Component !== null && section.ComponentId !== null){
-                                    if(section.componentName === 'MultiLevelApproval'){
-                                        if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName] === undefined){
+                                else if (section.Component !== null && section.ComponentId !== null) {
+                                    if (section.componentName === 'MultiLevelApproval') {
+                                        if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName] === undefined) {
                                             sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName] = ['Id']
                                         }
-                                        if(section.Component.ComponentDetails[0].configuration.addFinalApproverCriteria !== null){
+                                        if (section.Component.ComponentDetails[0].configuration.addFinalApproverCriteria !== null) {
                                             var fieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.addFinalApproverCriteria, [], layoutListMeta.layout.SObject.name);
-                                            fieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1){
-                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name+'-'+layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
+                                            fieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
+                                                    sObjectFieldListConfig.FieldListMap[layoutListMeta.layout.SObject.name + '-' + layoutListMeta.layout.type].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
                                             var newfieldList = extractFieldFromCriteria(section.Component.ComponentDetails[0].configuration.addFinalApproverCriteria, [], section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName);
-                                            newfieldList.forEach((fieldFromCriteria)=>{
-                                                if(sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1){
+                                            newfieldList.forEach((fieldFromCriteria) => {
+                                                if (sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].indexOf(fieldFromCriteria.SObjectField.name) === -1) {
                                                     sObjectFieldListConfig.FieldListMap[section.Component.ComponentDetails[0].configuration.approvalDetailSObjectName].push(fieldFromCriteria.SObjectField.name);
                                                 }
                                             });
@@ -419,14 +419,14 @@ global.config.archivalConfig.refreshConfig = () => {
             exclude: ['createdAt', 'updatedAt']
         },
         where: {
-            AWSS3Url: {
+            AWSEC2Url: {
                 $ne: ''
             }
         }
     })
     archivalConfig.then(function (archivalConfig) {
         if (archivalConfig != null && archivalConfig != undefined) {
-            global.config.archivalConfig.AWSS3Url = archivalConfig.AWSS3Url;
+            global.config.archivalConfig.AWSEC2Url = archivalConfig.AWSEC2Url;
             global.config.archivalConfig.AWSS3Secret = archivalConfig.AWSS3Secret;
             db.SObjectLayout.count({
                 attributes: {
@@ -447,7 +447,7 @@ global.config.archivalConfig.refreshConfig = () => {
         }
         else {
             global.config.archivalConfig.active = false;
-            global.config.archivalConfig.AWSS3Url = "";
+            global.config.archivalConfig.AWSEC2Url = "";
             global.config.archivalConfig.AWSS3Secret = "";
         }
     });
