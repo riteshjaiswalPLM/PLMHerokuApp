@@ -59,7 +59,8 @@ var getMobileConfig = function(callback){
         ,
         include: {
             model: global.db.SObjectField,
-            attributes: ['picklistValues', 'referenceTo', 'id', 'name', 'label', 'custom', 'aggregatable', 'autoNumber', 'byteLength', 'calculated', 'calculatedFormula', 'controllerName', 'createable', 'defaultValue', 'defaultValueFormula', 'dependentPicklist', 'digits', 'encrypted', 'externalId', 'extraTypeInfo', 'filterable', 'highScaleNumber', 'htmlFormatted', 'idLookup', 'inlineHelpText', 'length', 'mask', 'maskType', 'nameField', 'namePointing', 'nillable', 'precision', 'referenceTargetField', 'relationshipName', 'restrictedDelete', 'restrictedPicklist', 'scale', 'sortable', 'type', 'unique', 'updateable', 'SObjectId'],
+            //attributes: ['picklistValues', 'referenceTo', 'id', 'name', 'label', 'custom', 'aggregatable', 'autoNumber', 'byteLength', 'calculated', 'calculatedFormula', 'controllerName', 'createable', 'defaultValue', 'defaultValueFormula', 'dependentPicklist', 'digits', 'encrypted', 'externalId', 'extraTypeInfo', 'filterable', 'highScaleNumber', 'htmlFormatted', 'idLookup', 'inlineHelpText', 'length', 'mask', 'maskType', 'nameField', 'namePointing', 'nillable', 'precision', 'referenceTargetField', 'relationshipName', 'restrictedDelete', 'restrictedPicklist', 'scale', 'sortable', 'type', 'unique', 'updateable', 'SObjectId'],
+            attributes: ['picklistValues', 'referenceTo', 'id', 'name', 'label', 'length', 'sortable', 'type'],
             where: {
                 forMobile: true
             }
