@@ -589,18 +589,20 @@ admin.controller('AdminLayoutsEditListController',[
             }
         }
         $scope.removeFieldsAndStore = function (type, item) {
-            item.deleted = true;
-            if (type == "CriteriaField") {
-                if ($scope.searchCriteriaDeletedFields == undefined) {
-                    $scope.searchCriteriaDeletedFields = [];
+            if (item.id !== undefined) {
+                item.deleted = true;
+                if (type == "CriteriaField") {
+                    if ($scope.searchCriteriaDeletedFields == undefined) {
+                        $scope.searchCriteriaDeletedFields = [];
+                    }
+                    $scope.searchCriteriaDeletedFields.push(item);
                 }
-                $scope.searchCriteriaDeletedFields.push(item);
-            }
-            if (type == "ResultField") {
-                if ($scope.searchResultDeletedFields == undefined) {
-                    $scope.searchResultDeletedFields = [];
+                if (type == "ResultField") {
+                    if ($scope.searchResultDeletedFields == undefined) {
+                        $scope.searchResultDeletedFields = [];
+                    }
+                    $scope.searchResultDeletedFields.push(item);
                 }
-                $scope.searchResultDeletedFields.push(item);
             }
         }
         $scope.saveLayout = function(){
