@@ -26,7 +26,16 @@
             <div class="slds-form--horizontal slds-p-horizontal--x-small">
                 <div class="slds-form-element" ng-repeat="field in fields">
                      <form class="form-horizontal" ng-if="field.rendered != false">
-                        <label class="slds-form-element__label" style="font-weight: 600;float: none;width:30%" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
+                        <label ng-if="!field.SObjectField.inlineHelpText" class="slds-form-element__label slds-p-right--small" style="font-weight: 600;float: none;" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
+                        <label ng-if="field.SObjectField.inlineHelpText" class="slds-form-element__label" style="font-weight: 600;float: none;width:27%;margin-right:.1rem;" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
+                        <div ng-if="field.SObjectField.inlineHelpText" class="tooltip" style="border-radius: 50px; background-color: #0070d2;margin-right: .2rem;">
+                            <div class="slds-popover slds-popover_tooltip slds-nubbin--bottom-left tooltiptext" role="tooltip" style="position: absolute; bottom: 30px; left: 45px;">
+                                <div class="slds-popover__body">{{field.SObjectField.inlineHelpText}}</div>
+                            </div>
+                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" title="Help" style="vertical-align: 0%;height: 10px;fill: white;margin-right: .25rem;margin-left: .2rem;">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#help" style="width: 2px;height: 2px;"></use>
+                            </svg>
+                        </div>
                         <div class="slds-form-element__control ">
                             <div  field-readonly="{{field.readonly}}" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div>
                         </div>
