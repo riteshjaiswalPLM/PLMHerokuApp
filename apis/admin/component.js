@@ -265,19 +265,19 @@ componentRouter.post('/details', function(req, res){
                 }
             }
         },
-        {
-            model: db.SObject,
-            as: 'detailSObject',
-            attributes: {
-                exclude: ['createdAt','updatedAt']
-            },
-            include: {
-                model: db.SObjectField,
-                attributes: {
-                    exclude: ['createdAt','updatedAt']
-                }
-            }
-        },
+        // {
+        //     model: db.SObject,
+        //     as: 'detailSObject',
+        //     attributes: {
+        //         exclude: ['createdAt','updatedAt']
+        //     },
+        //     include: {
+        //         model: db.SObjectField,
+        //         attributes: {
+        //             exclude: ['createdAt','updatedAt']
+        //         }
+        //     }
+        // },
         {
             model: db.ComponentDetail,
             attributes: {
