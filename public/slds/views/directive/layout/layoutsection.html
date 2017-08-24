@@ -29,10 +29,10 @@
                         <label ng-if="!field.SObjectField.inlineHelpText" class="slds-form-element__label slds-p-right--small" style="font-weight: 600;float: none;width:30%" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
                         <label ng-if="field.SObjectField.inlineHelpText" class="slds-form-element__label" style="font-weight: 600;float: none;width:27%;margin-right:.1rem;" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
                         <div ng-if="field.SObjectField.inlineHelpText" class="tooltip" style="border-radius: 50px;">
-                            <div class="slds-popover slds-popover_tooltip slds-nubbin--top-left tooltiptext" role="tooltip" style="position: absolute; top: 25px; left: 42px;">
+                            <div class="slds-popover slds-popover_tooltip slds-nubbin--top-left tooltiptext" role="tooltip" style="position: absolute; top: 28px; left: 42px;">
                                 <div class="slds-popover__body">{{field.SObjectField.inlineHelpText}}</div>
                             </div>
-                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" title="Help" style="vertical-align: 0%;fill: #0070d2;">
+                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" title="Help" style="vertical-align: middle;fill: #0070d2;">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
                             </svg>
                         </div>
