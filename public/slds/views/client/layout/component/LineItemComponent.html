@@ -14,9 +14,9 @@
     }
 </style>
 <div  block-ui = "LineItemComponentBlock{{section.id}}" style="min-height: 22px;"  class="slds-scrollable LineItemComponentBlock"  >
-    <table  ng-if="dataModelList.length>0" class="slds-table slds-table--compaq  slds-table--cell-buffer slds-table--striped" style="width: 100%;">
+    <table class="slds-table slds-table--compaq  slds-table--cell-buffer slds-table--striped" style="width: 100%;">
         <tbody  ng-if="type !=='detail' && !section.readonly">
-            <tr>
+            <tr ng-if="dataModelList.length>0">
                 <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in invoiceData.fields" ng-hide="field.hidden">
                     <div >{{ field.label | translate }}</div>
                 </td>
@@ -39,7 +39,12 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr ng-if="dataModelList.length==0">
+                <td colspan="{{ invoiceData.fields.length + 1 }}" style="text-align: center;border-top: 0px;">
+                            <strong>{{'No result found' | translate}}.</strong>
+                </td>
+            </tr>
+            <tr ng-if="dataModelList.length>0">
                 <td colspan="{{ invoiceData.fields.length + 1 }}" style="text-align: center;border-top: 0px;">
                     <button class="slds-button slds-button--brand" type="button" ng-click="addItems()" ng-if="section.componentConfig.addmore==true">
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
@@ -61,9 +66,31 @@
                     </button>
                 </td>
             </tr>
+            <tr ng-if="dataModelList.length==0 && section.componentConfig.addmore==true">
+                <td colspan="{{ invoiceData.fields.length + 1 }}" style="text-align: center;border-top: 0px;">
+                    <button class="slds-button slds-button--brand" type="button" ng-click="addItems()" >
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"/>
+                        </svg>
+                        {{'Add more' | translate}}
+                    </button>
+                    <button class="slds-button slds-button--brand" type="button" ng-click="save()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"/>
+                        </svg>
+                        {{'Save' | translate}}
+                    </button>
+                    <button class="slds-button slds-button--neutral " type="button" ng-click="init()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"/>
+                        </svg>
+                        {{'Reload' | translate }}
+                    </button>
+                </td>
+            </tr>
         </tbody>
         <tbody ng-if="type ==='detail' || section.readonly" >
-            <tr>
+            <tr ng-if="dataModelList.length>0">
                 <td style="font-weight: 700;border-top: 0px" translate ng-repeat="field in invoiceData.fields" ng-hide="field.hidden">
                    <div >{{ field.label | translate }}</div>
                 </td>
@@ -75,9 +102,13 @@
                     <!--{{ (field.SObjectField.relationshipName !== null) ? dataModel[field.SObjectField.relationshipName].Name : dataModel[field.SObjectField.name]}}-->
                 </td>
             </tr>
+             <tr ng-if="dataModelList.length==0">
+                <td colspan="{{ invoiceData.fields.length + 1 }}" style="text-align: center;border-top: 0px;">
+                            <strong>{{'No result found' | translate}}.</strong>
+                
+                </td>
+            </tr>
          </tbody>
     </table>
-    <div class="slds-grid  slds-grid--align-center "  ng-if="dataModelList.length==0" >
-            <strong>{{'No result found' | translate}}.</strong>
-    </div>  
+ 
 </div>
