@@ -322,7 +322,7 @@ sobjectRouter.post('/delete', function(req, res){
 sobjectRouter.post('/editSObjectConfig', function (req, res) {
     var sObject = req.body;
     global.db.SObject.update({
-        config: sObject.config ? sObject.config : undefined
+        config: sObject.config ? JSON.parse(sObject.config) : null
     }, {
             where: {
                 id: sObject.id

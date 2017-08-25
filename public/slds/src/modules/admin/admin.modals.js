@@ -693,6 +693,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
     '$scope', '$rootScope', '$element', '$dialog', 'data', 'close', 'sobjectService',
     function ($scope, $rootScope, $element, $dialog, data, close, sobjectService) {
         $scope.sObject = (data.sObject) ? data.sObject : {};
+        $scope.sObject.config = ($scope.sObject.config) ? JSON.stringify($scope.sObject.config) : null;
         $scope.title = (data.title) ? data.title : data.sObject.label + ' Config';
 
         $scope.close = function () {
