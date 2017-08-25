@@ -39,9 +39,20 @@
                         style="margin-top: 0.5rem !important;"
                         ng-repeat="field in searchCriteriaFields" 
                     ng-init="field.SObjectField.type= (field.oldType ?field.oldType : field.SObjectField.type) ;field.oldType=field.SObjectField.type;field.SObjectField.type= (field.SObjectField.type === 'picklist' ? 'multipicklist' : field.SObjectField.type)" >
-                        <label class="slds-form-element__label slds-p-right--small"  for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none;" translate>
+                        <label ng-if="!field.SObjectField.inlineHelpText" class="slds-form-element__label slds-p-right--small" for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none;" translate>
                             {{ field.label }}
                         </label>
+                        <label ng-if="field.SObjectField.inlineHelpText" class="slds-form-element__label" for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none; width: 29%;" translate>
+                            {{ field.label }}
+                        </label>
+                        <div ng-if="field.SObjectField.inlineHelpText" class="tooltip" style="border-radius: 50px;">
+                            <div class="slds-popover slds-popover_tooltip slds-nubbin--top-left tooltiptext" role="tooltip" style="border:solid; position: absolute; top: 28px; left: 40px;">
+                                <div class="slds-popover__body">{{field.SObjectField.inlineHelpText}}</div>
+                            </div>
+                            <svg class="slds-button__icon " aria-hidden="true" title="Help" style="vertical-align: middle;fill: #0070d2;">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
+                            </svg>
+                        </div>
                         <div class="slds-form-element__control">
                             <div class="col-sm-7" sobject-layout-field field="field" criteria="'true'" index="$index"></div>
                         </div>

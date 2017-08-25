@@ -2,9 +2,9 @@ if(!global.hasOwnProperty('config')){
     global.config = {
         constant: require('./constant'),
         db: {
-            dbname:     'lightning_product_qa',
+            dbname:     'esm-product-node',
             username:   'postgres',
-            password:   'admin@123'
+            password:   'Sonam@7804'
         },
         sfdc: {
             username: 'mekyush.jariwala@esmdev.com',
@@ -45,7 +45,7 @@ if(!global.hasOwnProperty('config')){
             tabICON: 'fa fa-archive',
             sldsicon: 'summary',
             sldstabICON: 'summary',
-            active: false,
+            active: true,
             showRefreshResult: true
         }
     };
