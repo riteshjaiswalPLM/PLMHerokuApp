@@ -15,8 +15,8 @@ admin.controller('AdminSetupSObjectsController',['$scope','$rootScope','$state',
 }]);
 
 admin.controller('AdminSetupSObjectsListController',[
-            '$scope','$state','sobjectService','blockUI','$dialog',
-    function($scope , $state , sobjectService , blockUI , $dialog){
+            '$scope','$state','sobjectService','blockUI','$dialog','$adminModals',
+    function($scope , $state , sobjectService , blockUI , $dialog , $adminModals){
     
     $scope.loadSObjects = function(){
         if(!$scope.blockUI.loadSObjects.state().blocking){
@@ -65,7 +65,15 @@ admin.controller('AdminSetupSObjectsListController',[
     $scope.viewSObject = function(sObject){
         $state.go('admin.setup.sobjects.details',{ sObject: sObject });
     }
-    
+
+    $scope.editSObject = function (sObject) {
+        $adminModals.sObjectConfigProperties({
+            sObject: angular.copy(sObject)
+        }, function () {
+            $scope.loadSObjects();
+        });
+    }
+
     $scope.manage = function(){
         $state.go('admin.setup.sobjects.manage');
     }

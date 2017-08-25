@@ -63,6 +63,20 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                 });
             });
         },
+        sObjectConfigProperties: function (data, callback) {
+            ModalService.showModal({
+                templateUrl: 'slds/views/admin/setup/sobject/edit.html',
+                controller: 'AdminSetupSObjectsEditController',
+                inputs: {
+                    data: data
+                }
+            }).then(function (modal) {
+                modal.element.modal({ backdrop: 'static', keyboard: false });
+                modal.close.then(function (field) {
+                    callback && callback(field);
+                });
+            });
+        },
         criteriaModal: function(data, callback){
             ModalService.showModal({
                 templateUrl: 'slds/views/admin/admin-modals/criteriamodal.html',
@@ -672,6 +686,44 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
             $scope.stateCache = $appCache.get("layoutFieldPropertiesUserObjName");
             $scope.userMasterObjName="";
             $scope.userData();
+        };
+        $scope.init();
+    }
+]).controller('AdminSetupSObjectsEditController', [
+    '$scope', '$rootScope', '$element', '$dialog', 'data', 'close', 'sobjectService',
+    function ($scope, $rootScope, $element, $dialog, data, close, sobjectService) {
+        $scope.sObject = (data.sObject) ? data.sObject : {};
+        $scope.title = (data.title) ? data.title : data.sObject.label + ' Config';
+
+        $scope.close = function () {
+            $element.modal('hide');
+        };
+        $scope.save = function () {
+            if ($scope.sObject.config != undefined && $scope.sObject.config != "") {
+                try {
+                    JSON.parse($scope.sObject.config);
+                }
+                catch (e) {
+                    $dialog.alert("Invalid JSON format");
+                    return;
+                }
+            }
+            sobjectService.editSObjectConfig($scope.sObject)
+                .success(function (response) {
+                    if (response.success) {
+                        $element.modal('hide');
+                        close(500);
+                    } else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function (response) {
+                    $dialog.alert('Error occured while updating sObject.', 'Error', 'pficon pficon-error-circle-o');
+                });
+        };
+
+        $scope.init = function () {
+            console.log('AdminSetupSObjectsEditController loaded!');
         };
         $scope.init();
     }

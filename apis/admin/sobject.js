@@ -319,6 +319,21 @@ sobjectRouter.post('/delete', function(req, res){
     });
 });
 
+sobjectRouter.post('/editSObjectConfig', function (req, res) {
+    var sObject = req.body;
+    global.db.SObject.update({
+        config: sObject.config ? sObject.config : undefined
+    }, {
+            where: {
+                id: sObject.id
+            }
+        }).then(function () {
+            return res.json({
+                success: true
+            });
+        });
+});
+
 sobjectRouter.post('/updateForMobile', function(req, res){
     var sObject = req.body;
     global.db.SObject.update({

@@ -1,0 +1,33 @@
+<div role="dialog" tabindex="-1" aria-labelledby="adminSObjectsModalLabel" data-backdrop="static" class="slds-modal in">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading--medium" translate>{{ title }}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-form--horizontal" >
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="sObjectConfig">Config</label>
+                    <div class="slds-form-element__control">
+                        <textarea ng-model="sObject.config" class="slds-input" style="resize: none;" rows="3">{{ sObject.config }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop in"></div>

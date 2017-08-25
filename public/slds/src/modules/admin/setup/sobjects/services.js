@@ -13,6 +13,11 @@ admin.factory('sobjectService',['$http',function($http){
             delete sObjectToDelete.SObjectFields;
             return $http.post('/api/admin/sobject/delete',sObjectToDelete);
         },
+        editSObjectConfig: function (sObject) {
+            var sObjectToUpdate = angular.copy(sObject);
+            delete sObjectToUpdate.SObjectFields;
+            return $http.post('/api/admin/sobject/editSObjectConfig', sObjectToUpdate);
+        },
         loadSObjectFields: function(sObject){
             return $http.post('/api/admin/sobjectfield/list',sObject);
         },
