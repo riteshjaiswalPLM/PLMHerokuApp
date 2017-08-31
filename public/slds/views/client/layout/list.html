@@ -98,7 +98,7 @@
                 <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height: {{ (searchResult.length===0) ? 0 : 400 }}px;height:auto">
                     <thead>
                         <tr class="slds-text-title--caps">
-                            <th scope="col"  style="min-width:100px;max-width:100px" class="th-actions"></th>
+                            <th scope="col"  class="th-actions" style="font-weight: 600;">{{ 'Action' | translate}}</th>
                             <th  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
                                 ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
                                 ng-click="applyOrderBy(field)" 
