@@ -53,15 +53,15 @@ authRouter.post('/getOrgDetail', function (req, res) {
                 message: message.auth.error.INVALID_CREDENTIALS
             });
         } else {
-        	global.sfdc.jsForceConnection.login(global.sfdc.username,global.sfdc.password + global.sfdc.token, function (err, userInfo) {
-                if(err){
-                    console.error(err);
-                    res.status = 500;
-                    return res.json({
-                    	message : err
-                    });
-                }else{
-                    console.log('authenticated accessToken :: ', global.sfdc.jsForceConnection.accessToken);
+        	// global.sfdc.jsForceConnection.login(global.sfdc.username,global.sfdc.password + global.sfdc.token, function (err, userInfo) {
+            //     if(err){
+            //         console.error(err);
+            //         res.status = 500;
+            //         return res.json({
+            //         	message : err
+            //         });
+            //     }else{
+                    console.log('authenticated accessToken :: ', global.sfdc.accessToken);
                     var userData=JSON.parse(user.userdata);
                     return res.json({
                     	data: {
@@ -69,7 +69,7 @@ authRouter.post('/getOrgDetail', function (req, res) {
                     		connection:{
                     			OrgId:global.sfdc.orgId,
                     			ApexServerUrl:global.sfdc.instanceUrl+'/services/Soap/s/'+global.sfdc.version,
-                    			SessionId:global.sfdc.jsForceConnection.accessToken
+                    			SessionId:global.sfdc.accessToken
                     		},
                     		user :{
                     			id:user.id,
@@ -96,8 +96,8 @@ authRouter.post('/getOrgDetail', function (req, res) {
                     		}
                     	}
                     });
-                }
-            });
+            //     }
+            // });
         }
     });
 });
