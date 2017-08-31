@@ -168,7 +168,7 @@ client.controller('OtherChargeComponentController',[
 			return isNaN(invoiceLineItemTotalAmount) ? 0 : invoiceLineItemTotalAmount;
 		};
 		$scope.addItems = function(){	// addItem()
-			if($scope.getTotal() <  $scope.invoiceAmount){
+			if(parseFloat($scope.getTotal().toFixed(3)) <  parseFloat($scope.invoiceAmount.toFixed(3))){
 
 				$scope.newfields={};
 				$scope.invoiceData.componentConfig.fields.forEach(function(field){
@@ -222,7 +222,7 @@ client.controller('OtherChargeComponentController',[
 				}
 				
 			});
-			if(!fieldRequire && ( $scope.getTotal() !=  $scope.invoiceAmount)){
+			if(!fieldRequire && ( parseFloat($scope.getTotal().toFixed(3)) !=  parseFloat($scope.invoiceAmount.toFixed(3)))){
 				errorMessages[$scope.section.title]=$scope.section.title+" total amount must be " + ($scope.invoiceAmount);
 				fieldRequire=true;
 			}

@@ -7,7 +7,7 @@ client.controller('LineItemComponentController',[
 		var currencyFilter = $filter('currencyFilter');
 		var componentBlock = blockUI.instances.get("LineItemComponentBlock"+$scope.section.id);
 		$scope.loadLineItems = function(){
-			componentBlock.start('Loading invoice line items...');
+			componentBlock.start('Loading line items...');
 				$scope.invoiceData = {
 						invoiceId :$scope.ctrl.stateParamData.record.Id,
 						componentConfig :$scope.section.Component,
@@ -68,7 +68,7 @@ client.controller('LineItemComponentController',[
 							$scope.newfields[field.SObjectField.name] = (field.defaultValue == 'true')?true:false;
 						}
 						else{
-							$scope.newfields[field.SObjectField.name]=false;
+							$scope.newfields[field.SObjectField.name]=(field.defaultValue != undefined)?field.defaultValue:false;
 						}
 					}
 					

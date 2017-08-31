@@ -454,7 +454,7 @@ admin.controller('AdminLayoutsEditListController',[
                 return false;
             }
             item.type = 'Search-Criteria-Field';
-            var rangeAllowedDataTypes = ['date','datetime','double','int'];
+            var rangeAllowedDataTypes = ['date','datetime','double','int','currency'];
             if(rangeAllowedDataTypes.indexOf(item.SObjectField.type) > -1){
                 if(!angular.isDefined(item.tofield) && !angular.isDefined(item.fromfield)){
                     $dialog.confirm({
