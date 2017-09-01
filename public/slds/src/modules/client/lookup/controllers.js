@@ -91,9 +91,9 @@ client.controller('ClientSObjectLookupController',[
                         whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
                     }
                 }
-                // else if(field.SObjectField.type && field.SObjectField.type === "picklist"){
-                //     whereClauseString += field.SObjectField.name + " in ('" + $scope.sObjectLookupFilter + "') OR ";
-                // }
+                else if (field.SObjectField.type && field.SObjectField.type === "picklist") {
+                    whereClauseString += field.SObjectField.name + " in ('" + $scope.sObjectLookupFilter + "') OR ";
+                }
                 // else if(field.SObjectField.type && field.SObjectField.type === "date"){
                 //     whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
                 // }
