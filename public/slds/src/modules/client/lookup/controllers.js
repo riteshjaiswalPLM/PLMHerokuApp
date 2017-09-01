@@ -66,21 +66,40 @@ client.controller('ClientSObjectLookupController',[
         };
         $scope.createCriteria = function(whereClauseString,field){
             if($scope.sObjectLookupFilter != null && $scope.sObjectLookupFilter!=""){
-                if(field.SObjectField.type && field.SObjectField.type === "string"){
+                if (field.SObjectField.type && (field.SObjectField.type === "string" || field.SObjectField.type === "email")) {
                     whereClauseString += field.SObjectField.name + " Like '%" + $scope.sObjectLookupFilter + "%' OR ";
                 }
-                else if(field.SObjectField.type && (field.SObjectField.type === "double" || field.SObjectField.type === "currency" || field.SObjectField.type === "boolean")){
-                    whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                else if (field.SObjectField.type && field.SObjectField.type === "int") {
+                    if (!isNaN($scope.sObjectLookupFilter) && !$scope.sObjectLookupFilter.contains(".")) {
+                        whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                    }
                 }
-                else if(field.SObjectField.type && field.SObjectField.type === "picklist"){
-                    whereClauseString += field.SObjectField.name + " in ('" + $scope.sObjectLookupFilter + "') OR ";
+                else if (field.SObjectField.type && (field.SObjectField.type === "double" || field.SObjectField.type === "currency")) {
+                    if (!isNaN($scope.sObjectLookupFilter)) {
+                        if ($scope.sObjectLookupFilter.contains(".")) {
+                            if ($scope.sObjectLookupFilter.substring(0, $scope.sObjectLookupFilter.length - 1).contains(".")) {
+                                whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                            }
+                        }
+                        else {
+                            whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                        }
+                    }
                 }
-                else if(field.SObjectField.type && field.SObjectField.type === "date"){
-                    whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                else if (field.SObjectField.type && field.SObjectField.type === "boolean") {
+                    if ($scope.sObjectLookupFilter.toLowerCase() == "true" || $scope.sObjectLookupFilter.toLowerCase() == "false") {
+                        whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                    }
                 }
-                else if(field.SObjectField.type && field.SObjectField.type === "datetime"){
-                    whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + "T00:00:00Z OR ";
-                }
+                // else if(field.SObjectField.type && field.SObjectField.type === "picklist"){
+                //     whereClauseString += field.SObjectField.name + " in ('" + $scope.sObjectLookupFilter + "') OR ";
+                // }
+                // else if(field.SObjectField.type && field.SObjectField.type === "date"){
+                //     whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + " OR ";
+                // }
+                // else if(field.SObjectField.type && field.SObjectField.type === "datetime"){
+                //     whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + "T00:00:00Z OR ";
+                // }
                 
             }
             if(field.SObjectField.type === 'reference'){
@@ -127,7 +146,7 @@ client.controller('ClientSObjectLookupController',[
                     },
                     selectFields: selectFields,
                     whereFields: {},
-                     whereClauseString:whereClauseString,
+                    whereClauseString:whereClauseString,
                     limit: pageSize,
                     page: page 
                 };
