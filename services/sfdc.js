@@ -47,9 +47,7 @@ if(!global.hasOwnProperty('sfdc')){
        conn.on('refresh', function(accessToken, result) {
             console.log('on refresh :: ', accessToken);
             global.sfdc.accessToken = accessToken;
-            syncSessionIdWithMiddleware();
         });
-         syncSessionIdWithMiddleware();
         console.info(">>> NEW CONNECTION ESTABLISHED ---------------------------- >>>");
         console.info(">>> accessToken   : " + global.sfdc.accessToken);
         console.info(">>> instanceUrl   : " + global.sfdc.instanceUrl);
@@ -533,45 +531,7 @@ if(!global.hasOwnProperty('sfdc')){
             }
         });
     }
-    var syncSessionIdWithMiddleware = function(){
-        var baseURL = process.env.MOBILE_AUTH_INSTANCE_URL || 'https://esm-mob-auth-v3.herokuapp.com';
-        var instanceurl=process.env.INSTANCE_URL || "https://192.168.130.113:3000"
-        var UserMapping = db.UserMapping.findAll({
-            attributes: {
-                exclude: ['createdAt','updatedAt']
-            },
-            order: [
-                ['id']
-            ]
-        });
-        UserMapping.then(function(userMapping){
-            if(userMapping && userMapping.length > 0){
-                if(userMapping[0].isMobileActive === true){
-                    request({
-                        url: baseURL + '/api/mobusers/config/sessionId',
-                        method: 'PATCH',
-                        json: {
-                            sessionId:global.sfdc.accessToken,
-                            instanceUrl: instanceurl.replace(/http:\/\//g,'https:\/\/')
-                        }
-                    }, function(error, response, body){
-                        if(error) {
-                            console.log(error);
-                        } 
-                        else{
-                            if(response.statusCode === 500){
-                                console.log(response.body.errormessage);
-                                console.log(instanceurl)
-                            }
-                            else{
-                                console.log( 'Mobile sessionId updated successfully on middleware.');
-                            }
-                        }
-                    });
-                }
-            }
-        });
-    }
+   
 }
 
 module.exports = global.sfdc;

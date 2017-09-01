@@ -148,4 +148,24 @@ authRouter.get('/getAttachmentFile', function (req, res) {
         });
     }
 });
+
+authRouter.post('/refreshtoken', function (req, res) {
+    global.sfdc.jsForceConnection.login(global.sfdc.username,global.sfdc.password + global.sfdc.token, function (err, userInfo) {
+        if(err){
+            console.error(err);
+            res.status = 500;
+            return res.json({
+                message : err
+            });
+        }else{
+            global.sfdc.accessToken=global.sfdc.jsForceConnection.accessToken;
+            res.json({
+                status:"success",
+                sessionid:global.sfdc.accessToken
+            });
+        }
+    });
+       
+});
+
 module.exports = authRouter;
