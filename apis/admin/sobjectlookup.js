@@ -173,6 +173,7 @@ lookupRouter.post('/save', function(req, res){
                     active: lookup.active,
                     sobjectname: lookup.sobjectname,
                     SObjectId: lookup.SObjectId,
+                    whereClause: lookup.whereClause
                 })
                 .save()
                 .then(function(newLookup){
@@ -185,7 +186,8 @@ lookupRouter.post('/save', function(req, res){
                     title: lookup.title,
                     description: lookup.description,
                     active: lookup.active,
-                    SObjectId: lookup.SObjectId
+                    SObjectId: lookup.SObjectId,
+                    whereClause: lookup.whereClause
                 },{
                     where: {
                         id: lookup.id

@@ -138,6 +138,19 @@ client.controller('ClientSObjectLookupController',[
                 }
                 if(whereClauseString!=""){
                     whereClauseString=whereClauseString.substring(0,whereClauseString.length-4);
+                    if ($scope.metadata.whereClause !== undefined && $scope.metadata.whereClause !== null && $scope.metadata.whereClause !== "") {
+                        whereClauseString = $scope.metadata.whereClause + ' AND (' + whereClauseString + ')';
+                    }
+                }
+                else if ($scope.metadata.whereClause !== undefined && $scope.metadata.whereClause !== null && $scope.metadata.whereClause !== "") {
+                    whereClauseString = $scope.metadata.whereClause;
+                }
+                while (whereClauseString.indexOf('{PARENT') > -1) {
+                    var len = whereClauseString.length;
+                    var start = whereClauseString.indexOf('{PARENT') + 8;
+                    var stop = whereClauseString.indexOf('}', start);
+                    var fieldTobeReplaced = whereClauseString.substring(start, stop);
+                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);
                 }
                 var queryObject = {
                     sObject: {
@@ -218,6 +231,7 @@ client.controller('ClientSObjectLookupController',[
             $scope.currentPage = 0;
             $scope.lookupCacheId = 'sobject.' + data.field.SObjectField.name +'_'+ data.field.SObjectLookupId + '.lookup';
             $scope.lookupCache = $appCache.get($scope.lookupCacheId);
+            $scope.dataModal = data.dataModal;
             console.log('ClientSObjectLookupController loaded!');
             $scope.initBlockUiBlocks();
             $scope.loadLookupMetadata();

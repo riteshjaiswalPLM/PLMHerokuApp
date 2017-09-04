@@ -86,10 +86,14 @@ admin.controller('AdminLookupsEditController',[
                 }else if($scope.lookup.SObject == null || $scope.lookup.SObject.name !== sObject.name){
                     $scope.lookup.SObject = sObject;
                     $scope.lookup.SObjectLayoutFields = [];
+                    $scope.lookup.SObject.allowedSObjectFields = [];
                     $scope.lookup.title = ($scope.lookup.title) ? $scope.lookup.title : sObject.labelPlural;
                     angular.forEach(sObject.SObjectFields, function(field){
                         if(field.name === 'Name'){
                             $scope.addToLookupFields(field);
+                        }
+                        if ($scope.allowedLookupDataTypes.indexOf(field.type) > -1) {
+                            $scope.lookup.SObject.allowedSObjectFields.push(field);
                         }
                     });
                 }
@@ -112,6 +116,12 @@ admin.controller('AdminLookupsEditController',[
                         if(response.success === true){
                             $scope.lookup = response.data.sObjectLookup;
                             $scope.refSObjects = response.data.refSObjects;
+                            $scope.lookup.SObject.allowedSObjectFields = [];
+                            angular.forEach($scope.lookup.SObject.SObjectFields, function (field) {
+                                if ($scope.allowedLookupDataTypes.indexOf(field.type) > -1) {
+                                    $scope.lookup.SObject.allowedSObjectFields.push(field);
+                                }
+                            });
                         }else{
                             $dialog.alert('Error occured while saving layout.','Error','pficon pficon-error-circle-o');
                         }
@@ -191,6 +201,7 @@ admin.controller('AdminLookupsEditController',[
             $scope.initBlockUiBlocks();
             $scope.lookup = ($stateParams.lookup) ? $stateParams.lookup : angular.copy($scope.newLookup);
             $scope.stateAction = ($stateParams.lookup) ? 'Edit' : 'Create';
+            $scope.allowedLookupDataTypes = ['string', 'email', 'int', 'double', 'currency', 'boolean', 'picklist'];
             $scope.loadLookupDetails();
         };
         $scope.init();

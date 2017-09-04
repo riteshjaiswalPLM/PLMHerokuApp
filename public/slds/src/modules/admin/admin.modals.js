@@ -182,8 +182,8 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.init();
     }
 ]).controller('LayoutComponentPropertiesModalController',[
-            '$scope','$rootScope','$element','$dialog','$timeout','blockUI','data','close','sobjectService',
-    function($scope , $rootScope , $element , $dialog , $timeout , blockUI , data , close , sobjectService){
+            '$scope','$rootScope','$element','$dialog','$timeout','blockUI','data','close','$adminLookups',
+    function($scope , $rootScope , $element , $dialog , $timeout , blockUI , data , close , $adminLookups){
         $scope.title = (data.title) ? data.title : 'Section Properties';
         $scope.section = (data.section) ? data.section : {};
         $scope.section.readonly = $scope.section.readonly;
@@ -224,6 +224,27 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     $dialog.alert('Duplicate field!', 'Warning', 'pficon pficon-warning-triangle-o');
                 }
             }
+        };
+
+        $scope.openLookupsModal = function (field) {
+            $adminLookups.sObjectLookup({
+                criteria: {
+                    where: {
+                        active: true,
+                        default: false,
+                        sobjectname: field.SObjectField.referenceTo[0]
+                    }
+                }
+            }, function (lookup) {
+                if (lookup) {
+                    field.lookup = {
+                        labelValue: lookup.title + ' | ' + lookup.description,
+                        value: lookup.id
+                    };
+                } else {
+                    field.lookup = undefined;
+                }
+            });
         };
 
         $scope.addToComponentAmtFields = function (parentfield, childfield) {

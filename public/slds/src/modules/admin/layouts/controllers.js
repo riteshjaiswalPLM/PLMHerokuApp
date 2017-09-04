@@ -912,6 +912,16 @@ admin.controller('AdminLayoutsEditEditController',[
                             angular.forEach($scope.layoutSections, function (section, index) {
                                 if (section.Component && section.Component.catagory !== undefined && section.Component.catagory !== null && section.Component.catagory == "LineItemComponent") {
                                     section.sectionLevelCriteria = angular.copy(section.criteria);
+                                    if (section.sectionComponentFields !== undefined && section.sectionComponentFields !== null) {
+                                        angular.forEach(section.sectionComponentFields, function (field) {
+                                            if (field.SObjectLookup !== undefined && field.SObjectLookup !== null && field.SObjectField.type === 'reference') {
+                                                field.lookup = {
+                                                    labelValue: field.SObjectLookup.title + ' | ' + field.SObjectLookup.description,
+                                                    value: field.SObjectLookup.id
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             });
                             layoutService.loadLayoutRelatedLists($scope.layout)

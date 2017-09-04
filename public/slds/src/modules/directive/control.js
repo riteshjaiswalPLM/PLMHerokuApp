@@ -146,7 +146,8 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                         controller:'ClientSObjectLookupController',
                         inputs:{
                             data: {
-                                field: angular.copy($scope.field)
+                                field: angular.copy($scope.field),
+                                dataModal: $scope.model
                             }
                         } 
                     }).then(function(modal){

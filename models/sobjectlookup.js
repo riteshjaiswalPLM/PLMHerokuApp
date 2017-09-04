@@ -20,6 +20,12 @@ module.exports = function(sequelize, DataTypes){
             defaultValue: function(){
                 return false;
             }
+        },
+        whereClause: {
+            type: DataTypes.TEXT,
+            defaultValue: function () {
+                return undefined;
+            }
         }
     },{
         classMethods: {

@@ -67,6 +67,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="slds-form-element__group">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-1">
+                                <label class="slds-form-element__label" for="whereClause">Where Clause</label>
+                                <div class="slds-form-element__control slds-grid slds-box--border">
+                                    <textarea ng-model="lookup.whereClause" style="resize: none;" class="slds-textarea" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
             <div class="slds-size--1-of-2 slds-p-around--medium">
@@ -156,7 +166,7 @@
                                 <div class="slds-form-element">
                                     <div class="slds-form-element__control">
                                         <span class="slds-form-element__static">
-                                            <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in lookup.SObject.SObjectFields | filter: { type: '!id'}">
+                                            <select class="slds-select" ng-model="fieldToAdd" ng-options="field as (field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']') for field in lookup.SObject.allowedSObjectFields | filter: { type: '!id'} | orderBy: 'label'">
                                                 <option value="">-- None --</option>
                                             </select>
                                         </span>

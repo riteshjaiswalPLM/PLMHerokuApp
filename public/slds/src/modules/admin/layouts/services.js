@@ -86,7 +86,7 @@ admin.factory('layoutService',['$http',function($http){
                                 // }else{
                                 //     delete field.SObjectLookupId;
                                 // }
-                                field.SObjectLookupId = (field.lookup !== undefined && field.lookup.value !== undefined) ? field.lookup.value : field.SObjectLookupId; 
+                                field.SObjectLookupId = (field.lookup !== undefined && field.lookup.value !== undefined) ? field.lookup.value : field.SObjectLookupId;
                                 delete field.lookup;
                                 if(!field.deleted){
                                     field.order = fieldOrder;
@@ -104,6 +104,7 @@ admin.factory('layoutService',['$http',function($http){
                             if (!field.deleted) {
                                 field.order = fieldOrder;
                                 fieldOrder++;
+                                field.SObjectLookupId = (field.lookup !== undefined && field.lookup.value !== undefined) ? field.lookup.value : undefined;
                             }
                         });
                         fieldOrder = 0;

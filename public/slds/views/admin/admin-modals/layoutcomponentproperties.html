@@ -85,7 +85,10 @@
                                 <th scope="col">
                                     <div class="slds-truncate" title="Default Value">Default Value</div>
                                 </th>
-                                <th scope="col" style="width: 150px;">
+                                <th scope="col">
+                                    <div class="slds-truncate" title=""></div>
+                                </th>
+                                <th scope="col">
                                     <div class="slds-truncate" title="Type">Type</div>
                                 </th>
                                 <th scope="col" style="text-align: center;width: 100px">
@@ -95,10 +98,10 @@
                         </thead>
                         <tbody dnd-list="section.sectionComponentFields" dnd-allowed-types="['sectionListField']">
                             <tr ng-if="section.sectionComponentFields.length === 0">
-                                <td colspan="10" class="slds-blank-slate">No field added.</td>
+                                <td colspan="11" class="slds-blank-slate">No field added.</td>
                             </tr>
                             <tr class="dndPlaceholder" style="display: table-row !important">
-                                <th colspan="10" style="background: #e1d951; text-align: center;">
+                                <th colspan="11" style="background: #e1d951; text-align: center;">
                                     Move here
                                 </th>
                             </tr>
@@ -121,6 +124,22 @@
                                 </td>
                                 <td data-label="Default Value">
                                     <div field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field"></div>
+                                </td>
+                                <td data-label="">
+                                    <div ng-if="field.SObjectField.type === 'reference'" class="slds-form-element__control slds-grid slds-box--border slds-lookup-field">
+                                        <input type="hidden" ng-model="field.lookup.value">
+                                        <div class="slds-input-has-icon slds-grow">
+                                            <input readonly type="text" class="slds-lookup__search-input slds-input--bare" placeholder="Default lookup" ng-model="field.lookup.labelValue" />
+                                        </div>
+                                        <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
+                                            <button id="fieldLookup" ng-click="openLookupsModal(field)" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal custom lookups">
+                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                    <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                                </svg>
+                                                <span class="slds-assistive-text">Open lookup modal custom lookups</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td data-label="Type">
                                     <span class="slds-badge">{{ field.SObjectField.type + ((field.SObjectField.calculated) ? ' | formula' : '') }}</span>
