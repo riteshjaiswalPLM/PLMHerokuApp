@@ -5,7 +5,7 @@ var jsForce = require('jsforce');
 setupRouter.post('/sfdc', function(req, res){
     var Sfdcs = db.Salesforce.findAll({
         attributes: {
-            exclude: ['createdAt','updatedAt']
+            exclude: ['username','password','token','createdAt','updatedAt']
         },
         include: [{
             model: db.TimeZone,
@@ -35,6 +35,81 @@ setupRouter.post('/sfdc', function(req, res){
                     locale: locale.list,
                     timezone: timezone.list
                 }
+            });
+        }
+    });
+});
+
+setupRouter.post('/getUsername', function (req, res) {
+    var Sfdc = db.Salesforce.findOne({
+        attributes: {
+            exclude: ['id', 'password', 'token', 'environment', 'LocaleId', 'TimeZoneId', 'createdAt', 'updatedAt']
+        },
+        where: {
+            id: req.body.userid
+        }
+    });
+
+    Sfdc.then(function (sfdc) {
+        if (sfdc === undefined || sfdc === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading salesforce org configuration.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: sfdc
+            });
+        }
+    });
+});
+
+setupRouter.post('/getPassword', function (req, res) {
+    var Sfdc = db.Salesforce.findOne({
+        attributes: {
+            exclude: ['id', 'username', 'token', 'environment', 'LocaleId', 'TimeZoneId', 'createdAt', 'updatedAt']
+        },
+        where: {
+            id: req.body.userid
+        }
+    });
+
+    Sfdc.then(function (sfdc) {
+        if (sfdc === undefined || sfdc === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading salesforce org configuration.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: sfdc
+            });
+        }
+    });
+});
+
+setupRouter.post('/getToken', function (req, res) {
+    var Sfdc = db.Salesforce.findOne({
+        attributes: {
+            exclude: ['id', 'username', 'password', 'environment', 'LocaleId', 'TimeZoneId', 'createdAt', 'updatedAt']
+        },
+        where: {
+            id: req.body.userid
+        }
+    });
+
+    Sfdc.then(function (sfdc) {
+        if (sfdc === undefined || sfdc === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading salesforce org configuration.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: sfdc
             });
         }
     });

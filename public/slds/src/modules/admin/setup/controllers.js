@@ -78,9 +78,66 @@ function($scope , $rootScope , $state , $dialog , ModalService , setupService , 
             });
         }
     };
+    $scope.getUsername = function (userid) {
+        if (!$scope.blockUI.loadSalesforceConfiguration.state().blocking) {
+            $scope.blockUI.loadSalesforceConfiguration.start('Loading Username...');
+            setupService.getUsername({ userid: userid })
+                .success(function (response) {
+                    if (response.success === true) {
+                        $scope.sfdc.username = response.data.username;
+                    } else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                    $scope.blockUI.loadSalesforceConfiguration.stop();
+                })
+                .error(function (response) {
+                    $dialog.alert('Error occured while loading salesforce org configuration.', 'Error', 'pficon pficon-error-circle-o');
+                    $scope.blockUI.loadSalesforceConfiguration.stop();
+                });
+        }
+    };
+    $scope.getPassword = function (userid) {
+        if (!$scope.blockUI.loadSalesforceConfiguration.state().blocking) {
+            $scope.blockUI.loadSalesforceConfiguration.start('Loading Username...');
+            setupService.getPassword({ userid: userid })
+                .success(function (response) {
+                    if (response.success === true) {
+                        $scope.sfdc.password = response.data.password;
+                    } else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                    $scope.blockUI.loadSalesforceConfiguration.stop();
+                })
+                .error(function (response) {
+                    $dialog.alert('Error occured while loading salesforce org configuration.', 'Error', 'pficon pficon-error-circle-o');
+                    $scope.blockUI.loadSalesforceConfiguration.stop();
+                });
+        }
+    };
+    $scope.getToken = function (userid) {
+        if (!$scope.blockUI.loadSalesforceConfiguration.state().blocking) {
+            $scope.blockUI.loadSalesforceConfiguration.start('Loading Username...');
+            setupService.getToken({ userid: userid })
+                .success(function (response) {
+                    if (response.success === true) {
+                        $scope.sfdc.token = response.data.token;
+                    } else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                    $scope.blockUI.loadSalesforceConfiguration.stop();
+                })
+                .error(function (response) {
+                    $dialog.alert('Error occured while loading salesforce org configuration.', 'Error', 'pficon pficon-error-circle-o');
+                    $scope.blockUI.loadSalesforceConfiguration.stop();
+                });
+        }
+    };
+    $scope.hide = function (key) {
+        $scope.sfdc[key] = undefined;
+    };
     $scope.initBlockUiBlocks = function(){
         $scope.blockUI = {
-            loadSalesforceConfiguration: blockUI.instances.get('loadSalesforceConfiguration') 
+            loadSalesforceConfiguration: blockUI.instances.get('loadSalesforceConfiguration')
         }; 
     };
     $scope.init = function(){

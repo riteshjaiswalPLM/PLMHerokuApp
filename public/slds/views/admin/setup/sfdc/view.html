@@ -1,4 +1,4 @@
-<div class="slds-col slds-size--1-of-1">
+<div class="slds-col slds-size--1-of-1" block-ui="loadSalesforceConfiguration">
     <div class="slds-page-header slds-page-header--object-home">
         <div class="slds-grid">
             <div class="slds-col slds-has-flexi-truncate">
@@ -44,37 +44,43 @@
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Username</label>
                             <div class="slds-form-element__control">
-                                <label class="slds-input">{{ sfdc.username }}</label>
+                                <a ng-if="sfdc.username == undefined" href ng-click="getUsername(sfdc.id)"><span class="fa fa-chevron-circle-left"></span>View</a>
+                                <label ng-if="sfdc.username != undefined" class="slds-form-element__label">{{ sfdc.username }}</label>
+                                <a ng-if="sfdc.username != undefined" href ng-click="hide('username')"><span class="fa fa-chevron-circle-left"></span>Hide</a>
                             </div>
                         </div>
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Password</label>
                             <div class="slds-form-element__control">
-                                <label class="slds-input">{{ sfdc.password }}</label>
+                                <a ng-if="sfdc.password == undefined" href ng-click="getPassword(sfdc.id)"><span class="fa fa-chevron-circle-left"></span>View</a>
+                                <label ng-if="sfdc.password != undefined" class="slds-form-element__label">{{ sfdc.password }}</label>
+                                <a ng-if="sfdc.password != undefined" href ng-click="hide('password')"><span class="fa fa-chevron-circle-left"></span>Hide</a>
                             </div>
                         </div>
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Token</label>
                             <div class="slds-form-element__control">
-                                <label class="slds-input">{{ sfdc.token }}</label>
+                                <a ng-if="sfdc.token == undefined" href ng-click="getToken(sfdc.id)"><span class="fa fa-chevron-circle-left"></span>View</a>
+                                <label ng-if="sfdc.token != undefined" class="slds-form-element__label">{{ sfdc.token }}</label>
+                                <a ng-if="sfdc.token != undefined" href ng-click="hide('token')"><span class="fa fa-chevron-circle-left"></span>Hide</a>
                             </div>
                         </div>
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Environment</label>
                             <div class="slds-form-element__control">
-                                <label class="slds-input">{{ sfdc.environment }}</label>
+                                <label class="slds-form-element__label">{{ sfdc.environment }}</label>
                             </div>
                         </div>
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Time Zone</label>
                             <div class="slds-form-element__control">
-                                <label class="slds-input">{{ sfdc.TimeZone.name }}</label>
+                                <label class="slds-form-element__label">{{ sfdc.TimeZone.name }}</label>
                             </div>
                         </div>
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Locale</label>
                             <div class="slds-form-element__control">
-                                <label class="slds-input">{{ sfdc.Locale.name }}</label>
+                                <label class="slds-form-element__label">{{ sfdc.Locale.name }}</label>
                             </div>
                         </div>
                     </div>
