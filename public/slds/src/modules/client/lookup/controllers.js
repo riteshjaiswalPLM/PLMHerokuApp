@@ -152,6 +152,16 @@ client.controller('ClientSObjectLookupController',[
                     var fieldTobeReplaced = whereClauseString.substring(start, stop);
                     whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);
                 }
+                if (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
+                    var userData = JSON.parse($rootScope.user().userdata);
+                    while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
+                        var len = whereClauseString.length;
+                        var start = whereClauseString.indexOf('{LOGGED_IN_USER') + 16;
+                        var stop = whereClauseString.indexOf('}', start);
+                        var fieldTobeReplaced = whereClauseString.substring(start, stop);
+                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);
+                    }
+                }
                 var queryObject = {
                     sObject: {
                         id: $scope.metadata.SObjectId,

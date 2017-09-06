@@ -463,7 +463,8 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                             controller:'ClientSObjectLookupController',
                             inputs:{
                                 data: {
-                                    field: angular.copy($scope.field)
+                                    field: angular.copy($scope.field),
+                                    dataModal: $scope.parentCtrl.dataModel
                                 }
                             } 
                         }).then(function(modal){
