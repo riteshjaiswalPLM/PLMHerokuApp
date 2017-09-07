@@ -1,5 +1,6 @@
 <div ng-if="field.rendered">
         <input  id="{{ field.SObjectField.name + index}}"
+                type="number"
                 ng-model="model[field.SObjectField.name]"
                 is-currency
                 ng-if="!readonly"
