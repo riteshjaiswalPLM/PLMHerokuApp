@@ -161,6 +161,7 @@ admin.controller('AdminMobileGovernFieldsManageController',[
         });
         if (sObjectFieldsToSync.length <= 0) {
             $dialog.alert("Please select Local sObject Govern fields tobe added");
+            return;
         }
 
         $scope.currentSObjectIndex = 0;

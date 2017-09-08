@@ -496,6 +496,7 @@ admin.controller('AdminMobileSObjectsFieldsManageController',[
         });
         if (sObjectFieldsToSync.length <= 0) {
             $dialog.alert("Please select Local sObject fields tobe added");
+            return;
         }
 
         $scope.currentSObjectFieldIndex = 0;
