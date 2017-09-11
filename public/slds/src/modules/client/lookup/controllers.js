@@ -100,12 +100,11 @@ client.controller('ClientSObjectLookupController',[
                 // else if(field.SObjectField.type && field.SObjectField.type === "datetime"){
                 //     whereClauseString += field.SObjectField.name + " = " + $scope.sObjectLookupFilter + "T00:00:00Z OR ";
                 // }
-                
-            }
-            if(field.SObjectField.type === 'reference'){
-                var referenceField = field.SObjectField.relationshipName + '.' + field.reference; 
-                if(whereClauseString.indexOf(referenceField) === -1){
-                      whereClauseString += referenceField + " Like '%" + $scope.sObjectLookupFilter + "%' OR ";
+                if(field.SObjectField.type === 'reference'){
+                    var referenceField = field.SObjectField.relationshipName + '.' + field.reference;
+                    if(whereClauseString.indexOf(referenceField) === -1){
+                        whereClauseString += referenceField + " Like '%" + $scope.sObjectLookupFilter + "%' OR ";
+                    }
                 }
             }
             return whereClauseString;
@@ -186,11 +185,13 @@ client.controller('ClientSObjectLookupController',[
                             $scope.currentPage = response.data.currentPage;
                             $scope.hasMore = response.data.hasMore;
                             
-                            $scope.lookupCache.searchResult = $scope.searchResult;
-                            $scope.lookupCache.currentPage = $scope.currentPage;
-                            $scope.lookupCache.pageSize = pageSize;
-                            $scope.lookupCache.hasMore = $scope.hasMore;
-                            $scope.lookupCache.sObjectLookupFilter = $scope.sObjectLookupFilter;
+                            if ($scope.sObjectLookupFilter == "") {
+                                $scope.lookupCache.searchResult = $scope.searchResult;
+                                $scope.lookupCache.currentPage = $scope.currentPage;
+                                $scope.lookupCache.pageSize = pageSize;
+                                $scope.lookupCache.hasMore = $scope.hasMore;
+                                $scope.lookupCache.sObjectLookupFilter = $scope.sObjectLookupFilter;
+                            }
                             $appCache.put($scope.lookupCacheId, $scope.lookupCache);
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
