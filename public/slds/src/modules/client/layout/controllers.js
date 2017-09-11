@@ -120,6 +120,74 @@ client.controller('ClientListLayoutController',[
                 $scope.search(1, $scope.pageSize);
             },100);
         };
+
+        $scope.getWhereFieldsForsearch = function (callback) {
+            var whereFields = {};
+            whereFields['$and']=[];
+            var validateFields={};
+            angular.forEach($scope.searchCriteriaFields,function(field,index){
+                if(field.value !== undefined && field.value !== null && field.value !== ''){
+                    var fieldType=field.SObjectField.type;
+                    if(field.tofield || field.fromfield){
+                        var dataObj = {};
+                        if(field.tofield){
+                            if(fieldType === "date" || fieldType === "datetime"){
+                                var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
+                                dataObj[field.SObjectField.name] = {$lt: dataValue, type: field.SObjectField.type};
+                                validateFields[field.SObjectField.name+"_tofield"]=field;
+                            }
+                            else if (fieldType === "double" || fieldType === "currency") {
+                                dataObj[field.SObjectField.name] = { $lt: parseFloat(field.value).toFixed(3), type: field.SObjectField.type };
+                                validateFields[field.SObjectField.name + "_tofield"] = field;
+                            }
+                            else{
+                                dataObj[field.SObjectField.name] = {$lt: field.value, type: field.SObjectField.type};
+                                validateFields[field.SObjectField.name+"_tofield"]=field;
+                            }
+                        }
+                        else{
+                            if(fieldType === "date" || fieldType === "datetime"){
+                                var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
+                                    dataObj[field.SObjectField.name] = {$gt: dataValue, type: field.SObjectField.type};
+                                    validateFields[field.SObjectField.name+"_fromfield"]=field;
+                            }
+                            else if (fieldType === "double" || fieldType === "currency") {
+                                dataObj[field.SObjectField.name] = { $gt: parseFloat(field.value).toFixed(3), type: field.SObjectField.type };
+                                validateFields[field.SObjectField.name + "_fromfield"] = field;
+                            }
+                            else{
+                                dataObj[field.SObjectField.name] = {$gt: field.value, type: field.SObjectField.type};
+                                validateFields[field.SObjectField.name+"_fromfield"]=field;
+                            }
+
+                        }
+                        whereFields['$and'].push(dataObj);
+                    }else{
+                        if(!(angular.isArray(field.value) && field.value.join(";") === '')){
+                            var data = {};
+                            if(field.oldType && field.oldType === "picklist"){
+                                data[field.SObjectField.name] = {value : (angular.isArray(field.value)) ? field.value.join("','") : field.value, fieldtype : field.oldType};
+                            }
+                            else if(fieldType === "date" || fieldType === "datetime"){
+                                var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
+                                data[field.SObjectField.name] = {value : dataValue, fieldtype : field.oldType};
+                            }
+                            else if (fieldType === "double" || fieldType === "currency") {
+                                data[field.SObjectField.name] = { value: parseFloat(field.value).toFixed(3), fieldtype: field.SObjectField.type };
+                            }
+                            else{
+                                data[field.SObjectField.name] = {value : (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype : field.SObjectField.type};    
+                            }
+                            whereFields['$and'].push(data);
+                        }
+                    }
+                }
+            });
+            $scope.whereFields = whereFields;
+            $scope.validateFields = validateFields;
+            callback();
+        };
+
         $scope.search = function(page,pageSize){
             $scope.pageSize=pageSize;
             if(!$scope.blockUI.searchResultBlock.state().blocking && $scope.stateParamMetaData !== undefined){
@@ -138,111 +206,57 @@ client.controller('ClientListLayoutController',[
                         });
                     }
                 });
-                
-                var whereFields = {};
-                whereFields['$and']=[];
-                var validateFields={};
-                angular.forEach($scope.searchCriteriaFields,function(field,index){
-                    if(field.value !== undefined && field.value !== null && field.value !== ''){
-                        var fieldType=field.SObjectField.type;
-                        if(field.tofield || field.fromfield){
-                            var dataObj = {};
-                            if(field.tofield){
-                                if(fieldType === "date" || fieldType === "datetime"){
-                                    var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = {$lt: dataValue, type: field.SObjectField.type};
-                                    validateFields[field.SObjectField.name+"_tofield"]=field;
-                                }
-                                else if (fieldType === "double" || fieldType === "currency") {
-                                    dataObj[field.SObjectField.name] = { $lt: parseFloat(field.value).toFixed(3), type: field.SObjectField.type };
-                                    validateFields[field.SObjectField.name + "_tofield"] = field;
-                                }
-                                else{
-                                    dataObj[field.SObjectField.name] = {$lt: field.value, type: field.SObjectField.type};
-                                    validateFields[field.SObjectField.name+"_tofield"]=field;
-                                }
-                            }
-                            else{
-                                if(fieldType === "date" || fieldType === "datetime"){
-                                    var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = {$gt: dataValue, type: field.SObjectField.type};
-                                    validateFields[field.SObjectField.name+"_fromfield"]=field;
-                                }
-                                else if (fieldType === "double" || fieldType === "currency") {
-                                    dataObj[field.SObjectField.name] = { $gt: parseFloat(field.value).toFixed(3), type: field.SObjectField.type };
-                                    validateFields[field.SObjectField.name + "_fromfield"] = field;
-                                }
-                                else{
-                                    dataObj[field.SObjectField.name] = {$gt: field.value, type: field.SObjectField.type};
-                                    validateFields[field.SObjectField.name+"_fromfield"]=field;
-                                }
 
-                            }
-                            whereFields['$and'].push(dataObj);
-                        }else{
-                            if(!(angular.isArray(field.value) && field.value.join(";") === '')){
-                                var data = {};
-                                if(field.oldType && field.oldType === "picklist"){
-                                    data[field.SObjectField.name] = {value : (angular.isArray(field.value)) ? field.value.join("','") : field.value, fieldtype : field.oldType};
-                                }
-                                else if(fieldType === "date" || fieldType === "datetime"){
-                                    var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
-                                    data[field.SObjectField.name] = {value : dataValue, fieldtype : field.oldType};
-                                }
-                                else if (fieldType === "double" || fieldType === "currency") {
-                                    data[field.SObjectField.name] = { value: parseFloat(field.value).toFixed(3), fieldtype: field.SObjectField.type };
-                                }
-                                else{
-                                    data[field.SObjectField.name] = {value : (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype : field.SObjectField.type};    
-                                }
-                                whereFields['$and'].push(data);
+                $scope.getWhereFieldsForsearch(function () {
+                    var whereFields = angular.copy($scope.whereFields);
+                    $scope.whereFields = {};
+                    var validateFields = angular.copy($scope.validateFields);
+                    $scope.validateFields = {};
+
+                    var validationMessage="";
+                    var tofieldData=undefined;
+                    angular.forEach(validateFields,function(field,key){
+                        if(field.fromfield){
+                            tofieldData=validateFields[field.SObjectField.name+"_tofield"];
+                            if(tofieldData && field.value > tofieldData.value){
+                                validationMessage+="\""+tofieldData.label +"\"  should be greater than \""+field.label+"\". <br>";
                             }
                         }
+                    });
+                    if(validationMessage !== ""){
+                        $dialog.alert(validationMessage,'Validation Alert','pficon-warning-triangle-o');
+                        return;
                     }
-                });
-                var validationMessage="";
-                var tofieldData=undefined;
-                angular.forEach(validateFields,function(field,key){
-                    if(field.fromfield){
-                        tofieldData=validateFields[field.SObjectField.name+"_tofield"];
-                        if(tofieldData && field.value > tofieldData.value){
-                            validationMessage+="\""+tofieldData.label +"\"  should be greater than \""+field.label+"\". <br>";
-                        }
-                    }
-                });
-                if(validationMessage !== ""){
-                    $dialog.alert(validationMessage,'Validation Alert','pficon-warning-triangle-o');
-                    return;
-                }
-                var queryObject = {
-                    sObject: $scope.stateParamMetaData.sobject,
-                    selectFields: selectFields,
-                    whereFields: whereFields,
-                    limit: pageSize,
-                    page: page 
-                };
-                
-                $scope.blockUI.searchResultBlock.start('Searching ...');
-                clientSObjectService.search(queryObject)
-                    .success(function(response){
-                        if(response.success){
-                            $scope.searchResult = response.data.searchResult;
-                            $scope.currentPage = response.data.currentPage;
-                            $scope.hasMore = response.data.hasMore;
-                            
-                            $scope.stateCache.searchResult = $scope.searchResult;
-                            $scope.stateCache.currentPage = $scope.currentPage;
-                            $scope.stateCache.pageSize = pageSize;
-                            $scope.stateCache.hasMore = $scope.hasMore;
-                            $appCache.put($state.current.name, $scope.stateCache);
-                        }else{
-                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                        }
-                        $scope.blockUI.searchResultBlock.stop();
-                    })
-                    .error(function(response){
-                        $dialog.alert('Server error occured while querying data.','Error','pficon pficon-error-circle-o');
-                        $scope.blockUI.searchResultBlock.stop();
+                    var queryObject = {
+                        sObject: $scope.stateParamMetaData.sobject,
+                        selectFields: selectFields,
+                        whereFields: whereFields,
+                        limit: pageSize,
+                        page: page 
+                    };
+                    
+                    $scope.blockUI.searchResultBlock.start('Searching ...');
+                    clientSObjectService.search(queryObject)
+                        .success(function(response){
+                            if(response.success){
+                                $scope.searchResult = response.data.searchResult;
+                                $scope.currentPage = response.data.currentPage;
+                                $scope.hasMore = response.data.hasMore;
+                                
+                                $scope.stateCache.searchResult = $scope.searchResult;
+                                $scope.stateCache.currentPage = $scope.currentPage;
+                                $scope.stateCache.pageSize = pageSize;
+                                $scope.stateCache.hasMore = $scope.hasMore;
+                                $appCache.put($state.current.name, $scope.stateCache);
+                            }else{
+                                $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                            }
+                            $scope.blockUI.searchResultBlock.stop();
+                        })
+                        .error(function(response){
+                            $dialog.alert('Server error occured while querying data.','Error','pficon pficon-error-circle-o');
+                            $scope.blockUI.searchResultBlock.stop();
+                        });
                     });
             }
         };
@@ -253,96 +267,52 @@ client.controller('ClientListLayoutController',[
                     selectFields.push(field);
                 });
 
-                var whereFields = {};
-                whereFields['$and'] = [];
-                var validateFields = {};
-                angular.forEach($scope.searchCriteriaFields, function (field, index) {
-                    if (field.value !== undefined && field.value !== null && field.value !== '') {
-                        var fieldType = field.SObjectField.type;
-                        if (field.tofield || field.fromfield) {
-                            var dataObj = {};
-                            if (field.tofield) {
-                                if (fieldType === "date" || fieldType === "datetime") {
-                                    var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = { $lt: dataValue, type: field.SObjectField.type };
-                                    validateFields[field.SObjectField.name + "_tofield"] = field;
-                                }
-                                else {
-                                    dataObj[field.SObjectField.name] = { $lt: field.value, type: field.SObjectField.type };
-                                    validateFields[field.SObjectField.name + "_tofield"] = field;
-                                }
-                            }
-                            else {
-                                if (fieldType === "date" || fieldType === "datetime") {
-                                    var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = { $gt: dataValue, type: field.SObjectField.type };
-                                    validateFields[field.SObjectField.name + "_fromfield"] = field;
-                                }
-                                else {
-                                    dataObj[field.SObjectField.name] = { $gt: field.value, type: field.SObjectField.type };
-                                    validateFields[field.SObjectField.name + "_fromfield"] = field;
-                                }
+                $scope.getWhereFieldsForsearch(function () {
+                    var whereFields = angular.copy($scope.whereFields);
+                    $scope.whereFields = {};
+                    var validateFields = angular.copy($scope.validateFields);
+                    $scope.validateFields = {};
 
-                            }
-                            whereFields['$and'].push(dataObj);
-                        } else {
-                            if (!(angular.isArray(field.value) && field.value.join(";") === '')) {
-                                var data = {};
-                                if (field.oldType && field.oldType === "picklist") {
-                                    data[field.SObjectField.name] = { value: (angular.isArray(field.value)) ? field.value.join("','") : field.value, fieldtype: field.oldType };
-                                }
-                                else if (fieldType === "date" || fieldType === "datetime") {
-                                    var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    data[field.SObjectField.name] = { value: dataValue, fieldtype: field.oldType };
-                                }
-                                else {
-                                    data[field.SObjectField.name] = { value: (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype: field.SObjectField.type };
-                                }
-                                whereFields['$and'].push(data);
+                    var validationMessage = "";
+                    var tofieldData = undefined;
+                    angular.forEach(validateFields, function (field, key) {
+                        if (field.fromfield) {
+                            tofieldData = validateFields[field.SObjectField.name + "_tofield"];
+                            if (tofieldData && field.value > tofieldData.value) {
+                                validationMessage += "\"" + tofieldData.label + "\"  should be greater than \"" + field.label + "\". <br>";
                             }
                         }
-                    }
-                });
-
-                var validationMessage = "";
-                var tofieldData = undefined;
-                angular.forEach(validateFields, function (field, key) {
-                    if (field.fromfield) {
-                        tofieldData = validateFields[field.SObjectField.name + "_tofield"];
-                        if (tofieldData && field.value > tofieldData.value) {
-                            validationMessage += "\"" + tofieldData.label + "\"  should be greater than \"" + field.label + "\". <br>";
-                        }
-                    }
-                });
-                if (validationMessage !== "") {
-                    $dialog.alert(validationMessage, 'Validation Alert', 'pficon-warning-triangle-o');
-                    return;
-                }
-                var queryObject = {
-                    sObject: $scope.stateParamMetaData.sobject,
-                    selectFields: selectFields,
-                    whereFields: whereFields
-                };
-
-                $scope.btnExportDis = true;
-                clientSObjectService.export(queryObject)
-                    .success(function (response) {
-                        if (response.success) {
-                            if (response.data != undefined) {
-                                $scope.getFileData(response.data.file);
-                            }
-                            else {
-                                $dialog.alert("No records found.");
-                            }
-                        } else {
-                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                        }
-                        $scope.btnExportDis = false;
-                    })
-                    .error(function (response) {
-                        $dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
-                        $scope.btnExportDis = false;
                     });
+                    if (validationMessage !== "") {
+                        $dialog.alert(validationMessage, 'Validation Alert', 'pficon-warning-triangle-o');
+                        return;
+                    }
+                    var queryObject = {
+                        sObject: $scope.stateParamMetaData.sobject,
+                        selectFields: selectFields,
+                        whereFields: whereFields
+                    };
+
+                    $scope.btnExportDis = true;
+                    clientSObjectService.export(queryObject)
+                        .success(function (response) {
+                            if (response.success) {
+                                if (response.data != undefined) {
+                                    $scope.getFileData(response.data.file);
+                                }
+                                else {
+                                    $dialog.alert("No records found.");
+                                }
+                            } else {
+                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                            }
+                            $scope.btnExportDis = false;
+                        })
+                        .error(function (response) {
+                            $dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
+                            $scope.btnExportDis = false;
+                        });
+                });
             }
         };
 
