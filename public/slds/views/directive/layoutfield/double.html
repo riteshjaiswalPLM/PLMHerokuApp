@@ -5,6 +5,7 @@
                 is-double 
                 class="slds-input" 
                 ng-required="isFieldRequired(field)"
+                style="box-shadow:none;"
                 ng-if="!field.readonly"/>
         <span ng-if="field.readonly" ng-bind="field.value | number: 3"></span>
 </div>
