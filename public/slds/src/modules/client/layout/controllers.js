@@ -153,6 +153,10 @@ client.controller('ClientListLayoutController',[
                                     dataObj[field.SObjectField.name] = {$lt: dataValue, type: field.SObjectField.type};
                                     validateFields[field.SObjectField.name+"_tofield"]=field;
                                 }
+                                else if (fieldType === "double" || fieldType === "currency") {
+                                    dataObj[field.SObjectField.name] = { $lt: parseFloat(field.value).toFixed(3), type: field.SObjectField.type };
+                                    validateFields[field.SObjectField.name + "_tofield"] = field;
+                                }
                                 else{
                                     dataObj[field.SObjectField.name] = {$lt: field.value, type: field.SObjectField.type};
                                     validateFields[field.SObjectField.name+"_tofield"]=field;
@@ -163,6 +167,10 @@ client.controller('ClientListLayoutController',[
                                     var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
                                     dataObj[field.SObjectField.name] = {$gt: dataValue, type: field.SObjectField.type};
                                     validateFields[field.SObjectField.name+"_fromfield"]=field;
+                                }
+                                else if (fieldType === "double" || fieldType === "currency") {
+                                    dataObj[field.SObjectField.name] = { $gt: parseFloat(field.value).toFixed(3), type: field.SObjectField.type };
+                                    validateFields[field.SObjectField.name + "_fromfield"] = field;
                                 }
                                 else{
                                     dataObj[field.SObjectField.name] = {$gt: field.value, type: field.SObjectField.type};
@@ -180,6 +188,9 @@ client.controller('ClientListLayoutController',[
                                 else if(fieldType === "date" || fieldType === "datetime"){
                                     var dataValue=field.value.getFullYear()+"-"+("0"+(field.value.getMonth()+1)).slice(-2)+"-"+("0"+field.value.getDate()).slice(-2);
                                     data[field.SObjectField.name] = {value : dataValue, fieldtype : field.oldType};
+                                }
+                                else if (fieldType === "double" || fieldType === "currency") {
+                                    data[field.SObjectField.name] = { value: parseFloat(field.value).toFixed(3), fieldtype: field.SObjectField.type };
                                 }
                                 else{
                                     data[field.SObjectField.name] = {value : (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype : field.SObjectField.type};    
