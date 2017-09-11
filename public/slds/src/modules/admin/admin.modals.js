@@ -662,7 +662,9 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                         value: lookup.id
                     }
                 }else{
-                    $scope.field.lookup = undefined
+                    $scope.field.lookup = undefined;
+                    $scope.field.SObjectLookup = undefined;
+                    $scope.field.SObjectLookupId = undefined;
                 }
             });
         };
