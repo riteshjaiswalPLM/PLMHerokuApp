@@ -50,6 +50,7 @@ client.controller('ClientListLayoutController',[
                                 $scope.searchResultFields = [];
                                 $scope.recordActions = response.data.metadata.recordactions;
                                 $scope.navBarActions = response.data.metadata.navbaractions;
+                                $scope.whereClause = response.data.metadata.whereClause;
 
                                 angular.forEach($scope.recordActions,function(action){
                                     angular.forEach(response.data.metadata.btnCriteria,function(btncriteria){
@@ -71,7 +72,8 @@ client.controller('ClientListLayoutController',[
                                     searchCriteriaFields: $scope.searchCriteriaFields,
                                     searchResultFields: $scope.searchResultFields,
                                     recordActions: $scope.recordActions,
-                                    navBarActions: $scope.navBarActions
+                                    navBarActions: $scope.navBarActions,
+                                    whereClause: $scope.whereClause
                                 }
                                 $appCache.put($state.current.name, $scope.stateCache);
                                 
@@ -93,6 +95,7 @@ client.controller('ClientListLayoutController',[
                 $scope.searchResultFields = metadata.searchResultFields;
                 $scope.recordActions = metadata.recordActions;
                 $scope.navBarActions = metadata.navBarActions;
+                $scope.whereClause = metadata.whereClause;
                 
                 if($scope.stateCache.searchResult === undefined || $scope.stateCache.btnClick === "save"){
                     $timeout(function(){
@@ -227,9 +230,26 @@ client.controller('ClientListLayoutController',[
                         $dialog.alert(validationMessage,'Validation Alert','pficon-warning-triangle-o');
                         return;
                     }
+
+                    var whereClauseString = "";
+                    if ($scope.whereClause != null && $scope.whereClause != "") {
+                        whereClauseString = $scope.whereClause;
+                        if (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
+                            var userData = JSON.parse($rootScope.user().userdata);
+                            while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
+                                var len = whereClauseString.length;
+                                var start = whereClauseString.indexOf('{LOGGED_IN_USER') + 16;
+                                var stop = whereClauseString.indexOf('}', start);
+                                var fieldTobeReplaced = whereClauseString.substring(start, stop);
+                                whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);
+                            }
+                        }
+                    }
+
                     var queryObject = {
                         sObject: $scope.stateParamMetaData.sobject,
                         selectFields: selectFields,
+                        whereClauseString: whereClauseString,
                         whereFields: whereFields,
                         limit: pageSize,
                         page: page 
