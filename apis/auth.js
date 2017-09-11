@@ -104,7 +104,7 @@ authRouter.post('/authenticate', function(req, res){
         username: req.body.username, 
         password: req.body.password
     },{
-        username: req.body.username,
+        username: {$iLike: req.body.username},
         active: true
     }, req.body.isSSOLogin ? req.body.isSSOLogin : false, function(response){
         return res.json(response);
@@ -370,7 +370,7 @@ authRouter.post('/mailresetpasswordlink', function(req, res){
             exclude: ['createdAt','updatedAt','RoleId','active','password']
         },
         where: {
-            username: user.username,
+            username: {$iLike: user.username},
             active: true
         }
     });
@@ -396,7 +396,7 @@ authRouter.post('/mailresetpasswordlink', function(req, res){
                 },{
                     where: {
                         id		: user.id,
-                        username: user.username,
+                        username: {$iLike: user.username},
                         active	: true
                     }
                 }).then(function(){
@@ -780,7 +780,7 @@ authRouter.post('/userDetail', function (req, res) {
             attributes: ['id','name','code']
         }],
         where: {
-            username: username,
+            username: {$iLike: username},
             active: true
         }
     });

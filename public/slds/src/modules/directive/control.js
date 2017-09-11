@@ -319,7 +319,7 @@ ng.directive('sobjectComponentField', ['$rootScope','$compile','$parse','$http',
                 }
                 return 'slds/views/directive/componentfield/'+$scope.field.SObjectField.type+'.html';
             };
-            if($scope.field.SObjectField && $scope.model && $scope.model[$scope.field.SObjectField.name]===undefined)
+            if($scope.field && $scope.field.SObjectField && $scope.model && $scope.model[$scope.field.SObjectField.name]===undefined)
                 $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
             $scope.readonly = false;
             if($scope.field && $scope.field.readonly){

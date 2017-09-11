@@ -51,7 +51,7 @@ ssoRouter.post('/login/callback',
                 successRedirect: '/'
             }, where = {};
             where.active = true;
-            where[ssoconfig.config.mappingConfig.userField] = req.user[ssoconfig.config.mappingConfig.ssoField];
+            where[ssoconfig.config.mappingConfig.userField] = {$iLike: req.user[ssoconfig.config.mappingConfig.ssoField]};
             db.User.findOne({
                 attributes: {
                     exclude: ['createdAt','updatedAt','RoleId','active','LanguageId']

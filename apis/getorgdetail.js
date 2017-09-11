@@ -41,7 +41,7 @@ authRouter.post('/getOrgDetail', function (req, res) {
             attributes: ['id','name','code']
         }],
         where: {
-            username: username,
+            username: {$iLike: username},
             active: true
         }
     });
