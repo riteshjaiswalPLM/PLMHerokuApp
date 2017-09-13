@@ -191,6 +191,50 @@ client.controller('ClientListLayoutController',[
             callback();
         };
 
+        $scope.editWhereClauseStr = function (callback) {
+            var whereClauseString = "";
+            if ($scope.whereClause != null && $scope.whereClause != "") {
+                whereClauseString = $scope.whereClause;
+                var whereClauseStringTmp = $scope.whereClause;
+                if (whereClauseStringTmp.indexOf('{LOGGED_IN_USER') > -1) {
+                    var userData = JSON.parse($rootScope.user().userdata);
+                    var fieldsTobeReplaced = [];
+                    while (whereClauseStringTmp.indexOf('{LOGGED_IN_USER') > -1) {
+                        var start = whereClauseStringTmp.indexOf('{LOGGED_IN_USER') + 16;
+                        var stop = whereClauseStringTmp.indexOf('}', start);
+                        var fieldTobeReplaced = whereClauseStringTmp.substring(start, stop);
+                        fieldsTobeReplaced.push(fieldTobeReplaced);
+                        whereClauseStringTmp = whereClauseStringTmp.replace(whereClauseStringTmp.substring(start - 16, stop + 1), fieldTobeReplaced);
+                    }
+
+                    clientSObjectService.getFieldType({ sobjectname: 'akritivesm__Buyer_Users__c', fieldname: fieldsTobeReplaced })
+                        .success(function (response) {
+                            if (response.success) {
+                                while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
+                                    var start = whereClauseString.indexOf('{LOGGED_IN_USER') + 16;
+                                    var stop = whereClauseString.indexOf('}', start);
+                                    var fieldTobeReplaced = whereClauseString.substring(start, stop);
+
+                                    if (response.fieldDataTypes[fieldTobeReplaced] == "multipicklist") {
+                                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced].split(';').join("','"));
+                                    }
+                                    else {
+                                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);
+                                    }
+                                }
+                                callback(whereClauseString);
+                            }
+                        });
+                }
+                else {
+                    callback(whereClauseString);
+                }
+            }
+            else {
+                callback(whereClauseString);
+            }
+        };
+
         $scope.search = function(page,pageSize){
             $scope.pageSize=pageSize;
             if(!$scope.blockUI.searchResultBlock.state().blocking && $scope.stateParamMetaData !== undefined){
@@ -231,53 +275,40 @@ client.controller('ClientListLayoutController',[
                         return;
                     }
 
-                    var whereClauseString = "";
-                    if ($scope.whereClause != null && $scope.whereClause != "") {
-                        whereClauseString = $scope.whereClause;
-                        if (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
-                            var userData = JSON.parse($rootScope.user().userdata);
-                            while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
-                                var len = whereClauseString.length;
-                                var start = whereClauseString.indexOf('{LOGGED_IN_USER') + 16;
-                                var stop = whereClauseString.indexOf('}', start);
-                                var fieldTobeReplaced = whereClauseString.substring(start, stop);
-                                whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);
-                            }
-                        }
-                    }
+                    $scope.editWhereClauseStr(function (whereClauseString) {
+                        var queryObject = {
+                            sObject: $scope.stateParamMetaData.sobject,
+                            selectFields: selectFields,
+                            whereClauseString: whereClauseString,
+                            whereFields: whereFields,
+                            limit: pageSize,
+                            page: page
+                        };
 
-                    var queryObject = {
-                        sObject: $scope.stateParamMetaData.sobject,
-                        selectFields: selectFields,
-                        whereClauseString: whereClauseString,
-                        whereFields: whereFields,
-                        limit: pageSize,
-                        page: page 
-                    };
-                    
-                    $scope.blockUI.searchResultBlock.start('Searching ...');
-                    clientSObjectService.search(queryObject)
-                        .success(function(response){
-                            if(response.success){
-                                $scope.searchResult = response.data.searchResult;
-                                $scope.currentPage = response.data.currentPage;
-                                $scope.hasMore = response.data.hasMore;
-                                
-                                $scope.stateCache.searchResult = $scope.searchResult;
-                                $scope.stateCache.currentPage = $scope.currentPage;
-                                $scope.stateCache.pageSize = pageSize;
-                                $scope.stateCache.hasMore = $scope.hasMore;
-                                $appCache.put($state.current.name, $scope.stateCache);
-                            }else{
-                                $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                            }
-                            $scope.blockUI.searchResultBlock.stop();
-                        })
-                        .error(function(response){
-                            $dialog.alert('Server error occured while querying data.','Error','pficon pficon-error-circle-o');
-                            $scope.blockUI.searchResultBlock.stop();
-                        });
+                        $scope.blockUI.searchResultBlock.start('Searching ...');
+                        clientSObjectService.search(queryObject)
+                            .success(function(response){
+                                if(response.success){
+                                    $scope.searchResult = response.data.searchResult;
+                                    $scope.currentPage = response.data.currentPage;
+                                    $scope.hasMore = response.data.hasMore;
+
+                                    $scope.stateCache.searchResult = $scope.searchResult;
+                                    $scope.stateCache.currentPage = $scope.currentPage;
+                                    $scope.stateCache.pageSize = pageSize;
+                                    $scope.stateCache.hasMore = $scope.hasMore;
+                                    $appCache.put($state.current.name, $scope.stateCache);
+                                }else{
+                                    $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
+                                }
+                                $scope.blockUI.searchResultBlock.stop();
+                            })
+                            .error(function(response){
+                                $dialog.alert('Server error occured while querying data.','Error','pficon pficon-error-circle-o');
+                                $scope.blockUI.searchResultBlock.stop();
+                            });
                     });
+                });
             }
         };
         $scope.exportToExcel = function () {
@@ -307,31 +338,34 @@ client.controller('ClientListLayoutController',[
                         $dialog.alert(validationMessage, 'Validation Alert', 'pficon-warning-triangle-o');
                         return;
                     }
-                    var queryObject = {
-                        sObject: $scope.stateParamMetaData.sobject,
-                        selectFields: selectFields,
-                        whereFields: whereFields
-                    };
+                    $scope.editWhereClauseStr(function (whereClauseString) {
+                        var queryObject = {
+                            sObject: $scope.stateParamMetaData.sobject,
+                            selectFields: selectFields,
+                            whereClauseString: whereClauseString,
+                            whereFields: whereFields
+                        };
 
-                    $scope.btnExportDis = true;
-                    clientSObjectService.export(queryObject)
-                        .success(function (response) {
-                            if (response.success) {
-                                if (response.data != undefined) {
-                                    $scope.getFileData(response.data.file);
+                        $scope.btnExportDis = true;
+                        clientSObjectService.export(queryObject)
+                            .success(function (response) {
+                                if (response.success) {
+                                    if (response.data != undefined) {
+                                        $scope.getFileData(response.data.file);
+                                    }
+                                    else {
+                                        $dialog.alert("No records found.");
+                                    }
+                                } else {
+                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                                 }
-                                else {
-                                    $dialog.alert("No records found.");
-                                }
-                            } else {
-                                $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                            }
-                            $scope.btnExportDis = false;
-                        })
-                        .error(function (response) {
-                            $dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
-                            $scope.btnExportDis = false;
-                        });
+                                $scope.btnExportDis = false;
+                            })
+                            .error(function (response) {
+                                $dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
+                                $scope.btnExportDis = false;
+                            });
+                    });
                 });
             }
         };

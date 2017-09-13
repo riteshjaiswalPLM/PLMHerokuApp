@@ -218,8 +218,24 @@ sobjectRouter.post('/export', function (req, res) {
         });
         whereString = whereString.substr(0, whereString.length - 4);
     }
-    else {
+    else if (queryObject.whereFields != undefined && queryObject.whereFields != null && queryObject.whereFields != "") {
         whereString = queryObject.whereFields;
+    }
+    if (queryObject.whereClauseString != undefined && queryObject.whereClauseString != null && queryObject.whereClauseString != "") {
+        if (typeof whereString == 'object') {
+            var data = "";
+            for (key in whereString) {
+                if (data == "") {
+                    data += key + " = '" + whereString[key] + "'";
+                }
+                else {
+                    data += " AND " + key + " = '" + whereString[key] + "'";
+                }
+            }
+            whereString = data;
+
+        }
+        whereString = whereString == "" ? queryObject.whereClauseString : whereString + " AND " + queryObject.whereClauseString;
     }
     global.sfdc
         .sobject(queryObject.sObject.name)
@@ -597,6 +613,47 @@ sobjectRouter.post('/multipleApproveSave', function(req, res){
         });
             
 });
+
+sobjectRouter.post('/getFieldType', function (req, res) {
+    var data = req.body;
+    var Result = global.db.SObject.findOne({
+        attributes: {
+            exclude: ['label', 'labelPlural', 'keyPrefix', 'custom', 'customSetting', 'createable', 'deletable', 'layoutable', 'mergeable', 'queryable', 'replicateable', 'retrieveable', 'updateable', 'forMobile', 'config', 'createdAt', 'updatedAt']
+        },
+        include: {
+            model: global.db.SObjectField,
+            attributes: {
+                exclude: ['label', 'custom', 'aggregatable', 'autoNumber', 'byteLength', 'calculated', 'calculatedFormula', 'controllerName', 'createable', 'defaultValue', 'defaultValueFormula', 'dependentPicklist', 'digits', 'encrypted', 'externalId', 'extraTypeInfo', 'filterable', 'highScaleNumber', 'htmlFormatted', 'idLookup', 'inlineHelpText', 'length', 'mask', 'maskType', 'nameField', 'namePointing', 'nillable', 'picklistValues', 'precision', 'referenceTargetField', 'referenceTo', 'relationshipName', 'restrictedDelete', 'restrictedPicklist', 'scale', 'sortable', 'unique', 'updateable', 'forMobile', 'isGovernField', 'SObjectId', 'createdAt', 'updatedAt']
+            },
+            where: {
+                name: {
+                    $in: data.fieldname
+                }
+            }
+        },
+        where: {
+            name: data.sobjectname
+        }
+    });
+    Result.then(function (result) {
+        if (result != null && result != undefined && result.SObjectFields[0] != undefined) {
+            var fieldTypes = {};
+            result.SObjectFields.forEach(function (field) {
+                fieldTypes[field.name] = field.type;
+            });
+            return res.json({
+                success: true,
+                fieldDataTypes: fieldTypes
+            });
+        }
+        else {
+            return res.json({
+                success: false
+            });
+        }
+    });
+});
+
 var uploadFileOnSalesforce = function(queryObject){
     var attachmentIdArray = [];
     if(queryObject.files && queryObject.files.length > 0){
