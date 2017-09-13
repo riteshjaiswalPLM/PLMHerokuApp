@@ -109,6 +109,87 @@ client.controller('ClientSObjectLookupController',[
             }
             return whereClauseString;
         }
+        $scope.editWhereClauseStr = function (whereClauseString, callback) {
+            var whereClauseStringTmp = whereClauseString;
+            var fieldsTobeReplaced = [];
+            var parentCall = false;
+            var userCall = false;
+            while (whereClauseStringTmp.indexOf('{PARENT') > -1) {
+                var start = whereClauseStringTmp.indexOf('{PARENT') + 8;
+                var stop = whereClauseStringTmp.indexOf('}', start);
+                var fieldTobeReplaced = whereClauseStringTmp.substring(start, stop);
+                fieldsTobeReplaced.push(fieldTobeReplaced);
+                whereClauseStringTmp = whereClauseStringTmp.replace(whereClauseStringTmp.substring(start - 8, stop + 1), fieldTobeReplaced);
+            }
+            if (fieldsTobeReplaced.length > 0) {
+                clientSObjectService.getFieldType({ sobjectname: $scope.metadata.sobjectname, fieldname: fieldsTobeReplaced })
+                    .success(function (response) {
+                        if (response.success) {
+                            while (whereClauseString.indexOf('{PARENT') > -1) {
+                                var start = whereClauseString.indexOf('{PARENT') + 8;
+                                var stop = whereClauseString.indexOf('}', start);
+                                var fieldTobeReplaced = whereClauseString.substring(start, stop);
+                                if (response.fieldDataTypes[fieldTobeReplaced] == "multipicklist") {
+                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced] ? $scope.dataModal[fieldTobeReplaced].split(';').join("','") : '');
+                                }
+                                else {
+                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);
+                                }
+                            }
+                            parentCall = true;
+                            if (parentCall && userCall) {
+                                callback(whereClauseString);
+                            }
+                        }
+                    });
+            }
+            else {
+                parentCall = true;
+                if (parentCall && userCall) {
+                    callback(whereClauseString);
+                }
+            }
+
+            var userData = JSON.parse($rootScope.user().userdata);
+            fieldsTobeReplaced = [];
+            while (whereClauseStringTmp.indexOf('{LOGGED_IN_USER') > -1) {
+                var start = whereClauseStringTmp.indexOf('{LOGGED_IN_USER') + 16;
+                var stop = whereClauseStringTmp.indexOf('}', start);
+                var fieldTobeReplaced = whereClauseStringTmp.substring(start, stop);
+                fieldsTobeReplaced.push(fieldTobeReplaced);
+                whereClauseStringTmp = whereClauseStringTmp.replace(whereClauseStringTmp.substring(start - 16, stop + 1), fieldTobeReplaced);
+            }
+
+            if (fieldsTobeReplaced.length > 0) {
+                clientSObjectService.getFieldType({ sobjectname: 'akritivesm__Buyer_Users__c', fieldname: fieldsTobeReplaced })
+                    .success(function (response) {
+                        if (response.success) {
+                            while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
+                                var start = whereClauseString.indexOf('{LOGGED_IN_USER') + 16;
+                                var stop = whereClauseString.indexOf('}', start);
+                                var fieldTobeReplaced = whereClauseString.substring(start, stop);
+
+                                if (response.fieldDataTypes[fieldTobeReplaced] == "multipicklist") {
+                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced] ? userData[fieldTobeReplaced].split(';').join("','") : '');
+                                }
+                                else {
+                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);
+                                }
+                            }
+                            userCall = true;
+                            if (parentCall && userCall) {
+                                callback(whereClauseString);
+                            }
+                        }
+                    });
+            }
+            else {
+                userCall = true;
+                if (parentCall && userCall) {
+                    callback(whereClauseString);
+                }
+            }
+        };
         $scope.loadLookupData = function(page,pageSize){
             if(!$scope.blockUI.loadSObjectLookup.state().blocking){
                 var selectFields = [];
@@ -144,64 +225,49 @@ client.controller('ClientSObjectLookupController',[
                 else if ($scope.metadata.whereClause !== undefined && $scope.metadata.whereClause !== null && $scope.metadata.whereClause !== "") {
                     whereClauseString = $scope.metadata.whereClause;
                 }
-                while (whereClauseString.indexOf('{PARENT') > -1) {
-                    var len = whereClauseString.length;
-                    var start = whereClauseString.indexOf('{PARENT') + 8;
-                    var stop = whereClauseString.indexOf('}', start);
-                    var fieldTobeReplaced = whereClauseString.substring(start, stop);
-                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);
-                }
-                if (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
-                    var userData = JSON.parse($rootScope.user().userdata);
-                    while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
-                        var len = whereClauseString.length;
-                        var start = whereClauseString.indexOf('{LOGGED_IN_USER') + 16;
-                        var stop = whereClauseString.indexOf('}', start);
-                        var fieldTobeReplaced = whereClauseString.substring(start, stop);
-                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);
-                    }
-                }
-                var queryObject = {
-                    sObject: {
-                        id: $scope.metadata.SObjectId,
-                        name: $scope.metadata.sobjectname
-                    },
-                    selectFields: selectFields,
-                    whereFields: {},
-                    whereClauseString:whereClauseString,
-                    limit: pageSize,
-                    page: page 
-                };
-                
-                $scope.blockUI.loadSObjectLookup.start('Loading data ...');
-                clientSObjectService.search(queryObject)
-                    .success(function(response){
-                        if(response.success){
-                            $scope.searchResult = response.data.searchResult;
-                            if(data.field.excludeCurrentUser == true){
-                                var userDataId=JSON.parse($rootScope.user().userdata)['Id'];
-                                $scope.searchResult = $filter('filter')($scope.searchResult, {Id:'!'+userDataId});
+                $scope.editWhereClauseStr(whereClauseString, function (whereClauseString) {
+                    var queryObject = {
+                        sObject: {
+                            id: $scope.metadata.SObjectId,
+                            name: $scope.metadata.sobjectname
+                        },
+                        selectFields: selectFields,
+                        whereFields: {},
+                        whereClauseString: whereClauseString,
+                        limit: pageSize,
+                        page: page
+                    };
+
+                    $scope.blockUI.loadSObjectLookup.start('Loading data ...');
+                    clientSObjectService.search(queryObject)
+                        .success(function(response){
+                            if(response.success){
+                                $scope.searchResult = response.data.searchResult;
+                                if(data.field.excludeCurrentUser == true){
+                                    var userDataId=JSON.parse($rootScope.user().userdata)['Id'];
+                                    $scope.searchResult = $filter('filter')($scope.searchResult, {Id:'!'+userDataId});
+                                }
+                                $scope.currentPage = response.data.currentPage;
+                                $scope.hasMore = response.data.hasMore;
+
+                                if ($scope.sObjectLookupFilter == "") {
+                                    $scope.lookupCache.searchResult = $scope.searchResult;
+                                    $scope.lookupCache.currentPage = $scope.currentPage;
+                                    $scope.lookupCache.pageSize = pageSize;
+                                    $scope.lookupCache.hasMore = $scope.hasMore;
+                                    $scope.lookupCache.sObjectLookupFilter = $scope.sObjectLookupFilter;
+                                }
+                                $appCache.put($scope.lookupCacheId, $scope.lookupCache);
+                            }else{
+                                $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                             }
-                            $scope.currentPage = response.data.currentPage;
-                            $scope.hasMore = response.data.hasMore;
-                            
-                            if ($scope.sObjectLookupFilter == "") {
-                                $scope.lookupCache.searchResult = $scope.searchResult;
-                                $scope.lookupCache.currentPage = $scope.currentPage;
-                                $scope.lookupCache.pageSize = pageSize;
-                                $scope.lookupCache.hasMore = $scope.hasMore;
-                                $scope.lookupCache.sObjectLookupFilter = $scope.sObjectLookupFilter;
-                            }
-                            $appCache.put($scope.lookupCacheId, $scope.lookupCache);
-                        }else{
-                            $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                        }
-                        $scope.blockUI.loadSObjectLookup.stop();
-                    })
-                    .error(function(response){
-                        $dialog.alert('Server error occured while querying lookup data.','Error','pficon pficon-error-circle-o');
-                        $scope.blockUI.loadSObjectLookup.stop();
-                    });
+                            $scope.blockUI.loadSObjectLookup.stop();
+                        })
+                        .error(function(response){
+                            $dialog.alert('Server error occured while querying lookup data.','Error','pficon pficon-error-circle-o');
+                            $scope.blockUI.loadSObjectLookup.stop();
+                        });
+                });
             }
         };
         $scope.applyOrderBy = function(field){

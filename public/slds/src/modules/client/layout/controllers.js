@@ -216,7 +216,7 @@ client.controller('ClientListLayoutController',[
                                     var fieldTobeReplaced = whereClauseString.substring(start, stop);
 
                                     if (response.fieldDataTypes[fieldTobeReplaced] == "multipicklist") {
-                                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced].split(';').join("','"));
+                                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced] ? userData[fieldTobeReplaced].split(';').join("','"): '');
                                     }
                                     else {
                                         whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 16, stop + 1), userData[fieldTobeReplaced]);

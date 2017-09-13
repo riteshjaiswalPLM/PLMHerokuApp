@@ -201,7 +201,7 @@ admin.controller('AdminLookupsEditController',[
             $scope.initBlockUiBlocks();
             $scope.lookup = ($stateParams.lookup) ? $stateParams.lookup : angular.copy($scope.newLookup);
             $scope.stateAction = ($stateParams.lookup) ? 'Edit' : 'Create';
-            $scope.allowedLookupDataTypes = ['string', 'email', 'int', 'double', 'currency', 'boolean', 'picklist'];
+            $scope.allowedLookupDataTypes = ['string', 'email', 'int', 'double', 'currency', 'boolean', 'picklist', 'multipicklist'];
             $scope.loadLookupDetails();
         };
         $scope.init();
