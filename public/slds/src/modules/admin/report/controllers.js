@@ -201,7 +201,7 @@ admin.controller('AdminReportsEditController', [
                 return false;
             }
             item.type = 'Report-Criteria-Field';
-            var rangeAllowedDataTypes = ['date', 'datetime', 'double', 'int'];
+            var rangeAllowedDataTypes = ['date', 'datetime', 'double', 'int', 'currency'];
             if (rangeAllowedDataTypes.indexOf(item.SObjectField.type) > -1) {
                 if (!angular.isDefined(item.tofield) && !angular.isDefined(item.fromfield)) {
                     $dialog.confirm({
@@ -215,7 +215,7 @@ admin.controller('AdminReportsEditController', [
                             if (!itemTo.toField) {
                                 itemTo.label = itemTo.label + ' to';
                                 itemTo.tofield = true;
-                                $scope.searchCriteriaFields.push(itemTo);
+                                $scope.searchCriteriaFields.splice(index + 1, 0, itemTo);
                             }
                             item.fromfield = true;
                             item.label = item.label + ' from';

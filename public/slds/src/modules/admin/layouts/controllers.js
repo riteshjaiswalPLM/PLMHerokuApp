@@ -468,7 +468,7 @@ admin.controller('AdminLayoutsEditListController',[
                             if(!itemTo.toField){
                                 itemTo.label = itemTo.label + ' to';
                                 itemTo.tofield = true;
-                                $scope.searchCriteriaFields.push(itemTo);
+                                $scope.searchCriteriaFields.splice(index + 1, 0, itemTo);
                             }
                             item.fromfield = true;
                             item.label = item.label + ' from';
