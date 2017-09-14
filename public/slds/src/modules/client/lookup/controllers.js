@@ -122,7 +122,7 @@ client.controller('ClientSObjectLookupController',[
                 whereClauseStringTmp = whereClauseStringTmp.replace(whereClauseStringTmp.substring(start - 8, stop + 1), fieldTobeReplaced);
             }
             if (fieldsTobeReplaced.length > 0) {
-                clientSObjectService.getFieldType({ sobjectname: $scope.metadata.sobjectname, fieldname: fieldsTobeReplaced })
+                clientSObjectService.getFieldType({ sobjectname: $scope.dataModal.attributes.type, fieldname: fieldsTobeReplaced })
                     .success(function (response) {
                         if (response.success) {
                             while (whereClauseString.indexOf('{PARENT') > -1) {
