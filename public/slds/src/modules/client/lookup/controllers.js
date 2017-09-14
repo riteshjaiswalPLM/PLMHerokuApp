@@ -14,6 +14,7 @@ client.controller('ClientSObjectLookupController',[
                     pageSize: 25,
                     hasMore: false,
                     orderByField: undefined,
+                    isParentValueMatch: false
                 };
             }
             if($scope.lookupCache.metadata === undefined){
@@ -43,7 +44,7 @@ client.controller('ClientSObjectLookupController',[
                     $scope.metadata = $scope.lookupCache.metadata;
                 },100);
                 
-                if($scope.lookupCache.searchResult === undefined){
+                if($scope.lookupCache.searchResult === undefined || $scope.lookupCache.isParentValueMatch){
                     $timeout(function(){
                         $scope.loadLookupData(1, $scope.pageSize);
                     },100);
@@ -115,6 +116,7 @@ client.controller('ClientSObjectLookupController',[
             var parentCall = false;
             var userCall = false;
             while (whereClauseStringTmp.indexOf('{PARENT') > -1) {
+                $scope.lookupCache.isParentValueMatch = true;
                 var start = whereClauseStringTmp.indexOf('{PARENT') + 8;
                 var stop = whereClauseStringTmp.indexOf('}', start);
                 var fieldTobeReplaced = whereClauseStringTmp.substring(start, stop);
@@ -130,7 +132,7 @@ client.controller('ClientSObjectLookupController',[
                                 var stop = whereClauseString.indexOf('}', start);
                                 var fieldTobeReplaced = whereClauseString.substring(start, stop);
                                 if (response.fieldDataTypes[fieldTobeReplaced] == "multipicklist") {
-                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced] ? $scope.dataModal[fieldTobeReplaced].split(';').join("','") : '');
+                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced] ? $scope.dataModal[fieldTobeReplaced].toString().split(';').join("','") : '');
                                 }
                                 else {
                                     whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);

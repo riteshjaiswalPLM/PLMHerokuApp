@@ -744,7 +744,7 @@ client.controller('ClientSectionLayoutController',[
                         angular.forEach(section.columns,function(fields, columnIndex){
                             angular.forEach(fields,function(field,fieldIndex){
                                 if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
-                                    if (field.SObjectField.type === "multipicklist") {
+                                    if (field.SObjectField.type === "multipicklist" && field.value != null) {
                                         field.value = field.value.toString().replace(/\,/g, ';');
                                     }
                                     sObjectData[field.SObjectField.name] = field.value;
