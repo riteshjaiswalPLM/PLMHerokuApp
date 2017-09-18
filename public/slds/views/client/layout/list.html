@@ -31,10 +31,10 @@
     <div class="" style="height: calc(100vh - 156px);">
         <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small">
             <div class="slds-form--stacked slds-grow">
-                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;" ng-if="searchCriteriaFields.length !== 0">
+                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;" ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
                     <h3>{{'Search Criteria' | translate}}</h3>
                 </div>
-                <div block-ui="searchCriteriaBlock" class="slds-form--horizontal slds-grid slds-wrap slds-p-around--small slds-border--bottom" ng-if="searchCriteriaFields.length !== 0">
+                <div block-ui="searchCriteriaBlock" class="slds-form--horizontal slds-grid slds-wrap slds-p-around--small slds-border--bottom" ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
                     <div class="slds-form-element slds-size--1-of-2 slds-p-horizontal--small" 
                         style="margin-top: 0.5rem !important;"
                         ng-repeat="field in searchCriteriaFields" 
@@ -47,20 +47,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" ng-if="searchCriteriaFields.length !== 0 || searchResultFields.length !== 0">
+                <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" ng-if="(searchCriteriaFields != undefined && searchCriteriaFields.length !== 0) || (searchResultFields != undefined && searchResultFields.length !== 0)">
                     <div style="width: 230px;">
                         <select class="slds-select" style="width: auto;" ng-disabled="searchCriteriaFields.length === 0" data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in pageSizes" id="pageSize">
                         </select>&nbsp; {{'Items per page' | translate}}.
                     </div>
                     <div class="slds-align--absolute-center">
                         <div class="slds-button-group" role="group">
-                            <button class="slds-button slds-button--brand" ng-disabled="searchCriteriaFields.length === 0 || searchResultFields.length === 0" ng-click="search(1,pageSize)">
+                            <button class="slds-button slds-button--brand" ng-disabled="searchCriteriaFields == undefined || searchCriteriaFields.length === 0 || searchResultFields.length === 0" ng-click="search(1,pageSize)">
                                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                                 </svg>
                                 {{'Search' | translate}}
                             </button>
-                            <button class="slds-button slds-button--neutral" ng-disabled="searchCriteriaFields.length === 0" ng-click="reset()">
+                            <button class="slds-button slds-button--neutral" ng-disabled="searchCriteriaFields == undefined || searchCriteriaFields.length === 0" ng-click="reset()">
                                 <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
                                 </svg>
