@@ -260,6 +260,7 @@ authRouter.post('/states', function(req, res){
                             title: global.config.archivalConfig.title,
                             params:{
                                 icon: global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'icon'],
+                                LayoutId:null,
                                 showRefreshResult: global.config.archivalConfig.showRefreshResult
                             },
                             tab:{

@@ -414,48 +414,62 @@ sObjectFieldListConfig.refreshFieldLabelMappingConfig = () => {
 sObjectFieldListConfig.refreshConfig();
 sObjectFieldListConfig.refreshFieldLabelMappingConfig();
 global.config.archivalConfig.refreshConfig = () => {
-    var archivalConfig = db.ArchivalConfig.findOne({
+    var archivalSetupDetail = db.ArchivalSetupDetail.findAll({
         attributes: {
             exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-            AWSEC2Url: {
-                $ne: ''
-            }
         }
     })
+    archivalSetupDetail.then(function (archivalSetupDetail) {
+        global.config.archivalConfig.GenericSearch = {};
+        global.config.archivalConfig.AWSS3 = {};
+        archivalSetupDetail.forEach(function (detailData) {
+            if (detailData.ArchivalNamespace == 'GenericSearch') {
+                global.config.archivalConfig.GenericSearch = {};
+                global.config.archivalConfig.GenericSearch.AWSEC2Url = detailData.AWSEC2Url;
+                global.config.archivalConfig.GenericSearch.AWSS3Secret = detailData.AWSS3Secret;
+                //global.config.archivalConfig.ArchivalNamespace = archivalSetupDetail.ArchivalNamespace;
+                global.config.archivalConfig.GenericSearch.AWSS3Key = detailData.AWSS3Key;
+            }
+            else if (detailData.ArchivalNamespace == 'AWSS3') {
+                global.config.archivalConfig.AWSS3 = {};
+                global.config.archivalConfig.AWSS3.AWSS3Secret = detailData.AWSS3Secret;
+                // global.config.archivalConfig.AWSS3.ArchivalNamespace = archivalSetupDetail.ArchivalNamespace;
+                global.config.archivalConfig.AWSS3.AWSS3Key = detailData.AWSS3Key;
+                global.config.archivalConfig.AWSS3.AWSS3Region = detailData.AWSS3Region;
+                global.config.archivalConfig.AWSS3.AWSS3Bucket = detailData.AWSS3Bucket;
+            }
+
+        });
+        db.SObjectLayout.count({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            },
+            where: {
+                type: 'Archival',
+                active: true
+            }
+        }).then(function (cnt) {
+            if (cnt > 0) {
+                global.config.archivalConfig.active = true;
+            }
+            else {
+                global.config.archivalConfig.active = false;
+            }
+        });
+    });
+    var archivalConfig = db.ArchivalConfig.findAll({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        }
+    });
     archivalConfig.then(function (archivalConfig) {
-        if (archivalConfig != null && archivalConfig != undefined) {
-            global.config.archivalConfig.AWSEC2Url = archivalConfig.AWSEC2Url;
-            global.config.archivalConfig.AWSS3Secret = archivalConfig.AWSS3Secret;
-            db.SObjectLayout.count({
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt']
-                },
-                where: {
-                    type: 'Archival',
-                    active: true
-                }
-            }).then(function (cnt) {
-                if (cnt > 0) {
-                    global.config.archivalConfig.active = true;
-                }
-                else {
-                    global.config.archivalConfig.active = false;
-                }
-            });
-        }
-        else {
-            global.config.archivalConfig.active = false;
-            global.config.archivalConfig.AWSEC2Url = "";
-            global.config.archivalConfig.AWSS3Secret = "";
-        }
+        global.config.archivalConfig.ObjectSetup = archivalConfig;
     });
     var archivalSystemConfig = db.ArchivalSystemConfig.findOne({
         attributes: {
             exclude: ['createdAt', 'updatedAt']
-        },
-    })
+        }
+    });
     archivalSystemConfig.then(function (archivalSystemConfig) {
         console.log("archivalSystemConfig:::", archivalSystemConfig);
         if (archivalSystemConfig != null && archivalSystemConfig != undefined) {

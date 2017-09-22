@@ -1,0 +1,38 @@
+<div class="slds-col slds-size--1-of-1" block-ui="layoutBlock">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#' + $parent.tab.icon }}"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate}}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{dataModel.Name}}">{{dataModel.Name}}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <button class="slds-button slds-m-right--small" ng-click="back.go()" ng-if="back.allow">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                    </svg>
+                    {{'Back to List' | translate}}
+                </button>
+            </div>
+        </div>
+        <div class="slds-grid slds-panel slds-nowrap slds-grid--vertical slds-scrollable--y" style="height: calc(100vh - 156px);">
+            <archival-sobject-layout-section slds="true" ng-if="renderRelatedList" ng-repeat="section in metadata.layoutSections" section="section"
+                section-index="$index" model="dataModel" layout-block-ui-instance="blockUI.layoutBlock" type="detail" base-ctrl="baseCtrl"></archival-sobject-layout-section>
+            <div ng-if="metadata.relatedLists && (metadata.relatedLists).length > 0 && renderRelatedList" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small">
+                <div archival-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.parentRecord"
+                    ng-repeat="relatedList in metadata.relatedLists | filter: {dispaySection :'2'}"></div>
+                <div archival-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.parentRecord"
+                    ng-repeat="relatedList in metadata.relatedLists | filter: {dispaySection :'1'}"></div>
+            </div>
+        </div>
+    </div>

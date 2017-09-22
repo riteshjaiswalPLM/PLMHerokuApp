@@ -6,15 +6,13 @@ var jsForce = require('jsforce');
 
 archivalRouter.post('/sync', function (req, res) {
     var queryObject = req.body;
-    // ARCHIVAL CONFIG
+    //ArchivalSetupDetail
     global.sfdc
-        .sobject("arcsol__AWS_S3_RDS__c")
-        //.select('arcsol__AWSS3Url__c,arcsol__AWSS3Secret__c	')
-        //.select('arcsol__AWSEC2Url__c,arcsol__AWSS3Secret__c	')
+        .sobject("arcsol__ArchivalSetupDetail__c")
         .select('*')
-        .where({ Name: "Heroku_Config" })
         .execute(function (err, records) {
             console.log('daaa', records);
+
             if (err) {
                 return res.json({
                     success: false,
@@ -30,73 +28,165 @@ archivalRouter.post('/sync', function (req, res) {
                 });
             }
             else {
-                db.ArchivalConfig.findOne({
-                    attributes: {
-                        exclude: ['createdAt', 'updatedAt']
-                    }
-                }).then(function (archivalConfig) {
-                    console.log("archivalConfig", archivalConfig);
-                    if (archivalConfig === undefined || archivalConfig === null) {
-                        global.db.ArchivalConfig
-                            .build({
-                                ArchivalNamespace: records[0].arcsol__ArchivalNamespace__c,
-                                AWSEC2Url: records[0].arcsol__AWSEC2Url__c,
-                                AWSS3Bucket: records[0].arcsol__AWSS3Bucket__c,
-                                AAWSS3Key: records[0].arcsol__AWSS3Key__c,
-                                AAWSS3Region: records[0].arcsol__AWSS3Region__c,
-                                AWSS3Secret: records[0].arcsol__AWSS3Secret__c,
-                                AWSS3Service: records[0].arcsol__AWSS3Service__c,
-                                AWSS3Url: records[0].arcsol__AWSS3Url__c,
-                                BatchSizeConfiguration: records[0].arcsol__BatchSizeConfiguration__c,
-                                EnableSSEncryption: records[0].arcsol__EnableSSEncryption__c,
-                            })
-                            .save()
-                            .then(function (newArchivalConfig) {
-                                return res.json({
-                                    success: true,
-                                    data: {
-                                        message: "sync done"
-                                    }
-                                });
+                var itemsProcessed = 0;
+                records.forEach(function (rec) {
 
-                            });
-                        global.config.archivalConfig.refreshConfig();
-                        return saveArchivalDetail(records, req, res);
-                    }
-                    else {
-                        global.db.ArchivalConfig
-                            .update({
-                                ArchivalNamespace: records[0].arcsol__ArchivalNamespace__c,
-                                AWSEC2Url: records[0].arcsol__AWSEC2Url__c,
-                                AWSS3Bucket: records[0].arcsol__AWSS3Bucket__c,
-                                AAWSS3Key: records[0].arcsol__AWSS3Key__c,
-                                AAWSS3Region: records[0].arcsol__AWSS3Region__c,
-                                AWSS3Secret: records[0].arcsol__AWSS3Secret__c,
-                                AWSS3Service: records[0].arcsol__AWSS3Service__c,
-                                AWSS3Url: records[0].arcsol__AWSS3Url__c,
-                                BatchSizeConfiguration: records[0].arcsol__BatchSizeConfiguration__c,
-                                EnableSSEncryption: records[0].arcsol__EnableSSEncryption__c,
+                    db.ArchivalSetupDetail.findOrCreate({
+                        where: {
+                            ArchivalNamespace: rec.Name
+                        },
+                        defaults: {
+                            ArchivalNamespace: rec.Name,
+                            AWSEC2Url: rec.arcsol__AWSEC2Url__c,
+                            AWSS3Bucket: rec.arcsol__AWSS3Bucket__c,
+                            AWSS3Key: rec.arcsol__AWSS3Key__c,
+                            AWSS3Region: rec.arcsol__AWSS3Region__c,
+                            AWSS3Secret: rec.arcsol__AWSS3Secret__c,
+                            AWSS3Service: rec.arcsol__AWSS3Service__c,
+                            AWSS3Url: rec.arcsol__AWSS3Url__c,
+                            BatchSizeConfiguration: rec.arcsol__BatchSizeConfiguration__c,
+                            EnableSSEncryption: rec.arcsol__EnableSSEncryption__c,
+                        }
+
+                    }).spread(function (archivalSetupDetail, created) {
+                        itemsProcessed++;
+                        console.log("ArchivalSetupDetail::", archivalSetupDetail);
+                        if (!created) {
+                            db.ArchivalSetupDetail.update({
+                                AWSEC2Url: rec.arcsol__AWSEC2Url__c,
+                                AWSS3Bucket: rec.arcsol__AWSS3Bucket__c,
+                                AWSS3Key: rec.arcsol__AWSS3Key__c,
+                                AWSS3Region: rec.arcsol__AWSS3Region__c,
+                                AWSS3Secret: rec.arcsol__AWSS3Secret__c,
+                                AWSS3Service: rec.arcsol__AWSS3Service__c,
+                                AWSS3Url: rec.arcsol__AWSS3Url__c,
+                                BatchSizeConfiguration: rec.arcsol__BatchSizeConfiguration__c,
+                                EnableSSEncryption: rec.arcsol__EnableSSEncryption__c,
                             }, {
-                                where: {
-                                    id: archivalConfig.id
-                                }
-                            }).then(function () {
-                                return res.json({
-                                    success: true,
-                                    data: {
-                                        message: "sync done"
+                                    where: {
+                                        ArchivalNamespace: rec.Name
                                     }
-
                                 });
-
+                        }
+                        if (itemsProcessed == records.length) {
+                            global.config.archivalConfig.refreshConfig();
+                            saveArchivalDetail(req, res)
+                            return res.json({
+                                success: true,
+                                message: "sync done"
                             });
-                        global.config.archivalConfig.refreshConfig();
-                        return saveArchivalDetail(records, req, res);
-                    }
+                        }
+                    });
+                })
+            }
+        }, function (err) {
+            return res.json({
+                success: true,
+                message: "sync done"
+            });
+        });
+
+    // ARCHIVAL CONFIG
+    global.sfdc
+        .sobject("arcsol__ArchivalConfiguration__c")
+        .select('*')
+        .execute(function (err, records) {
+            console.log('daaa', records);
+
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: err.toString(),
+                    error: err,
+                    err: err.toString()
                 });
             }
+            else if (records === undefined || records === null || records.length === 0) {
+                return res.json({
+                    success: false,
+                    message: 'No such record found!'
+                });
+            }
+            else {
+                var itemsProcessed = 0;
+                records.forEach(function (rec) {
+
+                    db.ArchivalConfig.findOrCreate({
+                        where: {
+                            ObjectName: rec.arcsol__ObjectName__c
+                        },
+                        defaults: {
+                            Name: rec.Name,
+                            AdditionalFilterCriteria: rec.arcsol__AdditionalFilterCriteria__c,
+                            ArchiveFieldHistory: rec.arcsol__Archive_Field_History__c,
+                            AttachmentSource: rec.arcsol__AttachmentSource__c,
+                            ChildCountFieldName: rec.arcsol__ChildCountFieldName__c,
+                            EnableRecreationinSFDC: rec.arcsol__Enable_Recreation_in_SFDC__c,
+                            FieldNameToCreateFieldsets: rec.arcsol__FieldNameToCreateFieldsets__c,
+                            FieldSetsforDisplay: rec.arcsol__Field_Sets_for_Display__c,
+                            HasAttachments: rec.arcsol__HasAttachments__c,
+                            HasDetailPage: rec.arcsol__HasDetailPage__c,
+                            HasNotes: rec.arcsol__HasNotes__c,
+                            IsSearchable: rec.arcsol__IsSearchable__c,
+                            ObjectName: rec.arcsol__ObjectName__c,
+                            ObjectUniqueIdentifier: rec.arcsol__ObjectUniqueIdentifier__c,
+                            Order: rec.arcsol__Order__c,
+                            ParentField: rec.arcsol__ParentField__c,
+                            RelatedItemsforDisplay: rec.arcsol__Related_Items_for_Display__c,
+                            RelatedParentObject: rec.arcsol__RelatedParentObject__c,
+                            S3RootFolder: rec.arcsol__S3RootFolder__c,
+                        }
+
+                    }).spread(function (archivalConfig, created) {
+                        itemsProcessed++;
+                        console.log("ArchivalConfig::", archivalConfig);
+                        if (!created) {
+                            db.ArchivalConfig.update({
+                                Name: rec.Name,
+                                AdditionalFilterCriteria: rec.arcsol__AdditionalFilterCriteria__c,
+                                ArchiveFieldHistory: rec.arcsol__Archive_Field_History__c,
+                                AttachmentSource: rec.arcsol__AttachmentSource__c,
+                                ChildCountFieldName: rec.arcsol__ChildCountFieldName__c,
+                                EnableRecreationinSFDC: rec.arcsol__Enable_Recreation_in_SFDC__c,
+                                FieldNameToCreateFieldsets: rec.arcsol__FieldNameToCreateFieldsets__c,
+                                FieldSetsforDisplay: rec.arcsol__Field_Sets_for_Display__c,
+                                HasAttachments: rec.arcsol__HasAttachments__c,
+                                HasDetailPage: rec.arcsol__HasDetailPage__c,
+                                HasNotes: rec.arcsol__HasNotes__c,
+                                IsSearchable: rec.arcsol__IsSearchable__c,
+                                ObjectName: rec.arcsol__ObjectName__c,
+                                ObjectUniqueIdentifier: rec.arcsol__ObjectUniqueIdentifier__c,
+                                Order: rec.arcsol__Order__c,
+                                ParentField: rec.arcsol__ParentField__c,
+                                RelatedItemsforDisplay: rec.arcsol__Related_Items_for_Display__c,
+                                RelatedParentObject: rec.arcsol__RelatedParentObject__c,
+                                S3RootFolder: rec.arcsol__S3RootFolder__c,
+                            }, {
+                                    where: {
+                                        ObjectName: rec.arcsol__ObjectName__c
+                                    }
+                                });
+                        }
+                        if (itemsProcessed == records.length) {
+                            global.config.archivalConfig.refreshConfig();
+                            saveArchivalDetail(req, res)
+                            return res.json({
+                                success: true,
+                                message: "sync done"
+                            });
+                        }
+                    });
+                })
+            }
+        }, function (err) {
+            return res.json({
+                success: true,
+                message: "sync done"
+            });
         });
-    // ARCHIVAL SYSTEM CONFIG
+
+
+        // ARCHIVAL SYSTEM CONFIG
     global.sfdc
         .sobject("arcsol__Archival_System_Config__c")
         // .select('arcsol__ArchivalNamespace__c,arcsol__ArchiveFieldHistoryBatchSize__c,arcsol__ArchiveLargeAttachmentBatchSize__c, arcsol__ArchiveSObjectToS3batchSize__c, arcsol__Comma_Separated_List_of_Emails__c, arcsol__DeleteAlreadyArchivedRecordsBatchSize__c, arcsol__Down_for_maintenance__c, arcsol__Enable_Parenthetical_Currency_Conversion__c, arcsol__Enable_Server_Side_Encryption_S3__c, arcsol__Field_History_File_Size__c, arcsol__GenericArchiveAttachmentBatchSize__c, arcsol__GenericArchiveNotesBatchSize__c, arcsol__GenericArchiveRelatedItemsBatchSize__c, arcsol__GenericArchiveToRDSBatchSize__c, arcsol__ImplementationName__c, arcsol__MarkChildEligibityForDeleteBatchSize__c, arcsol__MarkParentEligibityForDeleteBatchSize__c, arcsol__MarkRecordsEligibleForDeleteBatchSize__c, arcsol__MarkRelatedItemsCountOnParentSize__c, arcsol__Parent_Batch_Size_for_Attachments__c, arcsol__Parent_Batch_Size_for_Notes__c, arcsol__VisibilityExportToCSV__c')
@@ -209,9 +299,7 @@ archivalRouter.post('/sync', function (req, res) {
         });
 });
 
-//ARCHIVAL SOBJECT
-
-var saveArchivalDetail = function (records, req, res) {
+var saveArchivalDetail = function (req, res) {
     global.sfdc
         .sobject("arcsol__RDSConfig__c")
         .select('arcsol__ObjectName__c,arcsol__RDSFieldName__c,	arcsol__RDSTableName__c,arcsol__SFDCFieldName__c')
@@ -344,7 +432,7 @@ var saveArchivalDetail = function (records, req, res) {
 archivalRouter.post('/checkArchivalActive', function (req, res) {
     var sObject = req.body;
     console.log("sObject", sObject);
-    global.sfdc.describeSObject("arcsol__AWS_S3_RDS__c", function (err, response) {
+    global.sfdc.describeSObject("arcsol__ArchivalSetupDetail__c", function (err, response) {
         if (err) {
             return res.json({
                 success: false,
@@ -360,6 +448,24 @@ archivalRouter.post('/checkArchivalActive', function (req, res) {
     });
 });
 
+// archivalRouter.post('/checkArchivalActive', function (req, res) {
+//     var sObject = req.body;
+//     console.log("sObject", sObject);
+//     global.sfdc.describeSObject("arcsol__AWS_S3_RDS__c", function (err, response) {
+//         if (err) {
+//             return res.json({
+//                 success: false,
+//                 message: "Error occured while loading sobjects from salesforce!",
+//                 error: err
+//             });
+//         } else {
+//             return res.json({
+//                 success: true,
+//                 data: response
+//             });
+//         }
+//     });
+// });
 archivalRouter.post('/list', function (req, res) {
     var criteria = (req.body) ? req.body.criteria : undefined;
     var where = (criteria) ? criteria.where : undefined;

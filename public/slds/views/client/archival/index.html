@@ -20,8 +20,8 @@
                             </div>
                             <div class="slds-media__body">
                                 <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p>
-                                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ reportData.reportName }}">
-                                    {{ reportData.reportName | translate }}
+                                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ reportData.SObject.label }}">
+                                    {{ reportData.SObject.label | translate }}
                                 </h1>
                             </div>
                         </div>
@@ -97,10 +97,12 @@
                                         ng-click="applyOrderBy(field)" ng-repeat="field in resultFields" ng-hide="field.hidden">
                                         <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                                     </th>
+                                    <th scope="col" style="min-width:150px;width:100%" class="th-actions"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="result in searchResult" class="search-result-tr">
+                                <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr">
+
                                     <td style="max-width:200px;width:{{100/resultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}"
                                         title="{{ (field.SObjectField.type === 'reference') 
                                     ? result[field.SObjectField.relationshipName][field.reference] 
@@ -126,6 +128,20 @@
                                             {{result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)]}}
                                         </div>
                                     </td>
+                                    <td class="td-actions">
+                                        <div class="slds-truncate slds-align--absolute-center">
+                                            <div class="slds-button-group" role="group">
+                                                <button title="{{ action.label | translate}}" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
+                                                    ng-click="doAction(action,result)">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#preview'}}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">View</span>
+                                        </button>
+                                            </div>
+                                        </div>
+                                    </td>
+
                                 </tr>
                             </tbody>
                         </table>

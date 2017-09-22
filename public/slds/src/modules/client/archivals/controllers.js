@@ -36,13 +36,36 @@ client.controller('ClientArchivalController', [
                 $scope.blockUI.reportPageBlock.start('Loading Layout Page...');
                 clientArchivalService.loadLayout({ LayoutId: LayoutId })
                     .success(function (response) {
+                        $scope.blockUI.reportPageBlock.stop();
                         if (response.success) {
                             $scope.reportData = response.sObjectLayouts;
                             $scope.fields = response.fields;
                             $scope.criteriaFields = response.criteriaFields;
                             $scope.resultFields = response.resultFields;
                             $scope.searchResult = [];
+                            //$scope.searchResult= undefined,
                             $scope.firstLoad = false;
+                            $scope.archivalConfig();
+                        }
+                        else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading report tabs.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.reportPageBlock.stop();
+                    });
+            }
+        };
+        $scope.archivalConfig = function () {
+            if (!$scope.blockUI.reportPageBlock.state().blocking) {
+                $scope.blockUI.reportPageBlock.start('Loading Layout Page...');
+
+                clientArchivalService.getConfigdata($scope.reportData)
+                    .success(function (response) {
+                        if (response.success) {
+                            $scope.archivalMetaData = response.data.configData;
                             if ($scope.fields > 0) {
                                 $scope.search(1, $scope.pageSize);
                             }
@@ -51,14 +74,12 @@ client.controller('ClientArchivalController', [
                             $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                         }
                         $scope.blockUI.reportPageBlock.stop();
-                    })
-                    .error(function (response) {
+                    }).error(function (response) {
                         $dialog.alert('Server error occured while loading report tabs.', 'Error', 'pficon pficon-error-circle-o');
                         $scope.blockUI.reportPageBlock.stop();
                     });
             }
         };
-
         $scope.search = function (page, pageSize) {
             $scope.pageSize = pageSize;
 
@@ -130,7 +151,7 @@ client.controller('ClientArchivalController', [
                                     whereClauseFields[field.SObjectField.name] = dataValue;
                                 }
                                 else if (fieldType && fieldType === "string") {
-                                     whereClauseFields[field.SObjectField.name] = '%'+field.value+'%';
+                                    whereClauseFields[field.SObjectField.name] = '%' + field.value + '%';
                                 }
                                 else {
                                     data[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join(';') : field.value;
@@ -158,11 +179,13 @@ client.controller('ClientArchivalController', [
                 }
                 var queryObject = {
                     LayoutId: $scope.reportData.id,
+
                     sObject: $scope.reportData.SObject,
                     ArchivalSobjectId: $scope.reportData.ArchivalSobjectId,
                     selectFields: selectFields,
                     whereFields: whereClauseFields,
                     limit: pageSize,
+
                     page: page
                 };
 
@@ -258,7 +281,19 @@ client.controller('ClientArchivalController', [
                 reportBlock: blockUI.instances.get('reportBlock')
             };
         };
+        $scope.doAction = function (action, record) {
+            $state.go('client.archivaldetail', {
+                data: {
+                    sobject: $scope.reportData.SObject,
+                    recrods: record,
+                    archivalMetaData: $scope.archivalMetaData,
+                    ArchivalSobjectId: $scope.reportData.ArchivalSobjectId,
+                    parentRecord: $scope.reportData.SObject,
+                    type: 'Details'
+                }
+            });
 
+        }
         $scope.init = function () {
             console.log('ClientArchivalController loaded!');
             $scope.firstLoad = true;
@@ -271,6 +306,165 @@ client.controller('ClientArchivalController', [
         };
         var orderBy = $filter('orderBy');
 
+        $scope.init();
+    }
+]);
+
+
+client.controller('ClientArchivalDetailLayoutController', [
+    '$scope', '$state', '$stateParams', '$dialog', '$adminLookups', 'clientSObjectService', 'blockUI', 'clientArchivalService', '$adminModals', 'ModalService', '$timeout',
+    function ($scope, $state, $stateParams, $dialog, $adminLookups, clientSObjectService, blockUI, clientArchivalService, $adminModals, ModalService, $timeout) {
+        $scope.sobjectDetaildata = function (layoutId) {
+            // Load layout metadata. (For example, layout sections, layout section fields, layout actions etc...)
+            if (!$scope.blockUI.layoutBlock.state().blocking && $scope.stateParamMetaData !== undefined) {
+                $scope.blockUI.layoutBlock.start('Loading layout...');
+                clientArchivalService.sobjectDetaildata($scope.stateParamMetaData)
+                    .success(function (response) {
+                        $scope.stateParamMetaData['layout'] = response.data.metadata;
+                        // $scope.stateParamMetaData['layout']['type']=$scope.stateParamMetaData.type;
+                        $scope.blockUI.layoutBlock.stop();
+                        if (response.success) {
+                            $scope.loadLayoutMetadata(response.data.metadata);
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading layout metadata.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.layoutBlock.stop();
+                    });
+            }
+        };
+
+        $scope.loadLayoutMetadata = function () {
+            if ($scope.stateParamMetaData !== undefined) {
+                $scope.blockUI.layoutBlock.start('Loading layout...');
+                clientArchivalService.metadata($scope.stateParamMetaData)
+                    .success(function (response) {
+                        $scope.blockUI.layoutBlock.stop();
+                        if (response.success) {
+                            $scope.metadata = response.data.metadata;
+                            $scope.archivalConfigSetup = response.data.archivalConfigSetup;
+                            var invoiceConfig = {};
+                            var relatedListItem = [];
+                            angular.forEach($scope.archivalConfigSetup, function (configs) {
+                                if (configs.ObjectName == $scope.stateParamMetaData.sobject.name) {
+                                    invoiceConfig = configs;
+                                }
+                            });
+                            angular.forEach($scope.metadata.relatedLists, function (action) {
+                                angular.forEach($scope.archivalConfigSetup, function (fields) {
+                                    if (action.SObject.name === fields.ObjectName && ("," + invoiceConfig.RelatedItemsforDisplay + ",").indexOf("," + fields.Name + ",") != -1) {
+                                        relatedListItem.push(action);
+                                    }
+                                    else if (action.SObject.name.toLowerCase().endsWith("__history") && fields.ArchiveFieldHistory === true
+                                        && ((fields.ObjectName.toLowerCase().lastIndexOf("__c") != -1 && action.SObject.name.substring(0, action.SObject.name.toLowerCase().lastIndexOf('__history')) == fields.ObjectName.substring(0, fields.ObjectName.toLowerCase().lastIndexOf("__c")))
+                                            || (fields.ObjectName.toLowerCase.lastIndexOf("__c") == -1 && action.SObject.name.substring(0, action.SObject.name.toLowerCase().lastIndexOf('__history')) == fields.ObjectName))) {
+                                        relatedListItem.push(action);
+                                    }
+                                });
+                            });
+
+                            $scope.metadata.relatedLists = relatedListItem;
+                            $scope.loadSObjectDetails(response.data.metadata);
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading layout metadata.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.layoutBlock.stop();
+                    });
+            }
+        };
+
+        $scope.loadsObjectMetadata = function () {
+            if ($scope.stateParamMetaData !== undefined) {
+                clientArchivalService.sobjectMetadata($scope.stateParamMetaData)
+                    .success(function (response) {
+                        $scope.sObjectMetaData = response.sObjectDetails;
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading layout metadata.', 'Error', 'pficon pficon-error-circle-o');
+                    });
+            }
+        };
+        $scope.criteriaValidation = function (action, model) {
+            if (action.criteria === undefined) {
+                return true;
+            }
+            var criteriaMatched = CriteriaHelper.validate(action.criteria, model);
+            if (criteriaMatched) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        $scope.loadSObjectDetails = function (metadata) {
+            $scope.back.allow = true;
+            if (!$scope.blockUI.layoutBlock.state().blocking && metadata !== undefined) {
+                $scope.blockUI.layoutBlock.start('Loading details...');
+                clientArchivalService.details($scope.stateParamMetaData)
+                    .success(function (response) {
+                        $scope.blockUI.layoutBlock.stop();
+                        if (response.success) {
+                            $scope.dataModel = response.data.dataModel;
+                            $scope.renderRelatedList = true;
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading details.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.layoutBlock.stop();
+                    });
+            }
+        };
+        $scope.back = {
+            allow: false,
+            go: function () {
+                //$scope.LayoutId : LayoutId
+               
+               var stateName = ('client.archival');
+                //var stateName=('client.archivals');
+                $state.go(stateName,{LayoutId: $scope.stateParamData.layout.id});
+            }
+        };
+
+        $scope.initBlockUiBlocks = function () {
+            $scope.blockUI = {
+                layoutBlock: blockUI.instances.get('layoutBlock'),
+            };
+        };
+        $scope.loadLayoutDetail = function () {
+            if (!$scope.blockUI.layoutBlock.state().blocking && $scope.stateParamMetaData !== undefined) {
+                $scope.blockUI.layoutBlock.start('Loading layout...');
+                clientArchivalService.metadata($scope.stateParamMetaData)
+                    .success(function (response) {
+                        $scope.blockUI.layoutBlock.stop();
+                        if (response.success) {
+                            $scope.loadSObjectDetails(response.data.metadata);
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading layout metadata.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.layoutBlock.stop();
+                    });
+            }
+        };
+        $scope.init = function () {
+            console.log('ClientArchivalDetailLayoutController loaded!');
+            $scope.dataModel = {};
+            $scope.renderRelatedList = false;
+            $scope.stateParamData = $stateParams.data;
+            $scope.stateParamMetaData = $scope.stateParamData;
+            $scope.initBlockUiBlocks();
+            $scope.sobjectDetaildata();
+            $scope.baseCtrl = this;
+            $scope.loadsObjectMetadata();
+        };
         $scope.init();
     }
 ]);

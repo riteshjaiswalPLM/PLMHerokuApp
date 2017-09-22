@@ -1,7 +1,7 @@
 'use strict';
 
-client.config(function($stateProvider) {
-    
+client.config(function ($stateProvider) {
+
     $stateProvider
         .state('client', {
             parent: 'app',
@@ -32,5 +32,13 @@ client.config(function($stateProvider) {
             templateUrl: 'slds/views/client/archival/index.html',
             controller: 'ClientArchivalsController',
             title: 'Archival'
-        });
+        })
+        .state('client.archivaldetail', {
+            templateUrl: 'slds/views/client/archival/detail.html',
+            controller: 'ClientArchivalDetailLayoutController',
+            params:{
+                data: null
+            },
+            title: 'archival detail'
+        })
 });

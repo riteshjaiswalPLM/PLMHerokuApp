@@ -1,0 +1,68 @@
+<style>
+    .UploadAttachment .block-ui-message{
+        background-image: url("/resources/images/newSpinner.gif") !important ;
+            background: none;
+            height: 16px !important;
+            color: black;
+            background-repeat: no-repeat;
+            padding: 0px;
+            font-size: 13px;
+            padding-left: 23px;
+    }
+</style>
+
+<div ng-if="type !== 'create'" >
+	<div class="slds-col slds-size--1-of-1 UploadAttachment" block-ui="AttachmentBlock" style="min-height:22px"> 
+		
+		<div class="slds-col slds-size--1-of-1">
+			<form class="slds-form--horizontal">
+				<div class="slds-form-element">
+					<div class="panel panel-default">
+						<!--<div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
+							<h3 >Attachments</h3>
+						</div>-->
+						<div class=" slds-grid " ng-if="attachments" data-ng-show="(attachments ).length > 0">
+							<table fixed-header class="slds-table slds-table--compaq  slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;max-height:300px ;">
+								<thead>
+									<tr class="slds-text-title--caps">
+										<th style="font-weight: 600;"  title="" ng-if="type !== 'detail'">{{'Delete' | translate }}</th>
+										<th style="font-weight: 600;" title="Title">{{'Title' | translate }}</th>
+										<th style="font-weight: 600;" title="Size">{{'Size' | translate }}</th>
+										<th style="text-align:center;width:100px;"  title="Download">{{'Download' | translate}}</th>
+									</tr>
+								</thead>
+								<tbody >
+									<tr ng-repeat="attachment in attachments">
+										<td style="width: 10%;" class="slds-truncate" data-label=""  title="{{attachment.Name}}" ng-if="type !== 'detail'">
+											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
+											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
+										</td>
+										<td style="width: 60%;max-width: 200px" class="slds-truncate" data-label="Title"  title="{{attachment.Key}}"><strong>{{ attachment.Key.substr(attachment.Key.lastIndexOf('/')+1) }}</strong></td>
+										<td style="width: 10%;" class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.Size/1024 | number : 2}} KB</td>
+										<td style="width: 20%;" data-label="Download" >
+											<div class="slds-truncate slds-align--absolute-center" >
+												<div class="slds-button-group" role="group">
+													<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="getFileData(attachment.Key)" >
+														<svg class="slds-button__icon" aria-hidden="true">
+															<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
+														</svg>
+														<span class="slds-assistive-text">{{'Download' | translate }}</span>
+													</button>
+												</div>
+											</div>
+											<!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="slds-grid  slds-grid--align-center "  ng-if="attachments" data-ng-show="(attachments ).length == 0">
+								<strong>{{'No attachment found' | translate}}.</strong>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+	</div>
+</div>

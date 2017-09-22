@@ -1,0 +1,89 @@
+<div block-ui="relatedList_{{ model.id }}_{{index}}" class="slds-form--stacked slds-grow" ng-if="rendered" style="border:1px solid #d8dde6;margin-bottom:3px">
+    <div class="slds-panel__section slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;">
+        <h3 translate>{{ model.title }}</h3>
+    </div>
+    <div>
+        <div class="slds-panel__section slds-grid slds-p-around--none " style="max-height:250px;overflow:auto">
+            <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="border-top: 0px">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th style="font-weight: 600" scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
+                            ng-click="applyOrderBy(field)" ng-repeat="field in model.SObjectLayoutFields">
+                            {{ field.label | translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-if="model.groupBy==undefined || model.groupBy=='' ">
+                    <tr ng-if="searchResult" ng-repeat="result in searchResult  | startFrom: (currentPage*pageSize) | limitTo:pageSize" class="search-result-tr">
+                        <td class="{{ 'td-'+field.SObjectField.type }}" ng-repeat="field in model.SObjectLayoutFields">
+                            <div class="slds-truncate">
+                                {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
+                                === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
+                                | number: field.SObjectField.scale) : (field.SObjectField.type === 'date') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate') : (field.SObjectField.type
+                                === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') : (field.SObjectField.name
+                                == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined) ? sObjectMetaData[result[field.SObjectField.name]]
+                                : result[field.SObjectField.name] }}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-repeat="(key,resultData) in searchResult| groupBy : groupByData " ng-if="model.groupBy != undefined && model.groupBy != '' ">
+                    <tr class="search-result-tr" style="background-color:#D5DDF3">
+                        <td colspan="100%" ng-if="groupByData.indexOf('-')==1">
+                            <b> {{groupFieldsLabel}} </b> : <b>{{key | ltrim: '-' }}</b>
+                        </td>
+                        <td colspan="100%" ng-if="!(groupByData.indexOf('-')==1)">
+                            <b> {{groupFieldsLabel}}</b> : <b>{{key}}</b>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="result in resultData" class="search-result-tr">
+                        <td class="{{ 'td-'+field.SObjectField.type }}" ng-repeat="field in model.SObjectLayoutFields">
+                            <div class="slds-truncate">
+                                {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
+                                === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
+                                | number: field.SObjectField.scale) : (field.SObjectField.type === 'date') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate') : (field.SObjectField.type
+                                === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') : (field.SObjectField.name
+                                == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined) ? sObjectMetaData[result[field.SObjectField.name]]
+                                : result[field.SObjectField.name] }}
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+                <tbody ng-if="searchResult.length === 0">
+                    <tr ng-if="searchResult.length === 0">
+                        <td colspan="{{model.SObjectLayoutFields.length}}" class="slds-blank-slate" style="padding:5px;text-align:center" translate>No Record found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" style="padding-top: 3px;padding-bottom: 3px;"
+            ng-if="model.groupBy == undefined || model.groupBy == '' ">
+            <div style="width: 230px;">
+                <select class="slds-select" data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in [25,50,100,200]"
+                    id="pageSize">
+                </select>
+            </div>
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" ng-disabled="currentPage < 1 || !searchResult || (currentPage < 1 && searchResult.length === 0)"
+                    ng-click="previousNext(-1)">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                    </svg>
+                    {{'Previous' | translate}}
+                </button>
+                <button class="slds-button slds-p-horizontal--medium">{{currentPage+1}}</button>
+                <button class="slds-button slds-button--neutral" ng-disabled=" searchResult.length < ((currentPage*pageSize)+pageSize)" ng-click="previousNext(1)">
+                    {{'Next' | translate}}
+                    <svg class="slds-button__icon slds-button__icon--right" aria-hidden="true">
+                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

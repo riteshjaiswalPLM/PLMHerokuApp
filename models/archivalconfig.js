@@ -1,36 +1,61 @@
 module.exports = function (sequelize, DataTypes) {
     var ArchivalConfig = sequelize.define("ArchivalConfig", {
-        ArchivalNamespace: {
+        Name:{
             type: DataTypes.STRING
         },
-        AWSEC2Url: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        AWSS3Bucket: {
+        AdditionalFilterCriteria: {
             type: DataTypes.STRING
         },
-        AAWSS3Key: {
-            type: DataTypes.STRING
-        },
-        AAWSS3Region: {
-            type: DataTypes.STRING
-        },
-        AWSS3Secret: {
-            type: DataTypes.STRING
-        },
-        AWSS3Service: {
-            type: DataTypes.STRING
-        },
-        AWSS3Url: {
-            type: DataTypes.STRING
-
-        },
-        BatchSizeConfiguration: {
-            type: DataTypes.STRING
-        },
-        EnableSSEncryption: {
+        ArchiveFieldHistory: {
             type: DataTypes.BOOLEAN
+        },
+        AttachmentSource: {
+            type: DataTypes.STRING
+        },
+        ChildCountFieldName: {
+            type: DataTypes.STRING
+        },
+        EnableRecreationinSFDC: {
+            type: DataTypes.BOOLEAN
+        },
+        FieldNameToCreateFieldsets: {
+            type: DataTypes.STRING
+        },
+        FieldSetsforDisplay: {
+            type: DataTypes.STRING
+        },
+        HasAttachments: {
+            type: DataTypes.BOOLEAN
+        },
+        HasDetailPage: {
+            type: DataTypes.BOOLEAN
+        },
+        HasNotes: {
+            type: DataTypes.BOOLEAN
+        },
+        IsSearchable: {
+            type: DataTypes.BOOLEAN
+        },
+        ObjectName: {
+            type: DataTypes.STRING
+        },
+        ObjectUniqueIdentifier: {
+            type: DataTypes.STRING
+        },
+        Order: {
+            type: DataTypes.INTEGER
+        },
+        ParentField: {
+            type: DataTypes.STRING
+        },
+        RelatedItemsforDisplay: {
+            type: DataTypes.STRING
+        },
+        RelatedParentObject: {
+            type: DataTypes.STRING
+        },
+        S3RootFolder: {
+            type: DataTypes.STRING
         },
     })
     return ArchivalConfig;

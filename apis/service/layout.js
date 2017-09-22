@@ -9,6 +9,42 @@ layoutRouter.post('/sobjectMetadata', function(req, res){
         sObjectDetails:global.sObjectFieldListConfig.sObjectFieldLabelMapping[sObject.name]
     });
 });
+layoutRouter.post('/sobjectDetaildata', function (req, res) {
+    var slds = req.body && req.body.slds === true;
+    var layout = req.body.layout;
+    var sObject = req.body.sobject;
+    console.log(layout);
+
+    var SObjectLayouts = db.SObjectLayout.findOne({
+        
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+            SObjectId: sObject.id,
+            type: req.body.type
+        },
+        
+    });
+    SObjectLayouts.then(function (sObjectLayouts) {
+        console.log("SObjectLayouts123", sObjectLayouts);
+        if (sObjectLayouts === undefined || sObjectLayouts === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading archivals tabs.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: {
+                    metadata: sObjectLayouts,
+                    archivalConfigSetup: global.config.archivalConfig.ObjectSetup
+
+                }
+            });
+        }
+    });
+});
 layoutRouter.post('/metadata', function(req, res){
     var slds = req.body && req.body.slds === true;
     var layout = req.body.layout;
@@ -190,7 +226,8 @@ layoutRouter.post('/metadata', function(req, res){
                             return res.json({
                                 success: true,
                                 data: {
-                                    metadata: resultMetadata
+                                    metadata: resultMetadata,
+                                    archivalConfigSetup: global.config.archivalConfig.ObjectSetup
                                 }
                             });
                         }
@@ -199,8 +236,8 @@ layoutRouter.post('/metadata', function(req, res){
                     return res.json({
                         success: true,
                         data: {
-                            metadata: resultMetadata
-                        }
+                            metadata: resultMetadata,
+                            archivalConfigSetup: global.config.archivalConfig.ObjectSetup                        }
                     });
                 }
             }else if(layout.type === 'List'){
@@ -234,14 +271,14 @@ layoutRouter.post('/metadata', function(req, res){
                             }
                             else if(_sObjLayout.type === 'List'){
                                 resultMetadata.btnCriteria=_sObjLayout.btnCriteria;
-                                resultMetadata.whereClause=_sObjLayout.whereClause;
                             }
                         });
                     }
                     return res.json({
                         success: true,
                         data: {
-                            metadata: resultMetadata
+                            metadata: resultMetadata,
+                            archivalConfigSetup: global.config.archivalConfig.ObjectSetup
                         }
                     });
                 });

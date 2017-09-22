@@ -10,4 +10,5 @@ serviceRouter.use('/dashboard',require('./dashboard'));
 serviceRouter.use('/archived',require('./archival'));
 serviceRouter.use('/report',require('./report'));
 serviceRouter.use('/archivals',require('./archivals'));
+serviceRouter.use('/archivalcomponent',require('./archivalcomponent'));
 module.exports = serviceRouter;
