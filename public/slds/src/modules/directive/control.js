@@ -27,6 +27,10 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
             }
             if ($scope.field.SObjectField && $scope.model && $scope.model[$scope.field.SObjectField.name] === undefined) {
                 $scope.model[$scope.field.SObjectField.name] = $scope.field.defaultValue;
+                if($scope.field.defaultValue!=undefined){
+                    $scope.baseCtrl.executeEvent($scope.field.event.onChange, [$scope.field.defaultValue, $scope.field]);
+                }
+                
             }
             
             $scope.doNotRender = function(){

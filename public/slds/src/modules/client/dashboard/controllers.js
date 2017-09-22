@@ -119,13 +119,13 @@ client.controller('ClientDashboardController', [
                     if (recordActions[0].label === 'Edit' && $scope.criteriaValidation(recordActions[0], record)) {
                         _action = recordActions[0];
                     }
-                    else if (recordActions[0].label !== 'Edit') {
+                    else if (recordActions[0].label !== 'Edit'  && $scope.criteriaValidation(recordActions[0], record)) {
                         _action = recordActions[0];
                     }
 
                 } else {
                     angular.forEach(recordActions, function (action) {
-                        if (action.label === 'Details' && !_action) {
+                        if (action.label === 'Details' && !_action && $scope.criteriaValidation(action, record)) {
                             _action = action;
                         } else if (action.label === 'Edit' && $scope.criteriaValidation(action, record) && !_editAction) {
                             _editAction = action;

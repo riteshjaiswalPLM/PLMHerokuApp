@@ -450,13 +450,13 @@ client.controller('ClientListLayoutController',[
                     if($scope.recordActions[0].label === 'Edit' && $scope.criteriaValidation($scope.recordActions[0],record)){
                         _action = $scope.recordActions[0];
                     }
-                    else if($scope.recordActions[0].label !== 'Edit' ){
+                    else if($scope.recordActions[0].label !== 'Edit' && $scope.criteriaValidation($scope.recordActions[0],record)){
                         _action = $scope.recordActions[0];
                     }
                     
                 }else{
                     angular.forEach($scope.recordActions,function(action){
-                        if(action.label === 'Details' && !_action){
+                        if(action.label === 'Details' && !_action && $scope.criteriaValidation(action,record)){
                             _action = action;
                         }else if(action.label === 'Edit' && $scope.criteriaValidation(action,record) && !_editAction){
                             _editAction = action;
