@@ -533,8 +533,8 @@ client.controller('ClientDetailsLayoutController',[
 
 // client.controller('ClientEditLayoutController',[
 client.controller('ClientSectionLayoutController',[
-            '$scope','$rootScope','$state','$stateParams','$dialog','$controller','$appCache','$timeout','$filter','blockUI','clientLayoutService','clientSObjectService','CriteriaHelper',
-    function($scope , $rootScope , $state , $stateParams , $dialog , $controller ,$appCache, $timeout , $filter , blockUI , clientLayoutService , clientSObjectService,CriteriaHelper){
+            '$scope','$rootScope','$state','$stateParams','$dialog','$controller','$appCache','$timeout','$filter','blockUI','clientLayoutService','clientSObjectService','CriteriaHelper','Notifications',
+    function($scope , $rootScope , $state , $stateParams , $dialog , $controller ,$appCache, $timeout , $filter , blockUI , clientLayoutService , clientSObjectService,CriteriaHelper,Notifications){
         var orderBy = $filter('orderBy');
         $scope.loadLayoutMetadata = function(){
             // Load layout metadata. (For example, layout sections, layout section fields, layout actions etc...)
@@ -813,6 +813,9 @@ client.controller('ClientSectionLayoutController',[
                         .success(function(response){
                             $scope.blockUI.layoutBlock.stop();
                             if(response.success){
+                                if(response.data.message!=undefined){
+                                    Notifications.success(response.data.message);
+                                }
                                 $scope.back.saveGo();
                             }else{
                                 $dialog.alert(response.message,'Validation Alert','pficon-warning-triangle-o');
@@ -931,6 +934,9 @@ client.controller('ClientSectionLayoutController',[
             .success(function(response){
                 $scope.blockUI.layoutBlock.stop();
                 if(response.success){
+                    if(response.data.message!=undefined){
+                        Notifications.success(response.data.message);
+                    }
                     $scope.back.saveGo();
                 }else{
                     $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
