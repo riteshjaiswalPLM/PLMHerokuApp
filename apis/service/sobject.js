@@ -616,42 +616,58 @@ sobjectRouter.post('/multipleApproveSave', function(req, res){
 
 sobjectRouter.post('/getFieldType', function (req, res) {
     var data = req.body;
-    var Result = global.db.SObject.findOne({
-        attributes: {
-            exclude: ['label', 'labelPlural', 'keyPrefix', 'custom', 'customSetting', 'createable', 'deletable', 'layoutable', 'mergeable', 'queryable', 'replicateable', 'retrieveable', 'updateable', 'forMobile', 'config', 'createdAt', 'updatedAt']
-        },
-        include: {
-            model: global.db.SObjectField,
+    if (data.sobjectname == undefined || data.sobjectname == '') {
+        global.sfdc.getUserMapping(null, function (err, UserMapping) {
+            if (err) {
+                return res.json({ success: false, message: err.message });
+            } else {
+                global.UserMapping = UserMapping;
+                data.sobjectname = global.UserMapping.SObject.name;
+                getAllFieldType();
+            }
+        });
+    }
+    else {
+        getAllFieldType();
+    }
+    var getAllFieldType = function () {
+        var Result = global.db.SObject.findOne({
             attributes: {
-                exclude: ['label', 'custom', 'aggregatable', 'autoNumber', 'byteLength', 'calculated', 'calculatedFormula', 'controllerName', 'createable', 'defaultValue', 'defaultValueFormula', 'dependentPicklist', 'digits', 'encrypted', 'externalId', 'extraTypeInfo', 'filterable', 'highScaleNumber', 'htmlFormatted', 'idLookup', 'inlineHelpText', 'length', 'mask', 'maskType', 'nameField', 'namePointing', 'nillable', 'picklistValues', 'precision', 'referenceTargetField', 'referenceTo', 'relationshipName', 'restrictedDelete', 'restrictedPicklist', 'scale', 'sortable', 'unique', 'updateable', 'forMobile', 'isGovernField', 'SObjectId', 'createdAt', 'updatedAt']
+                exclude: ['label', 'labelPlural', 'keyPrefix', 'custom', 'customSetting', 'createable', 'deletable', 'layoutable', 'mergeable', 'queryable', 'replicateable', 'retrieveable', 'updateable', 'forMobile', 'config', 'createdAt', 'updatedAt']
+            },
+            include: {
+                model: global.db.SObjectField,
+                attributes: {
+                    exclude: ['label', 'custom', 'aggregatable', 'autoNumber', 'byteLength', 'calculated', 'calculatedFormula', 'controllerName', 'createable', 'defaultValue', 'defaultValueFormula', 'dependentPicklist', 'digits', 'encrypted', 'externalId', 'extraTypeInfo', 'filterable', 'highScaleNumber', 'htmlFormatted', 'idLookup', 'inlineHelpText', 'length', 'mask', 'maskType', 'nameField', 'namePointing', 'nillable', 'picklistValues', 'precision', 'referenceTargetField', 'referenceTo', 'relationshipName', 'restrictedDelete', 'restrictedPicklist', 'scale', 'sortable', 'unique', 'updateable', 'forMobile', 'isGovernField', 'SObjectId', 'createdAt', 'updatedAt']
+                },
+                where: {
+                    name: {
+                        $in: data.fieldname
+                    }
+                }
             },
             where: {
-                name: {
-                    $in: data.fieldname
-                }
+                name: data.sobjectname
             }
-        },
-        where: {
-            name: data.sobjectname
-        }
-    });
-    Result.then(function (result) {
-        if (result != null && result != undefined && result.SObjectFields[0] != undefined) {
-            var fieldTypes = {};
-            result.SObjectFields.forEach(function (field) {
-                fieldTypes[field.name] = field.type;
-            });
-            return res.json({
-                success: true,
-                fieldDataTypes: fieldTypes
-            });
-        }
-        else {
-            return res.json({
-                success: false
-            });
-        }
-    });
+        });
+        Result.then(function (result) {
+            if (result != null && result != undefined && result.SObjectFields[0] != undefined) {
+                var fieldTypes = {};
+                result.SObjectFields.forEach(function (field) {
+                    fieldTypes[field.name] = field.type;
+                });
+                return res.json({
+                    success: true,
+                    fieldDataTypes: fieldTypes
+                });
+            }
+            else {
+                return res.json({
+                    success: false
+                });
+            }
+        });
+    }
 });
 
 var uploadFileOnSalesforce = function(queryObject){
