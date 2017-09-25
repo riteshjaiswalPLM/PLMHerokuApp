@@ -271,6 +271,7 @@ layoutRouter.post('/metadata', function(req, res){
                             }
                             else if(_sObjLayout.type === 'List'){
                                 resultMetadata.btnCriteria=_sObjLayout.btnCriteria;
+                                resultMetadata.whereClause=_sObjLayout.whereClause;
                             }
                         });
                     }
