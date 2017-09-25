@@ -163,7 +163,7 @@ client.controller('ClientSObjectLookupController',[
             }
 
             if (fieldsTobeReplaced.length > 0) {
-                clientSObjectService.getFieldType({ sobjectname: 'akritivesm__Buyer_Users__c', fieldname: fieldsTobeReplaced })
+                clientSObjectService.getFieldType({ sobjectname: userData.attributes.type, fieldname: fieldsTobeReplaced })
                     .success(function (response) {
                         if (response.success) {
                             while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {

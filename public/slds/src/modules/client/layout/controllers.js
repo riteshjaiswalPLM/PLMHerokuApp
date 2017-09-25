@@ -207,7 +207,7 @@ client.controller('ClientListLayoutController',[
                         whereClauseStringTmp = whereClauseStringTmp.replace(whereClauseStringTmp.substring(start - 16, stop + 1), fieldTobeReplaced);
                     }
 
-                    clientSObjectService.getFieldType({ sobjectname: 'akritivesm__Buyer_Users__c', fieldname: fieldsTobeReplaced })
+                    clientSObjectService.getFieldType({ sobjectname: userData.attributes.type, fieldname: fieldsTobeReplaced })
                         .success(function (response) {
                             if (response.success) {
                                 while (whereClauseString.indexOf('{LOGGED_IN_USER') > -1) {
