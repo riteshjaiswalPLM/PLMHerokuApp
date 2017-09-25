@@ -93,16 +93,28 @@
                         <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height: {{ (searchResult.length===0) ? 0 : 400 }}px;height:auto">
                             <thead>
                                 <tr class="slds-text-title--caps">
+                                    <th scope="col" style="min-width:150px;" class="th-actions">Action</th>
                                     <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
                                         ng-click="applyOrderBy(field)" ng-repeat="field in resultFields" ng-hide="field.hidden">
                                         <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                                     </th>
-                                    <th scope="col" style="min-width:150px;width:100%" class="th-actions"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr">
-
+                                    <td class="td-actions">
+                                        <div class="slds-truncate slds-align--absolute-center">
+                                            <div class="slds-button-group" role="group">
+                                                <button title="{{ action.label | translate}}" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
+                                                    ng-click="doAction(action,result)">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#preview'}}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">View</span>
+                                        </button>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td style="max-width:200px;width:{{100/resultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}"
                                         title="{{ (field.SObjectField.type === 'reference') 
                                     ? result[field.SObjectField.relationshipName][field.reference] 
@@ -128,20 +140,6 @@
                                             {{result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)]}}
                                         </div>
                                     </td>
-                                    <td class="td-actions">
-                                        <div class="slds-truncate slds-align--absolute-center">
-                                            <div class="slds-button-group" role="group">
-                                                <button title="{{ action.label | translate}}" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
-                                                    ng-click="doAction(action,result)">
-                                            <svg class="slds-button__icon" aria-hidden="true">
-                                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#preview'}}"></use>
-                                            </svg>
-                                            <span class="slds-assistive-text">View</span>
-                                        </button>
-                                            </div>
-                                        </div>
-                                    </td>
-
                                 </tr>
                             </tbody>
                         </table>

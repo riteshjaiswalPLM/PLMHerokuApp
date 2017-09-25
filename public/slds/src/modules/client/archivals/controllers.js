@@ -9,6 +9,7 @@ client.controller('ClientArchivalsController', [
                 .success(function (response) {
                     if (response.success) {
                         $scope.archivaltabs = response.archivaltabs;
+                        //$scope.back();
                     }
                     else {
                         $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
@@ -347,11 +348,21 @@ client.controller('ClientArchivalDetailLayoutController', [
                             $scope.archivalConfigSetup = response.data.archivalConfigSetup;
                             var invoiceConfig = {};
                             var relatedListItem = [];
+                            var widgetsItem = [];
                             angular.forEach($scope.archivalConfigSetup, function (configs) {
                                 if (configs.ObjectName == $scope.stateParamMetaData.sobject.name) {
                                     invoiceConfig = configs;
                                 }
                             });
+                            angular.forEach($scope.metadata.layoutSections, function (action) {
+                                if (action.isComponent === true && action.Component.catagory == "UploadAttachment") {
+                                    widgetsItem.push(action);
+                                }
+                                else if (action.isComponent === false) {
+                                    widgetsItem.push(action);
+                                }
+                            });
+                            $scope.metadata.layoutSections = widgetsItem;
                             angular.forEach($scope.metadata.relatedLists, function (action) {
                                 angular.forEach($scope.archivalConfigSetup, function (fields) {
                                     if (action.SObject.name === fields.ObjectName && ("," + invoiceConfig.RelatedItemsforDisplay + ",").indexOf("," + fields.Name + ",") != -1) {
@@ -424,8 +435,8 @@ client.controller('ClientArchivalDetailLayoutController', [
             allow: false,
             go: function () {
                 //$scope.LayoutId : LayoutId
-               
-               var stateName = ('client.archival');
+
+                var stateName = ('client.archival');
                 //var stateName=('client.archivals');
                 $state.go(stateName,{LayoutId: $scope.stateParamData.layout.id});
             }
