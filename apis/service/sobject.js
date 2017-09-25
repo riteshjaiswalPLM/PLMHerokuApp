@@ -767,38 +767,55 @@ var saveSobjectDetail = function(queryObject,req,res){
                 errMsg:err.toString()
             });
         }else{
-            if(queryObject.trackerId != undefined && queryObject.trackerId != null){
-                queryObject.sObject.data.Id = ret.id; 
-                queryObject.currentUserId=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
-                var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
-                if(!isUploadFileSuccess){
-                    global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);
-                    global.sfdc.sobject(queryObject.sObject.name).destroy(queryObject.sObject.data.Id);
+            global.sfdc
+            .sobject(queryObject.sObject.name)
+            .select('Name')
+            .where({id:ret.id})
+            .execute(function(err, records){
+                if(err || records.length ==0){
                     return res.json({
                         success: false,
-                        message: 'Error occured while creating new record.',
+                        message: 'Error occured while creating new records.',
                         error: err
                     });
+                }
+                if(queryObject.trackerId != undefined && queryObject.trackerId != null){
+                    queryObject.sObject.data.Id = ret.id; 
+                    queryObject.currentUserId=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
+                    var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
+                    if(!isUploadFileSuccess){
+                        global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);
+                        global.sfdc.sobject(queryObject.sObject.name).destroy(queryObject.sObject.data.Id);
+                        return res.json({
+                            success: false,
+                            message: 'Error occured while creating new record.',
+                            error: err
+                        });
+                    }
+                    else{
+                        deleteFilesFromHerokuAfterUpload(queryObject.files);
+                        return res.json({
+                            success: true,
+                            data: {
+                                id: ret.id,
+                                message:records[0].Name +' has been created successfully!'
+                            }
+                        });
+                    } 
                 }
                 else{
                     deleteFilesFromHerokuAfterUpload(queryObject.files);
                     return res.json({
                         success: true,
                         data: {
-                            id: ret.id
+                            id: ret.id,
+                            message:records[0].Name +' has been created successfully!'
                         }
                     });
-                } 
-            }
-            else{
-                deleteFilesFromHerokuAfterUpload(queryObject.files);
-                return res.json({
-                    success: true,
-                    data: {
-                        id: ret.id
-                    }
-                });
-            }
+                }
+                
+            });
+            
         }
     });
 };
