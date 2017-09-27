@@ -1,7 +1,7 @@
 'use strict';
 client.controller('ClientArchivalsController', [
-    '$scope', '$rootScope', '$controller', '$state', '$dialog', 'clientArchivalService',
-    function ($scope, $rootScope, $controller, $state, $dialog, clientArchivalService) {
+    '$scope', '$rootScope', '$controller', '$state', '$dialog', 'clientArchivalService', '$stateParams',
+    function ($scope, $rootScope, $controller, $state, $dialog, clientArchivalService, $stateParams) {
 
         $scope.loadArchivaltabs = function () {
             clientArchivalService.archivaltabs()
@@ -9,7 +9,6 @@ client.controller('ClientArchivalsController', [
                 .success(function (response) {
                     if (response.success) {
                         $scope.archivaltabs = response.archivaltabs;
-                        //$scope.back();
                     }
                     else {
                         $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
@@ -29,8 +28,8 @@ client.controller('ClientArchivalsController', [
 ]);
 
 client.controller('ClientArchivalController', [
-    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter', '$timeout', '$appCache', 'blockUI', 'clientArchivalService',
-    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $timeout, $appCache, blockUI, clientArchivalService) {
+    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter', '$timeout', '$appCache', 'blockUI', 'clientArchivalService', '$stateParams',
+    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $timeout, $appCache, blockUI, clientArchivalService, $stateParams) {
 
         $scope.loadLayout = function (LayoutId) {
             if (!$scope.blockUI.reportPageBlock.state().blocking) {
@@ -290,6 +289,7 @@ client.controller('ClientArchivalController', [
                     archivalMetaData: $scope.archivalMetaData,
                     ArchivalSobjectId: $scope.reportData.ArchivalSobjectId,
                     parentRecord: $scope.reportData.SObject,
+                    ArchivalLayoutId: $scope.reportData.id,
                     type: 'Details'
                 }
             });
@@ -304,6 +304,9 @@ client.controller('ClientArchivalController', [
             $scope.stateCache = {};
             $scope.btnExportDis = false;
             $scope.initBlockUiBlocks();
+            if ($stateParams && $stateParams.LayoutId) {
+                $scope.loadLayout($stateParams.LayoutId);
+            }
         };
         var orderBy = $filter('orderBy');
 
@@ -434,14 +437,10 @@ client.controller('ClientArchivalDetailLayoutController', [
         $scope.back = {
             allow: false,
             go: function () {
-                //$scope.LayoutId : LayoutId
-
                 var stateName = ('client.archival');
-                //var stateName=('client.archivals');
-                $state.go(stateName,{LayoutId: $scope.stateParamData.layout.id});
+                $state.go(stateName, { LayoutId: $scope.stateParamData.ArchivalLayoutId });
             }
         };
-
         $scope.initBlockUiBlocks = function () {
             $scope.blockUI = {
                 layoutBlock: blockUI.instances.get('layoutBlock'),

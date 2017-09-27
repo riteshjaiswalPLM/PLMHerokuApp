@@ -31,6 +31,9 @@ client.config(function ($stateProvider) {
         .state('client.archival', {
             templateUrl: 'slds/views/client/archival/index.html',
             controller: 'ClientArchivalsController',
+            params:{
+                LayoutId: null
+            },
             title: 'Archival'
         })
         .state('client.archivaldetail', {

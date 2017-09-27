@@ -36,7 +36,7 @@
                     <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
                         <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                     </svg>
-                    <input type="text" class="slds-input" placeholder="Search layouts..." ng-model="layoutsFilter" />
+                    <input type="text" class="slds-input" placeholder="Search layouts..." ng-model="filterStr.layoutsFilter" />
                 </div>
             </div>
         </div>
@@ -62,19 +62,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-if="$root.filteredLayouts.length === 0 && layouts.length > 0 && layoutsFilter">
+            <tr ng-if="$root.filteredLayouts.length === 0 && layouts.length > 0 && filterStr.layoutsFilter">
                 <td colspan="6" class="slds-blank-slate">
                     <h1>No Layout found for search criteria.</h1>
                 </td>
             </tr>
-            <tr ng-if="layouts.length === 0">
-                <td colspan="6" class="slds-blank-slate">
-                    <h1>No Layout added.</h1>
-                    <p>Click <a href="" ng-click="openSObjectLayoutsLookup()"><strong>Create Layout</strong></a> to add new
-                        <strong>Layout</strong>.</p>
-                </td>
-            </tr>
-            <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: layoutsFilter)">
+            <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: filterStr.layoutsFilter)">
                 <td data-label="SObject">
                     <div class="slds-truncate" title="{{ layout.SObject.label }} : {{ layout.type }} layout">{{ layout.SObject.label }}</div>
                 </td>

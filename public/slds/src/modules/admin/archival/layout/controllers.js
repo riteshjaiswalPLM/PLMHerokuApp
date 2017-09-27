@@ -141,6 +141,7 @@ admin.controller('AdminArchivalLayoutsListController', [
             console.log('AdminArchivalLayoutsListController loaded!');
             $scope.initBlockUiBlocks();
             $scope.loadSObjects();
+            $scope.filterStr = {};
         };
         $scope.init();
     }]);
