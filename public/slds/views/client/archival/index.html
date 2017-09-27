@@ -69,16 +69,15 @@
                                 </div>
                             </div>
                             <div class="slds-button-group" role="group">
-                                <button class="slds-button slds-button--neutral" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)"
-                                    ng-click="search(currentPage - 1, pageSize)">
+                                <button class="slds-button slds-button--neutral" ng-disabled="currentPage < 1 || !searchResult || (currentPage < 1 && searchResult.length === 0)"
+                                ng-click="previousNext(-1)">
                                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                         <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
                                     </svg>
                                     {{'Previous' | translate}}
                                 </button>
-                                <button class="slds-button slds-p-horizontal--medium">{{currentPage}}</button>
-                                <button class="slds-button slds-button--neutral" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize"
-                                    ng-click="search(currentPage + 1, pageSize)">
+                                <button class="slds-button slds-p-horizontal--medium">{{currentPage+1}}</button>
+                                <button class="slds-button slds-button--neutral" ng-disabled=" searchResult.length < ((currentPage*pageSize)+pageSize)" ng-click="previousNext(1)">
                                     {{'Next' | translate}}
                                     <svg class="slds-button__icon slds-button__icon--right" aria-hidden="true">
                                         <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
@@ -101,7 +100,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr">
+                                <tr ng-if = "searchResult" ng-repeat="result in searchResult | startFrom: (currentPage*pageSize) | limitTo:pageSize"  class="search-result-tr">
                                     <td class="td-actions">
                                         <div class="slds-truncate slds-align--absolute-center">
                                             <div class="slds-button-group" role="group">

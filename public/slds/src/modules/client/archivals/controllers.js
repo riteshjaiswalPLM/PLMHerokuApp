@@ -203,8 +203,8 @@ client.controller('ClientArchivalController', [
                         .success(function (response) {
                             if (response.success) {
                                 $scope.searchResult = response.data.searchResult;
-                                $scope.currentPage = response.data.currentPage;
-                                $scope.hasMore = response.data.hasMore;
+                                //$scope.currentPage = response.data.currentPage;
+                                //$scope.hasMore = response.data.hasMore;
 
                                 $scope.stateCache.searchResult = $scope.searchResult;
                                 $scope.stateCache.currentPage = $scope.currentPage;
@@ -294,6 +294,9 @@ client.controller('ClientArchivalController', [
                 }
             });
 
+        }
+        $scope.previousNext = function (count) {
+            $scope.currentPage = $scope.currentPage + count;
         }
         $scope.init = function () {
             console.log('ClientArchivalController loaded!');
