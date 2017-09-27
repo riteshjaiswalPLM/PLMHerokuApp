@@ -468,11 +468,15 @@ languageRouter.post('/exportlanguagetranslation', function(req, res){
                     }
                     //If translation is partially defined then we will sync it
                     else if(englishTranslations.length > translations.length){
+                        //CSV generation logic
+                        var csvData = [];
+                        csvData.push({label: 'Label', translation: 'Translation'});
                         var missingTranslations = [];
                         englishTranslations.forEach(function(engTranslation){
                             var isPresisted = false;
                             translations.forEach(function(otherTranslation){
                                 if(engTranslation.label === otherTranslation.label){
+                                    csvData.push({label: otherTranslation.label, translation: otherTranslation.translation});
                                     isPresisted = true;
                                     return;
                                 }
@@ -490,8 +494,8 @@ languageRouter.post('/exportlanguagetranslation', function(req, res){
                         });
                         global.db.Translation.bulkCreate(missingTranslations).then(function(){
                             //CSV generation logic
-                            var csvData = [];
-                            csvData.push({label: 'Label', translation: 'Translation'});
+                            //var csvData = [];
+                            //csvData.push({label: 'Label', translation: 'Translation'});
                             missingTranslations.forEach(function(missingTranslation) {
                                 csvData.push({label: missingTranslation.label, translation: missingTranslation.translation});
                             });
