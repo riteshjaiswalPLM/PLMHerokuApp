@@ -616,20 +616,6 @@ sobjectRouter.post('/multipleApproveSave', function(req, res){
 
 sobjectRouter.post('/getFieldType', function (req, res) {
     var data = req.body;
-    if (data.sobjectname == undefined || data.sobjectname == '') {
-        global.sfdc.getUserMapping(null, function (err, UserMapping) {
-            if (err) {
-                return res.json({ success: false, message: err.message });
-            } else {
-                global.UserMapping = UserMapping;
-                data.sobjectname = global.UserMapping.SObject.name;
-                getAllFieldType();
-            }
-        });
-    }
-    else {
-        getAllFieldType();
-    }
     var getAllFieldType = function () {
         var Result = global.db.SObject.findOne({
             attributes: {
@@ -667,6 +653,20 @@ sobjectRouter.post('/getFieldType', function (req, res) {
                 });
             }
         });
+    }
+    if (data.sobjectname == undefined || data.sobjectname == '') {
+        global.sfdc.getUserMapping(null, function (err, UserMapping) {
+            if (err) {
+                return res.json({ success: false, message: err.message });
+            } else {
+                global.UserMapping = UserMapping;
+                data.sobjectname = global.UserMapping.SObject.name;
+                getAllFieldType();
+            }
+        });
+    }
+    else {
+        getAllFieldType();
     }
 });
 
