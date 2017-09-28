@@ -33,8 +33,7 @@ admin.factory('archivalService',['$http',function($http){
         changeActive: function(layout){
             return $http.post('/api/admin/archival/changeactive',layout);
         },
-        saveListLayout: function(searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutWhereClause){
-            // var fieldsToDelete = [];
+        saveListLayout: function(searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutId,sObjectLayoutWhereClause,searchCriteriaDeletedFields,searchResultDeletedFields){
             var _index = 0;
             angular.forEach(searchCriteriaFields,function(field,index){
                 if(field.ControllerSObjectField !== undefined && field.ControllerSObjectField !== null){
@@ -58,9 +57,10 @@ admin.factory('archivalService',['$http',function($http){
                 }
             });
             var listLayout = {
-                searchCriteriaFields: searchCriteriaFields,
-                searchRecordFields: searchRecordFields,
+                searchCriteriaFields: searchCriteriaDeletedFields ? searchCriteriaFields.concat(searchCriteriaDeletedFields) : searchCriteriaFields,
+                searchRecordFields: searchResultDeletedFields ? searchRecordFields.concat(searchResultDeletedFields) : searchRecordFields,
                 actionButtonCriteria : actionButtonCriteria,
+                sObjectLayoutId: sObjectLayoutId,
                 sObjectLayoutWhereClause: sObjectLayoutWhereClause
             };
             return $http.post('/api/admin/archival/savelistlayout',listLayout);

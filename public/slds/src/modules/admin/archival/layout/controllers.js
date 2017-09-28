@@ -123,9 +123,9 @@ admin.controller('AdminArchivalLayoutsListController', [
                 if (confirm) {
                     $scope.blockUI.synchronizeLayouts.start('Synchronizing archivalConfigs with Salesforce...');
                     archivalService.syncArchivalConfigs(soobjectList).
-                    success(function (response) {
-                        $scope.blockUI.synchronizeLayouts.stop();
-                    }).
+                        success(function (response) {
+                            $scope.blockUI.synchronizeLayouts.stop();
+                        }).
                         error(function (response) {
                             $dialog.alert('Error occured while synchronization.', 'Error', 'pficon pficon-error-circle-o');
                             $scope.blockUI.synchronizeLayouts.stop();
@@ -249,10 +249,10 @@ admin.controller('AdminArchivalLayoutsEditController', [
                 $state.go('admin.archival.layouts.list');
             }
         };
-        $scope.removeAndReorder = function (items, item, index) {
-            var subRemoveAndReoprder = function (items, item, index) {
+        $scope.removeFieldsAndStoreAndReorder = function (type, items, item, index) {
+            var subRemoveAndReorder = function (items, item, index) {
                 item.deleted = true;
-                if (item.id === undefined) {
+                if (item.id === undefined || item.type == "Layout-Section-Field" || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field") {
                     items.splice(index, 1);
                 }
                 var itemIndex = 0;
@@ -276,24 +276,51 @@ admin.controller('AdminArchivalLayoutsEditController', [
                     title: 'Want to remove field?',
                     yes: 'Yes', no: 'No',
                     message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
-                    class: 'primary'
+                    class: 'destructive',
+                    headerClass: 'error'
                 }, function (confirm) {
                     if (confirm) {
                         var toFromPair = [{ item: item, index: index }];
                         angular.forEach(items, function (i, _index) {
-                            if (i.SObjectField.name === item.SObjectField.name) {
-                                toFromPair.push({ item: i, index: _index });
+                            if (i.SObjectField.name === item.SObjectField.name && index != _index) {
+                                if (index < _index) {
+                                    toFromPair.push({ item: i, index: _index - 1 });
+                                }
+                                else {
+                                    toFromPair.push({ item: i, index: _index });
+                                }
                             }
                         });
-                        subRemoveAndReoprder(items, toFromPair[0].item, toFromPair[0].index);
-                        subRemoveAndReoprder(items, toFromPair[1].item, toFromPair[1].index);
+                        $scope.removeFieldsAndStore(type, toFromPair[0].item);
+                        $scope.removeFieldsAndStore(type, toFromPair[1].item);
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
                     }
                 });
             }
             else {
-                subRemoveAndReoprder(items, item, index);
+                $scope.removeFieldsAndStore(type, item);
+                subRemoveAndReorder(items, item, index);
             }
-        };
+        }
+        $scope.removeFieldsAndStore = function (type, item) {
+            if (item.id !== undefined) {
+                item.deleted = true;
+                if (type == "CriteriaField") {
+                    if ($scope.searchCriteriaDeletedFields == undefined) {
+                        $scope.searchCriteriaDeletedFields = [];
+                    }
+                    $scope.searchCriteriaDeletedFields.push(item);
+                }
+                if (type == "ResultField") {
+                    if ($scope.searchResultDeletedFields == undefined) {
+                        $scope.searchResultDeletedFields = [];
+                    }
+                    $scope.searchResultDeletedFields.push(item);
+                }
+            }
+        }
+
 
         $scope.initBlockUiBlocks = function () {
             $scope.blockUI = {
@@ -349,7 +376,7 @@ admin.controller('AdminArchivalLayoutsEditListController', [
                             if (!itemTo.toField) {
                                 itemTo.label = itemTo.label + ' to';
                                 itemTo.tofield = true;
-                                $scope.searchCriteriaFields.splice(index + 1, 0, itemTo);
+                                $scope.searchCriteriaFields.splice(index + 1, 0, itemTo);
                             }
                             item.fromfield = true;
                             item.label = item.label + ' from';
@@ -385,6 +412,8 @@ admin.controller('AdminArchivalLayoutsEditListController', [
                         if (response.success) {
                             $scope.searchCriteriaFields = [];
                             $scope.searchResultFields = [];
+                            $scope.searchCriteriaDeletedFields = [];
+                            $scope.searchResultDeletedFields = [];
                             angular.forEach(response.data.sObjectLayoutFields, function (field) {
                                 if (field.type === 'Search-Criteria-Field') {
                                     $scope.searchCriteriaFields.push(field);
@@ -414,29 +443,8 @@ admin.controller('AdminArchivalLayoutsEditListController', [
         };
         $scope.saveLayout = function () {
             if (!$scope.blockUI.editListLayout.state().blocking && $scope.layout.SObject != null) {
-                var duplicate = false;
-                angular.forEach($scope.searchResultFields, function (field, index) {
-                    if (field.SObjectField.type === 'reference' && !field.deleted) {
-                        angular.forEach($scope.searchResultFields, function (_field, _index) {
-                            if (_field.SObjectField.type === 'reference' && !_field.deleted) {
-                                if (!duplicate) {
-                                    if (_field.reference && field.reference && _index !== index && _field.SObjectField.id === field.SObjectField.id && _field.reference === field.reference) {
-                                        duplicate = true;
-                                    }
-                                    if (_field.referenceRemoved && field.referenceRemoved && _field.referenceRemoved === true && field.referenceRemoved === true && _index !== index && _field.SObjectField.id === field.SObjectField.id) {
-                                        duplicate = true;
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
-                if (duplicate === true) {
-                    $dialog.alert('Duplicate field found in reference.', 'Error', 'pficon pficon-error-circle-o');
-                    return;
-                }
                 $scope.blockUI.editListLayout.start('Saving ...');
-                archivalService.saveListLayout($scope.searchCriteriaFields, $scope.searchResultFields, $scope.actionButtonCriteria, $scope.layout.whereClause)
+                archivalService.saveListLayout($scope.searchCriteriaFields, $scope.searchResultFields, $scope.actionButtonCriteria, $scope.layout.id, $scope.layout.whereClause, $scope.searchCriteriaDeletedFields, $scope.searchResultDeletedFields)
                     .success(function (response) {
                         $scope.blockUI.editListLayout.stop();
                         if (response.success === true) {
