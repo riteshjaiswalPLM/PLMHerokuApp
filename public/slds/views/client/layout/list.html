@@ -30,10 +30,12 @@
     </div>
     <div class="" style="height: calc(100vh - 156px);">
         <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small">
+            <form role="form">
             <div class="slds-form--stacked slds-grow">
                 <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;" ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
                     <h3>{{'Search Criteria' | translate}}</h3>
                 </div>
+                <button class="" ng-click="search(1,pageSize)" style="width:0px;float:left;padding: 0px;border-width: 0px;"></button>
                 <div block-ui="searchCriteriaBlock" class="slds-form--horizontal slds-grid slds-wrap slds-p-around--small slds-border--bottom" ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
                     <div class="slds-form-element slds-size--1-of-2 slds-p-horizontal--small" 
                         style="margin-top: 0.5rem !important;"
@@ -92,6 +94,7 @@
                 </div>
                             
             </div>
+            </form>
         </div>
         <div block-ui="searchResultBlock" ng-if="searchResultFields.length>0">
             <div  class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="overflow: auto;margin:.75rem;max-height: 400px;min-height:200px ">
