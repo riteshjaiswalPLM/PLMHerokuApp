@@ -28,8 +28,8 @@ client.controller('ClientReportsController', [
 ]);
 
 client.controller('ClientReportController', [
-    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$filter', '$appCache', 'blockUI', 'clientReportService',
-    function ($scope, $rootScope, $controller, $state, $dialog, $filter, $appCache, blockUI, clientReportService) {
+    '$scope', '$rootScope', '$controller', '$state', '$dialog', '$timeout', '$filter', '$appCache', 'blockUI', 'clientReportService',
+    function ($scope, $rootScope, $controller, $state, $dialog, $timeout, $filter, $appCache, blockUI, clientReportService) {
 
         $scope.loadReport = function (reportid) {
             if (!$scope.blockUI.reportPageBlock.state().blocking) {
