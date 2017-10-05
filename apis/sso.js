@@ -4,6 +4,7 @@ var PassportLib = require('../passport-lib');
 var Passport = PassportLib.Passport;
 var PassportStrategyConfigurer = PassportLib.StrategyConfigurer;
 const PIManager = PassportLib.InstanceManager;
+var CryptoJS = require("crypto-js");
 
 PIManager._getConfig = function _getConfig(req, callback) {
     var configuration = JSON.parse(JSON.stringify(ssoconfig));
@@ -81,7 +82,11 @@ ssoRouter.post('/login/callback',
                         '</html>'].join('\r\n')
                     res.send(htmlForm);
                 }
-                else res.redirect('/sso/login/'+user.username);
+                else{
+                    var ciphertext = CryptoJS.AES.encrypt(user.username, global.config.constant.AES_SECRET_KEY);
+                    var base64encode=new Buffer(ciphertext.toString(),'UTF-8');
+                    res.redirect('/sso/login/'+escape(base64encode.toString('base64')));
+                } 
             });
         } 
         else {

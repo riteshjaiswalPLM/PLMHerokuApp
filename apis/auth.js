@@ -100,11 +100,21 @@ global.authenticate = (credential, where, isSSOLogin, callback)=>{
 };
 
 authRouter.post('/authenticate', function(req, res){
+    var username;
+    if(req.body.isSSOLogin){
+        var base64decode=new Buffer(req.body.username,'base64');
+        // Decrypt 
+        var bytes  = CryptoJS.AES.decrypt(base64decode.toString('UTF-8'), config.constant.AES_SECRET_KEY);
+        username = bytes.toString(CryptoJS.enc.Utf8);
+    }
+    else{
+        username=req.body.username;
+    }
     global.authenticate({
-        username: req.body.username, 
+        username: username, 
         password: req.body.password
     },{
-        username: {$iLike: req.body.username},
+        username: {$iLike: username},
         active: true
     }, req.body.isSSOLogin ? req.body.isSSOLogin : false, function(response){
         return res.json(response);
