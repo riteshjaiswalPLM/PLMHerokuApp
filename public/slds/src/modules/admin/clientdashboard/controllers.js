@@ -23,6 +23,11 @@ admin.controller('AdminClientDashboardDesignController',[
             $scope.reOrder($scope.dashboardContainers);
             if(!$scope.blockUI.ClientDashboardEditLayoutBlockUI.state().blocking){
                 $scope.blockUI.ClientDashboardEditLayoutBlockUI.start('Saving layout...');
+                angular.forEach($scope.dashboardContainers, function (container) {
+                    container.deletedComponents ? container.components = container.components.concat(container.deletedComponents) : container.components,
+                        container.deletedComponents = undefined;
+                });
+                $scope.deletedContainers ? $scope.dashboardContainers = $scope.dashboardContainers.concat($scope.deletedContainers) : $scope.dashboardContainers,
                 clientDashboardContainerService.saveClientDashboardContainers({ 
                     containers: $scope.dashboardContainers
                 })
@@ -95,12 +100,23 @@ admin.controller('AdminClientDashboardDesignController',[
                 }
             });
         }
+        $scope.removeFieldsStore = function (container, item) {
+            if (container.deletedComponents == undefined) {
+                container.deletedComponents = [];
+            }
+            item.deleted = true;
+            container.deletedComponents.push(item);
+        };
+        $scope.removeFieldsStoreOfContainer = function (item) {
+            if ($scope.deletedContainers == undefined) {
+                $scope.deletedContainers = [];
+            }
+            item.deleted = true;
+            $scope.deletedContainers.push(item);
+        };
         $scope.removeAndReorder = function(items,item,index){
             item.deleted = true;
-            if(item.id === undefined){
-                items.splice(index,1);
-            }
-            
+            items.splice(index,1);
             var itemIndex = 0;
             angular.forEach(items,function(i, _index){
                 if(!i.deleted){
