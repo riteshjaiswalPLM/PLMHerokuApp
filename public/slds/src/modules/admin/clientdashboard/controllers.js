@@ -68,13 +68,18 @@ admin.controller('AdminClientDashboardDesignController',[
             return item;
         };
         $scope.dashboardContainerComponentPropertiesModal = function(containerIndex, component, index){
+            if (component.component != undefined) {
+                if (component.ComponentId == undefined) {
+                    component.id = component.component.id;
+                }
+                delete component.component;
+            }
             if (component.SObject != undefined) {
                 delete component.SObject;
-                component.component = angular.copy(component);
-                delete component.id;
             }
-            else {
-                component.component = angular.copy(component);
+            component.component = angular.copy(component);
+            if (component.ComponentId == undefined) {
+                delete component.id;
             }
             component.deleted = component.component.deleted;
             component.order = component.component.order;
