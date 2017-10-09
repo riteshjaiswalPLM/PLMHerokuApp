@@ -366,9 +366,9 @@ admin.controller('AdminLayoutsEditController',[
         $scope.removeAndReorder = function(items,item,index){
             var subRemoveAndReoprder = function(items,item,index){
                 item.deleted = true;
-                if(item.id === undefined || item.type == "Layout-Section-Field" || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field"){
+                //if(item.id === undefined || item.type == "Layout-Section-Field" || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field"){
                     items.splice(index,1);
-                }
+                //}
                 
                 var itemIndex = 0;
                 angular.forEach(items,function(i, _index){
@@ -410,7 +410,13 @@ admin.controller('AdminLayoutsEditController',[
                 subRemoveAndReoprder(items,item,index);
             }
         };
-        
+        $scope.removeSectionFieldsStore=function(section){
+            section.deleted = true;
+            if($scope.deletedSections==undefined){
+                $scope.deletedSections=[];
+            }
+            $scope.deletedSections.push(section);
+        }
         $scope.initBlockUiBlocks = function(){
             $scope.blockUI = {
                 editLayout: blockUI.instances.get('editLayout'),
@@ -1057,6 +1063,7 @@ admin.controller('AdminLayoutsEditEditController',[
             }
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editEditLayout.start('Saving layout...');
+                $scope.deletedSections ? $scope.layoutSections = $scope.layoutSections.concat($scope.deletedSections) : $scope.layoutSections,
                 layoutService.saveEditLayout({ 
                     layoutSections: $scope.layoutSections,
                     type: $scope.layout.type,
