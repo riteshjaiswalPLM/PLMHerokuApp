@@ -1,6 +1,14 @@
 var express = require('express');
 var setupRouter = express.Router();
 var jsForce = require('jsforce');
+var path = require('path');
+var formidable = require('formidable');
+var fs = require('fs');
+var timestamp = require('unix-timestamp');
+var http = require('http');
+var os = require('os');
+var request = require('request');
+var mime = require('mime');
 
 setupRouter.post('/sfdc', function(req, res){
     var Sfdcs = db.Salesforce.findAll({
@@ -490,5 +498,57 @@ setupRouter.post('/ssoconfig/save', function(req, res){
         });
     });
 });
+
+setupRouter.post('/logoconfig/homelogo', function(req, res){
+    var form = new formidable.IncomingForm();
+    var fileName;
+    form.multiples = true;
+    form.uploadDir = "./public/resources/images/";
+    form.parse(req);
+
+    form.on('file', function(field, file) {
+        fs.rename(file.path, path.join(form.uploadDir, 'homeLogo'+file.name.toLowerCase().substr(file.name.indexOf("."),file.name.length - 1) ));
+    });
+
+    form.on('error', function(err) {
+        return res.json({
+            success: false,
+            error: err
+        });
+    });
+
+    form.on('end', function() {
+        return res.json({
+            success: true,
+            fileName: fileName
+        });
+    });
+});
+setupRouter.post('/logoconfig/headerlogo', function(req, res){
+    var form = new formidable.IncomingForm();
+    var fileName;
+    form.multiples = true;
+    form.uploadDir = "./public/resources/images/logo/";
+    form.parse(req);
+
+    form.on('file', function(field, file) {
+        fs.rename(file.path, path.join(form.uploadDir, 'headerLogo'+file.name.toLowerCase().substr(file.name.indexOf("."),file.name.length - 1) ));
+    });
+
+    form.on('error', function(err) {
+        return res.json({
+            success: false,
+            error: err
+        });
+    });
+
+    form.on('end', function() {
+        return res.json({
+            success: true,
+            fileName: fileName
+        });
+    });
+});
+
 
 module.exports = setupRouter;

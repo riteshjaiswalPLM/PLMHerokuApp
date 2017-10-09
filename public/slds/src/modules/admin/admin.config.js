@@ -232,6 +232,11 @@ admin.config(function($stateProvider) {
             controller: "AdminSetupSSOConfigController",
             title: "SSO Configuration"
         })
+        .state("admin.setup.logoconfig",{
+            templateUrl: "slds/views/admin/setup/logoconfig/view.html",
+            controller: "AdminSetupLogoConfigController",
+            title: "Logo Configuration"
+        })
 
         // Admin Languages
         .state("admin.languages",{

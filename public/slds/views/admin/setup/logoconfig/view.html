@@ -1,0 +1,104 @@
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#user"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() }}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Org Detail Configuration">Org Detail Configuration</h1>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <button type="submit" class="slds-button slds-button--brand" ng-click="save()">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"/>
+                    </svg>
+                    Save
+                </button>
+            </div>-->
+        </div>
+    </div>
+    <div block-ui="loadOrgDetail" class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="height: calc(100vh - 237px);">
+        <article class="slds-card slds-size--1-of-1">
+            <div class="slds-grid slds-border--top slds-border--bottom" style="background: white;">
+                <div class="slds-size--1-of-2 slds-panel__section" >
+                    <div class="slds-form--horizontal">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="logo"><b>Home Page logo</b></label>
+                            <div class="slds-form-element__control">
+                                <div class="input-group col-md-6" >
+                                    <!--<label  class="col-md-6 control-label" for="selectFile"> {{logofile ? logofile.name : 'Select file to upload as logo'}}</label>-->
+                                    <span 	id 				="selectFile"
+                                            class		    = "slds-button slds-button--brand dz-clickable" 
+                                            name		    = "file"
+                                            enctype		    = "multipart/form-data"
+                                            data-ngf-select	= "selectFile($files, $invalidFiles,'Home')"
+                                            style="    cursor: pointer;"
+                                            >
+                                            <span>Upload </span><i class="pficon-file"></i> 
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class='slds-form-element__control' style="color: red;font-weight: bold">
+                                Note : Only {{allowedExtList}} file format supported.<br>
+                                Logo should be 75px height and 380px width for best view<br>&nbsp;
+                            </div>
+                        
+                        </div>
+                        
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <img class="logo-img" ng-src="{{tempHomeLogoImg}}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size--1-of-2 slds-panel__section" >
+                    <div class="slds-form--horizontal">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="logo"><b>Org(Header) logo</b></label>
+                            <div class="slds-form-element__control">
+                                <div class="input-group col-md-6" >
+                                    <!--<label  class="col-md-6 control-label" for="selectFile"> {{headerlogofile ? headerlogofile.name : 'Select file to upload as logo'}}</label>-->
+                                    <span 	id 				="selectFile"
+                                            class		    = "slds-button slds-button--brand dz-clickable" 
+                                            name		    = "file"
+                                            enctype		    = "multipart/form-data"
+                                            data-ngf-select	= "selectFile($files, $invalidFiles,'Header')"
+                                            style="    cursor: pointer;"
+                                            >
+                                            <span>Upload </span><i class="pficon-file"></i> 
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class='slds-form-element__control' style="color: red;font-weight: bold">
+                                Note : Only {{allowedExtList}} file format supported.<br>
+                                Logo should be 42px height and 155px width for best view<br>&nbsp;
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <div class="slds-global-header__logo" style="width: 7.8125rem;">
+                                    <img ng-src="{{tempHeaderLogoImg}}"  />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </article>
+    </div>
+</div>
