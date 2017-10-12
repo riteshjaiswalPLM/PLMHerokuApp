@@ -14,7 +14,7 @@ client.controller('ClientDashboardController', [
                 else {
                     $scope.stateCache = $appCache.get($state.current.name);
                     if ($scope.stateCache.btnClick === "save" && $scope.stateCache.cacheReference !== undefined && $scope.stateCache.recordReference !== undefined) {
-                        $scope.stateCache.searchResult[$scope.stateCache.cacheReference].splice($scope.stateCache.searchResult[$scope.stateCache.cacheReference].indexOf($scope.stateCache.recordReference), 1);
+                        $scope.loadData($scope.stateCache.configuration,$scope.stateCache.cetagory+ 'Component' + $scope.stateCache.componentId,$scope.stateCache.catagory+ $scope.stateCache.componentId + 'Block' ,$scope.stateCache.label, $scope.stateCache.allowedType, true);
                         $scope.searchResult = $scope.stateCache.searchResult;
                         $appCache.put($state.current.name, $scope.stateCache);
                     }
@@ -82,11 +82,16 @@ client.controller('ClientDashboardController', [
             $appCache.remove($state.current.name);
             $scope.init();
         };
-        $scope.doAction = function (stateCacheName, action, record, recordActions, relativeField) {
+        $scope.doAction = function (stateCacheName, action, record, recordActions, relativeField,configuration,catagory,componentId,label,allowedType) {
             $scope.stateCache = $appCache.get($state.current.name);
             $scope.stateCache.cacheReference = stateCacheName;
             $scope.stateCache.recordReference = record;
             $appCache.put($state.current.name, $scope.stateCache);
+            $scope.stateCache.configuration = configuration;
+            $scope.stateCache.catagory  = catagory;
+            $scope.stateCache.componentId  = componentId;
+            $scope.stateCache.label  = label;
+            $scope.stateCache.allowedType = allowedType;
             var _editAction = undefined;
             if (relativeField) {
                 record.Id = record[relativeField.name];

@@ -121,7 +121,7 @@
                                                         <div class="slds-truncate slds-align--absolute-center">
                                                             <div class="slds-button-group" role="group">
                                                                 <button title="{{ action.label | translate}}" ng-repeat="action in component.Component.ComponentDetail.recordActions" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
-                                                                    ng-click="doAction(component.Component.catagory+'Component'+component.id, action,result, component.Component.ComponentDetail.recordActions, component.Component.ComponentDetail.configuration.relativeField)">
+                                                                    ng-click="doAction(component.Component.catagory+'Component'+component.id, action,result, component.Component.ComponentDetail.recordActions, component.Component.ComponentDetail.configuration.relativeField,component.Component.ComponentDetail.configuration,component.Component.catagory,component.id,component.label,container.allowedType)">
                                                                 <svg class="slds-button__icon" aria-hidden="true">
                                                                     <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
                                                                 </svg>
