@@ -412,10 +412,21 @@ admin.controller('AdminLayoutsEditController',[
         };
         $scope.removeSectionFieldsStore=function(section){
             section.deleted = true;
-            if($scope.deletedSections==undefined){
-                $scope.deletedSections=[];
+            if(section.id != undefined){
+                if($scope.deletedSections==undefined){
+                    $scope.deletedSections=[];
+                }
+                $scope.deletedSections.push(section);
             }
-            $scope.deletedSections.push(section);
+        }
+        $scope.removeRelatedListFieldsStore=function(relatedlist){
+            relatedlist.deleted = true;
+            if(relatedlist.id != undefined){
+                if($scope.deletedRelatedList==undefined){
+                    $scope.deletedRelatedList=[];
+                }
+                $scope.deletedRelatedList.push(relatedlist);
+            }
         }
         $scope.initBlockUiBlocks = function(){
             $scope.blockUI = {
@@ -978,6 +989,7 @@ admin.controller('AdminLayoutsEditEditController',[
         };
         $scope.saveLayoutRelatedLists = function(){
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
+                $scope.deletedRelatedList ? $scope.relatedLists = $scope.relatedLists.concat($scope.deletedRelatedList) : $scope.relatedLists;
                 if($scope.relatedLists !== undefined && $scope.relatedLists.length > 0){
                     if ($scope.isValidRelatedLists()) {
                         $scope.blockUI.editEditLayout.start('Saving layout related lists...');

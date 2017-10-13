@@ -106,18 +106,22 @@ admin.controller('AdminClientDashboardDesignController',[
             });
         }
         $scope.removeFieldsStore = function (container, item) {
-            if (container.deletedComponents == undefined) {
-                container.deletedComponents = [];
+            if(item.id != undefined){
+                if (container.deletedComponents == undefined) {
+                    container.deletedComponents = [];
+                }
+                item.deleted = true;
+                container.deletedComponents.push(item);
             }
-            item.deleted = true;
-            container.deletedComponents.push(item);
         };
         $scope.removeFieldsStoreOfContainer = function (item) {
-            if ($scope.deletedContainers == undefined) {
-                $scope.deletedContainers = [];
+            if(item.id != undefined){
+                if ($scope.deletedContainers == undefined) {
+                    $scope.deletedContainers = [];
+                }
+                item.deleted = true;
+                $scope.deletedContainers.push(item);
             }
-            item.deleted = true;
-            $scope.deletedContainers.push(item);
         };
         $scope.removeAndReorder = function(items,item,index){
             item.deleted = true;
