@@ -32,7 +32,7 @@ admin.factory('layoutService',['$http',function($http){
         changeActive: function(layout){
             return $http.post('/api/admin/sobjectlayout/changeactive',layout);
         },
-        saveListLayout: function(searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutId,sObjectLayoutWhereClause,searchCriteriaDeletedFields,searchResultDeletedFields){
+        saveListLayout: function(layoutId,searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutId,sObjectLayoutWhereClause,searchCriteriaDeletedFields,searchResultDeletedFields){
             // var fieldsToDelete = [];
             var _index = 0;
             angular.forEach(searchCriteriaFields,function(field,index){
@@ -57,6 +57,7 @@ admin.factory('layoutService',['$http',function($http){
                 }
             });
             var listLayout = {
+                layoutId: layoutId,
                 searchCriteriaFields: searchCriteriaDeletedFields ? searchCriteriaFields.concat(searchCriteriaDeletedFields) : searchCriteriaFields,
                 searchRecordFields: searchResultDeletedFields ? searchRecordFields.concat(searchResultDeletedFields) : searchRecordFields,
                 actionButtonCriteria : actionButtonCriteria,

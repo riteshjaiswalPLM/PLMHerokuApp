@@ -54,7 +54,8 @@ admin.controller('AdminMobileLayoutsListController',[
                     criteria: {
                         where: {
                             created: true,
-                            type : 'Mobile'
+                            type: 'Mobile',
+                            mobileSubtype: { $or: ['MEdit', null] }
                         }
                     }
                 })
@@ -138,6 +139,10 @@ admin.controller('AdminMobileLayoutsListController',[
         $scope.search = function(layout){
             layout.tempType='List';
             $state.go('admin.mobile.layout.edit',{layout: layout});
+        };
+        $scope.createLayout = function (layout) {
+            layout.tempType = 'Create';
+            $state.go('admin.mobile.layout.create', { layout: layout });
         };
         $scope.edit = function(layout){
             layout.tempType='Edit';
@@ -254,12 +259,29 @@ admin.controller('AdminMobileLayoutsEditController',[
                 $state.go('admin.mobile.layout.list');  
             }
         };
-        $scope.removeAndReorder = function(items,item,index){
-            var subRemoveAndReoprder = function(items,item,index){
-                item.deleted = true;
-                if(item.id === undefined || item.type == "Search-Criteria-Field" || item.type == "Search-Result-Field"){
-                    items.splice(index,1);
+
+        $scope.removeSectionFieldsStore = function (section) {
+            section.deleted = true;
+            if (section.id != undefined) {
+                if ($scope.deletedSections == undefined) {
+                    $scope.deletedSections = [];
                 }
+                $scope.deletedSections.push(section);
+            }
+        };
+        $scope.removeRelatedListFieldsStore = function (relatedlist) {
+            relatedlist.deleted = true;
+            if (relatedlist.id != undefined) {
+                if ($scope.deletedRelatedList == undefined) {
+                    $scope.deletedRelatedList = [];
+                }
+                $scope.deletedRelatedList.push(relatedlist);
+            }
+        };
+        $scope.removeAndReorder = function(items,item,index){
+            var subRemoveAndReorder = function(items,item,index){
+                item.deleted = true;
+                items.splice(index,1);
                 
                 var itemIndex = 0;
                 angular.forEach(items,function(i, _index){
@@ -291,14 +313,78 @@ admin.controller('AdminMobileLayoutsEditController',[
                                 toFromPair.push({item: i, index: _index});
                             }
                         });
-                        subRemoveAndReoprder(items, toFromPair[0].item, toFromPair[0].index);
-                        subRemoveAndReoprder(items, toFromPair[1].item, toFromPair[1].index);
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
                     }
                 });
             }
             else{
-                subRemoveAndReoprder(items,item,index);
+                subRemoveAndReorder(items,item,index);
             }
+        };
+
+        $scope.removeFieldsStoreAndReorder = function (section, items, item, index) {
+            var subRemoveAndReorder = function (items, item, index) {
+                item.deleted = true;
+                if (item.id === undefined || item.type == "Layout-Section-Field") {
+                    items.splice(index, 1);
+                }
+
+                var itemIndex = 0;
+                angular.forEach(items, function (i, _index) {
+                    if (!i.deleted) {
+                        i.order = itemIndex;
+                        itemIndex++;
+                    }
+                });
+
+                if (item.columns !== undefined && angular.isArray(item.columns)) {
+                    angular.forEach(item.columns, function (fields) {
+                        angular.forEach(fields, function (field, fieldIndex) {
+                            field.deleted = true;
+                        });
+                    });
+                }
+            }
+            if (item.fromfield || item.tofield) {
+                $dialog.confirm({
+                    title: 'Want to remove field?',
+                    yes: 'Yes', no: 'No',
+                    message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
+                    class: 'destructive',
+                    headerClass: 'error'
+                }, function (confirm) {
+                    if (confirm) {
+                        var toFromPair = [{ item: item, index: index }];
+                        angular.forEach(items, function (i, _index) {
+                            if (i.SObjectField.name === item.SObjectField.name && index != _index) {
+                                if (index < _index) {
+                                    toFromPair.push({ item: i, index: _index - 1 });
+                                }
+                                else {
+                                    toFromPair.push({ item: i, index: _index });
+                                }
+                            }
+                        });
+                        $scope.removeFieldsStore(section, toFromPair[0].item);
+                        $scope.removeFieldsStore(section, toFromPair[1].item);
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
+                    }
+                });
+            }
+            else {
+                $scope.removeFieldsStore(section, item);
+                subRemoveAndReorder(items, item, index);
+            }
+        };
+
+        $scope.removeFieldsStore = function (section, item) {
+            item.deleted = true;
+            if (section.deletedFields == undefined) {
+                section.deletedFields = [];
+            }
+            section.deletedFields.push(item);
         };
         
         $scope.initBlockUiBlocks = function(){
@@ -514,7 +600,7 @@ admin.controller('AdminMobileLayoutsEditListController',[
                     return;
                 }
                 $scope.blockUI.editListLayout.start('Saving ...');
-                mobileLayoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.whereClause,$scope.searchCriteriaDeletedFields,$scope.searchResultDeletedFields)
+                mobileLayoutService.saveListLayout($scope.layout.id,$scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.whereClause,$scope.searchCriteriaDeletedFields,$scope.searchResultDeletedFields)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){
@@ -948,6 +1034,7 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 if($scope.relatedLists !== undefined && $scope.relatedLists.length > 0){
                     if ($scope.isValidRelatedLists()) {
+                        $scope.deletedRelatedList ? $scope.relatedLists = $scope.relatedLists.concat($scope.deletedRelatedList) : $scope.relatedLists;
                         $scope.blockUI.editEditLayout.start('Saving layout related lists...');
                         mobileLayoutService.saveLayoutRelatedLists({ 
                             relatedLists: $scope.relatedLists,
@@ -1071,6 +1158,7 @@ admin.controller('AdminMobileLayoutsEditEditController',[
                 return;
             }
             if(!$scope.blockUI.editEditLayoutWithSideBar.state().blocking  && $scope.layout.SObject != null){
+                $scope.deletedSections ? $scope.layoutSections = $scope.layoutSections.concat($scope.deletedSections) : $scope.layoutSections;
                 $scope.blockUI.editEditLayoutWithSideBar.start('Saving layout...');
                 mobileLayoutService.saveEditLayout({ 
                     layoutSections: $scope.layoutSections,
@@ -1109,6 +1197,599 @@ admin.controller('AdminMobileLayoutsEditEditController',[
             $scope.cancelMobileEditLayoutConfig();
             $scope.loadGoverningFields();
             $scope.loadMobileEditLayoutConfig();
+        };
+        $scope.init();
+    }
+]);
+
+admin.controller('AdminMobileLayoutsCreateController', [
+    '$scope', '$state', '$stateParams', '$controller', 'mobileLayoutService', 'sobjectService', 'blockUI', '$dialog', '$adminModals', '$filter',
+    function ($scope, $state, $stateParams, $controller, mobileLayoutService, sobjectService, blockUI, $dialog, $adminModals, $filter) {
+        var thisCtrl = this;
+        $scope.loadSObjectFields = function () {
+            if (!$scope.blockUI.sObjectFields.state().blocking && $scope.layout.SObject != null) {
+                $scope.blockUI.sObjectFields.start('Loading ...');
+                sobjectService.loadSObjectFields($scope.layout.SObject)
+                    .success(function (response) {
+                        if (response.success) {
+                            $scope.layout.SObject.fields = []; // = response.data.sObjectFields;
+                            $scope.refSObjects = response.data.refSObjects;
+                            response.data.sObjectFields = $filter('filter')(response.data.sObjectFields, { forMobile: true });
+                            angular.forEach(response.data.sObjectFields, function (field) {
+                                var ControllerSObjectField = undefined;
+                                if (field.controllerName && (field.type === 'picklist' || field.type === 'multipicklist')) {
+                                    angular.forEach(response.data.sObjectFields, function (ctrlField) {
+                                        if (ctrlField.name === field.controllerName) {
+                                            ControllerSObjectField = ctrlField;
+                                        }
+                                    });
+                                }
+                                var SObjectLayoutField = {
+                                    SObjectField: field,
+                                    ControllerSObjectField: ControllerSObjectField,
+                                    label: field.label,
+                                    type: null,
+                                    hidden: false,
+                                    deleted: false,
+                                    recordid: field.type === 'id',
+                                    SObjectLayoutId: $scope.layout.id
+                                };
+                                $scope.layout.SObject.fields.push(SObjectLayoutField);
+                            });
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                        $scope.blockUI.sObjectFields.stop();
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Error occured while loading sobject fields.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.sObjectFields.stop();
+                    });
+            }
+        };
+        $scope.loadChildSObjects = function () {
+            if (!$scope.blockUI.childSObjects.state().blocking && $scope.layout.SObject != null) {
+                $scope.blockUI.childSObjects.start('Loading ...');
+                $scope.layout.SObject.mobile = true;
+                sobjectService.loadChildSObjects($scope.layout.SObject)
+                    .success(function (response) {
+                        if (response.success) {
+                            $scope.layoutRelatedLists = [];
+                            angular.forEach(response.data.sObjectFields, function (sObjectField) {
+                                $scope.layoutRelatedLists.push({
+                                    SObject: sObjectField.SObject,
+                                    title: sObjectField.SObject.labelPlural,
+                                    active: true,
+                                    deleted: false,
+                                    readonly: false
+                                });
+                            });
+                        } else {
+                            $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                        }
+                        $scope.blockUI.childSObjects.stop();
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Error occured while loading sobject fields.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.childSObjects.stop();
+                    });
+            }
+        };
+        $scope.loadCreateLayoutContents = function () {
+            if (!$scope.blockUI.editCreateLayout.state().blocking && $scope.layout.SObject != null) {
+                $scope.blockUI.editCreateLayout.start('Loading ...');
+                mobileLayoutService.loadEditLayoutContents($scope.layout)
+                    .success(function (response) {
+                        if (response.success === true) {
+                            var sObject = angular.copy($scope.layout.SObject);
+                            var tempType = $scope.layout.tempType;
+                            $scope.layout = response.data.sObjectLayout;
+                            $scope.layout.SObject = angular.copy(sObject);
+                            $scope.layout.tempType = tempType;
+                            $scope.layoutSections = response.data.sObjectLayoutSections;
+                            mobileLayoutService.loadLayoutRelatedLists($scope.layout)
+                                .success(function (response2) {
+                                    if (response2.success === true) {
+                                        $scope.relatedLists = response2.data.sObjectLayoutRelatedLists;
+                                        angular.forEach($scope.relatedLists, function (relatedlist, index) {
+                                            if (relatedlist.SObject && relatedlist.SObject.name.indexOf("Invoice_Line_Item__c") > -1
+                                                && relatedlist.amountCriteriaConfig !== undefined && relatedlist.amountCriteriaConfig !== null) {
+                                                relatedlist.relatedListAmtFields = relatedlist.amountCriteriaConfig.relatedListAmtFields;
+                                            }
+                                            delete relatedlist.amountCriteriaConfig;
+                                        });
+                                    } else {
+                                        $dialog.alert('Error occured while loading layout related lists.', 'Error', 'pficon pficon-error-circle-o');
+                                    }
+                                    $scope.blockUI.editCreateLayout.stop();
+                                })
+                                .error(function (response2) {
+                                    $dialog.alert('Server error occured while loading layout related lists.', 'Error', 'pficon pficon-error-circle-o');
+                                    $scope.blockUI.editCreateLayout.stop();
+                                });
+                        } else {
+                            $dialog.alert('Error occured while loading layout contents.', 'Error', 'pficon pficon-error-circle-o');
+                            $scope.blockUI.editCreateLayout.stop();
+                        }
+                    })
+                    .error(function (response) {
+                        $dialog.alert('Server error occured while loading layout contents.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.editCreateLayout.stop();
+                    });
+            }
+        };
+        $scope.returnToList = function () {
+            $state.go('admin.mobile.layout.list');
+        };
+        $scope.components = function () {
+            if ($scope.componentsValues === undefined) {
+                $scope.componentsValues = [{
+                    title: 'Layout Section',
+                    deleted: false,
+                    readonly: false,
+                    active: true,
+                    isComponent: false,
+                    SObjectLayoutId: undefined,
+                    columns: [
+                        []
+                    ]
+                }];
+            }
+            return $scope.componentsValues;
+        };
+        $scope.sectionsDropCallBack = function (event, index, item, external, type) {
+            item.order = index;
+            if (item.SObjectLayoutId === undefined) {
+                item.SObjectLayoutId = $scope.layout.id;
+                $scope.openSectionPropertiesModal(item, index);
+            }
+            return item;
+        };
+        $scope.openSectionPropertiesModal = function (section, index) {
+            $adminModals.layoutSectionProperties({
+                layout: angular.copy($scope.layout),
+                section: angular.copy(section)
+            }, function (newSection) {
+                $scope.layoutSections[index] = newSection;
+            });
+        };
+        $scope.fieldsDropCallBack = function (event, index, item, external, type, section, columnNumber) {
+            var sectionFields = section.columns[0];
+            if (section.columns.length === 2) {
+                sectionFields = section.columns[0].concat(section.columns[1]);
+            }
+            if ($scope.isDuplicate(sectionFields, item)) {
+                return false;
+            }
+            item.type = 'Layout-Section-Field';
+            item.column = columnNumber;
+            item.order = index;
+            item.readonly = (section.readonly !== undefined) ? section.readonly : false;
+            item.active = (item.active !== undefined) ? item.active : true;
+            item.enable = (item.enable !== undefined) ? item.enable : true;
+
+            angular.forEach(section.columns, function (fields) {
+                var fieldIndex = 0;
+                angular.forEach(fields, function (field, fieldOrder) {
+                    if (!field.deleted) {
+                        field.order = fieldIndex;
+                        fieldIndex++;
+                    }
+                });
+            });
+            return item;
+        };
+        $scope.isDuplicate = function (fields, item) {
+            var duplicate = false;
+            for (var index = 0; index < fields.length; index++) {
+                if (!duplicate) {
+                    if (fields[index].SObjectField.id === item.SObjectField.id && !fields[index].deleted) {
+                        if (item.type === null) {
+                            duplicate = true;
+                        }
+                        else {
+                            fields[index].deleted = true;
+                            fields.splice(index, 1);
+                            index--;
+                        }
+                    }
+                }
+            }
+            return duplicate;
+        };
+        $scope.openFieldPropertiesModal = function (section, sectionIndex, columnIndex, field, fieldIndex) {
+            $adminModals.layoutFieldProperties({
+                layout: angular.copy($scope.layout),
+                section: angular.copy(section),
+                field: angular.copy(field),
+                refSObjects: angular.copy($scope.refSObjects)
+            }, function (newField) {
+                $scope.layoutSections[sectionIndex].columns[columnIndex][fieldIndex] = newField;
+            });
+        };
+        $scope.relatedListsDropCallBack = function (event, index, item, external, type, dispaySection) {
+            item.order = index;
+            item.dispaySection = dispaySection;
+            if (item.SObjectLayoutId === undefined) {
+                item.SObjectLayoutId = $scope.layout.id;
+                item.SObjectLayoutFields = [];
+                angular.forEach(item.SObject.SObjectFields, function (field, fieldIndex) {
+                    if (field.name === 'Name' || field.name === 'CreatedDate' || field.name === 'CreatedById' || field.name === 'LastModifiedDate' || field.name === 'LastModifiedById') {
+                        item.SObjectLayoutFields.push({
+                            SObjectField: field,
+                            label: field.label,
+                            type: 'Related-List-Field',
+                            hidden: false,
+                            deleted: false,
+                        });
+                    }
+                });
+                var itemIndex = 0;
+                var newRLists = [];
+
+                angular.forEach($scope.relatedLists, function (i, _index) {
+                    if (i.dispaySection == dispaySection) {
+                        if (itemIndex === index) {
+                            itemIndex++;
+                        }
+                        i.order = itemIndex;
+                        itemIndex++;
+                        newRLists.push(i);
+                    }
+                });
+                angular.forEach($scope.relatedLists, function (i, _index) {
+                    if (i.dispaySection != dispaySection) {
+                        if (itemIndex === index) {
+                            itemIndex++;
+                        }
+                        i.order = itemIndex;
+                        itemIndex++;
+                        newRLists.push(i);
+                    }
+                });
+                $scope['relatedLists'] = newRLists;
+                $scope.openRelatedListPropertiesModal(item, index);
+            }
+            return item;
+        };
+        $scope.openRelatedListPropertiesModal = function (relatedList, index) {
+            if (relatedList.SObject && relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
+                if (!$scope.blockUI.editCreateLayout.state().blocking && $scope.layout.SObject != null) {
+                    $scope.blockUI.editCreateLayout.start('Loading ...');
+                    sobjectService.loadSObjectFields($scope.layout.SObject)
+                        .success(function (response) {
+                            if (response.success) {
+                                relatedList.parentSObjectAmountFields = [];
+                                if (relatedList.relatedListAmtFields === undefined || relatedList.relatedListAmtFields === null) {
+                                    relatedList.relatedListAmtFields = [];
+                                }
+                                angular.forEach(response.data.sObjectFields, function (field, fieldOrder) {
+                                    if (field.SObjectField == undefined) {
+                                        field.SObjectField = angular.copy(field);
+                                    }
+                                    if (field.type == "currency" || field.type == "double") {
+                                        relatedList.parentSObjectAmountFields.push(field);
+                                    }
+                                });
+
+                                $scope.blockUI.editCreateLayout.stop();
+                                $adminModals.relatedListProperties({
+                                    layout: angular.copy($scope.layout),
+                                    relatedList: angular.copy(relatedList)
+                                }, function (newRelatedList) {
+                                    $scope.relatedLists[index] = newRelatedList;
+                                });
+                            }
+                        });
+                }
+            }
+            else {
+                $adminModals.relatedListProperties({
+                    layout: angular.copy($scope.layout),
+                    relatedList: angular.copy(relatedList)
+                }, function (newRelatedList) {
+                    $scope.relatedLists[index] = newRelatedList;
+                });
+            }
+        };
+        $scope.removeSectionFieldsStore = function (section) {
+            section.deleted = true;
+            if (section.id != undefined) {
+                if ($scope.deletedSections == undefined) {
+                    $scope.deletedSections = [];
+                }
+                $scope.deletedSections.push(section);
+            }
+        };
+        $scope.removeRelatedListFieldsStore = function (relatedlist) {
+            relatedlist.deleted = true;
+            if (relatedlist.id != undefined) {
+                if ($scope.deletedRelatedList == undefined) {
+                    $scope.deletedRelatedList = [];
+                }
+                $scope.deletedRelatedList.push(relatedlist);
+            }
+        };
+        $scope.removeAndReorder = function (items, item, index) {
+            var subRemoveAndReorder = function (items, item, index) {
+                item.deleted = true;
+                items.splice(index, 1);
+
+                var itemIndex = 0;
+                angular.forEach(items, function (i, _index) {
+                    if (!i.deleted) {
+                        i.order = itemIndex;
+                        itemIndex++;
+                    }
+                });
+
+                if (item.columns !== undefined && angular.isArray(item.columns)) {
+                    angular.forEach(item.columns, function (fields) {
+                        angular.forEach(fields, function (field, fieldIndex) {
+                            field.deleted = true;
+                        });
+                    });
+                }
+            }
+            if (item.fromfield || item.tofield) {
+                $dialog.confirm({
+                    title: 'Want to remove field?',
+                    yes: 'Yes', no: 'No',
+                    message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
+                    class: 'primary'
+                }, function (confirm) {
+                    if (confirm) {
+                        var toFromPair = [{ item: item, index: index }];
+                        angular.forEach(items, function (i, _index) {
+                            if (i.SObjectField.name === item.SObjectField.name) {
+                                toFromPair.push({ item: i, index: _index });
+                            }
+                        });
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
+                    }
+                });
+            }
+            else {
+                subRemoveAndReorder(items, item, index);
+            }
+        };
+        $scope.removeFieldsStoreAndReorder = function (section, items, item, index) {
+            var subRemoveAndReorder = function (items, item, index) {
+                item.deleted = true;
+                if (item.id === undefined || item.type == "Layout-Section-Field") {
+                    items.splice(index, 1);
+                }
+
+                var itemIndex = 0;
+                angular.forEach(items, function (i, _index) {
+                    if (!i.deleted) {
+                        i.order = itemIndex;
+                        itemIndex++;
+                    }
+                });
+
+                if (item.columns !== undefined && angular.isArray(item.columns)) {
+                    angular.forEach(item.columns, function (fields) {
+                        angular.forEach(fields, function (field, fieldIndex) {
+                            field.deleted = true;
+                        });
+                    });
+                }
+            }
+            if (item.fromfield || item.tofield) {
+                $dialog.confirm({
+                    title: 'Want to remove field?',
+                    yes: 'Yes', no: 'No',
+                    message: 'Select item is ' + (item.fromfield ? 'from' : 'to') + ' field of range search.\nRemoval of this field will remove corresponding ' + (item.fromfield ? 'to' : 'from') + ' field of range search.',
+                    class: 'destructive',
+                    headerClass: 'error'
+                }, function (confirm) {
+                    if (confirm) {
+                        var toFromPair = [{ item: item, index: index }];
+                        angular.forEach(items, function (i, _index) {
+                            if (i.SObjectField.name === item.SObjectField.name && index != _index) {
+                                if (index < _index) {
+                                    toFromPair.push({ item: i, index: _index - 1 });
+                                }
+                                else {
+                                    toFromPair.push({ item: i, index: _index });
+                                }
+                            }
+                        });
+                        $scope.removeFieldsStore(section, toFromPair[0].item);
+                        $scope.removeFieldsStore(section, toFromPair[1].item);
+                        subRemoveAndReorder(items, toFromPair[0].item, toFromPair[0].index);
+                        subRemoveAndReorder(items, toFromPair[1].item, toFromPair[1].index);
+                    }
+                });
+            }
+            else {
+                $scope.removeFieldsStore(section, item);
+                subRemoveAndReorder(items, item, index);
+            }
+        };
+        $scope.removeFieldsStore = function (section, item) {
+            item.deleted = true;
+            if (section.deletedFields == undefined) {
+                section.deletedFields = [];
+            }
+            section.deletedFields.push(item);
+        };
+        $scope.isValidLayout = function () {
+            if ($scope.layoutSections.length == 0) {
+                $dialog.alert('Please add atleast one layout section with atleast one field.', 'Error', 'pficon pficon-error-circle-o');
+                return false;
+            }
+            else {
+                var deleted = true;
+                angular.forEach($scope.layoutSections, function (section) {
+                    if (!section.deleted) {
+                        deleted = false;
+                    }
+                });
+                if (deleted) {
+                    $dialog.alert('Please add atleast one layout section with atleast one field.', 'Error', 'pficon pficon-error-circle-o');
+                    return false;
+                }
+            }
+
+            var atleastOneEmptyLayout = false;
+            angular.forEach($scope.layoutSections, function (section) {
+                if (!section.deleted && !section.isComponent) {
+                    var fdeleted = true;
+                    angular.forEach(section.columns, function (fields) {
+                        if (fdeleted) {
+                            angular.forEach(fields, function (field) {
+                                if (fdeleted && !field.deleted) {
+                                    fdeleted = false;
+                                }
+                            });
+                        }
+                    });
+                    if (fdeleted) {
+                        atleastOneEmptyLayout = true;
+                    }
+                }
+            });
+            if (atleastOneEmptyLayout) {
+                $dialog.alert('Please add atleast one field in each layout section.', 'Error', 'pficon pficon-error-circle-o');
+                return false;
+            }
+
+            var titleTooLong = false;
+            angular.forEach($scope.layoutSections, function (section) {
+                if (!section.deleted) {
+                    if (section.title.length > 255) {
+                        titleTooLong = true;
+                    }
+                }
+                else {
+                    if (section.title.length > 255) {
+                        section.title = "Deleted Section";
+                    }
+                }
+            });
+            if (titleTooLong) {
+                $dialog.alert('Section Title is too long. No more than 255 characters allowed.');
+                return false;
+            }
+
+            var errorCount = 0;
+            angular.forEach($scope.layoutSections, function (section) {
+                if (!section.isComponent) {
+                    angular.forEach(section.columns, function (fields) {
+                        angular.forEach(fields, function (field) {
+                            if ((field.SObjectField.type === 'picklist' || field.SObjectField.type === 'multipicklist') && field.SObjectField.controllerName) {
+                                var controllerField = $scope.controllerField(field.SObjectField.controllerName);
+                                if (controllerField === undefined) {
+                                    field.error = 'Parent field is missing!';
+                                    errorCount++;
+                                } else {
+                                    delete field.error;
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+            return errorCount === 0;
+        };
+        $scope.saveCreateLayout = function () {
+            if (!$scope.isValidLayout()) {
+                return;
+            }
+            if (!$scope.blockUI.editCreateLayout.state().blocking && $scope.layout.SObject != null) {
+                $scope.deletedSections ? $scope.layoutSections = $scope.layoutSections.concat($scope.deletedSections) : $scope.layoutSections;
+                $scope.blockUI.editCreateLayout.start('Saving layout...');
+                mobileLayoutService.saveEditLayout({
+                    layoutSections: $scope.layoutSections,
+                    type: $scope.layout.type,
+                    id: $scope.layout.id,
+                    SObjectId: $scope.layout.SObjectId,
+                    primaryAttachmentRequired: $scope.layout.primaryAttachmentRequired ? $scope.layout.primaryAttachmentRequired : false
+                })
+                    .success(function (response) {
+                        $scope.blockUI.editCreateLayout.stop();
+                        if (response.success === true) {
+                            $scope.saveLayoutRelatedLists();
+                        } else {
+                            $dialog.alert('Error occured while saving layout.', 'Error', 'pficon pficon-error-circle-o');
+                        }
+                    })
+                    .error(function (response) {
+                        $scope.blockUI.editCreateLayout.stop();
+                        $dialog.alert('Server error occured while saving layout.', 'Error', 'pficon pficon-error-circle-o');
+                    });
+            }
+        };
+        $scope.saveLayoutRelatedLists = function () {
+            if (!$scope.blockUI.editCreateLayout.state().blocking && $scope.layout.SObject != null) {
+                if ($scope.relatedLists !== undefined && $scope.relatedLists.length > 0) {
+                    if ($scope.isValidRelatedLists()) {
+                        $scope.deletedRelatedList ? $scope.relatedLists = $scope.relatedLists.concat($scope.deletedRelatedList) : $scope.relatedLists;
+                        $scope.blockUI.editCreateLayout.start('Saving layout related lists...');
+                        mobileLayoutService.saveLayoutRelatedLists({
+                            relatedLists: $scope.relatedLists,
+                            type: $scope.layout.type,
+                            id: $scope.layout.id
+                        })
+                            .success(function (response) {
+                                $scope.blockUI.editCreateLayout.stop();
+                                if (response.success === true) {
+                                    $scope.loadCreateLayoutContents();
+                                } else {
+                                    $dialog.alert('Error occured while saving layout related lists.', 'Error', 'pficon pficon-error-circle-o');
+                                }
+                            })
+                            .error(function (response) {
+                                $scope.blockUI.editCreateLayout.stop();
+                                $dialog.alert('Server error occured while saving layout related lists.', 'Error', 'pficon pficon-error-circle-o');
+                            });
+                    }
+                } else {
+                    $scope.loadCreateLayoutContents();
+                }
+            }
+        };
+        $scope.isValidRelatedLists = function () {
+            var titleTooLong = false;
+            angular.forEach($scope.relatedLists, function (relatedList) {
+                if (!relatedList.deleted) {
+                    if (relatedList.title.length > 255) {
+                        titleTooLong = true;
+                    }
+                }
+                else {
+                    if (relatedList.title.length > 255) {
+                        relatedList.title = "Deleted Related List";
+                    }
+                }
+            });
+            if (titleTooLong) {
+                $dialog.alert('Related List Title is too long. No more than 255 characters allowed.');
+                return false;
+            }
+            else {
+                return true;
+            }
+        };
+        $scope.initBlockUiBlocks = function () {
+            $scope.blockUI = {
+                sObjectFields: blockUI.instances.get('sObjectFields'),
+                childSObjects: blockUI.instances.get('childSObjects'),
+                editCreateLayout: blockUI.instances.get('editCreateLayout')
+            };
+        };
+        $scope.init = function () {
+            console.log('AdminMobileLayoutsCreateController loaded!');
+            $scope.initBlockUiBlocks();
+            $scope.layoutSections = [];
+            $scope.layout = $stateParams.layout;
+            $scope.loadSObjectFields();
+            $scope.loadChildSObjects();
+            $scope.loadCreateLayoutContents();
+            $scope.templateUrl = 'slds/views/admin/mobile/layout/create.edit.html';
         };
         $scope.init();
     }

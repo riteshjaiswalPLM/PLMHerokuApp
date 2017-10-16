@@ -625,7 +625,7 @@ admin.controller('AdminLayoutsEditListController',[
         $scope.saveLayout = function(){
             if(!$scope.blockUI.editListLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editListLayout.start('Saving ...');
-                layoutService.saveListLayout($scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id,$scope.layout.whereClause,$scope.searchCriteriaDeletedFields,$scope.searchResultDeletedFields)
+                layoutService.saveListLayout($scope.layout.id,$scope.searchCriteriaFields,$scope.searchResultFields,$scope.actionButtonCriteria,$scope.layout.id,$scope.layout.whereClause,$scope.searchCriteriaDeletedFields,$scope.searchResultDeletedFields)
                     .success(function(response){
                         $scope.blockUI.editListLayout.stop();
                         if(response.success === true){

@@ -4,6 +4,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.ENUM,
             values: ['Create','Edit','List','Details','Mobile','Archival']
         },
+        mobileSubtype: {
+            type: DataTypes.ENUM,
+            values: ['MCreate', 'MEdit']
+        },
         created: {
             type: DataTypes.BOOLEAN,
             defaultValue: function(){
@@ -56,6 +60,12 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.TEXT,
             defaultValue: function () {
                 return undefined;
+            }
+        },
+        primaryAttachmentRequired: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function () {
+                return false;
             }
         }
     },{

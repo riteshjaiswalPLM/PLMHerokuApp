@@ -383,6 +383,14 @@ admin.config(function($stateProvider) {
             controller: "AdminMobileLayoutsListController",
             title: "Layout"
         })
+        .state("admin.mobile.layout.create", {
+            templateUrl: "slds/views/admin/mobile/layout/create.html",
+            controller: "AdminMobileLayoutsCreateController",
+            params:{
+                layout: null
+            },
+            title: "Create Layout"
+        })
         .state("admin.mobile.layout.edit", {
             templateUrl: "slds/views/admin/mobile/layout/edit.html",
             controller: "AdminMobileLayoutsEditController",

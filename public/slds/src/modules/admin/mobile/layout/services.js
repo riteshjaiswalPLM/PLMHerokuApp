@@ -32,7 +32,7 @@ admin.factory('mobileLayoutService',['$http',function($http){
         changeActive: function(layout){
             return $http.post('/api/admin/sobjectlayout/changeactive',layout);
         },
-        saveListLayout: function(searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutWhereClause,searchCriteriaDeletedFields,searchResultDeletedFields){
+        saveListLayout: function(layoutId,searchCriteriaFields,searchRecordFields,actionButtonCriteria,sObjectLayoutWhereClause,searchCriteriaDeletedFields,searchResultDeletedFields){
             // var fieldsToDelete = [];
             var _index = 0;
             angular.forEach(searchCriteriaFields,function(field,index){
@@ -57,6 +57,7 @@ admin.factory('mobileLayoutService',['$http',function($http){
                 }
             });
             var listLayout = {
+                layoutId: layoutId,
                 searchCriteriaFields: searchCriteriaDeletedFields ? searchCriteriaFields.concat(searchCriteriaDeletedFields) : searchCriteriaFields,
                 searchRecordFields: searchResultDeletedFields ? searchRecordFields.concat(searchResultDeletedFields) : searchRecordFields,
                 actionButtonCriteria : actionButtonCriteria,
@@ -67,7 +68,13 @@ admin.factory('mobileLayoutService',['$http',function($http){
         saveEditLayout: function(editLayout){
             var sectionOrder = 0;
             angular.forEach(editLayout.layoutSections,function(section,sectionIndex){
-                section.MobileEditLayoutConfigId = editLayout.MobileEditLayoutConfigId;
+                if (editLayout.MobileEditLayoutConfigId == undefined) {
+                    editLayout.mobileSubtype = 'MCreate';
+                }
+                else {
+                    editLayout.mobileSubtype = 'MEdit';
+                    section.MobileEditLayoutConfigId = editLayout.MobileEditLayoutConfigId;
+                }
                 if(!section.deleted){
                     section.order = sectionOrder;
                     sectionOrder++;
@@ -88,6 +95,9 @@ admin.factory('mobileLayoutService',['$http',function($http){
                                     fieldOrder++;
                                 }
                             });
+                        });
+                        angular.forEach(section.deletedFields, function (field) {
+                            section.columns[0].push(field);
                         });
                     }
                     else{

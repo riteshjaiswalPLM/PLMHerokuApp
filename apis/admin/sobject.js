@@ -355,7 +355,7 @@ sobjectRouter.post('/updateForMobile', function(req, res){
                 }
             }).then(function(){
 
-                db.SObjectLayout.findOne({
+                db.SObjectLayout.findAll({
                     attributes: {
                         exclude: ['createdAt','updatedAt']
                     },
@@ -363,34 +363,41 @@ sobjectRouter.post('/updateForMobile', function(req, res){
                         SObjectId : sObject.id,
                         type : 'Mobile'
                     }
-                }).then(function(sObjectLayout) {
-                    if(sObjectLayout !== undefined && sObjectLayout !== null ){
-                        db.SObjectLayoutSection.destroy({
-                            where: {
-                                SObjectLayoutId: sObjectLayout.id
-                            },
-                        }).then(function(deletedSectionsCount){
-                            db.SObjectLayoutField.destroy({
+                }).then(function(sObjectLayouts) {
+                    if(sObjectLayouts !== undefined && sObjectLayouts !== null ){
+                        var total = sObjectLayouts.length;
+                        var cnt = 0;
+                        sObjectLayouts.forEach(function (sObjectLayout) {
+                            db.SObjectLayoutSection.destroy({
                                 where: {
                                     SObjectLayoutId: sObjectLayout.id
-                                }
-                            }).then(function(deletedFieldsCount){
-                                global.db.SObjectLayout.destroy({
+                                },
+                            }).then(function(deletedSectionsCount){
+                                db.SObjectLayoutField.destroy({
                                     where: {
-                                    id: sObjectLayout.id
+                                        SObjectLayoutId: sObjectLayout.id
                                     }
-                                }).then(function(){
-                                    global.db.UserAction.destroy({
+                                }).then(function(deletedFieldsCount){
+                                    global.db.SObjectLayout.destroy({
                                         where: {
-                                            SObjectId: sObject.id
+                                        id: sObjectLayout.id
                                         }
                                     }).then(function(){
-                                        return res.json({
-                                            success: true,
-                                            message: 'Successfully Update Mobile Sobject detail',
-                                        });
+                                        global.db.UserAction.destroy({
+                                            where: {
+                                                SObjectId: sObject.id
+                                            }
+                                        }).then(function(){
+                                            cnt = cnt + 1;
+                                            if (cnt == total) {
+                                                return res.json({
+                                                    success: true,
+                                                    message: 'Successfully Update Mobile Sobject detail',
+                                                });
+                                            }
+                                        })
                                     })
-                                })
+                                });
                             });
                         });
                     }
@@ -420,8 +427,9 @@ sobjectRouter.post('/updateForMobile', function(req, res){
             });
         }
         else{
-            db.SObjectLayout.build({ type: 'Mobile',  SObjectId: sObject.id, created: true, active: false })
-            .save()
+            db.SObjectLayout.bulkCreate([
+                { type: 'Mobile', mobileSubtype: 'MCreate', SObjectId: sObject.id, created: true, active: false },
+                { type: 'Mobile', mobileSubtype: 'MEdit', SObjectId: sObject.id, created: true, active: false }])
             .then(function(){
                 return res.json({
                     success: true,
