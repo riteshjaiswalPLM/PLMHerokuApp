@@ -33,7 +33,7 @@
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#download"/>
                     </svg>
                     Import</file-field>
-                <button ng-disabled="(language.aspect !== 'Fixed Label' && !language.SObject.label) || !language.aspect || language.code == 'eng' || (language.code == 'eng' && language.aspect === 'Fixed Label')" class="slds-button slds-button--brand" type="button" ng-click="automateLanguageTranslation()">
+                <button ng-disabled="(language.aspect !== 'Fixed Label' && !language.SObject.label) || !language.aspect || language.code == 'eng' || (language.code == 'eng' && language.aspect === 'Fixed Label') || btnAutoTransDis" class="slds-button slds-button--brand" type="button" ng-click="automateLanguageTranslation()">
                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#replace"/>
                     </svg>

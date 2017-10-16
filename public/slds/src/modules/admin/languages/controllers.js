@@ -191,10 +191,12 @@ admin.controller('AdminLanguagesEditController',[
                 if($scope.language.aspect !== 'Fixed Label' && (!$scope.language.SObject || !$scope.language.SObject.id)){
                     return;
                 }
+                $scope.btnAutoTransDis = true;
                 automateLanguageTranslation.start('Auto translating '+ $scope.language.aspect + ($scope.language.aspect !== 'Fixed Label' ? ('s for ' + $scope.language.SObject.label) : '') + '...');
                 languageService.automateLanguageTranslation($scope.language)
                     .success(function(response){
                         automateLanguageTranslation.stop();
+                        $scope.btnAutoTransDis = false;
                         $dialog.alert(response.message,'','',function(){
                             if(response.success){
                                 $scope.viewLanguageDetails();
@@ -203,6 +205,7 @@ admin.controller('AdminLanguagesEditController',[
                     })
                     .error(function(response){
                         automateLanguageTranslation.stop();
+                        $scope.btnAutoTransDis = false;
                         $dialog.alert('Error occured while importing '+ $scope.language.aspect + ($scope.language.aspect !== 'Fixed Label' ? (' for ' + $scope.language.SObject.label) : '') + '.','Error','pficon pficon-error-circle-o');
                     });
             }
@@ -279,6 +282,7 @@ admin.controller('AdminLanguagesEditController',[
                 code: null,
                 active: false,
             };
+            $scope.btnAutoTransDis = false;
         };
         $scope.init();
     }  
