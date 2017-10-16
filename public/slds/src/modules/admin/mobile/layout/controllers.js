@@ -1695,6 +1695,20 @@ admin.controller('AdminMobileLayoutsCreateController', [
             });
             return errorCount === 0;
         };
+        $scope.controllerField = function (name) {
+            var controllerField = undefined;
+            angular.forEach($scope.layoutSections, function (section) {
+                angular.forEach(section.columns, function (fields) {
+                    angular.forEach(fields, function (field) {
+                        if (field.SObjectField.name === name && !field.deleted && controllerField === undefined) {
+                            controllerField = field;
+                            return controllerField;
+                        }
+                    });
+                });
+            });
+            return controllerField;
+        };
         $scope.saveCreateLayout = function () {
             if (!$scope.isValidLayout()) {
                 return;
