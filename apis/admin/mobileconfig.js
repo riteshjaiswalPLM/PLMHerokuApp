@@ -189,7 +189,7 @@ var getMobileConfig = function(callback){
                         });
                     }
                 });
-                
+
 
                 UserActionField = global.db.UserActionField.findAll({
                     include: [{
@@ -211,7 +211,7 @@ var getMobileConfig = function(callback){
                 });
 
                 UserActionField.then(function (userAction) {
-                    
+
                     userAction.forEach(function (userActionField) {
                         if (userActionField.UserAction.SObject != undefined) {
                             if(userActionConfig[userActionField.UserAction.SObject.name] == undefined){
@@ -229,7 +229,7 @@ var getMobileConfig = function(callback){
                                 userActionConfig[userActionField.UserAction.SObject.name][userActionField.UserAction.actionvalue].readOnly.push(userActionField.SObjectField.name);
                             if(userActionField.type == 'Required')
                                 userActionConfig[userActionField.UserAction.SObject.name][userActionField.UserAction.actionvalue].mandatory.push(userActionField.SObjectField.name);
-                        
+
                         }
                     });
 
@@ -266,461 +266,679 @@ var getMobileConfig = function(callback){
                             ['catagory','ASC']
                         ]
                     })
-                    .then((myTaskComponents)=>{
-                        var myTaskConfig = []
-                        myTaskComponents.forEach((myTaskComponent)=>{
-                            var taskConfig = {
-                                title: "",
-                                query: "",
-                                displayFields: [],
-                                mainObject: "",
-                                detailObject: "",
-                                idField: "",
-                                userMapping: {
-                                    assignUser: "",
-                                    assignRole: ""
-                                },
-                                governFieldMapping:{}
-                            };
-                            taskConfig.title = myTaskComponent.title;
-                            taskConfig.mainObject = myTaskComponent.SObject.name;
-                            taskConfig.detailObject = myTaskComponent.detailSObject ? myTaskComponent.detailSObject.name : myTaskComponent.SObject.name;
-                            taskConfig.idField = myTaskComponent.detailSObject && myTaskComponent.ComponentDetails[0].configuration.relativeField ? myTaskComponent.ComponentDetails[0].configuration.relativeField.name : 'Id';
-                            taskConfig.query = "Select Id, ", fieldsLength = myTaskComponent.ComponentDetails[0].configuration.fields.length;
-                            myTaskComponent.ComponentDetails[0].configuration.fields.forEach((field, index)=>{
-                                if(field.SObjectField.type === 'reference' && field.reference !== undefined){
-                                    taskConfig.query += field.SObjectField.relationshipName + '.' + field.reference; 
-                                    if(field.isUserNameField){
-                                        taskConfig.userMapping.assignUser = field.SObjectField.relationshipName + '.' + field.reference;
-                                    }
-                                    if(field.isAssignedRoleField){
-                                        taskConfig.userMapping.assignRole = field.SObjectField.relationshipName + '.' + field.reference;
-                                    }
-                                    if(field.governFieldName !== null){
-                                        taskConfig.governFieldMapping[field.governFieldName] = field.SObjectField.relationshipName + '.' + field.reference;
-                                    }
-                                }
-                                else{
-                                    taskConfig.query += field.SObjectField.name;
-                                    if(field.isUserNameField){
-                                        taskConfig.userMapping.assignUser = field.SObjectField.name;
-                                    }
-                                    if(field.isAssignedRoleField){
-                                        taskConfig.userMapping.assignRole = field.SObjectField.name;
-                                    }
-                                    if(field.governFieldName !== null){
-                                        taskConfig.governFieldMapping[field.governFieldName] = field.SObjectField.name;
-                                    }
-                                }
-                                if(index < fieldsLength-1){
-                                    taskConfig.query += ", ";
-                                }
-                                if(field.hidden === false){
-                                    if(field.SObjectField.type === 'reference' && field.reference !== undefined)
-                                        taskConfig.displayFields.push(field.SObjectField.relationshipName + '.' + field.reference);
-                                    else
-                                        taskConfig.displayFields.push(field.SObjectField.name);
-                                }
-                            });
-                            if(myTaskComponent.detailSObject && myTaskComponent.ComponentDetails[0].configuration.relativeField){
-                                taskConfig.query += ", " + myTaskComponent.ComponentDetails[0].configuration.relativeField.name;
-                            }
-                            taskConfig.query += " from " + myTaskComponent.SObject.name + (myTaskComponent.ComponentDetails[0].configuration.whereClause ? (" where " + myTaskComponent.ComponentDetails[0].configuration.whereClause) : "");
-                            myTaskConfig.push(taskConfig);
-                        });
-
-                        DependentPicklist = global.db.DependentPicklistChildValue.findAll({
-                            attributes: ['id', 'userType','childfieldvalue'],
-                            include: {
-                                model: global.db.DependentPicklist,
-                                attributes: ['id', 'parentfieldvalue'],
-                                include: [{
-                                    model: global.db.SObject,
-                                    attributes: ['id', 'name', 'label'],
-                                },{
-                                    model: global.db.SObjectField,
-                                    as: 'parentSObjectField',
-                                    attributes: ['id', 'name', 'label'],
-                                },{
-                                    model: global.db.SObjectField,
-                                    as : 'childSObjectField',
-                                    attributes: ['id', 'name', 'label','picklistValues'],
-                                }],
-                            },
-                            order: [
-                                ['DependentPicklistId','ASC'],
-                            ]
-                        });
-
-                        DependentPicklist.then(function (picklistDetail) {
-                            var prvDPID=-1;
-                            pickListConfig={};
-                            var tempConfig=[];
-                            var keyconfig=[];
-                            var childDependency=[];
-                            var parentValue="";
-                            var datasobject;
-                            var dataparentfield;
-                            var datachildfield;
-                            picklistDetail.forEach(function (picklistDetailField) {
-                                // console.log("prvDPID",prvDPID)
-                                if(prvDPID!==picklistDetailField.DependentPicklist.id){
-                                    // console.log("prvDPID11",childDependency)
-                                    if(prvDPID!= -1){
-                                        key=datasobject + dataparentfield + datachildfield;
-                                        if(keyconfig.indexOf(key)===-1){
-                                            keyconfig.push(key);    
-                                        }
-                                        tempConfig.push({
-                                            key : key,
-                                            sobject : datasobject,
-                                            parentfield : dataparentfield,
-                                            childfield : datachildfield,
-                                            parentValue : parentValue,
-                                            childDependency :childDependency
-                                        });
-                                        parentValue="";
-                                        childDependency=[];
-                                    }
-                                    prvDPID=picklistDetailField.DependentPicklist.id;
-                                    datasobject=picklistDetailField.DependentPicklist.SObject.name;
-                                    dataparentfield=picklistDetailField.DependentPicklist.parentSObjectField.name;
-                                    datachildfield=picklistDetailField.DependentPicklist.childSObjectField.name;
-                                    parentValue=picklistDetailField.DependentPicklist.parentfieldvalue;
-                                }
-                                if(picklistDetailField.userType == "DEFAULT"){
-                                    childDependency.push({
-                                        values: picklistDetailField.childfieldvalue.split(","),
-                                    })
-                                }
-                                else{
-                                    childDependency.push({
-                                        values: picklistDetailField.childfieldvalue.split(","),
-                                        userType:picklistDetailField.userType
-                                    })
-                                }
-                                
-                            });
-                            if(prvDPID!= -1){
-                                key=datasobject + dataparentfield + datachildfield;
-                                if(keyconfig.indexOf(key)===-1){
-                                    keyconfig.push(key);    
-                                }
-                                tempConfig.push({
-                                    key : key,
-                                    sobject : datasobject,
-                                    parentfield : dataparentfield,
-                                    childfield : datachildfield,
-                                    parentValue : parentValue,
-                                    childDependency :childDependency
-                                });
-                                parentValue="";
-                                childDependency=[];
-                            }
-                            var data;
-                            
-                            var datadependency=[];
-                            
-                            keyconfig.forEach(function (key) {
-                                datadependency=[];
-                                for(var i=tempConfig.length-1;i>=0;i--){
-                                    data=tempConfig[i];
-                                    if(data.key===key){
-                                        datasobject=data.sobject;
-                                        dataparentfield =data.parentfield;
-                                        datachildfield  =data.childfield;
-                                        datadependency.push({
-                                            parentValue:data.parentValue,
-                                            childDependency:data.childDependency
-                                        })
-                                        tempConfig.splice(i,1);
-                                    }   
+                        .then((myTaskComponents)=>{
+                            var myTaskConfig = []
+                            myTaskComponents.forEach((myTaskComponent)=>{
+                                var taskConfig = {
+                                    title: "",
+                                    query: "",
+                                    displayFields: [],
+                                    mainObject: "",
+                                    detailObject: "",
+                                    idField: "",
+                                    userMapping: {
+                                        assignUser: "",
+                                        assignRole: ""
+                                    },
+                                    governFieldMapping:{}
                                 };
-                                if(pickListConfig[datasobject]=== undefined){
-                                    pickListConfig[datasobject]=[];
-                                }
-                                pickListConfig[datasobject].push({
-                                    parent:dataparentfield,
-                                    child:datachildfield,
-                                    dependency:datadependency
+                                taskConfig.title = myTaskComponent.title;
+                                taskConfig.mainObject = myTaskComponent.SObject.name;
+                                taskConfig.detailObject = myTaskComponent.detailSObject ? myTaskComponent.detailSObject.name : myTaskComponent.SObject.name;
+                                taskConfig.idField = myTaskComponent.detailSObject && myTaskComponent.ComponentDetails[0].configuration.relativeField ? myTaskComponent.ComponentDetails[0].configuration.relativeField.name : 'Id';
+                                taskConfig.query = "Select Id, ", fieldsLength = myTaskComponent.ComponentDetails[0].configuration.fields.length;
+                                myTaskComponent.ComponentDetails[0].configuration.fields.forEach((field, index)=>{
+                                    if(field.SObjectField.type === 'reference' && field.reference !== undefined){
+                                        taskConfig.query += field.SObjectField.relationshipName + '.' + field.reference;
+                                        if(field.isUserNameField){
+                                            taskConfig.userMapping.assignUser = field.SObjectField.relationshipName + '.' + field.reference;
+                                        }
+                                        if(field.isAssignedRoleField){
+                                            taskConfig.userMapping.assignRole = field.SObjectField.relationshipName + '.' + field.reference;
+                                        }
+                                        if(field.governFieldName !== null){
+                                            taskConfig.governFieldMapping[field.governFieldName] = field.SObjectField.relationshipName + '.' + field.reference;
+                                        }
+                                    }
+                                    else{
+                                        taskConfig.query += field.SObjectField.name;
+                                        if(field.isUserNameField){
+                                            taskConfig.userMapping.assignUser = field.SObjectField.name;
+                                        }
+                                        if(field.isAssignedRoleField){
+                                            taskConfig.userMapping.assignRole = field.SObjectField.name;
+                                        }
+                                        if(field.governFieldName !== null){
+                                            taskConfig.governFieldMapping[field.governFieldName] = field.SObjectField.name;
+                                        }
+                                    }
+                                    if(index < fieldsLength-1){
+                                        taskConfig.query += ", ";
+                                    }
+                                    if(field.hidden === false){
+                                        if(field.SObjectField.type === 'reference' && field.reference !== undefined)
+                                            taskConfig.displayFields.push(field.SObjectField.relationshipName + '.' + field.reference);
+                                        else
+                                            taskConfig.displayFields.push(field.SObjectField.name);
+                                    }
                                 });
+                                if(myTaskComponent.detailSObject && myTaskComponent.ComponentDetails[0].configuration.relativeField){
+                                    taskConfig.query += ", " + myTaskComponent.ComponentDetails[0].configuration.relativeField.name;
+                                }
+                                taskConfig.query += " from " + myTaskComponent.SObject.name + (myTaskComponent.ComponentDetails[0].configuration.whereClause ? (" where " + myTaskComponent.ComponentDetails[0].configuration.whereClause) : "");
+                                myTaskConfig.push(taskConfig);
                             });
 
-                            db.SObjectLayout.findAll({
-                                attributes: ['id'],
-                                include: [{
-                                    model: db.SObject,
-                                    attributes: ['name'],
-                                },{
-                                    model: db.MobileEditLayoutConfig,
-                                    as:'a',
-                                    attributes: ['governingFieldValue'],
+                            DependentPicklist = global.db.DependentPicklistChildValue.findAll({
+                                attributes: ['id', 'userType','childfieldvalue'],
+                                include: {
+                                    model: global.db.DependentPicklist,
+                                    attributes: ['id', 'parentfieldvalue'],
                                     include: [{
-                                        model: db.SObjectLayoutSection,
-                                        attributes: ['id','title','readonly','order'],
-                                        required: false,
-                                        include: {
-                                            model: db.SObjectLayoutField,
-                                            attributes: ['readonly','required','order'],
+                                        model: global.db.SObject,
+                                        attributes: ['id', 'name', 'label'],
+                                    },{
+                                        model: global.db.SObjectField,
+                                        as: 'parentSObjectField',
+                                        attributes: ['id', 'name', 'label'],
+                                    },{
+                                        model: global.db.SObjectField,
+                                        as : 'childSObjectField',
+                                        attributes: ['id', 'name', 'label','picklistValues'],
+                                    }],
+                                },
+                                order: [
+                                    ['DependentPicklistId','ASC'],
+                                ]
+                            });
+
+                            DependentPicklist.then(function (picklistDetail) {
+                                var prvDPID=-1;
+                                pickListConfig={};
+                                var tempConfig=[];
+                                var keyconfig=[];
+                                var childDependency=[];
+                                var parentValue="";
+                                var datasobject;
+                                var dataparentfield;
+                                var datachildfield;
+                                picklistDetail.forEach(function (picklistDetailField) {
+                                    // console.log("prvDPID",prvDPID)
+                                    if(prvDPID!==picklistDetailField.DependentPicklist.id){
+                                        // console.log("prvDPID11",childDependency)
+                                        if(prvDPID!= -1){
+                                            key=datasobject + dataparentfield + datachildfield;
+                                            if(keyconfig.indexOf(key)===-1){
+                                                keyconfig.push(key);
+                                            }
+                                            tempConfig.push({
+                                                key : key,
+                                                sobject : datasobject,
+                                                parentfield : dataparentfield,
+                                                childfield : datachildfield,
+                                                parentValue : parentValue,
+                                                childDependency :childDependency
+                                            });
+                                            parentValue="";
+                                            childDependency=[];
+                                        }
+                                        prvDPID=picklistDetailField.DependentPicklist.id;
+                                        datasobject=picklistDetailField.DependentPicklist.SObject.name;
+                                        dataparentfield=picklistDetailField.DependentPicklist.parentSObjectField.name;
+                                        datachildfield=picklistDetailField.DependentPicklist.childSObjectField.name;
+                                        parentValue=picklistDetailField.DependentPicklist.parentfieldvalue;
+                                    }
+                                    if(picklistDetailField.userType == "DEFAULT"){
+                                        childDependency.push({
+                                            values: picklistDetailField.childfieldvalue.split(","),
+                                        })
+                                    }
+                                    else{
+                                        childDependency.push({
+                                            values: picklistDetailField.childfieldvalue.split(","),
+                                            userType:picklistDetailField.userType
+                                        })
+                                    }
+
+                                });
+                                if(prvDPID!= -1){
+                                    key=datasobject + dataparentfield + datachildfield;
+                                    if(keyconfig.indexOf(key)===-1){
+                                        keyconfig.push(key);
+                                    }
+                                    tempConfig.push({
+                                        key : key,
+                                        sobject : datasobject,
+                                        parentfield : dataparentfield,
+                                        childfield : datachildfield,
+                                        parentValue : parentValue,
+                                        childDependency :childDependency
+                                    });
+                                    parentValue="";
+                                    childDependency=[];
+                                }
+                                var data;
+
+                                var datadependency=[];
+
+                                keyconfig.forEach(function (key) {
+                                    datadependency=[];
+                                    for(var i=tempConfig.length-1;i>=0;i--){
+                                        data=tempConfig[i];
+                                        if(data.key===key){
+                                            datasobject=data.sobject;
+                                            dataparentfield =data.parentfield;
+                                            datachildfield  =data.childfield;
+                                            datadependency.push({
+                                                parentValue:data.parentValue,
+                                                childDependency:data.childDependency
+                                            })
+                                            tempConfig.splice(i,1);
+                                        }
+                                    };
+                                    if(pickListConfig[datasobject]=== undefined){
+                                        pickListConfig[datasobject]=[];
+                                    }
+                                    pickListConfig[datasobject].push({
+                                        parent:dataparentfield,
+                                        child:datachildfield,
+                                        dependency:datadependency
+                                    });
+                                });
+
+                                db.SObjectLayout.findAll({
+                                    attributes: ['id'],
+                                    include: [{
+                                        model: db.SObject,
+                                        attributes: ['name'],
+                                    },{
+                                        model: db.MobileEditLayoutConfig,
+                                        as:'a',
+                                        attributes: ['governingFieldValue'],
+                                        include: [{
+                                            model: db.SObjectLayoutSection,
+                                            attributes: ['id','title','readonly','order'],
+                                            required: false,
                                             include: {
-                                                model: db.SObjectField,
-                                                attributes: ['name'],
-                                                where: {
-                                                    forMobile: true
-                                                }
+                                                model: db.SObjectLayoutField,
+                                                attributes: ['readonly','required','order'],
+                                                include: {
+                                                    model: db.SObjectField,
+                                                    attributes: ['name'],
+                                                    where: {
+                                                        forMobile: true
+                                                    }
+                                                },
+                                                order: ['order']
+                                            },
+                                            where: {
+                                                active: true
                                             },
                                             order: ['order']
-                                        },
-                                        where: {
-                                            active: true
-                                        },
-                                        order: ['order']
-                                    },{
-                                        model: db.SObjectLayoutRelatedList,
-                                        attributes: ['id','title','requireAddMore','criteria','readonly','amountCriteriaConfig'],
-                                        required: false,
-                                        include: [{
-                                            model: db.SObject,
-                                            attributes: ['name'],
                                         },{
-                                            model: db.SObjectLayoutField,
-                                            attributes: ['id','readonly','required','SObjectFieldId','reference','order'],
-                                            order: ['order', 'AESC']
-                                        },{
-                                            model: db.SObjectField,
-                                            attributes: ['name'],
+                                            model: db.SObjectLayoutRelatedList,
+                                            attributes: ['id','title','requireAddMore','criteria','readonly','amountCriteriaConfig'],
                                             required: false,
-                                            where:{
-                                                forMobile: true
-                                            }
+                                            include: [{
+                                                model: db.SObject,
+                                                attributes: ['name'],
+                                            },{
+                                                model: db.SObjectLayoutField,
+                                                attributes: ['id','readonly','required','SObjectFieldId','reference','order'],
+                                                order: ['order', 'AESC']
+                                            },{
+                                                model: db.SObjectField,
+                                                attributes: ['name'],
+                                                required: false,
+                                                where:{
+                                                    forMobile: true
+                                                }
+                                            }],
+                                            where: {
+                                                active: true
+                                            },
+                                            order: ['order']
                                         }],
                                         where: {
                                             active: true
-                                        },
-                                        order: ['order']
-                                    }],
+                                        }
+                                    }
+                                    ],
                                     where: {
+                                        type: 'Mobile',
+                                        mobileSubtype: { $or: ['MEdit', null] },
                                         active: true
                                     }
-                                }
-                                ],
-                                where: {
-                                    type: 'Mobile',
-                                    active: true
-                                }
-                            })
-                            .then((mobileEditLayoutConfigs)=>{
-                                var uiLayout = {};
-                                var relatedListSobjectFieldsDeatilId = [];
-                                var fieldNameReferenceMap = {};
-                                mobileEditLayoutConfigs.forEach((mobileEditLayoutConfig)=>{
-                                    uiLayout[mobileEditLayoutConfig.SObject.name] = [];
-                                    var key = mobileEditLayoutConfig.SObject.name;
-                                    mobileEditLayoutConfig.a.forEach((configObj)=>{
-                                        var governValue = [], sectionsDetails = [];
-                                        governField[key].forEach((value)=>{
-                                            governValue.push(configObj.governingFieldValue[value]);
-                                        });
-                                        configObj.SObjectLayoutSections.sort((a, b)=>{
-                                            if(a.order < b.order)
-                                                return -1;
-                                            if(a.order > b.order)
-                                                return 1;
-                                            return 0;
-                                        }).forEach((section)=>{
-                                            var sectionConfig = {
-                                                title: '',
-                                                isLineSection: false,
-                                                isEditable: true,
-                                                fields: [],
-                                                readOnly: [],
-                                                mandatory: []
-                                            };
-                                            sectionConfig.title = section.title;
-                                            sectionConfig.isEditable = !section.readonly;
-                                            section.SObjectLayoutFields.sort((a, b)=>{
-                                                if(a.order < b.order)
-                                                    return -1;
-                                                if(a.order > b.order)
-                                                    return 1;
-                                                return 0;
-                                            }).forEach((field)=>{
-                                                sectionConfig.fields.push(field.SObjectField.name);
-                                                if(sectionConfig.isEditable === false){
-                                                	sectionConfig.readOnly.push(field.SObjectField.name);
-                                                }
-                                                else{
-                                                	if(field.readonly === true){
-                                                		sectionConfig.readOnly.push(field.SObjectField.name);
-                                                	}
-                                                	if(field.required === true){
-                                                		sectionConfig.mandatory.push(field.SObjectField.name);
-                                                	}
-                                                }
-                                            });
-                                            sectionsDetails.push(sectionConfig);
-                                        });
-                                        configObj.SObjectLayoutRelatedLists.forEach((relatedList)=>{
-                                            var relatedListConfig = {
-                                                title: '',
-                                                isLineSection: true,
-                                                isEditable: true,
-                                                requiredAddMoreFunctionality: false,
-                                                object: '',
-                                                refrenceField: '',
-                                                filterCondition: '',
-                                                fields: [],
-                                                readOnly: [],
-                                                mandatory: []
-                                            };
-                                            relatedListConfig.title = relatedList.title;
-                                            relatedListConfig.requiredAddMoreFunctionality = relatedList.requireAddMore;
-                                            relatedListConfig.object = relatedList.SObject.name;
-                                            relatedListConfig.refrenceField = relatedList.SObjectField.name;
-                                            relatedListConfig.isEditable = !relatedList.readonly;
-                                            relatedListConfig.filterCondition = createGroupExpression(relatedList.criteria,"",relatedList.criteria.group.operator);
-                                            if (relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
-                                                relatedListConfig.calculation = [];
-                                                if (relatedList.amountCriteriaConfig !== undefined && relatedList.amountCriteriaConfig !== null && relatedList.amountCriteriaConfig.relatedListAmtFields.length > 0) {
-                                                    relatedList.amountCriteriaConfig.relatedListAmtFields.forEach(function (config) {
-                                                        relatedListConfig.calculation.push({
-                                                            [config.parentSObjectField.name]: config.childSObjectField.name
-                                                        });
+                                })
+                                    .then((mobileEditLayoutConfigs)=>{
+                                        var uiLayout = {};
+                                        var relatedListSobjectFieldsDeatilId = [];
+                                        var fieldNameReferenceMap = {};
+                                        mobileEditLayoutConfigs.forEach((mobileEditLayoutConfig)=>{
+                                            uiLayout[mobileEditLayoutConfig.SObject.name] = [];
+                                            var key = mobileEditLayoutConfig.SObject.name;
+                                            mobileEditLayoutConfig.a.forEach((configObj)=>{
+                                                var governValue = [], sectionsDetails = [];
+                                                governField[key].forEach((value)=>{
+                                                    governValue.push(configObj.governingFieldValue[value]);
+                                                });
+                                                configObj.SObjectLayoutSections.sort((a, b)=>{
+                                                    if(a.order < b.order)
+                                                        return -1;
+                                                    if(a.order > b.order)
+                                                        return 1;
+                                                    return 0;
+                                                }).forEach((section)=>{
+                                                    var sectionConfig = {
+                                                        title: '',
+                                                        isLineSection: false,
+                                                        isEditable: true,
+                                                        fields: [],
+                                                        readOnly: [],
+                                                        mandatory: []
+                                                    };
+                                                    sectionConfig.title = section.title;
+                                                    sectionConfig.isEditable = !section.readonly;
+                                                    section.SObjectLayoutFields.sort((a, b)=>{
+                                                        if(a.order < b.order)
+                                                            return -1;
+                                                        if(a.order > b.order)
+                                                            return 1;
+                                                        return 0;
+                                                    }).forEach((field)=>{
+                                                        sectionConfig.fields.push(field.SObjectField.name);
+                                                        if(sectionConfig.isEditable === false){
+                                                            sectionConfig.readOnly.push(field.SObjectField.name);
+                                                        }
+                                                        else{
+                                                            if(field.readonly === true){
+                                                                sectionConfig.readOnly.push(field.SObjectField.name);
+                                                            }
+                                                            if(field.required === true){
+                                                                sectionConfig.mandatory.push(field.SObjectField.name);
+                                                            }
+                                                        }
                                                     });
-                                                }
-                                            }
-                                            relatedList.SObjectLayoutFields.sort((a, b)=>{
-                                                if(a.order < b.order)
-                                                    return -1;
-                                                if(a.order > b.order)
-                                                    return 1;
-                                                return 0;
-                                            }).forEach((field)=>{
-                                                fieldNameReferenceMap[field.SObjectFieldId] = field.reference;
-                                                relatedListSobjectFieldsDeatilId.push(field.SObjectFieldId)
-                                                relatedListConfig.fields.push(field.SObjectFieldId);
-                                                if(relatedListConfig.isEditable === false){
-                                                	relatedListConfig.readOnly.push(field.SObjectFieldId);
-                                                }
-                                                else{
-                                                    if(field.readonly === true){
-                                                        relatedListConfig.readOnly.push(field.SObjectFieldId);
+                                                    sectionsDetails.push(sectionConfig);
+                                                });
+                                                configObj.SObjectLayoutRelatedLists.forEach((relatedList)=>{
+                                                    var relatedListConfig = {
+                                                        title: '',
+                                                        isLineSection: true,
+                                                        isEditable: true,
+                                                        requiredAddMoreFunctionality: false,
+                                                        object: '',
+                                                        refrenceField: '',
+                                                        filterCondition: '',
+                                                        fields: [],
+                                                        readOnly: [],
+                                                        mandatory: []
+                                                    };
+                                                    relatedListConfig.title = relatedList.title;
+                                                    relatedListConfig.requiredAddMoreFunctionality = relatedList.requireAddMore;
+                                                    relatedListConfig.object = relatedList.SObject.name;
+                                                    relatedListConfig.refrenceField = relatedList.SObjectField.name;
+                                                    relatedListConfig.isEditable = !relatedList.readonly;
+                                                    relatedListConfig.filterCondition = createGroupExpression(relatedList.criteria,"",relatedList.criteria.group.operator);
+                                                    if (relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
+                                                        relatedListConfig.calculation = [];
+                                                        if (relatedList.amountCriteriaConfig !== undefined && relatedList.amountCriteriaConfig !== null && relatedList.amountCriteriaConfig.relatedListAmtFields.length > 0) {
+                                                            relatedList.amountCriteriaConfig.relatedListAmtFields.forEach(function (config) {
+                                                                relatedListConfig.calculation.push({
+                                                                    [config.parentSObjectField.name]: config.childSObjectField.name
+                                                                });
+                                                            });
+                                                        }
                                                     }
-                                                    if(field.required === true){
-                                                        relatedListConfig.mandatory.push(field.SObjectFieldId);
-                                                    }
-                                                }
+                                                    relatedList.SObjectLayoutFields.sort((a, b)=>{
+                                                        if(a.order < b.order)
+                                                            return -1;
+                                                        if(a.order > b.order)
+                                                            return 1;
+                                                        return 0;
+                                                    }).forEach((field)=>{
+                                                        fieldNameReferenceMap[field.SObjectFieldId] = field.reference;
+                                                        relatedListSobjectFieldsDeatilId.push(field.SObjectFieldId)
+                                                        relatedListConfig.fields.push(field.SObjectFieldId);
+                                                        if(relatedListConfig.isEditable === false){
+                                                            relatedListConfig.readOnly.push(field.SObjectFieldId);
+                                                        }
+                                                        else{
+                                                            if(field.readonly === true){
+                                                                relatedListConfig.readOnly.push(field.SObjectFieldId);
+                                                            }
+                                                            if(field.required === true){
+                                                                relatedListConfig.mandatory.push(field.SObjectFieldId);
+                                                            }
+                                                        }
+                                                    });
+                                                    sectionsDetails.push(relatedListConfig);
+                                                });
+                                                uiLayout[key].push({governValue: governValue, sectionsDetails: sectionsDetails})
                                             });
-                                            sectionsDetails.push(relatedListConfig);
                                         });
-                                        uiLayout[key].push({governValue: governValue, sectionsDetails: sectionsDetails})
-                                    });
-                                });
-                                db.SObjectField.findAll({
-                                    where: {
-                                        forMobile: true,
-                                        id: {$in: relatedListSobjectFieldsDeatilId}
-                                    }
-                                }).then((fields)=>{
-                                    Object.keys(uiLayout).forEach(function(key) {
-                                        uiLayout[key].forEach((layout)=>{
-                                            layout.sectionsDetails.forEach((section)=>{
-                                                if(section.isLineSection === true){
-                                                    fields.forEach((_field)=>{
-                                                        section.fields.forEach((field, index)=>{
-                                                            if(_field.id === field){
-                                                                if(_field.type === 'reference')
-                                                                    section.fields[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                else
-                                                                    section.fields[index] = _field.name;
+                                        db.SObjectField.findAll({
+                                            where: {
+                                                forMobile: true,
+                                                id: {$in: relatedListSobjectFieldsDeatilId}
+                                            }
+                                        }).then((fields)=>{
+                                            Object.keys(uiLayout).forEach(function(key) {
+                                                uiLayout[key].forEach((layout)=>{
+                                                    layout.sectionsDetails.forEach((section)=>{
+                                                        if(section.isLineSection === true){
+                                                            fields.forEach((_field)=>{
+                                                                section.fields.forEach((field, index)=>{
+                                                                    if(_field.id === field){
+                                                                        if(_field.type === 'reference')
+                                                                            section.fields[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                        else
+                                                                            section.fields[index] = _field.name;
+                                                                    }
+                                                                });
+                                                                section.readOnly.forEach((field, index)=>{
+                                                                    if(_field.id === field){
+                                                                        if(_field.type === 'reference')
+                                                                            section.readOnly[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                        else
+                                                                            section.readOnly[index] = _field.name;
+                                                                    }
+                                                                });
+                                                                section.mandatory.forEach((field, index)=>{
+                                                                    if(_field.id === field){
+                                                                        if(_field.type === 'reference')
+                                                                            section.mandatory[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                        else
+                                                                            section.mandatory[index] = _field.name;
+                                                                    }
+                                                                });
+                                                            })
+                                                        }
+                                                    });
+                                                });
+                                            });
+
+                                            db.SObjectLayout.findAll({
+                                                attributes: ['id'],
+                                                include: [{
+                                                    model: db.SObject,
+                                                    attributes: ['name'],
+                                                }, {
+                                                    model: db.SObjectLayoutSection,
+                                                    attributes: ['id', 'title', 'readonly', 'order'],
+                                                    required: false,
+                                                    include: {
+                                                        model: db.SObjectLayoutField,
+                                                        attributes: ['readonly', 'required', 'order'],
+                                                        include: {
+                                                            model: db.SObjectField,
+                                                            attributes: ['name'],
+                                                            where: {
+                                                                forMobile: true
                                                             }
+                                                        },
+                                                        order: ['order']
+                                                    },
+                                                    where: {
+                                                        active: true
+                                                    },
+                                                    order: ['order']
+                                                }, {
+                                                    model: db.SObjectLayoutRelatedList,
+                                                    attributes: ['id', 'title', 'requireAddMore', 'criteria', 'readonly', 'amountCriteriaConfig'],
+                                                    required: false,
+                                                    include: [{
+                                                        model: db.SObject,
+                                                        attributes: ['name'],
+                                                    }, {
+                                                        model: db.SObjectLayoutField,
+                                                        attributes: ['id', 'readonly', 'required', 'SObjectFieldId', 'reference', 'order'],
+                                                        order: ['order', 'AESC']
+                                                    }, {
+                                                        model: db.SObjectField,
+                                                        attributes: ['name'],
+                                                        required: false,
+                                                        where: {
+                                                            forMobile: true
+                                                        }
+                                                    }],
+                                                    where: {
+                                                        active: true
+                                                    },
+                                                    order: ['order']
+                                                }
+                                                ],
+                                                where: {
+                                                    type: 'Mobile',
+                                                    mobileSubtype: 'MCreate',
+                                                    active: true
+                                                }
+                                            })
+                                                .then((mobileCreateLayoutConfigs) => {
+                                                    var uiCreateLayout = {};
+                                                    var relatedListSobjectFieldsDeatilId = [];
+                                                    var fieldNameReferenceMap = {};
+                                                    mobileCreateLayoutConfigs.forEach((mobileCreateLayoutConfig) => {
+                                                        uiCreateLayout[mobileCreateLayoutConfig.SObject.name] = [];
+                                                        var key = mobileCreateLayoutConfig.SObject.name;
+                                                        var sectionsDetails = [];
+                                                        mobileCreateLayoutConfig.SObjectLayoutSections.sort((a, b) => {
+                                                            if (a.order < b.order)
+                                                                return -1;
+                                                            if (a.order > b.order)
+                                                                return 1;
+                                                            return 0;
+                                                        }).forEach((section) => {
+                                                            var sectionConfig = {
+                                                                title: '',
+                                                                isLineSection: false,
+                                                                isEditable: true,
+                                                                fields: [],
+                                                                readOnly: [],
+                                                                mandatory: []
+                                                            };
+                                                            sectionConfig.title = section.title;
+                                                            sectionConfig.isEditable = !section.readonly;
+                                                            section.SObjectLayoutFields.sort((a, b) => {
+                                                                if (a.order < b.order)
+                                                                    return -1;
+                                                                if (a.order > b.order)
+                                                                    return 1;
+                                                                return 0;
+                                                            }).forEach((field) => {
+                                                                sectionConfig.fields.push(field.SObjectField.name);
+                                                                if (sectionConfig.isEditable === false) {
+                                                                    sectionConfig.readOnly.push(field.SObjectField.name);
+                                                                }
+                                                                else {
+                                                                    if (field.readonly === true) {
+                                                                        sectionConfig.readOnly.push(field.SObjectField.name);
+                                                                    }
+                                                                    if (field.required === true) {
+                                                                        sectionConfig.mandatory.push(field.SObjectField.name);
+                                                                    }
+                                                                }
+                                                            });
+                                                            sectionsDetails.push(sectionConfig);
                                                         });
-                                                        section.readOnly.forEach((field, index)=>{
-                                                            if(_field.id === field){
-                                                                if(_field.type === 'reference')
-                                                                    section.readOnly[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                else
-                                                                    section.readOnly[index] = _field.name;
+                                                        mobileCreateLayoutConfig.SObjectLayoutRelatedLists.forEach((relatedList) => {
+                                                            var relatedListConfig = {
+                                                                title: '',
+                                                                isLineSection: true,
+                                                                isEditable: true,
+                                                                requiredAddMoreFunctionality: false,
+                                                                object: '',
+                                                                refrenceField: '',
+                                                                filterCondition: '',
+                                                                fields: [],
+                                                                readOnly: [],
+                                                                mandatory: []
+                                                            };
+                                                            relatedListConfig.title = relatedList.title;
+                                                            relatedListConfig.requiredAddMoreFunctionality = relatedList.requireAddMore;
+                                                            relatedListConfig.object = relatedList.SObject.name;
+                                                            relatedListConfig.refrenceField = relatedList.SObjectField.name;
+                                                            relatedListConfig.isEditable = !relatedList.readonly;
+                                                            relatedListConfig.filterCondition = createGroupExpression(relatedList.criteria, "", relatedList.criteria.group.operator);
+                                                            if (relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
+                                                                relatedListConfig.calculation = [];
+                                                                if (relatedList.amountCriteriaConfig !== undefined && relatedList.amountCriteriaConfig !== null && relatedList.amountCriteriaConfig.relatedListAmtFields.length > 0) {
+                                                                    relatedList.amountCriteriaConfig.relatedListAmtFields.forEach(function (config) {
+                                                                        relatedListConfig.calculation.push({
+                                                                            [config.parentSObjectField.name]: config.childSObjectField.name
+                                                                        });
+                                                                    });
+                                                                }
                                                             }
+                                                            relatedList.SObjectLayoutFields.sort((a, b) => {
+                                                                if (a.order < b.order)
+                                                                    return -1;
+                                                                if (a.order > b.order)
+                                                                    return 1;
+                                                                return 0;
+                                                            }).forEach((field) => {
+                                                                fieldNameReferenceMap[field.SObjectFieldId] = field.reference;
+                                                                relatedListSobjectFieldsDeatilId.push(field.SObjectFieldId)
+                                                                relatedListConfig.fields.push(field.SObjectFieldId);
+                                                                if (relatedListConfig.isEditable === false) {
+                                                                    relatedListConfig.readOnly.push(field.SObjectFieldId);
+                                                                }
+                                                                else {
+                                                                    if (field.readonly === true) {
+                                                                        relatedListConfig.readOnly.push(field.SObjectFieldId);
+                                                                    }
+                                                                    if (field.required === true) {
+                                                                        relatedListConfig.mandatory.push(field.SObjectFieldId);
+                                                                    }
+                                                                }
+                                                            });
+                                                            sectionsDetails.push(relatedListConfig);
                                                         });
-                                                        section.mandatory.forEach((field, index)=>{
-                                                            if(_field.id === field){
-                                                                if(_field.type === 'reference')
-                                                                    section.mandatory[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                else
-                                                                    section.mandatory[index] = _field.name;
-                                                            }
+                                                        uiCreateLayout[key].push({ sectionsDetails: sectionsDetails })
+                                                    });
+                                                    db.SObjectField.findAll({
+                                                        where: {
+                                                            forMobile: true,
+                                                            id: { $in: relatedListSobjectFieldsDeatilId }
+                                                        }
+                                                    }).then((fields) => {
+                                                        Object.keys(uiCreateLayout).forEach(function (key) {
+                                                            uiCreateLayout[key].forEach((layout) => {
+                                                                layout.sectionsDetails.forEach((section) => {
+                                                                    if (section.isLineSection === true) {
+                                                                        fields.forEach((_field) => {
+                                                                            section.fields.forEach((field, index) => {
+                                                                                if (_field.id === field) {
+                                                                                    if (_field.type === 'reference')
+                                                                                        section.fields[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                                    else
+                                                                                        section.fields[index] = _field.name;
+                                                                                }
+                                                                            });
+                                                                            section.readOnly.forEach((field, index) => {
+                                                                                if (_field.id === field) {
+                                                                                    if (_field.type === 'reference')
+                                                                                        section.readOnly[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                                    else
+                                                                                        section.readOnly[index] = _field.name;
+                                                                                }
+                                                                            });
+                                                                            section.mandatory.forEach((field, index) => {
+                                                                                if (_field.id === field) {
+                                                                                    if (_field.type === 'reference')
+                                                                                        section.mandatory[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                                    else
+                                                                                        section.mandatory[index] = _field.name;
+                                                                                }
+                                                                            });
+                                                                        })
+                                                                    }
+                                                                });
+                                                            });
                                                         });
+
+                                                        global.db.MobileOrgDetail.findAll()
+                                                            .then(function (orgDetail) {
+                                                                if (orgDetail !== undefined && orgDetail !== null) {
+                                                                    console.log('orgDetail',orgDetail);
+                                                                    if(orgDetail.length>0){
+                                                                        mobileOrgDetail={
+                                                                            logo : orgDetail[orgDetail.length-1].logo,
+                                                                            name:orgDetail[orgDetail.length-1].name,
+                                                                            sysAdminId  : orgDetail[orgDetail.length-1].sysAdminId,
+                                                                        }
+                                                                    }
+                                                                }
+                                                                callback && callback({
+                                                                    success: true,
+                                                                    config: {
+                                                                        orgDetail:mobileOrgDetail,
+                                                                        objectMetadata: objectMetadata,
+                                                                        governField: governField,
+                                                                        objectSearchConfig: objectSearchConfig,
+                                                                        userActionConfig: userActionConfig,
+                                                                        myTaskConfig: myTaskConfig,
+                                                                        pickListConfig: pickListConfig,
+                                                                        uiLayout: uiLayout,
+                                                                        uiCreateLayout: uiCreateLayout
+                                                                    }
+                                                                });
+                                                            })
+                                                            .catch((err)=>{
+                                                                callback && callback({
+                                                                    success: false,
+                                                                    message: 'Error occured getting field detail for Mobile Config JSON of org details.',
+                                                                    err: err
+                                                                });
+                                                            });
                                                     })
-                                                }
+                                                        .catch((err) => {
+                                                            callback && callback({
+                                                                success: false,
+                                                                message: 'Error occured getting field detail for Mobile Config JSON of mobileCreateLayoutConfigs.',
+                                                                err: err
+                                                            });
+                                                        });
+                                                })
+                                                .catch((err) => {
+                                                    callback && callback({
+                                                        success: false,
+                                                        message: 'Error occured getting Mobile Config JSON of mobileCreateLayoutConfigs.',
+                                                        err: err
+                                                    });
+                                                });
+                                        })
+                                            .catch((err)=>{
+                                                callback && callback({
+                                                    success: false,
+                                                    message: 'Error occured getting field detail for Mobile Config JSON of mobileEditLayoutConfigs.',
+                                                    err: err
+                                                });
                                             });
-                                        });
-                                    });
-                                    global.db.MobileOrgDetail.findAll()
-                                    .then(function (orgDetail) {
-                                        if (orgDetail !== undefined && orgDetail !== null) {
-                                            console.log('orgDetail',orgDetail);
-                                            if(orgDetail.length>0){
-                                                mobileOrgDetail={
-                                                    logo : orgDetail[orgDetail.length-1].logo,
-                                                    name:orgDetail[orgDetail.length-1].name,
-                                                    sysAdminId  : orgDetail[orgDetail.length-1].sysAdminId,
-                                                }
-                                            }
-                                        }
-                                        callback && callback({
-                                            success: true,
-                                            config: {
-                                                orgDetail:mobileOrgDetail,
-                                                objectMetadata: objectMetadata,
-                                                governField: governField,
-                                                objectSearchConfig: objectSearchConfig,
-                                                userActionConfig: userActionConfig,
-                                                myTaskConfig: myTaskConfig,
-                                                pickListConfig: pickListConfig,
-                                                uiLayout: uiLayout
-                                            }
-                                        });
                                     })
                                     .catch((err)=>{
                                         callback && callback({
                                             success: false,
-                                            message: 'Error occured getting field detail for Mobile Config JSON of org details.',
+                                            message: 'Error occured getting Mobile Config JSON of mobileEditLayoutConfigs.',
                                             err: err
                                         });
                                     });
-                                })
-                                .catch((err)=>{
-                                    callback && callback({
-                                        success: false,
-                                        message: 'Error occured getting field detail for Mobile Config JSON of mobileEditLayoutConfigs.',
-                                        err: err
-                                    });
-                                });
-                            })
-                            .catch((err)=>{
+
+                            }).catch((err)=>{
                                 callback && callback({
                                     success: false,
-                                    message: 'Error occured getting Mobile Config JSON of mobileEditLayoutConfigs.',
+                                    message: 'Error occured getting Mobile Config JSON of pickListConfig.',
                                     err: err
                                 });
                             });
-
-                        }).catch((err)=>{
+                        })
+                        .catch((err)=>{
                             callback && callback({
                                 success: false,
-                                message: 'Error occured getting Mobile Config JSON of pickListConfig.',
+                                message: 'Error occured getting Mobile Config JSON of myTaskConfig.',
                                 err: err
                             });
                         });
-                    })
-                    .catch((err)=>{
-                        callback && callback({
-                            success: false,
-                            message: 'Error occured getting Mobile Config JSON of myTaskConfig.',
-                            err: err
-                        });
-                    });
                 }).catch(function (err) {
                     callback && callback({
                         success: false,
@@ -728,7 +946,7 @@ var getMobileConfig = function(callback){
                         err: err
                     });
                 });
-                
+
             }).catch(function (err) {
                 callback && callback({
                     success: false,
