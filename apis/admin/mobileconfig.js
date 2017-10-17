@@ -816,7 +816,7 @@ var getMobileConfig = function(callback){
                                                             });
                                                             sectionsDetails.push(relatedListConfig);
                                                         });
-                                                        uiCreateLayout[key].sectionsDetails = sectionsDetails;
+                                                        uiCreateLayout[key].sections = sectionsDetails;
                                                     });
                                                     db.SObjectField.findAll({
                                                         where: {
@@ -825,7 +825,7 @@ var getMobileConfig = function(callback){
                                                         }
                                                     }).then((fields) => {
                                                         Object.keys(uiCreateLayout).forEach(function (key) {
-                                                            uiCreateLayout[key].sectionsDetails.forEach((section) => {
+                                                            uiCreateLayout[key].sections.forEach((section) => {
                                                                 if (section.isLineSection === true) {
                                                                     fields.forEach((_field) => {
                                                                         section.fields.forEach((field, index) => {
