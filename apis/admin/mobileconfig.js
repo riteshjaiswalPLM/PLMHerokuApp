@@ -659,7 +659,7 @@ var getMobileConfig = function(callback){
                                             });
 
                                             db.SObjectLayout.findAll({
-                                                attributes: ['id'],
+                                                attributes: ['id', 'primaryAttachmentRequired'],
                                                 include: [{
                                                     model: db.SObject,
                                                     attributes: ['name'],
@@ -719,7 +719,9 @@ var getMobileConfig = function(callback){
                                                     var relatedListSobjectFieldsDeatilId = [];
                                                     var fieldNameReferenceMap = {};
                                                     mobileCreateLayoutConfigs.forEach((mobileCreateLayoutConfig) => {
-                                                        uiCreateLayout[mobileCreateLayoutConfig.SObject.name] = [];
+                                                        uiCreateLayout[mobileCreateLayoutConfig.SObject.name] = {
+                                                            primaryAttachmentRequired: mobileCreateLayoutConfig.primaryAttachmentRequired
+                                                        };
                                                         var key = mobileCreateLayoutConfig.SObject.name;
                                                         var sectionsDetails = [];
                                                         mobileCreateLayoutConfig.SObjectLayoutSections.sort((a, b) => {
@@ -814,7 +816,7 @@ var getMobileConfig = function(callback){
                                                             });
                                                             sectionsDetails.push(relatedListConfig);
                                                         });
-                                                        uiCreateLayout[key].push({ sectionsDetails: sectionsDetails })
+                                                        uiCreateLayout[key].sectionsDetails = sectionsDetails;
                                                     });
                                                     db.SObjectField.findAll({
                                                         where: {
@@ -823,37 +825,35 @@ var getMobileConfig = function(callback){
                                                         }
                                                     }).then((fields) => {
                                                         Object.keys(uiCreateLayout).forEach(function (key) {
-                                                            uiCreateLayout[key].forEach((layout) => {
-                                                                layout.sectionsDetails.forEach((section) => {
-                                                                    if (section.isLineSection === true) {
-                                                                        fields.forEach((_field) => {
-                                                                            section.fields.forEach((field, index) => {
-                                                                                if (_field.id === field) {
-                                                                                    if (_field.type === 'reference')
-                                                                                        section.fields[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                                    else
-                                                                                        section.fields[index] = _field.name;
-                                                                                }
-                                                                            });
-                                                                            section.readOnly.forEach((field, index) => {
-                                                                                if (_field.id === field) {
-                                                                                    if (_field.type === 'reference')
-                                                                                        section.readOnly[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                                    else
-                                                                                        section.readOnly[index] = _field.name;
-                                                                                }
-                                                                            });
-                                                                            section.mandatory.forEach((field, index) => {
-                                                                                if (_field.id === field) {
-                                                                                    if (_field.type === 'reference')
-                                                                                        section.mandatory[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                                    else
-                                                                                        section.mandatory[index] = _field.name;
-                                                                                }
-                                                                            });
-                                                                        })
-                                                                    }
-                                                                });
+                                                            uiCreateLayout[key].sectionsDetails.forEach((section) => {
+                                                                if (section.isLineSection === true) {
+                                                                    fields.forEach((_field) => {
+                                                                        section.fields.forEach((field, index) => {
+                                                                            if (_field.id === field) {
+                                                                                if (_field.type === 'reference')
+                                                                                    section.fields[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                                else
+                                                                                    section.fields[index] = _field.name;
+                                                                            }
+                                                                        });
+                                                                        section.readOnly.forEach((field, index) => {
+                                                                            if (_field.id === field) {
+                                                                                if (_field.type === 'reference')
+                                                                                    section.readOnly[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                                else
+                                                                                    section.readOnly[index] = _field.name;
+                                                                            }
+                                                                        });
+                                                                        section.mandatory.forEach((field, index) => {
+                                                                            if (_field.id === field) {
+                                                                                if (_field.type === 'reference')
+                                                                                    section.mandatory[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
+                                                                                else
+                                                                                    section.mandatory[index] = _field.name;
+                                                                            }
+                                                                        });
+                                                                    })
+                                                                }
                                                             });
                                                         });
 
