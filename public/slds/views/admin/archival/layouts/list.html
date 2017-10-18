@@ -25,74 +25,75 @@
                 </button>
             </div>
         </div>
-    </div>
-    <div class="slds-grid">
-        <div class="slds-col slds-align-bottom">
-            <p class="slds-text-body--small">Total <span ng-bind-template="{{$root.filteredLayouts.length}}">0</span> item(s).</p>
-        </div>
-        <div class="slds-col slds-no-flex slds-grid slds-align-bottom">
-            <div class="slds-form-element">
-                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
-                    <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
-                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
-                    </svg>
-                    <input type="text" class="slds-input" placeholder="Search layouts..." ng-model="filterStr.layoutsFilter" />
+        <div class="slds-grid">
+            <div class="slds-col slds-align-bottom">
+                <p class="slds-text-body--small">Total <span ng-bind-template="{{$root.filteredLayouts.length}}">0</span> item(s).</p>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-bottom">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        <input type="text" class="slds-input" placeholder="Search layouts..." ng-model="filterStr.layoutsFilter" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="slds-grid slds-scrollable--y" block-ui="loadSObjects" style="height: calc(100vh - 228px);">
-    <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-        style="height: calc(100vh - 260px);">
-        <thead>
-            <tr class="slds-text-title--caps">
-                <th scope="col">
-                    <div class="slds-truncate" title="SObject">SObject</div>
-                </th>
-                <th scope="col" style="width: 150px;">
-                    <div class="slds-truncate" title="Layout type">Layout type</div>
-                </th>
-                <th scope="col" style="text-align: center; width: 50px;">
-                    <div class="slds-truncate" title="Active">Active</div>
-                </th>
-                <th scope="col" style="text-align: center;width: 100px;">
-                    <div class="slds-truncate" title="Actions">Actions</div>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-if="$root.filteredLayouts.length === 0 && layouts.length > 0 && filterStr.layoutsFilter">
-                <td colspan="6" class="slds-blank-slate">
-                    <h1>No Layout found for search criteria.</h1>
-                </td>
-            </tr>
-            <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: filterStr.layoutsFilter)">
-                <td data-label="SObject">
-                    <div class="slds-truncate" title="{{ layout.SObject.label }} : {{ layout.type }} layout">{{ layout.SObject.label }}</div>
-                </td>
-                <td data-label="Layout type">
-                    <div class="slds-truncate" title="{{ layout.type }}">{{ layout.type }}</div>
-                </td>
-                <td data-label="Active">
-                    <div class="slds-truncate slds-align--absolute-center">
-                        <slds-switch ng-model="layout.active" switch-change="changeActive(layout)" show-texts="false" />
-                    </div>
-                </td>
-                <td data-label="Actions">
-                    <div class="slds-truncate slds-align--absolute-center">
-                        <div class="slds-button-group" role="group">
-                            <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="search(layout)">
+    <div>
+        <div class="slds-grid slds-scrollable--y" block-ui="loadSObjects" style="height: calc(100vh - 228px);">
+            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
+                style="height: calc(100vh - 260px);">
+                <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="SObject">SObject</div>
+                        </th>
+                        <th scope="col" style="width: 150px;">
+                            <div class="slds-truncate" title="Layout type">Layout type</div>
+                        </th>
+                        <th scope="col" style="text-align: center; width: 50px;">
+                            <div class="slds-truncate" title="Active">Active</div>
+                        </th>
+                        <th scope="col" style="text-align: center;width: 100px;">
+                            <div class="slds-truncate" title="Actions">Actions</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="$root.filteredLayouts.length === 0 && layouts.length > 0 && filterStr.layoutsFilter">
+                        <td colspan="6" class="slds-blank-slate">
+                            <h1>No Layout found for search criteria.</h1>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: filterStr.layoutsFilter)">
+                        <td data-label="SObject">
+                            <div class="slds-truncate" title="{{ layout.SObject.label }} : {{ layout.type }} layout">{{ layout.SObject.label }}</div>
+                        </td>
+                        <td data-label="Layout type">
+                            <div class="slds-truncate" title="{{ layout.type }}">{{ layout.type }}</div>
+                        </td>
+                        <td data-label="Active">
+                            <div class="slds-truncate slds-align--absolute-center">
+                                <slds-switch ng-model="layout.active" switch-change="changeActive(layout)" show-texts="false" />
+                            </div>
+                        </td>
+                        <td data-label="Actions">
+                            <div class="slds-truncate slds-align--absolute-center">
+                                <div class="slds-button-group" role="group">
+                                    <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="search(layout)">
                                     <svg class="slds-button__icon" aria-hidden="true">
                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                                     </svg>
                                     <span class="slds-assistive-text">Manage Search Layout</span>
                                 </button>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

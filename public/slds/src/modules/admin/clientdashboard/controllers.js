@@ -61,12 +61,28 @@ admin.controller('AdminClientDashboardDesignController',[
         };
         $scope.componentDropCallBack = function(event, index, item, external, type, container, containerIndex, columnNumber){
             item.order = index;
+            if ($scope.isDuplicate(item)) {
+                return false;
+            }
             if(angular.isUndefined(item.columns))
                 item.columns = 3;
             if(angular.isUndefined(item.label))
                 $scope.dashboardContainerComponentPropertiesModal(containerIndex, item, index);
             return item;
         };
+        $scope.isDuplicate = function (item) {
+            var duplicate = false;
+            angular.forEach($scope.dashboardContainers, function (container, index) {
+                angular.forEach(container.components, function (component, index) {
+                    if (!duplicate) {
+                        if (((component.ComponentId != undefined && component.ComponentId === item.id) || (component.component != undefined && component.component.id === item.id)) && !component.deleted) {
+                            duplicate = true;
+                        }
+                    }
+                });
+            });
+            return duplicate;
+        }
         $scope.dashboardContainerComponentPropertiesModal = function(containerIndex, component, index){
             if (component.component != undefined) {
                 if (component.ComponentId == undefined) {
