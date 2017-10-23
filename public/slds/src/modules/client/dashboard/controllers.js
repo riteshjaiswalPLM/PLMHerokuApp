@@ -94,8 +94,12 @@ client.controller('ClientDashboardController', [
             $scope.stateCache.allowedType = allowedType;
             var _editAction = undefined;
             if (relativeField) {
-                record.Id = record[relativeField.name];
-                record.attributes = record[relativeField.relationshipName].attributes;
+                if (record[relativeField.name] != undefined) {
+                    record.Id = record[relativeField.name];
+                }
+                if (record[relativeField.relationshipName] != undefined && record[relativeField.relationshipName].attributes != undefined) {
+                    record.attributes = record[relativeField.relationshipName].attributes;
+                }
             }
             if (recordActions.length > 1) {
                 angular.forEach(recordActions, function (action) {
