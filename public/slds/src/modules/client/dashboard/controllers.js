@@ -14,7 +14,7 @@ client.controller('ClientDashboardController', [
                 else {
                     $scope.stateCache = $appCache.get($state.current.name);
                     if ($scope.stateCache.btnClick === "save" && $scope.stateCache.cacheReference !== undefined && $scope.stateCache.recordReference !== undefined) {
-                        $scope.loadData($scope.stateCache.configuration,$scope.stateCache.cetagory+ 'Component' + $scope.stateCache.componentId,$scope.stateCache.catagory+ $scope.stateCache.componentId + 'Block' ,$scope.stateCache.label, $scope.stateCache.allowedType, true);
+                        $scope.loadData($scope.stateCache.configuration,$scope.stateCache.catagory+ 'Component' + $scope.stateCache.componentId,$scope.stateCache.catagory+ $scope.stateCache.componentId + 'Block' ,$scope.stateCache.label, $scope.stateCache.allowedType, true);
                         $scope.searchResult = $scope.stateCache.searchResult;
                         $appCache.put($state.current.name, $scope.stateCache);
                     }
@@ -94,12 +94,8 @@ client.controller('ClientDashboardController', [
             $scope.stateCache.allowedType = allowedType;
             var _editAction = undefined;
             if (relativeField) {
-                if (record[relativeField.name] != undefined) {
-                    record.Id = record[relativeField.name];
-                }
-                if (record[relativeField.relationshipName] != undefined && record[relativeField.relationshipName].attributes != undefined) {
-                    record.attributes = record[relativeField.relationshipName].attributes;
-                }
+                record.Id = record[relativeField.name];
+                record.attributes = record[relativeField.relationshipName].attributes;
             }
             if (recordActions.length > 1) {
                 angular.forEach(recordActions, function (action) {
