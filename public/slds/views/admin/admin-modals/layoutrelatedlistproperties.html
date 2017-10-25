@@ -47,7 +47,7 @@
                         <input   ng-model="relatedList.orderBy" class="slds-input" />
                     </div>
                 </div>
-                <div class="slds-form-element" ng-if="forMobile === true" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
+                <div class="slds-form-element" ng-if="forMobile === true && !(layout.type === 'Mobile' && layout.mobileSubtype === 'MCreate')" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
                     <label class="slds-form-element__label" for="readOnly">Readonly</label>
                     <div class="slds-form-element__control" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
                         <slds-switch id="readOnly" switch-change="onChangeReadonlySwitch()" ng-model="relatedList.readonly" on-text="Yes" off-text="No" />
@@ -97,7 +97,7 @@
                                 <th scope="col">
                                     <div class="slds-truncate" title="Reference">Reference</div>
                                 </th>
-                                <th scope="col" ng-if="forMobile === true">
+                                <th scope="col" ng-if="forMobile === true && !(layout.type === 'Mobile' && layout.mobileSubtype === 'MCreate')">
                                     <div class="slds-truncate" title="Read Only">Read Only</div>
                                 </th>
                                 <th scope="col" ng-if="forMobile === true">
@@ -131,7 +131,7 @@
                                     <input type="text" class="slds-input" placeholder="{{field.SObjectField.label}}" ng-model="field.label" />
                                 </td>
                                 <td data-label="Reference" reference-field-selector field="field" ref-sobjects="refSObjects"></td>
-                                <td ng-if="forMobile === true" data-label="Read Only">
+                                <td ng-if="forMobile === true && !(layout.type === 'Mobile' && layout.mobileSubtype === 'MCreate')" data-label="Read Only">
                                     <slds-switch id="isReadOnly" switch-change="onChangeReadonly(field);" ng-model="field.readonly" on-text="Yes" off-text="No" />
                                 </td>
                                 <td ng-if="forMobile === true" data-label="Required">

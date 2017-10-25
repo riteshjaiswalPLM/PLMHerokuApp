@@ -17,7 +17,7 @@
                         <input type="text" id="sectionTitle" class="slds-input" placeholder="{{sectionTitle}}" ng-model="section.title">
                     </div>
                 </div>
-                <div class="slds-form-element">
+                <div class="slds-form-element" ng-if="!(layout.type === 'Mobile' && layout.mobileSubtype === 'MCreate')">
                     <label class="slds-form-element__label" for="sectionReadonly">Readonly ?</label>
                     <div class="slds-form-element__control">
                         <slds-switch id="sectionReadonly" ng-model="section.readonly" on-text="Yes" off-text="No" switch-readonly="layout.type === 'Details' || (section.isComponent && section.Component.catagory == 'RelatedListComponent')"/>

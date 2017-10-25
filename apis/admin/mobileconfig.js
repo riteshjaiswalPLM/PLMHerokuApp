@@ -665,11 +665,11 @@ var getMobileConfig = function(callback){
                                                     attributes: ['name'],
                                                 }, {
                                                     model: db.SObjectLayoutSection,
-                                                    attributes: ['id', 'title', 'readonly', 'order'],
+                                                    attributes: ['id', 'title', 'order'],
                                                     required: false,
                                                     include: {
                                                         model: db.SObjectLayoutField,
-                                                        attributes: ['readonly', 'required', 'order'],
+                                                        attributes: ['required', 'order'],
                                                         include: {
                                                             model: db.SObjectField,
                                                             attributes: ['name'],
@@ -685,14 +685,14 @@ var getMobileConfig = function(callback){
                                                     order: ['order']
                                                 }, {
                                                     model: db.SObjectLayoutRelatedList,
-                                                    attributes: ['id', 'title', 'requireAddMore', 'criteria', 'readonly', 'amountCriteriaConfig'],
+                                                    attributes: ['id', 'title', 'requireAddMore', 'criteria', 'amountCriteriaConfig'],
                                                     required: false,
                                                     include: [{
                                                         model: db.SObject,
                                                         attributes: ['name'],
                                                     }, {
                                                         model: db.SObjectLayoutField,
-                                                        attributes: ['id', 'readonly', 'required', 'SObjectFieldId', 'reference', 'order'],
+                                                        attributes: ['id', 'required', 'SObjectFieldId', 'reference', 'order'],
                                                         order: ['order', 'AESC']
                                                     }, {
                                                         model: db.SObjectField,
@@ -734,13 +734,10 @@ var getMobileConfig = function(callback){
                                                             var sectionConfig = {
                                                                 title: '',
                                                                 isLineSection: false,
-                                                                isEditable: true,
                                                                 fields: [],
-                                                                readOnly: [],
                                                                 mandatory: []
                                                             };
                                                             sectionConfig.title = section.title;
-                                                            sectionConfig.isEditable = !section.readonly;
                                                             section.SObjectLayoutFields.sort((a, b) => {
                                                                 if (a.order < b.order)
                                                                     return -1;
@@ -749,16 +746,8 @@ var getMobileConfig = function(callback){
                                                                 return 0;
                                                             }).forEach((field) => {
                                                                 sectionConfig.fields.push(field.SObjectField.name);
-                                                                if (sectionConfig.isEditable === false) {
-                                                                    sectionConfig.readOnly.push(field.SObjectField.name);
-                                                                }
-                                                                else {
-                                                                    if (field.readonly === true) {
-                                                                        sectionConfig.readOnly.push(field.SObjectField.name);
-                                                                    }
-                                                                    if (field.required === true) {
-                                                                        sectionConfig.mandatory.push(field.SObjectField.name);
-                                                                    }
+                                                                if (field.required === true) {
+                                                                    sectionConfig.mandatory.push(field.SObjectField.name);
                                                                 }
                                                             });
                                                             sectionsDetails.push(sectionConfig);
@@ -767,20 +756,17 @@ var getMobileConfig = function(callback){
                                                             var relatedListConfig = {
                                                                 title: '',
                                                                 isLineSection: true,
-                                                                isEditable: true,
                                                                 requiredAddMoreFunctionality: false,
                                                                 object: '',
                                                                 refrenceField: '',
                                                                 filterCondition: '',
                                                                 fields: [],
-                                                                readOnly: [],
                                                                 mandatory: []
                                                             };
                                                             relatedListConfig.title = relatedList.title;
                                                             relatedListConfig.requiredAddMoreFunctionality = relatedList.requireAddMore;
                                                             relatedListConfig.object = relatedList.SObject.name;
                                                             relatedListConfig.refrenceField = relatedList.SObjectField.name;
-                                                            relatedListConfig.isEditable = !relatedList.readonly;
                                                             relatedListConfig.filterCondition = createGroupExpression(relatedList.criteria, "", relatedList.criteria.group.operator);
                                                             if (relatedList.SObject.name.indexOf("Invoice_Line_Item__c") > -1) {
                                                                 relatedListConfig.calculation = [];
@@ -802,16 +788,8 @@ var getMobileConfig = function(callback){
                                                                 fieldNameReferenceMap[field.SObjectFieldId] = field.reference;
                                                                 relatedListSobjectFieldsDeatilId.push(field.SObjectFieldId)
                                                                 relatedListConfig.fields.push(field.SObjectFieldId);
-                                                                if (relatedListConfig.isEditable === false) {
-                                                                    relatedListConfig.readOnly.push(field.SObjectFieldId);
-                                                                }
-                                                                else {
-                                                                    if (field.readonly === true) {
-                                                                        relatedListConfig.readOnly.push(field.SObjectFieldId);
-                                                                    }
-                                                                    if (field.required === true) {
-                                                                        relatedListConfig.mandatory.push(field.SObjectFieldId);
-                                                                    }
+                                                                if (field.required === true) {
+                                                                    relatedListConfig.mandatory.push(field.SObjectFieldId);
                                                                 }
                                                             });
                                                             sectionsDetails.push(relatedListConfig);
@@ -834,14 +812,6 @@ var getMobileConfig = function(callback){
                                                                                     section.fields[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
                                                                                 else
                                                                                     section.fields[index] = _field.name;
-                                                                            }
-                                                                        });
-                                                                        section.readOnly.forEach((field, index) => {
-                                                                            if (_field.id === field) {
-                                                                                if (_field.type === 'reference')
-                                                                                    section.readOnly[index] = _field.relationshipName + '.' + fieldNameReferenceMap[_field.id];
-                                                                                else
-                                                                                    section.readOnly[index] = _field.name;
                                                                             }
                                                                         });
                                                                         section.mandatory.forEach((field, index) => {
