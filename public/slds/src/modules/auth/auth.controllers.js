@@ -129,7 +129,7 @@ auth.controller('ResetPasswordController',[
                 Notifications.error('Password field must not be blank');
                 return
             }
-            if(!(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+.]{5,19}$/).test($scope.credentials.password)){ 
+            if(!(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+.]{5,19}$/).test($scope.credentials.password)){ 
                 Notifications.error('Password format is invalid');
                 return
             }

@@ -36,7 +36,7 @@ client.controller('ClientProfileChangePasswordController',[
                 $dialog.alert('Password field must not be blank','Error','pficon pficon-error-circle-o');
                 return
             }
-            if(!(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+.]{5,19}$/).test($scope.credentials.newPassword)){ 
+            if(!(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+.]{5,19}$/).test($scope.credentials.newPassword)){ 
                 $dialog.alert('Password format is invalid','Error','pficon pficon-error-circle-o');
                 return
             }

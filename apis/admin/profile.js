@@ -3,7 +3,6 @@ var adminProfileRouter = express.Router();
 var CryptoJS = require('crypto-js');
 
 adminProfileRouter.post('/changepassword', function (req, res) {
-    var baseURL = process.env.MOBILE_AUTH_INSTANCE_URL || 'https://esm-mob-auth-v3.herokuapp.com';
     var userObject = req.body;
     var User = db.User.findOne({
         include: {
@@ -33,7 +32,7 @@ adminProfileRouter.post('/changepassword', function (req, res) {
             }, {
                     where: {
                         id: user.id,
-                        username: user.username,
+                        username: user.username
                     }
                 }).then(function () {
                     return res.json({
@@ -50,6 +49,30 @@ adminProfileRouter.post('/changepassword', function (req, res) {
                 });
         }
     });
+});
+
+adminProfileRouter.post('/changeemail', function (req, res) {
+    var userObject = req.body;
+    db.User.update({
+        email: userObject.newEmail,
+    }, {
+            where: {
+                username: userObject.username,
+                email: userObject.email
+            }
+        }).then(function () {
+            return res.json({
+                success: true,
+                message: "Email updated successfully."
+            });
+        })
+        .catch(function (err) {
+            console.log(err);
+            return res.json({
+                success: false,
+                message: 'Error occured while updating email',
+            });
+        });
 });
 
 module.exports = adminProfileRouter;

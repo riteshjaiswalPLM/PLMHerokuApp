@@ -20,8 +20,8 @@ module.exports = {
                                             firstname: 'System',
                                             lastname: 'Administrator',
                                             username: 'Administrator',
-                                            email: process.env.ADMINISTRATOR_EMAIL || 'kaushik.rathod@sftpl.com',
-                                            password: 'sailfin@123',
+                                            email: process.env.ADMINISTRATOR_EMAIL || 'sonam.patel@sftpl.com',
+                                            password: '@dmin*123',
                                             active: true,
                                             userdata: {},
                                             RoleId: 1

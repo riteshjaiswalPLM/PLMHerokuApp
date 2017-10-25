@@ -16,6 +16,12 @@ admin.config(function($stateProvider) {
             controller: 'AdminProfileController',
             title: 'Change Password'
         })
+        // Admin change email
+        .state('admin.changeemail', {
+            templateUrl: 'slds/views/admin/profile/changeemail.html',
+            controller: 'AdminProfileEmailController',
+            title: 'Change Email'
+        })
 
         // Admin Dashboard
         .state('admin.dashboard', {
