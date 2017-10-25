@@ -112,16 +112,16 @@ client.controller('LineItemComponentController',[
 			if(!fieldRequire){
 				var criteriaSum = {};
 				angular.forEach($scope.dataModelList, function (model, mindex) {
-					if (model.isDeleted == false) {
-						angular.forEach($scope.section.componentConfig.sectionComponentAmtFields, function (field, findex) {
+					angular.forEach($scope.section.componentConfig.sectionComponentAmtFields, function (field, findex) {
 						if (criteriaSum[field.childSObjectField.name + '-' + findex] === undefined || criteriaSum[field.childSObjectField.name + '-' + findex] === null) {
 							criteriaSum[field.childSObjectField.name + '-' + findex] = 0;
 						}
-						//Maintain map here and then at last compare amount of invoice and the sum of line items
-						var lineItemTotalAmount = parseFloat(criteriaSum[field.childSObjectField.name + '-' + findex]) + parseFloat(model[field.childSObjectField.name] ? model[field.childSObjectField.name] : 0);
+						if (model.isDeleted == false) {
+							//Maintain map here and then at last compare amount of invoice and the sum of line items
+							var lineItemTotalAmount = parseFloat(criteriaSum[field.childSObjectField.name + '-' + findex]) + parseFloat(model[field.childSObjectField.name] ? model[field.childSObjectField.name] : 0);
 							criteriaSum[field.childSObjectField.name + '-' + findex] = lineItemTotalAmount;
-						});
-					}
+						}	
+					});
 				});
 				angular.forEach($scope.section.componentConfig.sectionComponentAmtFields, function (field, findex) {
 					var headerAmt = $scope.$parent.$parent.$parent.model[field.parentSObjectField.name];
