@@ -13,7 +13,7 @@ if(!global.hasOwnProperty('config')){
             environment: 'PRODUCTION'
         },
         demo_sfdc: {
-           username: 'admin@esm.demo3',
+            username: 'admin@esm.demo3',
             password: 'akritiv*1234',
             token: 'q5HveDEOSkyobijMVunvpEoE',
             environment: 'PRODUCTION'
@@ -24,8 +24,8 @@ if(!global.hasOwnProperty('config')){
             port: 587,
             secure: false, // use SSL
             auth: {
-                user: 'customer.support@akritiv.com',
-                pass: '@kritiv*support'
+                user: 'notification.customercare@gmail.com',
+                pass: 'Akritiv*123'
             }
         },
         dashboardConfig :{
