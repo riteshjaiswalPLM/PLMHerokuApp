@@ -134,7 +134,7 @@ admin.controller('AdminUserManagementUsersCreateController',[
                                 }
                             });
                             if(!(emailFieldVal === undefined || emailFieldVal==null || emailFieldVal.trim()==""
-                                || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailFieldVal))){
+                                || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(emailFieldVal))){
                                 $dialog.alert("Please Enter Valid Email Address",'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }
@@ -239,7 +239,7 @@ admin.controller('AdminUserManagementUsersEditController',[
                                 }
                             });
                             if(!(emailFieldVal === undefined || emailFieldVal==null || emailFieldVal.trim()==""
-                                || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailFieldVal))){
+                                || /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(emailFieldVal))){
                                 $dialog.alert("Please Enter Valid Email Address",'Validation Alert','pficon-warning-triangle-o');
                                 return;
                             }

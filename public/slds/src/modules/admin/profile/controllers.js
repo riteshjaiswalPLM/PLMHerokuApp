@@ -69,7 +69,7 @@ admin.controller('AdminProfileEmailController', [
                 $dialog.alert('Please enter email address', 'Error', 'pficon pficon-error-circle-o');
                 return;
             }
-            if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test($scope.user.newEmail)) {
+            if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/).test($scope.user.newEmail)) {
                 $dialog.alert('Please enter valid email address', 'Error', 'pficon pficon-error-circle-o');
                 return;
             }
