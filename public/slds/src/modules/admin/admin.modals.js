@@ -232,7 +232,8 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     where: {
                         active: true,
                         default: false,
-                        sobjectname: field.SObjectField.referenceTo[0]
+                        //sobjectname: field.SObjectField.referenceTo[0]
+                        sobjectname: { $in : field.SObjectField.referenceTo}
                     }
                 }
             }, function (lookup) {
@@ -652,7 +653,8 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                     where: {
                         active: true,
                         default: false,
-                        sobjectname: $scope.field.SObjectField.referenceTo[0]
+                        //sobjectname: $scope.field.SObjectField.referenceTo[0]
+                        sobjectname: { $in : $scope.field.SObjectField.referenceTo}
                     }
                 }
             }, function(lookup){

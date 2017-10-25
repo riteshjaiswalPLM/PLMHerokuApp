@@ -51,6 +51,7 @@ languageRouter.post('/save', function(req, res){
                 id: languageToSave.id
             }
         }).then(function(){
+            global.languageconfig.refreshEnableLanguage();
             return res.json({
                 success: true
             });
@@ -563,6 +564,7 @@ languageRouter.post('/changeactive', function(req, res){
         }
     }).then(function(){
         languageconfig.refreshLanguageConfig();
+        global.languageconfig.refreshEnableLanguage();
         return res.json({
             success: true
         });

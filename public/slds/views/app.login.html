@@ -15,7 +15,7 @@
                         <form class="slds-form--horizontal  " style="text-align: left !important" role="form">
                         <div class="slds-form-element">
                             <div class="" >
-                                <h2 style=" color: #404040; font-size: 25px;margin:20px 0px;"><b> Welcome! </b></h2>
+                                <h2 style=" color: #404040; font-size: 25px;margin:20px 0px;"><b> {{ 'Welcome' | translate }}! </b></h2>
                             </div>
                         </div>
                         <!--<div class="slds-form-element"  style="margin-bottom:0px">
@@ -25,7 +25,7 @@
                         </div>-->
                         <div class="slds-form-element" style="margin-bottom:0px">
                             <div class="" style=" color:#00B0F0; " >
-                                User Name: 
+                                {{ 'User Name' | translate}} : 
                             </div>
                         </div>
                         <div class="slds-form-element"  style="margin-bottom:15px">
@@ -35,7 +35,7 @@
                         </div>
                         <div class="slds-form-element" style="margin-bottom:0px">
                             <div class="" style=" color:#00B0F0; " >
-                                Password:
+                                {{'Password' | translate }} :
                             </div>
                         </div>
                         <div class="slds-form-element"  style="margin-bottom:15px">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="slds-form-element slds-grid">
                             <div class="slds-size--8-of-12">
-                                <span class="help-block">  <a href="#" style=" color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickResetPassLink()" tabindex="6"> Forgot Password? </a></span>
+                                <span class="help-block">  <a href="#" style=" color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickResetPassLink()" tabindex="6"> {{'Forgot Password' | translate}}? </a></span>
                             </div>
                             <div class="slds-size--4-of-12 submit" align="right">
                                 <!--<button type="submit" class="btn  btn-lg " style="background-color: #005fb2 ;color:white; border-radius: 5px;"  tabindex="4" ng-click="login()" ng-disabled="loggingIn"> {{ (loggingIn) ? 'Logging In ...' : 'Log In' }}</button>-->
@@ -53,7 +53,7 @@
                                     <!--<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#login"></use>
                                     </svg>-->
-                                    <b>{{ (loggingIn) ? 'Logging In ...' : 'Login' }}</b>
+                                    <b style="white-space: nowrap;">{{ (loggingIn) ? 'Logging In ...' : 'Login' | translate}}</b>
                                 </button>
                             </div>
                         </div>
@@ -69,9 +69,30 @@
                 <div class="slds-size--8-of-12 slds-grid">
                     <div class="slds-size--1-of-1 slds-text-heading_large" style="text-align: center;">
                         <span class="help-block slds-text-heading_large" ng-if="$root.SSOConfig().isSSOEnabled">
-                            <a href style="color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickGoToSSO()">
-                                {{$root.SSOConfig().ssoLinkCaption}}
+                             <button type="button" style="font-size: 14px;" class="slds-button slds-button--brand" ng-click="onClickGoToSSO()" >
+                                    <b style="white-space: nowrap;">{{$root.SSOConfig().ssoLinkCaption | translate}}</b>
+                            </button>
+                            <!--<a href style="color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="onClickGoToSSO()">
+                                {{$root.SSOConfig().ssoLinkCaption | translate}}
+                            </a>-->
+                        </span>
+                    </div>
+                </div>
+                <div class="slds-size--2-of-12"></div>
+            </div>
+            <div class="slds-size--12-of-12 slds-grid">
+                <div class="slds-size--2-of-12"></div>
+                <div class="slds-size--8-of-12 slds-grid">
+                    
+                    <div class="slds-size--1-of-1 slds-text-heading_large" style="text-align: center;padding-top:10px">
+                        <span class="help-block slds-text-heading_large" style="padding:5px" ng-repeat="language in enableLanguages">
+                            <a href style="color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="setLanguage(language.code)" ng-if="language.code!=currentLanguages">
+                                {{language.label}}
                             </a>
+                            <span style="text-decoration: none;font-size: 14px"  ng-if="language.code==currentLanguages">
+                                {{language.label}}
+                            </span>
+                            
                         </span>
                     </div>
                 </div>

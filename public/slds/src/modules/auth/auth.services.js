@@ -19,7 +19,13 @@ auth.factory('authService',[
             },
             resetpasswordlinkexpired: function(credentials){
                 return $http.post('/api/auth/resetpasswordlinkexpired', credentials);
-            }
+            },
+            Translation: function(languageCode){
+                return $http.post('/api/translation/', languageCode);
+            },
+            enableLanguages: function(){
+                return $http.post('/api/translation/enableLanguages',null);
+            },
         };
     }
 ]);
@@ -29,6 +35,7 @@ auth.factory('loginService',[
     function($location , $cookies , authService , $rootScope){
         return {
             login: function(credentials){
+                credentials.currentLanguage=$cookies.getObject('languageCode');
                 return authService.authenticate(credentials);
             },
             logout: function(){
@@ -37,7 +44,13 @@ auth.factory('loginService',[
             },
             isLoggedIn: function(){
                 return $cookies.getObject('user') != undefined;
-            }
+            },
+            getTranslation: function(languageCode){
+                return authService.Translation(languageCode);
+            },
+            getenableLanguages: function(){
+                return authService.enableLanguages();
+            },
             // saveAttempedUrl: function(){
             //     if($location.path().toLowerCase() != '/login'){
             //         redirectToUrlAfterLogin.url = $location.path();

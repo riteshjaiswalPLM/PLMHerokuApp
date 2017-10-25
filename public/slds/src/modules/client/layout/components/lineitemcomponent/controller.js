@@ -180,9 +180,23 @@ client.controller('LineItemComponentController',[
 		$scope.save = function(){
 			if($scope.isComponentValid()){
 				componentBlock.start('Saving invoice line items...');
+				var dataModelLst=[];
+				angular.forEach($scope.dataModelList,function(model){
+					var datamodel={};
+					if(model['attributes']!=undefined){
+						datamodel['attributes']=model['attributes'];
+					}
+					datamodel['isPersisted']=model['isPersisted'];
+					datamodel['isDeleted']=model['isDeleted'];
+					datamodel['isRemovable']=model['isRemovable'];
+					angular.forEach($scope.invoiceData.fields,function(sObject){
+						datamodel[sObject.SObjectField.name]=model[sObject.SObjectField.name];
+					});
+					dataModelLst.push(datamodel);
+				});
 				var dataObject = {
 					sObject: $scope.section.Component.ComponentDetails[0].configuration.detailSObjectName,
-					dataModelList: $scope.dataModelList,
+					dataModelList: dataModelLst,
 					parentID:$scope.ctrl.dataModel.Id,
 					lookupFieldName:$scope.invoiceData.componentConfig.ComponentDetails[0].configuration.connectingField,
 				};

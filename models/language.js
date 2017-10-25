@@ -26,7 +26,10 @@ module.exports = function(sequelize, DataTypes){
             defaultValue: function(){
                 return false;
             }
-        }
+        },
+        label: {
+            type: DataTypes.STRING,
+        },
     });
 
     return Language;

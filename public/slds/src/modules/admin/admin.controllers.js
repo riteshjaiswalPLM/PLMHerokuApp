@@ -4,6 +4,9 @@
 admin.controller('AdminController',['$scope','$rootScope','$state','$http',function($scope,$rootScope,$state,$http){
     $scope.init = function(){ 
         $scope.isArchivalActive=false;
+        _$translateProvider.translations('en',{});
+        _$translateProvider.use('en');
+        _$translateProvider.useSanitizeValueStrategy(null);
         console.log('AdminController loaded!');
         $http.post('/api/admin/archival/checkArchivalActive',{})
         .success(function (response) {

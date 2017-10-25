@@ -14,6 +14,7 @@ if(!global.hasOwnProperty('db')){
         sequelize = new Sequelize(db.dbname,db.username,db.password,{
             host: 'localhost',
             dialect: 'postgres',
+             logging: false,
             pool:{max: 5, min: 0, idle: 10000}
         });
     }

@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var apiRouter = express.Router();
 
 apiRouter.use('/salesforce', require('./getorgdetail'));
+apiRouter.use('/translation', require('./translation'));
 // Authentication Apis
 apiRouter.use('/auth', require('./auth'));
 apiRouter.use('/sso', require('./sso'));

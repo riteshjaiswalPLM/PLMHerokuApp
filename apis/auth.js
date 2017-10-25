@@ -4,7 +4,7 @@ var CryptoJS = require('crypto-js');
 var authRouter = express.Router();
 var request = require('request');
 
-global.authenticate = (credential, where, isSSOLogin, callback)=>{
+global.authenticate = (credential, where, isSSOLogin,data, callback)=>{
     if(isSSOLogin == false && !credential.username && !credential.password){
         callback && callback({
             success: false,
@@ -67,9 +67,15 @@ global.authenticate = (credential, where, isSSOLogin, callback)=>{
             }
             var translation = {};
             clonedUser.Language = clonedUser.Language;
-            if(clonedUser.Role.name !== 'ADMINISTRATOR')
-                translation[clonedUser.Language.code] = global.config.languageconfig.languageconfig.languageTransaltionMap[clonedUser.Language.code];
-            
+            if(clonedUser.Role.name !== 'ADMINISTRATOR'){
+                if(data && data.currentLanguage!=null){
+                    translation[data.currentLanguage] = global.config.languageconfig.languageconfig.languageTransaltionMap[data.currentLanguage];
+                }
+                else{
+                    translation[clonedUser.Language.code] = global.config.languageconfig.languageconfig.languageTransaltionMap[clonedUser.Language.code];
+                }
+            }
+                
             delete clonedUser.password;
             delete clonedUser.id;
             delete clonedUser.Role;
@@ -116,7 +122,7 @@ authRouter.post('/authenticate', function(req, res){
     },{
         username: {$iLike: username},
         active: true
-    }, req.body.isSSOLogin ? req.body.isSSOLogin : false, function(response){
+    }, req.body.isSSOLogin ? req.body.isSSOLogin : false,req.body, function(response){
         return res.json(response);
     });
 });

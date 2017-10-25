@@ -17,7 +17,7 @@ var app = angular.module('App',[
 
 var stateProviderRef = null, _$translateProvider = null;
 
-app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,$localStorage){
+app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,$localStorage,loginService){
     $localStorage.$default({translations: {}});
     $rootScope.matrix1 = '/resources/images/matrix1.png';
     $rootScope.matrix2 = '/resources/images/matrix2.png';
@@ -27,15 +27,21 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
         {
             var user = $rootScope.user();
             angular.forEach($localStorage.translations, function(translation, key){
-                if(angular.isUndefined(_$translateProvider.translations(key)) || _$translateProvider.translations(key) == null){
+                // if(angular.isUndefined(_$translateProvider.translations(key)) || _$translateProvider.translations(key) == null){
                     var translationObject = {};
                     angular.forEach(translation, function(translation){
                         translationObject[translation.label] = translation.translation;
                     });
                     _$translateProvider.translations(key, translationObject);
-                }
+                // }
             });
-            _$translateProvider.use(user.Language.code);
+            if($localStorage.translations[$cookies.getObject('languageCode')]!=null){
+                _$translateProvider.use($cookies.getObject('languageCode'));
+            }
+            else{
+                _$translateProvider.use(user.Language.code);
+                $cookies.putObject('languageCode',user.Language.code);
+            }
             _$translateProvider.useSanitizeValueStrategy(null);
         }    
     };
@@ -136,4 +142,48 @@ app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,
             return '';
         }
     }
+    $rootScope.setLanguage = function(languageCode){
+        loginService.getTranslation({languageCode:languageCode})
+        .success(function(response){
+            $localStorage.translations = response.translations
+            if(_$translateProvider != null)
+            {
+                angular.forEach($localStorage.translations, function(translation, key){
+                    if(angular.isUndefined(_$translateProvider.translations(key)) || _$translateProvider.translations(key) == null){
+                        var translationObject = {};
+                        angular.forEach(translation, function(translation){
+                            translationObject[translation.label] = translation.translation;
+                        });
+                        _$translateProvider.translations(key, translationObject);
+                    }
+                });
+                _$translateProvider.use(languageCode);
+                _$translateProvider.useSanitizeValueStrategy(null);
+                                
+            } 
+        })
+        .error(function(response){
+            
+        });
+    }
+    $rootScope.refreshEnableLanguages = function(){
+        loginService.getenableLanguages()
+        .success(function(response){
+            $rootScope.enableLanguages= response.enableLanguages;
+            var languageCode='en';
+            angular.forEach($rootScope.enableLanguages, function(language, key){
+                if(language.code==$cookies.getObject('languageCode')){
+                    languageCode=language.code;
+                }
+            });
+            if($rootScope.user()==undefined ){
+                $rootScope.setLanguage(languageCode);
+            }
+  
+        })
+        .error(function(response){
+
+        });
+    }
+    $rootScope.refreshEnableLanguages();
 });

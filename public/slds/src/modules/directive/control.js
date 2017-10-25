@@ -70,10 +70,13 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 if($scope.field.SObjectField.type === 'reference'){
                     if($scope.model && $scope.model[$scope.field.SObjectField.relationshipName] !== undefined && $scope.model[$scope.field.SObjectField.relationshipName] !== null){
                         $scope.field.labelValue = $scope.model[$scope.field.SObjectField.relationshipName][$scope.field.reference];
+                    }
+                    if(newValue==undefined || newValue==null){
                         var userData=JSON.parse($rootScope.user().userdata);
                         if( $scope.field.currentUserSelected && $scope.field.currentUserSelected==true ){
                             $scope.model[$scope.field.SObjectField.name] = userData['Id'];
                             $scope.field.labelValue = userData[$scope.field.reference];
+                            $scope.field.value=userData['Id'];
                         }
                         else if($scope.field.excludeCurrentUser && $scope.field.excludeCurrentUser==true ){
                             if($scope.model[$scope.field.SObjectField.name] === userData['Id']){

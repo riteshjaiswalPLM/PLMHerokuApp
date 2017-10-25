@@ -103,19 +103,21 @@ componentRouter.post('/deleteexistingattachment', function (req, res) {
                 err:err
             });
         }
-        if(result.length>0){
-            return res.json({
-                success: true,
-                filename: attachment.Name,
-                message: "File Deleted successfully"
-            });
-        }
         else{
-            return res.json({
-                success: false,
-                filename: attachment.Name,
-                message: "File Not Found or Already Deleted"
-            });
+            if(result.length>0){
+                return res.json({
+                    success: true,
+                    filename: attachment.Name,
+                    message: "File Deleted successfully"
+                });
+            }
+            else{
+                return res.json({
+                    success: false,
+                    filename: attachment.Name,
+                    message: "File Not Found or Already Deleted"
+                });
+            }
         }
         // console.log(result.length>0);
         //  return res.json({
@@ -961,7 +963,7 @@ componentRouter.post('/savelineitemdata', function(req, res){
             else if(!costAllocationLineItem.isDeleted && costAllocationLineItem.isPersisted){
                 var updatedValueObj = {};
                 for (var key in costAllocationLineItem){
-                    if(key.indexOf('__c') > -1){
+                   if(!(key == 'isRemovable' || key == 'isDeleted' || key =='isPersisted' || key =='attributes' )){
                         updatedValueObj[key] = costAllocationLineItem[key];
                     }
                 }
@@ -972,7 +974,7 @@ componentRouter.post('/savelineitemdata', function(req, res){
         else if(!costAllocationLineItem.isPersisted && !costAllocationLineItem.isDeleted){
             var valueObj = {};
             for (var key in costAllocationLineItem){
-                if(key.indexOf('__c') > -1 || key=="CurrencyIsoCode"){
+                if(!(key == 'isRemovable' || key == 'isDeleted' || key =='isPersisted' || key =='attributes' )){
                     valueObj[key] = costAllocationLineItem[key];
                 }
             };

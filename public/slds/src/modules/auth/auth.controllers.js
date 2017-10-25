@@ -1,8 +1,8 @@
 'use strict';
 
 auth.controller('LoginController',[
-            '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout','$window',
-    function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout , $window){
+            '$scope','$rootScope','$state','loginService','blockUI','Notifications','$timeout','$window','$localStorage','$cookies',
+    function($scope , $rootScope , $state , loginService , blockUI , Notifications , $timeout , $window,$localStorage,$cookies){
         $scope.login = function(){
             var loggingIn = blockUI.instances.get('loggingIn');
             loggingIn.start('Logging In ...');
@@ -24,6 +24,12 @@ auth.controller('LoginController',[
                     });
             // },3000);  
         };
+        $scope.setLanguage = function(languageCode){
+            $cookies.putObject('languageCode',languageCode);
+            $rootScope.setLanguage(languageCode);
+            $scope.currentLanguages=languageCode;
+            $rootScope.redirectTo();
+        };
         $scope.onClickGoToSSO = function(){
             $window.location.href = '/api/sso/login';
         };
@@ -35,6 +41,8 @@ auth.controller('LoginController',[
                 username: null,
                 password: null
             }
+            $scope.enableLanguages=$rootScope.enableLanguages;
+            $scope.currentLanguages=($cookies.getObject('languageCode')==undefined ||$cookies.getObject('languageCode')=="")?'en':$cookies.getObject('languageCode');
         };
         $scope.init();
 }]);

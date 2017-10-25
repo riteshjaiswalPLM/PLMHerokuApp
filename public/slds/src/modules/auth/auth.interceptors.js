@@ -3,9 +3,9 @@
 auth.factory('httpAuthInterceptor',['$q','$cookies','$injector','$rootScope','$localStorage',function($q,$cookies, $injector,$rootScope,$localStorage){
     return {
         request: function(config){
-            
+           
             var loginService = $injector.get('loginService');
-            if(!loginService.isLoggedIn() && config.url.startsWith('/api/') && config.url !== '/api/auth/authenticate' && config.url !== '/api/auth/mailresetpasswordlink' &&  config.url !== '/api/auth/resetpassword' &&  config.url !== '/api/auth/resetpasswordlinkexpired'  ){
+            if(!loginService.isLoggedIn() && config.url.startsWith('/api/') && config.url !== '/api/auth/authenticate' && config.url !== '/api/auth/mailresetpasswordlink' &&  config.url !== '/api/auth/resetpassword' &&  config.url !== '/api/translation/' && config.url !== '/api/translation/enableLanguages' &&  config.url !== '/api/auth/resetpasswordlinkexpired'  ){
                 $rootScope.redirectTo('login');
             }else if(loginService.isLoggedIn()){
                 var token = $cookies.getObject('user').token;
