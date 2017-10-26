@@ -486,7 +486,8 @@ setupRouter.post('/ssoconfig/save', function(req, res){
     },{
         where: {
             id: ssoConfig.id
-        }
+        },
+         individualHooks:true
     }).then(function(){
         global.ssoconfig.refreshSSOConfig(function(updatedConfig){
             return res.json({

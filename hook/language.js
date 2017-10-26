@@ -178,6 +178,24 @@ module.exports = function(){
         });
     });
 
+    global.db.SSOConfig.afterCreate(function(newSSOConfig){
+        global.db.Translation.build({
+            label: newSSOConfig.linkCaption, 
+            translation: newSSOConfig.linkCaption,
+            type: 'Fixed-Label', 
+            LanguageId: global.languageconfig.English.id,
+        }).save();
+    });
+    global.db.SSOConfig.afterUpdate(function(newSSOConfig){
+        if(newSSOConfig.changed().indexOf("linkCaption") > -1){
+            global.db.Translation.build({
+                label: newSSOConfig.linkCaption, 
+                translation: newSSOConfig.linkCaption,
+                type: 'Fixed-Label', 
+                LanguageId: global.languageconfig.English.id,
+            }).save();
+        }
+    });
     global.db.Components.afterCreate(function(newComponent){
         global.db.Translation.build({
             label: newComponent.title, 

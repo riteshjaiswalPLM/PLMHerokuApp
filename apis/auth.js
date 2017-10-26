@@ -402,8 +402,8 @@ authRouter.post('/mailresetpasswordlink', function(req, res){
             
                 var listToBeInserted=[];
                 var base64encode=new Buffer(user.id,'UTF-8');
-                
-                var link=req.protocol + '://' + req.get('host')+"/resetpassword/"+escape(base64encode.toString('base64'));
+                var instanceurl = process.env.INSTANCE_URL || "http://localhost:3000";
+                var link=instanceurl+"/resetpassword/"+escape(base64encode.toString('base64'));
              
                 console.log('Link escape : '+link);
                 
@@ -704,11 +704,19 @@ authRouter.post('/resetpassword', function(req, res){
                                 message: message.auth.success.NEWPASSWORD_SUCCESS
                             });
                         }
+                    })
+                    .catch(function(err){
+                        console.log(err);
+                        return res.json({
+                            success: false,
+                            message: 'Error occured while reseting password',
+                            error: err
+                        });
                     });
-                    return res.json({
-                        success: true,
-                        message: message.auth.success.NEWPASSWORD_SUCCESS
-                    });
+                    // return res.json({
+                    //     success: true,
+                    //     message: message.auth.success.NEWPASSWORD_SUCCESS
+                    // });
                 })
                 .catch(function(err){
                      console.log(err);
