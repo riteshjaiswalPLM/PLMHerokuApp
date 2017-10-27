@@ -1164,7 +1164,7 @@ layoutRouter.post('/deletemobileeditlayoutconfig', (req, res)=>{
 
 layoutRouter.post('/savemobileeditlayoutconfig', (req, res)=>{
     var mobileEditLayoutConfig = req.body;
-    db.MobileEditLayoutConfig.findAll({where: {governingFieldValue : JSON.stringify(mobileEditLayoutConfig.governingFieldValue)}})
+    db.MobileEditLayoutConfig.findAll({where: {governingFieldValue : JSON.stringify(mobileEditLayoutConfig.governingFieldValue), SObjectLayoutId: mobileEditLayoutConfig.SObjectLayoutId}})
         .then((mobileEditLayoutConfiguration)=>{
             if(mobileEditLayoutConfiguration !== undefined && mobileEditLayoutConfiguration !== undefined && mobileEditLayoutConfiguration.length > 0){
                 return res.json({
@@ -1191,7 +1191,7 @@ layoutRouter.post('/savemobileeditlayoutconfig', (req, res)=>{
                 .catch((error)=>{
                     return res.json({
                         success: false,
-                        message: 'Error occured while creating mobile layout configuration.',
+                        message: 'Error occured while updating mobile layout configuration.',
                         error: error
                     });
                 });

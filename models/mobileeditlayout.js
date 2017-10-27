@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes){
         governingFieldValue: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+            unique: false,
             set: function(value){
                 this.setDataValue('governingFieldValue',JSON.stringify(value));
             },
