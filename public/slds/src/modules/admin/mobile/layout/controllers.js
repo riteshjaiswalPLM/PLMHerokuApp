@@ -945,7 +945,8 @@ admin.controller('AdminMobileLayoutsEditEditController',[
         };
         $scope.saveLayoutRelatedLists = function(){
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
-                if($scope.relatedLists !== undefined && $scope.relatedLists.length > 0){
+                if (($scope.relatedLists !== undefined && $scope.relatedLists.length > 0)
+                    || ($scope.deletedRelatedList !== undefined && $scope.deletedRelatedList.length > 0)) {
                     if ($scope.isValidRelatedLists()) {
                         $scope.deletedRelatedList ? $scope.relatedLists = $scope.relatedLists.concat($scope.deletedRelatedList) : $scope.relatedLists;
                         $scope.blockUI.editEditLayout.start('Saving layout related lists...');
@@ -1596,7 +1597,8 @@ admin.controller('AdminMobileLayoutsCreateController', [
         };
         $scope.saveLayoutRelatedLists = function () {
             if (!$scope.blockUI.editCreateLayout.state().blocking && $scope.layout.SObject != null) {
-                if ($scope.relatedLists !== undefined && $scope.relatedLists.length > 0) {
+                if (($scope.relatedLists !== undefined && $scope.relatedLists.length > 0)
+                    || ($scope.deletedRelatedList !== undefined && $scope.deletedRelatedList.length > 0)) {
                     if ($scope.isValidRelatedLists()) {
                         $scope.deletedRelatedList ? $scope.relatedLists = $scope.relatedLists.concat($scope.deletedRelatedList) : $scope.relatedLists;
                         $scope.blockUI.editCreateLayout.start('Saving layout related lists...');
