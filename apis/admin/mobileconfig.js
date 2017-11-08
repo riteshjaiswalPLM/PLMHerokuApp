@@ -669,7 +669,7 @@ var getMobileConfig = function(callback){
                                                     required: false,
                                                     include: {
                                                         model: db.SObjectLayoutField,
-                                                        attributes: ['required', 'order'],
+                                                        attributes: ['readonly', 'required', 'order', 'defaultValue'],
                                                         include: {
                                                             model: db.SObjectField,
                                                             attributes: ['name'],
@@ -692,7 +692,7 @@ var getMobileConfig = function(callback){
                                                         attributes: ['name'],
                                                     }, {
                                                         model: db.SObjectLayoutField,
-                                                        attributes: ['id', 'required', 'SObjectFieldId', 'reference', 'order'],
+                                                        attributes: ['id', 'readonly', 'required', 'SObjectFieldId', 'reference', 'order'],
                                                         order: ['order', 'AESC']
                                                     }, {
                                                         model: db.SObjectField,
@@ -735,6 +735,7 @@ var getMobileConfig = function(callback){
                                                                 title: '',
                                                                 isLineSection: false,
                                                                 fields: [],
+                                                                readOnly: [],
                                                                 mandatory: []
                                                             };
                                                             sectionConfig.title = section.title;
@@ -745,7 +746,10 @@ var getMobileConfig = function(callback){
                                                                     return 1;
                                                                 return 0;
                                                             }).forEach((field) => {
-                                                                sectionConfig.fields.push(field.SObjectField.name);
+                                                                sectionConfig.fields.push({ "apiName": field.SObjectField.name, "defaultValue": field.defaultValue });
+                                                                if (field.readonly === true) {
+                                                                    sectionConfig.readOnly.push(field.SObjectField.name);
+                                                                }
                                                                 if (field.required === true) {
                                                                     sectionConfig.mandatory.push(field.SObjectField.name);
                                                                 }
@@ -877,7 +881,7 @@ var getMobileConfig = function(callback){
                                                                     err: err
                                                                 });
                                                             });
-                                                        })
+                                                    })
                                                         .catch((err) => {
                                                             callback && callback({
                                                                 success: false,

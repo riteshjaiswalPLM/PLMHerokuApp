@@ -601,6 +601,17 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         if($scope.field.SObjectField.type === 'boolean'){
             $scope.field.defaultValue = $scope.field.defaultValue === 'true';
         }
+        else if ($scope.field.defaultValue != undefined) {
+            if ($scope.field.SObjectField.type === 'double' || $scope.field.SObjectField.type === 'currency') {
+                $scope.field.defaultValue = parseFloat($scope.field.defaultValue);
+            }
+            else if ($scope.field.SObjectField.type === 'int') {
+                $scope.field.defaultValue = parseInt($scope.field.defaultValue);
+            }
+            else if ($scope.field.SObjectField.type === 'reference') {
+                $scope.field.labelValue = $scope.field.defaultValueLabel;
+            }
+        }
         
         $scope.eventFields = ['reference','picklist','boolean'];
         
@@ -676,6 +687,33 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         };
         $scope.save = function(){
             $scope.field.label = ($scope.field.label) ? $scope.field.label : $scope.field.SObjectField.label;
+            if ($scope.layout.type == 'Mobile' && $scope.layout.mobileSubtype != undefined && $scope.layout.mobileSubtype == 'MCreate') {
+                if ($scope.field.value != undefined || $scope.field.SObjectField.type == 'reference') {
+                    if ($scope.field.SObjectField.type == 'multipicklist') {
+                        $scope.field.defaultValue = '';
+                        $scope.field.value.forEach(function (val) {
+                            if ($scope.field.defaultValue == '') {
+                                $scope.field.defaultValue = val;
+                            }
+                            else {
+                                $scope.field.defaultValue += ";" + val;
+                            }
+                        });
+                    }
+                    else if ($scope.field.SObjectField.type == 'reference') {
+                        if ($scope.field.SObjectField.referenceTo.indexOf($scope.userMasterObjName) === -1) {
+                            $scope.field.defaultValue = $scope.field.value;
+                            $scope.field.defaultValueLabel = $scope.field.labelValue;
+                        }
+                    }
+                    else {
+                        $scope.field.defaultValue = $scope.field.value;
+                    }
+                }
+                else {
+                    $scope.field.defaultValue = undefined;
+                }
+            }
             $element.modal('hide');
             close($scope.field, 500);
         }
