@@ -218,9 +218,6 @@
                                 <th scope="col">
                                     <div class="slds-truncate" title="Readonly">Readonly</div>
                                 </th>
-                                <th scope="col">
-                                    <div class="slds-truncate" title="Hidden">Hidden</div>
-                                </th>
 
                                 <th scope="col" style="width: 200px;">
                                     <div class="slds-truncate" title="Type">Type</div>
@@ -232,12 +229,12 @@
                         </thead>
                         <tbody dnd-list="component.ComponentDetails[0].configuration.multipleFields" dnd-allowed-types="['DashboardMyTaskFields']">
                             <tr ng-if="!component.ComponentDetails[0].configuration.multipleFields || component.ComponentDetails[0].configuration.multipleFields.length === 0">
-                                <td colspan="15" class="slds-blank-slate">
+                                <td colspan="14" class="slds-blank-slate">
                                     <div class="slds-truncate slds-align--absolute-center">No field added.</div>
                                 </td>
                             </tr>
                             <tr class="dndPlaceholder slds-hint-parent" style="display: table-row !important">
-                                <th colspan="15" style="background: #e1d951;">
+                                <th colspan="14" style="background: #e1d951;">
                                     <div class="slds-truncate slds-align--absolute-center">Drop field here</div>
                                 </th>
                             </tr>
@@ -308,12 +305,6 @@
                                 <td data-label="Readonly">
                                     <div class="slds-truncate" ng-init="multipleField.readonly = multipleField.readonly === undefined ? false : multipleField.readonly">
                                         <slds-switch id="isReadonly" switch-change="onChangeReadonly(multipleField);" ng-model="multipleField.readonly" on-text="Yes"
-                                            off-text="No" show-texts="false" />
-                                    </div>
-                                </td>
-                                <td data-label="Hidden">
-                                    <div class="slds-truncate" ng-init="multipleField.hidden = multipleField.hidden === undefined ? false : multipleField.hidden">
-                                        <slds-switch id="isHidden" switch-change="onChangeMultipleHidden(multipleField);" ng-model="multipleField.hidden" on-text="Yes"
                                             off-text="No" show-texts="false" />
                                     </div>
                                 </td>
