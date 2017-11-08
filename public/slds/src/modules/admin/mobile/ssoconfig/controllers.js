@@ -1,8 +1,8 @@
 'use strict';
 
-admin.controller('AdminSetupSSOConfigController',[
-        '$scope','$rootScope','$state','$dialog','ModalService','ssoConfigService','blockUI','$adminLookups',
-function($scope , $rootScope , $state , $dialog , ModalService , ssoConfigService , blockUI , $adminLookups){
+admin.controller('AdminMobileSSOConfigController',[
+        '$scope','$rootScope','$state','$dialog','ModalService','mobileSSOConfigService','blockUI','$adminLookups',
+function($scope , $rootScope , $state , $dialog , ModalService , mobileSSOConfigService , blockUI , $adminLookups){
     $scope.ssoConfig = {
         entryPoint: null,
         cert: null,
@@ -15,13 +15,13 @@ function($scope , $rootScope , $state , $dialog , ModalService , ssoConfigServic
     $scope.loadSSOConfiguration = function(){
         if(!$scope.blockUI.loadSSOConfiguration.state().blocking){
             $scope.blockUI.loadSSOConfiguration.start('Loading SSO Configuration...');
-            ssoConfigService.loadSSOConfiguration({})
+            mobileSSOConfigService.loadSSOConfiguration({})
             .success(function(response){
                 if(response.success === true){
                     $scope.ssoConfig = (response.data.ssoConfig) ? response.data.ssoConfig : $scope.ssoConfig;
                     $scope.ssoConfig.active = $scope.ssoConfig.active ? $scope.ssoConfig.active : false;
                     $scope.callbackUrl=response.data.callbackUrl;
-                    $scope.loadUserTableColumn();
+                    
                 }else{
                     $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                 }
@@ -59,14 +59,14 @@ function($scope , $rootScope , $state , $dialog , ModalService , ssoConfigServic
 
         if(!$scope.blockUI.loadSSOConfiguration.state().blocking){
             $scope.blockUI.loadSSOConfiguration.start('Saving SSO Configuration...');
-            ssoConfigService.saveSSOConfiguration($scope.ssoConfig)
+            mobileSSOConfigService.saveSSOConfiguration($scope.ssoConfig)
             .success(function(response){
+                $scope.blockUI.loadSSOConfiguration.stop();
                 if(response.success === true){
                     $scope.loadSSOConfiguration();
                 }else{
                     $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                 }
-                $scope.blockUI.loadSSOConfiguration.stop();
             })
             .error(function(response){
                 $dialog.alert('Error occured while saving salesforce org configuration.','Error','pficon pficon-error-circle-o');
@@ -78,24 +78,6 @@ function($scope , $rootScope , $state , $dialog , ModalService , ssoConfigServic
         $scope.blockUI = {
             loadSSOConfiguration: blockUI.instances.get('loadSSOConfiguration') 
         }; 
-    };
-    $scope.loadUserTableColumn = function(){
-        // if(!$scope.blockUI.loadSSOConfiguration.state().blocking){
-            $scope.blockUI.loadSSOConfiguration.start('Loading user table fields...');
-            ssoConfigService.loadUserTableColumn()
-            .success(function(response){
-                if(response.success === true){
-                    $scope.userTableFields = response.data.userTableFields;
-                }else{
-                    $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
-                }
-                $scope.blockUI.loadSSOConfiguration.stop();
-            })
-            .error(function(response){
-                $dialog.alert('Error occured while saving salesforce org configuration.','Error','pficon pficon-error-circle-o');
-                $scope.blockUI.loadSSOConfiguration.stop();
-            });
-        // }
     };
     $scope.init = function(){
         console.log('AdminSetupSSOConfigController loaded!');

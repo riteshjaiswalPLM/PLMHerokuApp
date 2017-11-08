@@ -35,6 +35,13 @@ module.exports = function(sequelize, DataTypes){
         linkCaption: {
             type: DataTypes.STRING
         },
+        forMobile: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: function(){
+                return false;
+            }
+        },
         mappingConfig: {
             type: DataTypes.TEXT,
         	defaultValue: function(){

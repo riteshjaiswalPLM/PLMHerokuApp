@@ -211,7 +211,20 @@ if(!global.hasOwnProperty('sfdc')){
                             }
                         });
                     }else{
-                        updateUser(global.UserMapping, message);
+                        if(global.UserMapping.defaultRole==null){
+                            getDefaultRole(function(err, defaultRole){
+                                if(err){
+                                    console.error('HerokuUserSyncTopic->getDefaultRole:ERROR :: ' + err.message);
+                                }else{
+                                    global.UserMapping.defaultRole = defaultRole;
+                                    console.log("USER_MAPPINGS-> DEFAULT ROLE :: Update ::" + global.UserMapping.defaultRole);
+                                    updateUser(global.UserMapping, message);
+                                }
+                            });
+                        }
+                        else{
+                            updateUser(global.UserMapping, message);
+                        }
                     }
                     // console.log(message);
                 }).then(function(){
@@ -276,6 +289,12 @@ if(!global.hasOwnProperty('sfdc')){
                 attributes: {
                     exclude: ['createdAt','updatedAt']
                 }
+            },{
+                model: db.SObjectField,
+                as: 'FederationIdField',
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                }
             }]
         };
         if(userMapping){
@@ -320,6 +339,7 @@ if(!global.hasOwnProperty('sfdc')){
                 firstname: message.sobject[userMapping.FirstnameField.name],
                 lastname: message.sobject[userMapping.LastnameField.name],
                 email: message.sobject[userMapping.EmailField.name],
+                faderationId: message.sobject[userMapping.FederationIdField.name],
                 username: message.sobject[userMapping.UsernameField.name],
                 active: isUserActive,
                 userdata: message.sobject
@@ -364,8 +384,8 @@ if(!global.hasOwnProperty('sfdc')){
                             if(userMapping.isMobileActive !== undefined && userMapping.isMobileActive == true)
                             {
                                 console.log('in sync',createdUser.username);
-                                var instanceurl=process.env.INSTANCE_URL || "https://localhost:3000"
-                                syncWithMiddleware('/api/mobusers','post',{username:createdUser.username,password:createdUser.password,instanceurl:instanceurl,isEncryptionEnabled :true,organization_id:global.sfdc.orgId},function(result){
+                                var instanceurl=process.env.INSTANCE_URL || "http://localhost:3000"
+                                syncWithMiddleware('/api/mobusers','post',{federationid:createdUser.faderationId,username:createdUser.username,password:createdUser.password,instanceurl:instanceurl,isEncryptionEnabled :true,organization_id:global.sfdc.orgId},function(result){
                                     if(result){
                                         console.log('>>>>>>>>>>>>>>>>> User created successfully');
                                     }
@@ -431,7 +451,7 @@ if(!global.hasOwnProperty('sfdc')){
                                     console.log('in sync',userToSave.username);
                                     console.log('in sync',savedUser.password);
                                     console.log('in sync',old_username);
-                                    syncWithMiddleware('/api/mobusers/updation','post',{username:userToSave.username,password:savedUser.password,old_username:old_username,isEncryptionEnabled :true},function(result){
+                                    syncWithMiddleware('/api/mobusers/updation','post',{federationid:userToSave.faderationId,username:userToSave.username,password:savedUser.password,old_username:old_username,isEncryptionEnabled :true},function(result){
                                         if(result){
                                             console.log('>>>>>>>>>>>>>>>>> User updated successfully');
                                         }

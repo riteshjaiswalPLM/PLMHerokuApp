@@ -8,7 +8,8 @@ function($scope , $rootScope , $state , $dialog , ModalService , userMappingServ
         UsernameField: null,
         FirstnameField: null,
         LastnameField: null,
-        EmailField: null
+        EmailField: null,
+        FederationIdField:null
     };
     $scope.criteriaFields = [];
     $scope.$watch(function(){

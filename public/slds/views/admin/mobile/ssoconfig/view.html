@@ -104,11 +104,9 @@
                         </div>
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">Mapping Configuration</label>
-                            <div class="slds-form-element__control" ng-init="ssoConfig.mappingConfig = ssoConfig.mappingConfig ? ssoConfig.mappingConfig : {}">
+                            <div class="slds-form-element__control" ng-init="ssoConfig.mappingConfig = ssoConfig.mappingConfig ? ssoConfig.mappingConfig : {userField:'faderationId'}">
                                 <label ng-if="enableEdit === false" class="slds-input">{{ ssoConfig.mappingConfig.ssoField === undefined && ssoConfig.mappingConfig.userField === undefined ? '' : '{'+ssoConfig.mappingConfig.userField + ' : ' + ssoConfig.mappingConfig.ssoField + '}'}}</label>
-                                <select style="width: 40%;" ng-if="enableEdit === true" ng-disabled="!ssoConfig.active" class="slds-select slds-p-horizontal--x-small" ng-model="ssoConfig.mappingConfig.userField" ng-options="field as field for field in userTableFields">
-                                    <option value="">-- None --</option>
-                                </select>
+                                <label style="width: 40%;" ng-if="enableEdit === true"  class="slds-input" >{{ssoConfig.mappingConfig.userField}}</label>
                                 <input style="width: 40%;" ng-if="enableEdit === true" class="slds-input" type="text" ng-disabled="!ssoConfig.active" id="caption" placeholder="" tabindex="2" ng-model="ssoConfig.mappingConfig.ssoField">
                             </div>
                         </div>

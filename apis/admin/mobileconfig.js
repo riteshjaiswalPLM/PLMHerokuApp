@@ -839,20 +839,36 @@ var getMobileConfig = function(callback){
                                                                         }
                                                                     }
                                                                 }
-                                                                callback && callback({
-                                                                    success: true,
-                                                                    config: {
-                                                                        orgDetail:mobileOrgDetail,
-                                                                        objectMetadata: objectMetadata,
-                                                                        governField: governField,
-                                                                        objectSearchConfig: objectSearchConfig,
-                                                                        userActionConfig: userActionConfig,
-                                                                        myTaskConfig: myTaskConfig,
-                                                                        pickListConfig: pickListConfig,
-                                                                        uiLayout: uiLayout,
-                                                                        uiCreateLayout: uiCreateLayout
-                                                                    }
-                                                                });
+                                                                db.SSOConfig.findOne({
+                                                                        attributes: ['entryPoint','active'],
+                                                                        where: {
+                                                                            forMobile: true
+                                                                        }
+                                                                    })
+                                                                    .then(function (ssoconfig) {
+                                                                        callback && callback({
+                                                                            success: true,
+                                                                            config: {
+                                                                                orgDetail:mobileOrgDetail,
+                                                                                objectMetadata: objectMetadata,
+                                                                                governField: governField,
+                                                                                objectSearchConfig: objectSearchConfig,
+                                                                                userActionConfig: userActionConfig,
+                                                                                myTaskConfig: myTaskConfig,
+                                                                                pickListConfig: pickListConfig,
+                                                                                uiLayout: uiLayout,
+                                                                                uiCreateLayout: uiCreateLayout,
+                                                                                ssoconfig:ssoconfig
+                                                                            }
+                                                                        });
+                                                                    })
+                                                                    .catch((err)=>{
+                                                                        callback && callback({
+                                                                            success: false,
+                                                                            message: 'Error occured getting field detail for Mobile Config JSON of SSO Config.',
+                                                                            err: err
+                                                                        });
+                                                                    });
                                                             })
                                                             .catch((err)=>{
                                                                 callback && callback({
@@ -861,7 +877,7 @@ var getMobileConfig = function(callback){
                                                                     err: err
                                                                 });
                                                             });
-                                                    })
+                                                        })
                                                         .catch((err) => {
                                                             callback && callback({
                                                                 success: false,

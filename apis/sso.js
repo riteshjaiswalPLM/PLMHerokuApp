@@ -8,6 +8,9 @@ var CryptoJS = require("crypto-js");
 
 PIManager._getConfig = function _getConfig(req, callback) {
     var configuration = JSON.parse(JSON.stringify(ssoconfig));
+    if(req.originalUrl=='/api/sso/mobile/callback'){
+        var configuration = JSON.parse(JSON.stringify(ssoconfig.mobile));
+    }
     delete configuration.config.linkCaption;
     var options = {
         realm: req.hostname,
@@ -97,5 +100,86 @@ ssoRouter.post('/login/callback',
         }
 });
 
+
+ssoRouter.post('/mobile/callback',
+    PIManager.authmiddleware("authenticate", "loginCallback_post"),
+    function (req, res, next) {
+        console.info("response validation passed!!");
+        next();
+    },
+    function (req, res) {
+        if (req.isAuthenticated() && req.passport.successRedirect) {
+            var config = {
+                user: req.user,
+                successRedirect: '/'
+            }, where = {};
+            where.active = true;
+            where[ssoconfig.mobile.config.mappingConfig.userField] = {$iLike: req.user[ssoconfig.mobile.config.mappingConfig.ssoField]};
+            db.User.findOne({
+                attributes: {
+                    exclude: ['createdAt','updatedAt','RoleId','active','LanguageId']
+                },
+                where: where
+            }).then((user)=>{
+                if(user === null || user === undefined){
+                    res.cookie('username','', { maxAge: 900000, httpOnly: true });
+                    var htmlForm = ['<!DOCTYPE html>',
+                        '<html>',
+                        '<head>',
+                        // '<style>',
+                        // '.outer {display: table;position: absolute;height: 100%;width: 100%;}',
+                        // '.middle {display: table-cell;vertical-align: middle;}',
+                        // '.inner {text-align:center;margin-left: auto;margin-right: auto;}',
+                        // '</style>',
+                        '</head>',
+                        '<body>',
+                        // '<div class="outer">',
+                        // '<div class="middle">',
+                        // '<div class="inner">',
+                        // '<img class="logo-img" src="/resources/images/homeLogo.png" >',
+                        // '<h4>User : '+req.user[ssoconfig.config.mappingConfig.ssoField]+' is not set up with the system. Please contact administrator.</h4>',
+                        // '</div>',
+                        // '</div>',
+                        // '</div>',
+                        '</body>',
+                        '</html>'].join('\r\n')
+                    res.send(htmlForm);
+                }
+                else{
+                    var ciphertext = CryptoJS.AES.encrypt(user.username, global.config.constant.AES_SECRET_KEY);
+                    var base64encode=new Buffer(ciphertext.toString(),'UTF-8');
+                    res.cookie('username',user.username, { maxAge: 900000, httpOnly: true });
+                    var htmlForm = ['<!DOCTYPE html>',
+                        '<html>',
+                        '<head>',
+                        // '<style>',
+                        // '.outer {display: table;position: absolute;height: 100%;width: 100%;}',
+                        // '.middle {display: table-cell;vertical-align: middle;}',
+                        // '.inner {text-align:center;margin-left: auto;margin-right: auto;}',
+                        // '</style>',
+                        '</head>',
+                        '<body>',
+                        // '<div class="outer">',
+                        // '<div class="middle">',
+                        // '<div class="inner">',
+                        // '<img class="logo-img" src="/resources/images/homeLogo.png" >',
+                        // '<h4>Success!!</h4>',
+                        // '</div>',
+                        // '</div>',
+                        // '</div>',
+                        '</body>',
+                        '</html>'].join('\r\n')
+                    res.send(htmlForm);
+                    //res.redirect('/sso/login/'+escape(base64encode.toString('base64')));
+                } 
+            });
+        } 
+        else {
+            return res.json({
+                status: 'fail',
+                user: null
+            });
+        }
+});
 module.exports = ssoRouter;
 

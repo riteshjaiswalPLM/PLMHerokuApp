@@ -130,6 +130,7 @@ userRouter.post('/sync', function (req, res) {
                             lastname: record[global.UserMapping.LastnameField.name],
                             email: record[global.UserMapping.EmailField.name],
                             username: record[global.UserMapping.UsernameField.name],
+                            faderationId: record[global.UserMapping.FederationIdField.name],
                             active: isUserActive,
                             userdata: record,
                             LanguageId: languageconfig.English.id
@@ -145,6 +146,15 @@ userRouter.post('/sync', function (req, res) {
                                 userToSave.RoleId = global.UserMapping.defaultRole.id;
                                 userToSave.LanguageId = languageconfig.English.id
                                 global.db.User.create(userToSave).then(function(createdUser){
+                                    var instanceurl=process.env.INSTANCE_URL || "http://localhost:3000"
+                                    syncWithMiddleware('/api/mobusers','post',{federationid:createdUser.faderationId,username:createdUser.username,password:createdUser.password,instanceurl:instanceurl,isEncryptionEnabled :true,organization_id:global.sfdc.orgId},function(result){
+                                        if(result){
+                                            console.log('>>>>>>>>>>>>>>>>> User created successfully',result);
+                                        }
+                                        else{
+                                            console.log('>>>>>>>>>>>>>>>>> Error occured while creating user on middleware :',result.message);
+                                        }
+                                    })
                                     callback();
                                 }).catch(function(err){
                                     syncErrors.push({
@@ -154,6 +164,15 @@ userRouter.post('/sync', function (req, res) {
                                     callback();
                                 });
                             }else{
+                                syncWithMiddleware('/api/mobusers/updation','post',{federationid:userToSave.faderationId,username:userToSave.username,isEncryptionEnabled :true},function(result){
+                                    if(result){
+                                        console.log('>>>>>>>>>>>>>>>>> User updated successfully',result);
+                                    }
+                                    else{
+                                        //rollback data 
+                                        console.log('>>>>>>>>>>>>>>>>> Error occured while updating user on middleware :',result.message);
+                                    }
+                                });  
                                 callback();
                             }
                         }).catch(function(err){
@@ -191,7 +210,43 @@ userRouter.post('/sync', function (req, res) {
 
     
 });
-
+var syncWithMiddleware = function(urlPath,method,json,callback){
+        var baseURL = process.env.MOBILE_AUTH_INSTANCE_URL || 'https://esm-mob-auth-v3.herokuapp.com';
+        request({
+            url: baseURL + urlPath,
+            method: method,
+            json: json
+        }, function(error, response, body){
+            
+            if(error) {
+                console.log(error);
+                callback({
+                    success: false,
+                    message: 'Error occured on server while sending message.\nError: ' + error.message
+                });
+            } 
+            else{
+                if(response.statusCode === 503){
+                    callback({
+                        success: false,
+                        message: 'Service unavailable'
+                    }); 
+                }
+                else if(response.statusCode === 500 || body.success === false){
+                    callback({
+                        success: false,
+                        message: response.body.errormessage
+                    }); 
+                }
+                else{
+                    callback({
+                        success: true,
+                        message: 'User create or Update successfully on middleware.',
+                    });
+                }
+            }
+        });
+}
 
 userRouter.post('/getUserLayoutDetail', function(req, res){
     var ltype="Create";

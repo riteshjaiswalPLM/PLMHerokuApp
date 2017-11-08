@@ -476,5 +476,10 @@ admin.config(function($stateProvider) {
             controller: "AdminUnlockMobUsersController",
             title: "Unlock Mobile Users"
         })
+        .state("admin.mobile.ssoconfig", {
+            templateUrl: "slds/views/admin/mobile/ssoconfig/view.html",
+            controller: "AdminMobileSSOConfigController",
+            title: "SSO Config Layout"
+        })
         ;
 });

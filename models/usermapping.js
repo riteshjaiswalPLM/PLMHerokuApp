@@ -59,6 +59,7 @@ module.exports = function(sequelize, DataTypes){
                 UserMapping.belongsTo(models.SObjectField, {as: 'FirstnameField'});
                 UserMapping.belongsTo(models.SObjectField, {as: 'LastnameField'});
                 UserMapping.belongsTo(models.SObjectField, {as: 'EmailField'});
+                UserMapping.belongsTo(models.SObjectField, {as: 'FederationIdField'});
             }
         },
         hooks: {

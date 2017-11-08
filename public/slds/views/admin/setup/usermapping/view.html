@@ -107,6 +107,18 @@
                             </div>
                         </div>
                         <div class="slds-form-element">
+                            <label class="slds-form-element__label">Federation Id field</label>
+                            <div class="slds-form-element__control">
+                                <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.FederationIdField.label }}</label>
+                                <select ng-if="enableEdit === true && usermapping.FederationIdField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.FederationIdField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields ">
+                                    <option value="">-- None --</option>
+                                </select>
+                                <select ng-if="enableEdit === true && !usermapping.FederationIdField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.FederationIdField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields ">
+                                    <option value="">-- None --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
                             <label class="slds-form-element__label">Default role</label>
                             <div class="slds-form-element__control">
                                 <label class="slds-text-body--regular" ng-if="enableEdit === false">{{ usermapping.DefaultRole.name }}</label>

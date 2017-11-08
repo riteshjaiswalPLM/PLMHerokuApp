@@ -291,6 +291,12 @@ setupRouter.post('/usermapping', function(req, res){
             attributes: {
                 exclude: ['createdAt','updatedAt']
             }
+        },{
+            model: db.SObjectField,
+            as: 'FederationIdField',
+            attributes: {
+                exclude: ['createdAt','updatedAt']
+            }
         }]
     });
     
@@ -372,6 +378,7 @@ setupRouter.post('/usermapping/save', function(req, res){
                     FirstnameFieldId: UserMapping.FirstnameField.id,
                     LastnameFieldId: UserMapping.LastnameField.id,
                     EmailFieldId: UserMapping.EmailField.id,
+                    FederationIdFieldId:UserMapping.FederationIdField.id,
                     activeCriteria: UserMapping.activeCriteria,
                     syncCriteria: UserMapping.syncCriteria,
                     isMobileActive: UserMapping.isMobileActive,
@@ -413,6 +420,7 @@ setupRouter.post('/usermapping/save', function(req, res){
                     FirstnameFieldId: UserMapping.FirstnameField.id,
                     LastnameFieldId: UserMapping.LastnameField.id,
                     EmailFieldId: UserMapping.EmailField.id,
+                    FederationIdFieldId:UserMapping.FederationIdField.id,
                     activeCriteria: UserMapping.activeCriteria,
                     syncCriteria: UserMapping.syncCriteria,
                     isMobileActive: UserMapping.isMobileActive,
@@ -453,10 +461,12 @@ setupRouter.post('/usermapping/save', function(req, res){
 });
 
 setupRouter.post('/ssoconfig', function(req, res){
+    var instanceUrl = process.env.INSTANCE_URL || 'http://localhost:3000';
     return res.json({
         success: true,
         data: {
-            ssoConfig: global.ssoconfig.config
+            ssoConfig: global.ssoconfig.config,
+            callbackUrl:instanceUrl+"/api/sso/login/callback"
         }
     });
 });
