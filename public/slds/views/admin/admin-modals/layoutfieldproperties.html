@@ -55,7 +55,10 @@
                 <div class="slds-form-element" ng-if="(forMobile === true && layout.type === 'Mobile' && layout.mobileSubtype === 'MCreate')">
                     <label class="slds-form-element__label" for="fieldDefaultValue">Default Value</label>
                     <div class="slds-form-element__control">
-                        <div ng-if="!(field.SObjectField.type === 'reference' && field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1)" field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field"></div>
+                        <select ng-if="field.SObjectField.type === 'picklist'" class="slds-select" ng-model="field.defaultValue" ng-options="pValue.value as pValue.label for pValue in field.SObjectField.picklistValues">
+                            <option value="">-- None --</option>
+                        </select>
+                        <div ng-if="!(field.SObjectField.type === 'reference' && field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1) && field.SObjectField.type !== 'picklist'" field-readonly="'false'" base-ctrl="ctrl" sobject-layout-field field="field" model="field"></div>
                         <input ng-if="field.SObjectField.type === 'reference' && field.SObjectField.referenceTo.indexOf(userMasterObjName) !== -1" type="text" id="fieldCustomDefaultValue" class="slds-input" placeholder="{{field.defaultValue}}" ng-model="field.defaultValue">
                     </div>
                 </div>

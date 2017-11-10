@@ -688,7 +688,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
         $scope.save = function(){
             $scope.field.label = ($scope.field.label) ? $scope.field.label : $scope.field.SObjectField.label;
             if ($scope.layout.type == 'Mobile' && $scope.layout.mobileSubtype != undefined && $scope.layout.mobileSubtype == 'MCreate') {
-                if ($scope.field.value != undefined || $scope.field.SObjectField.type == 'reference') {
+                if ($scope.field.value != undefined || $scope.field.SObjectField.type == 'reference' || $scope.field.SObjectField.type == 'picklist') {
                     if ($scope.field.SObjectField.type == 'multipicklist') {
                         $scope.field.defaultValue = '';
                         $scope.field.value.forEach(function (val) {
@@ -706,7 +706,7 @@ adminLookup.factory('$adminModals',['ModalService',function(ModalService){
                             $scope.field.defaultValueLabel = $scope.field.labelValue;
                         }
                     }
-                    else {
+                    else if ($scope.field.SObjectField.type != 'picklist') {
                         $scope.field.defaultValue = $scope.field.value;
                     }
                 }
