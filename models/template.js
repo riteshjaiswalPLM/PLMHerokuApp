@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes){
         utilityname: {
             type: DataTypes.STRING,
             allowNull: false,
-           
+
         },
         subject: {
             type: DataTypes.TEXT,
@@ -21,11 +21,20 @@ module.exports = function(sequelize, DataTypes){
         emailtype: {
             type: DataTypes.ENUM,
             values: ['html','text']
-        }
+        },
+        active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function () {
+                return false;
+            }
+        },
     },{
-        classMethods: {
-        }
-    });
-    
+            classMethods: {
+                associate: function (models) {
+                    Template.belongsTo(models.Language);
+                }
+            }
+        });
+
     return Template;
 }

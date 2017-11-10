@@ -23,4 +23,5 @@ adminRouter.use('/sobjectreport',require('./sobjectreport'));
 adminRouter.use('/profile',require('./profile'));
 adminRouter.use('/archival',require('./archival'));
 adminRouter.use('/mobilesso',require('./mobilesso'));
+adminRouter.use('/templateconfig',require('./templateconfig'));
 module.exports = adminRouter;

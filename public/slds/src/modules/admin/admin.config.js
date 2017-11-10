@@ -243,7 +243,26 @@ admin.config(function($stateProvider) {
             controller: "AdminSetupLogoConfigController",
             title: "Logo Configuration"
         })
-
+        //-- TemplateConfiguration
+        .state("admin.setup.templateconfiguration", {
+            templateUrl: "slds/views/admin/setup/templateconfig/index.html",
+            controller: "AdminSetupTemplateConfigController"
+        })
+        .state("admin.setup.templateconfiguration.list", {
+            templateUrl: "slds/views/admin/setup/templateconfig/list.html",
+            controller: "AdminSetupTemplateConfigListController",
+            title: "Template Configuration"
+        })
+        .state("admin.setup.templateconfiguration.edit", {
+            templateUrl: "slds/views/admin/setup/templateconfig/edit.html",
+            controller: "AdminSetupTemplateConfigEditController",
+            params: {
+                template: null,
+                utilityName: null,
+                emailType: null
+            },
+            title: "Template"
+        })
         // Admin Languages
         .state("admin.languages",{
             templateUrl: "slds/views/admin/language/index.html",

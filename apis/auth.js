@@ -423,7 +423,8 @@ authRouter.post('/mailresetpasswordlink', function(req, res){
 
                     var templateData={
                         username:user.username,
-                        link:link
+                        link:link,
+                        LanguageId:user.LanguageId
                     };
                     
                     transporter.getTemplate('reset-password',templateData,function(res){

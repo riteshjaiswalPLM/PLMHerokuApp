@@ -1,0 +1,138 @@
+<div class="slds-col slds-size--1-of-1">
+    <div class="slds-page-header slds-page-header--object-home">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-user">
+                            <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() }}</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="All tabs">Template Configuration</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand" ng-click="edit()">
+                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                        </svg>
+                        Create Template
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <div class="slds-col slds-align-bottom">
+                <p class="slds-text-body--small">Total <span ng-bind-template="{{$root.filteredTemplates.length}}">0</span> item(s).</p>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-bottom">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
+                        <svg class="slds-input__icon slds-icon-text-default" aria-hidden="true">
+                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        <input type="text" class="slds-input" placeholder="Search templates..." ng-model="templatesFilter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-scrollable--y" block-ui="loadTemplates" style="height: calc(100vh - 228px);">
+        <div class="slds-col slds-size--1-of-1">
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
+            style="height: calc(100vh - 260px);">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col" >
+                        <div class="slds-truncate" title="Language Name">Language Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Utility Name">Utility Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Subject">Subject</div>
+                    </th>
+                    <th scope="col" style="text-align: left;max-width: 500px;">
+                        <div class="slds-truncate" title="Body">Body</div>
+                    </th>
+                    <th scope="col" >
+                        <div class="slds-truncate" title="Email Type">Email Type</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Active">Active</div>
+                    </th>
+                    <th scope="col" style="text-align: center;">
+                        <div class="slds-truncate" title="Actions">Actions</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="$root.filteredTemplates.length === 0 && templates.length > 0  && templatesFilter">
+                    <td colspan="6" class="slds-blank-slate">
+                        <h1>No templates found for search criteria.</h1>
+                    </td>
+                </tr>
+                <tr ng-if="sTemplates.length == 0">
+                    <td colspan="6" class="slds-blank-slate">
+                        <h1>No Template configured.</h1>
+                        <p>Click <a href="" ng-click="edit(sTemplates)"><strong>Create Template</strong></a> to configure new
+                            <strong>Template</strong>.</p>
+                    </td>
+                </tr>
+                <tr ng-repeat="sTemplates in $root.filteredTemplates = (sTemplates | filter: templatesFilter)" ng-dblclick="edit(sTemplates)">
+                    <td data-label="Language Name">
+                        <div class="slds-truncate" title="{{sTemplates.Language.name}}">{{sTemplates.Language.name}}</div>
+                    </td>
+                    <td data-label="Utility Name" >
+                        <div class="slds-truncate" title="{{ sTemplates.utilityname }}">{{ sTemplates.utilityname }}</div>
+                    </td>
+                    <td data-label="Subject">
+                        <div class="slds-truncate" title="{{ sTemplates.subject }}">{{ sTemplates.subject }}</div>
+                    </td>
+                    <td data-label="Body" style="text-align: left;max-width: 500px;">
+                        <div class="slds-truncate" title="{{ sTemplates.body }}">{{ sTemplates.body }}</div>
+                    </td>
+                    <td data-label="Email Type">
+                        <div class="slds-truncate" title="{{ sTemplates.emailtype }}">{{ sTemplates.emailtype }}</div>
+                    </td>
+
+                    <td data-label="Active" >
+                        <div class="slds-truncate">
+                            <svg class="slds-button__icon slds-button__icon--left" ng-if="sTemplates.active" aria-hidden="true">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                        </div>
+                    </td>
+
+                    <td data-label="Actions" style="text-align: center;">
+                        <div class="slds-truncate slds-align--absolute-center">
+                            <div class="slds-button-group" role="group">
+                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="edit(sTemplates)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#edit"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Edit</span>
+                                </button>
+                               <!--code:: {{sTemplates.Language.code}}-->
+                                <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-if="sTemplates.Language.code !== 'en'"
+                                    ng-click="deleteTemplate(sTemplates)">
+                                    <svg class="slds-button__icon" aria-hidden="true">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                    </svg>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
