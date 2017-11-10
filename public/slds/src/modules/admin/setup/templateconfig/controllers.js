@@ -42,12 +42,13 @@ admin.controller('AdminSetupTemplateConfigListController', [
             $dialog.confirm({
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
-                message: 'Are you sure to delete "' + template.utilityname + '' + template.Language.name + '" template ?',
+                //message: 'Are you sure to delete "' + template.utilityname + '' + template.Language.name + '" template ?',
+                message: 'Are you sure to delete language for "'+ template.Language.name +'" template ?',
                 class: 'destructive',
                 headerClass: 'error'
             }, function (confirm) {
                 if (confirm) {
-                    $scope.blockUI.loadTemplates.start('Deleting "' + template.utilityname + '' + template.Language.name + '" template...');
+                    $scope.blockUI.loadTemplates.start('Deleting "'+template.utilityname +''+template.Language.name+'" template...');
                     templateConfigService.deleteTemplate(template)
                         .success(function (response) {
                             $scope.blockUI.loadTemplates.stop();
@@ -89,7 +90,7 @@ admin.controller('AdminSetupTemplateConfigEditController', [
                 $dialog.alert("Please Select utility Name", 'Error', 'pficon pficon-error-circle-o');
             }
             else if ($scope.sTemplates.Language == undefined || $scope.sTemplates.Language == null || $scope.sTemplates.Language == "") {
-                $dialog.alert("Please Select Language Name", 'Error', 'pficon pficon-error-circle-o');
+                $dialog.alert("Please Select Language", 'Error', 'pficon pficon-error-circle-o');
             }
             else if ($scope.sTemplates.subject == undefined || $scope.sTemplates.subject == null || $scope.sTemplates.subject == "") {
                 $dialog.alert("Please Enter Subject", 'Error', 'pficon pficon-error-circle-o');
