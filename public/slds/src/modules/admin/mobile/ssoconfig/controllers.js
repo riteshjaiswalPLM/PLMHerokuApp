@@ -10,7 +10,8 @@ function($scope , $rootScope , $state , $dialog , ModalService , mobileSSOConfig
         authnRequestBinding: null,
         issuer: null,
         identifierFormat: null,
-        linkCaption: null
+        linkCaption: null,
+        mappingConfig:null
     };
     $scope.loadSSOConfiguration = function(){
         if(!$scope.blockUI.loadSSOConfiguration.state().blocking){
@@ -18,7 +19,10 @@ function($scope , $rootScope , $state , $dialog , ModalService , mobileSSOConfig
             mobileSSOConfigService.loadSSOConfiguration({})
             .success(function(response){
                 if(response.success === true){
-                    $scope.ssoConfig = (response.data.ssoConfig) ? response.data.ssoConfig : $scope.ssoConfig;
+                    var ssoConfigData = (response.data.ssoConfig) ? response.data.ssoConfig : $scope.ssoConfig;
+                    if(ssoConfigData.entryPoint!=undefined){
+                        $scope.ssoConfig=ssoConfigData;
+                    }
                     $scope.ssoConfig.active = $scope.ssoConfig.active ? $scope.ssoConfig.active : false;
                     $scope.callbackUrl=response.data.callbackUrl;
                     
