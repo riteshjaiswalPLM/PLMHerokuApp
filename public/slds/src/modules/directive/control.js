@@ -21,7 +21,7 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 return 'slds/views/directive/layoutfield/'+$scope.field.SObjectField.type+'.html';
             };
             // if($scope.model !== undefined && $scope.field !== undefined){
-             if ($scope.field.SObjectField.type ===  'boolean'  && $scope.field.defaultValue !==  undefined) {
+            if ($scope.field.SObjectField.type ===  'boolean'  && $scope.field.defaultValue !==  undefined) {
                 if (typeof  $scope.field.defaultValue ===  'string')
                     $scope.field.defaultValue = $scope.field.defaultValue ===  'true';
             }
@@ -814,14 +814,15 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
             model: "=",
             parentSObject: "=",
             index: "=",
-            datamodel: "="
+            datamodel: "=",
+            parentStateParamData: "="
         },
         templateUrl: 'slds/views/directive/control/layoutrelatedlist.html',
         controller: 'LayoutRelatedListController'
     }
 }]).controller('LayoutRelatedListController', [
-            '$scope','$rootScope','$filter','$dialog','blockUI','clientSObjectService','CriteriaHelper',
-    function($scope , $rootScope , $filter , $dialog , blockUI , clientSObjectService,CriteriaHelper){
+            '$scope','$rootScope','$filter','$dialog','blockUI','clientSObjectService','CriteriaHelper','$state',
+    function($scope , $rootScope , $filter , $dialog , blockUI , clientSObjectService,CriteriaHelper,$state){
         var orderBy = $filter('orderBy');
         $scope.search = function(page,pageSize){
             if($scope.rendered)
@@ -871,6 +872,45 @@ ng.directive('layoutRelatedList',['ModalService','$dialog', function(ModalServic
                     });
             }
         };
+        $scope.doAction = function(record){
+            var _editAction=undefined;
+            var editCriteria=undefined;
+            angular.forEach($scope.model.SObject.SObjectLayouts,function(layout){
+                if(layout.type=='Edit' & layout.active==true){
+                    _editAction={
+                        type: 'record',
+                        label: 'edit',
+                        state: 'client.'+$scope.model.SObject.keyPrefix+'.'+'edit',
+                        
+                    }
+                    
+                }
+                else if(layout.type=='List'){
+                    angular.forEach(layout.btnCriteria,function(btnCriteria){
+                        if(btnCriteria.keyName=='Edit'){
+                            editCriteria=btnCriteria.criteria;
+                        }
+                    });
+                    
+                }
+            });
+            if(_editAction!=undefined){
+                _editAction['criteria']=editCriteria;
+            }
+            $state.go('client.'+$scope.model.SObject.keyPrefix+'.'+'details', {
+                data: {
+                    record: record,
+                    editAction:_editAction,
+                    isFromRelatedList:true,
+                    parentStateParamData:$scope.parentStateParamData,
+                    parentState:$state.current.name,
+                }   
+            });
+        };
+        $scope.showlink = function(){
+            if($scope.model.SObject && $scope.model.SObject.keyPrefix!=null && $scope.model.SObject.keyPrefix!="")
+            return $state.href('client.'+$scope.model.SObject.keyPrefix+'.'+'details');
+        }
         $scope.applyOrderBy = function(field){
             if($scope.searchResult && $scope.searchResult.length > 0){
                 $scope.predicate = field.SObjectField.name;

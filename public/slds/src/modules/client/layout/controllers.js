@@ -4,7 +4,7 @@ client.controller('ClientLayoutController',[
             '$scope','$rootScope','$state','$stateParams',
     function($scope , $rootScope , $state , $stateParams){
         $scope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams,options){
-            if($scope.stateParamMetaData !== null && toState.name === $scope.defaultState && fromState !== $scope.stateParamMetaData.redirectTo){
+            if($scope.stateParamMetaData !== null && toState.name === $scope.defaultState && $scope.stateParamMetaData.redirectTo && fromState !== $scope.stateParamMetaData.redirectTo ){
                 event.preventDefault();
                 $state.go($scope.stateParamMetaData.redirectTo);
             }
@@ -437,7 +437,8 @@ client.controller('ClientListLayoutController',[
                 $state.go(action.state, {
                     data: {
                         record: record,
-                        editAction: _editAction
+                        editAction: _editAction,
+                        parentState:$state.current.name
                     }
                 });
             }
@@ -467,7 +468,8 @@ client.controller('ClientListLayoutController',[
                     $state.go(_action.state, {
                         data: {
                             record: record,
-                            editAction: _editAction 
+                            editAction: _editAction,
+                            parentState:$state.current.name
                         }
                     });
                 }
@@ -637,22 +639,50 @@ client.controller('ClientSectionLayoutController',[
         $scope.back = {
             allow: false,
             go: function(){
+                var isFromRelatedList=false;
+                var parentData;
             	var stateName = ($stateParams.data !== undefined && $stateParams.data !== null && $stateParams.data.isFromDashboard && $stateParams.data.isFromDashboard === true) ? 'client.dashboard' : $stateParams.metadata.redirectTo; 
+                if(stateName==undefined && $stateParams.data){
+                    stateName=$stateParams.data.parentState
+                }
+                if($stateParams.data !== undefined && $stateParams.data !== null &&  $stateParams.data.isFromRelatedList && $stateParams.data.isFromRelatedList == true){
+                    stateName=$stateParams.data.parentState;
+                    isFromRelatedList=true;
+                    parentData={data:$stateParams.data.parentStateParamData}
+                }
+            	
             	var stateCache = $appCache.get(stateName);
             	if(stateCache!= undefined){
             		stateCache.btnClick="cancel";
             	}
             	$appCache.put(stateName, stateCache);
-            	$state.go(stateName);
+                if(isFromRelatedList){
+                    $state.go(stateName,parentData);
+                }
+                else{
+                    $state.go(stateName);
+                }
             }, 
             saveGo: function(){
+                var isFromRelatedList=false;
+                var parentData;
             	var stateName = ($stateParams.data !== undefined && $stateParams.data !== null && $stateParams.data.isFromDashboard && $stateParams.data.isFromDashboard === true) ? 'client.dashboard' : $stateParams.metadata.redirectTo; 
             	var stateCache = $appCache.get(stateName);
             	if(stateCache!= undefined){
             		stateCache.btnClick="save";
             	}
+                if($stateParams.data !== undefined && $stateParams.data !== null &&  $stateParams.data.isFromRelatedList && $stateParams.data.isFromRelatedList == true){
+                    stateName=$stateParams.data.parentState;
+                    isFromRelatedList=true;
+                    parentData={data:$stateParams.data.parentStateParamData}
+                }
             	$appCache.put(stateName, stateCache);
-            	$state.go(stateName);
+                if(isFromRelatedList){
+                    $state.go(stateName,parentData);
+                }
+                else{
+                    $state.go(stateName);
+                }
             }  
         };
         $scope.initBlockUiBlocks = function(){
