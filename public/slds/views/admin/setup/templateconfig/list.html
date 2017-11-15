@@ -49,22 +49,22 @@
             style="height: calc(100vh - 260px);">
             <thead>
                 <tr class="slds-text-title--caps">
-                    <th scope="col" >
-                        <div class="slds-truncate" title="Language Name">Language Name</div>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Language">Language</div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate" title="Utility Name">Utility Name</div>
+                        <div class="slds-truncate" title="Utility">Utility</div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate" title="Subject">Subject</div>
                     </th>
-                    <th scope="col" style="text-align: left;max-width: 500px;">
+                    <th scope="col" style="text-align: left;max-width: 600px;">
                         <div class="slds-truncate" title="Body">Body</div>
                     </th>
-                    <th scope="col" >
+                    <th scope="col">
                         <div class="slds-truncate" title="Email Type">Email Type</div>
                     </th>
-                    <th scope="col">
+                    <th scope="col" style="text-align: center;">
                         <div class="slds-truncate" title="Active">Active</div>
                     </th>
                     <th scope="col" style="text-align: center;">
@@ -89,20 +89,20 @@
                     <td data-label="Language Name">
                         <div class="slds-truncate" title="{{sTemplates.Language.name}}">{{sTemplates.Language.name}}</div>
                     </td>
-                    <td data-label="Utility Name" >
+                    <td data-label="Utility Name">
                         <div class="slds-truncate" title="{{ sTemplates.utilityname }}">{{ sTemplates.utilityname }}</div>
                     </td>
                     <td data-label="Subject">
                         <div class="slds-truncate" title="{{ sTemplates.subject }}">{{ sTemplates.subject }}</div>
                     </td>
-                    <td data-label="Body" style="text-align: left;max-width: 500px;">
+                    <td data-label="Body" style="text-align: left;max-width: 600px;">
                         <div class="slds-truncate" title="{{ sTemplates.body }}">{{ sTemplates.body }}</div>
                     </td>
                     <td data-label="Email Type">
                         <div class="slds-truncate" title="{{ sTemplates.emailtype }}">{{ sTemplates.emailtype }}</div>
                     </td>
 
-                    <td data-label="Active" >
+                    <td data-label="Active">
                         <div class="slds-truncate">
                             <svg class="slds-button__icon slds-button__icon--left" ng-if="sTemplates.active" aria-hidden="true">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
