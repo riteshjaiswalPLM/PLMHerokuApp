@@ -47,6 +47,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.TEXT,
          
         },
+        viewLinkField: {
+            type: DataTypes.TEXT,
+         
+        },
         criteria :{
             type: DataTypes.TEXT,
             defaultValue: function(){

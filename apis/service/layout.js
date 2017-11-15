@@ -195,6 +195,17 @@ layoutRouter.post('/metadata', function(req, res){
                             }
                         },{
                             model: db.SObject,
+                            include: {
+                                model: db.SObjectLayout,
+                                attributes: {
+                                    exclude: ['createdAt','updatedAt']
+                                },
+                                where :{
+                                     type: {
+                                        $in: ['List', 'Edit']
+                                    }
+                                }
+                            },
                             attributes: {
                                 exclude: ['createdAt','updatedAt']
                             }

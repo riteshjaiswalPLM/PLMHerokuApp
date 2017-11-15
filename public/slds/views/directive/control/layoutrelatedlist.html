@@ -18,7 +18,7 @@
                 <tbody ng-if="model.groupBy==undefined || model.groupBy=='' ">
                     <tr ng-repeat="result in searchResult " class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
                         <td class="{{ 'td-'+field.SObjectField.type }}"  ng-repeat="field in model.SObjectLayoutFields">
-                            <div class="slds-truncate">
+                            <div class="slds-truncate" ng-if="!(field.SObjectField.name==model.viewLinkField && showlink())">
                             {{ (field.SObjectField.type === 'reference') 
                                 ? result[field.SObjectField.relationshipName][field.reference] 
                                 : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
@@ -29,6 +29,20 @@
                                             ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
                                             : (field.SObjectField.name == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined)  ? sObjectMetaData[result[field.SObjectField.name]] : result[field.SObjectField.name] }}
                             </div>
+                            <div class="slds-truncate" ng-if="field.SObjectField.name==model.viewLinkField && showlink()">
+                                <a title=""  href="#" ng-click="doAction(result)"  >
+                                    {{ (field.SObjectField.type === 'reference') 
+                                ? result[field.SObjectField.relationshipName][field.reference] 
+                                : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                    ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                    : (field.SObjectField.type === 'date') 
+                                        ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                        : (field.SObjectField.type === 'datetime')
+                                            ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
+                                            : (field.SObjectField.name == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined)  ? sObjectMetaData[result[field.SObjectField.name]] : result[field.SObjectField.name] }}
+                                </a>
+                            </div>
+                            
                         </td>                            
                     </tr>
                     <!--<tr ng-if="searchResult.length === 0">

@@ -47,6 +47,15 @@
                         <input   ng-model="relatedList.orderBy" class="slds-input" />
                     </div>
                 </div>
+                <div class="slds-form-element" ng-if="forMobile != true">
+                    <label class="slds-form-element__label" for="relatedListViewLinkField">View Link Field</label>
+                    <div class="slds-form-element__control">
+                        <select class="slds-select" ng-model="relatedList.viewLinkField" >
+                            <option value="">-- None --</option>
+                            <option value="{{field.name}}" title="{{field.name}}"  ng-repeat="field in relatedList.SObject.SObjectFields | orderBy:'label'">{{field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']'}}</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="slds-form-element" ng-if="forMobile === true && !(layout.type === 'Mobile' && layout.mobileSubtype === 'MCreate')" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">
                     <label class="slds-form-element__label" for="readOnly">Readonly</label>
                     <div class="slds-form-element__control" ng-init="relatedList.readonly = relatedList.readonly ? relatedList.readonly : false">

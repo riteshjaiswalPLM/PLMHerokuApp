@@ -44,8 +44,8 @@
         <!--<div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" >-->
             <sobject-layout-section slds="true" ng-repeat="section in metadata.layoutSections" section="section" section-index="$index" model="dataModel" layout-block-ui-instance="blockUI.layoutBlock" type="detail" base-ctrl="baseCtrl"></sobject-layout-section>
             <div ng-if="metadata.relatedLists && (metadata.relatedLists | filter: {dispaySection :'2'}).length > 0" class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" >
-                <div layout-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.record"  ng-repeat="relatedList in metadata.relatedLists | filter: {dispaySection :'2'}" ></div>
-                <div layout-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.record"  ng-repeat="relatedList in metadata.relatedLists | filter: {dispaySection :'1'}" ></div>
+                <div layout-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.record" parent-state-param-data="stateParamData"   ng-repeat="relatedList in metadata.relatedLists | filter: {dispaySection :'2'}" ></div>
+                <div layout-related-list model="relatedList" datamodel="dataModel" index="$index" parent-s-object="stateParamData.record"  parent-state-param-data="stateParamData"    ng-repeat="relatedList in metadata.relatedLists | filter: {dispaySection :'1'}" ></div>
             </div>
         <!--</div>-->
     </div>

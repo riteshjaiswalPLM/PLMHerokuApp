@@ -889,6 +889,7 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                     whereClause: relatedList.whereClause,
                     groupBy: relatedList.groupBy,
                     orderBy: relatedList.orderBy,
+                    viewLinkField:relatedList.viewLinkField,
                     requireAddMore: relatedList.requireAddMore,
                     MobileEditLayoutConfigId: editLayout.MobileEditLayoutConfigId
                 })
@@ -917,6 +918,7 @@ layoutRouter.post('/saveeditlayoutrelatedlists', function(req, res){
                     whereClause: relatedList.whereClause,
                     groupBy: relatedList.groupBy,
                     orderBy: relatedList.orderBy,
+                    viewLinkField:relatedList.viewLinkField,
                     requireAddMore: relatedList.requireAddMore,
                     MobileEditLayoutConfigId: editLayout.MobileEditLayoutConfigId
                 },{
