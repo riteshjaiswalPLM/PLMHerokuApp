@@ -25,16 +25,8 @@ client.controller('MultiLevelApprovalController',[
 					componentBlock.stop();
 					if(response.success === true){
 						$scope.dataModelList = response.data.dataModelList;
-						$scope.allowAddMore=false;
 						$scope.dataModelList.forEach(function(dataModel){
 							dataModel.deleted = false;
-							if($scope.dataModelList!=undefined && $scope.dataModelList.length>0){
-								$scope.dataModelList.forEach(function(dataModel){
-									if($scope.isCriteriaValidAllObjects('for Add More Criteria.',$scope.section.Component.ComponentDetails[0].configuration.allowAddMoreCriteria, dataModel, $scope.ctrl.dataModel)==true){
-										$scope.allowAddMore=true;
-									}
-								});
-							}
 						});
 					}
 					else{
@@ -59,21 +51,12 @@ client.controller('MultiLevelApprovalController',[
 			}
 			if(parentModel){
 				dataModel[parentModel.attributes.type] = parentModel
-			}
-			if(criteria!=undefined){
-				return MultiObjectCriteriaHelper.validate(criteria, dataModel)
 			}	
-			else{
-				return true;
-			}
+			return MultiObjectCriteriaHelper.validate(criteria, dataModel)
 		};
-		
 		$scope.addItems = function(){
 			var newRow = {}
 			$scope.section.Component.ComponentDetails[0].configuration.fields.forEach(function(field){
-				if(field.data == undefined){
-					field.data={};
-				}
 				if(!newRow[field.SObjectField.name]){
 					newRow[field.SObjectField.name] = (field.data[field.SObjectField.name] === undefined ? null : field.data[field.SObjectField.name]);
 					if(field.SObjectField.type === 'reference'){
@@ -212,7 +195,6 @@ client.controller('MultiLevelApprovalController',[
 		$scope.init = function(){
 			console.log('MultiLevelApprovalController loaded...');
 			$scope.loadApprovalDetailList();
-			$scope.allowAddMore=false;
 			$scope.userObj = JSON.parse($rootScope.user().userdata);
 			$scope.fieldList = ['Id', 'deleted', 'recalled'];
 			$scope.section.Component.name = $scope.section.componentName;
