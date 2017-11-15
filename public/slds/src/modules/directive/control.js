@@ -21,6 +21,9 @@ ng.directive('sobjectLayoutField', ['$rootScope','$compile','$parse','$http','$t
                 return 'slds/views/directive/layoutfield/'+$scope.field.SObjectField.type+'.html';
             };
             // if($scope.model !== undefined && $scope.field !== undefined){
+            if ($scope.field.SObjectField.type === 'boolean' && $scope.field.defaultValue == undefined) {
+                $scope.field.defaultValue = false;
+            }
             if ($scope.field.SObjectField.type ===  'boolean'  && $scope.field.defaultValue !==  undefined) {
                 if (typeof  $scope.field.defaultValue ===  'string')
                     $scope.field.defaultValue = $scope.field.defaultValue ===  'true';
