@@ -122,7 +122,7 @@ ssoRouter.post('/mobile/callback',
                 where: where
             }).then((user)=>{
                 if(user === null || user === undefined){
-                    res.cookie('mob-username','', { maxAge: 60000, httpOnly: true });
+                    res.cookie('mob-username','', { maxAge: 60000, httpOnly: false });
                     var htmlForm = ['<!DOCTYPE html>',
                         '<html>',
                         '<head>',
@@ -148,7 +148,7 @@ ssoRouter.post('/mobile/callback',
                 else{
                     var ciphertext = CryptoJS.AES.encrypt(user.username, global.config.constant.AES_SECRET_KEY);
                     var base64encode=new Buffer(ciphertext.toString(),'UTF-8');
-                    res.cookie('mob-username',user.username, { maxAge: 60000, httpOnly: true });
+                    res.cookie('mob-username',user.username, { maxAge: 60000, httpOnly: false });
                     var htmlForm = ['<!DOCTYPE html>',
                         '<html>',
                         '<head>',
