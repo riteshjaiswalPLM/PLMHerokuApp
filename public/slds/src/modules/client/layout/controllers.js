@@ -564,7 +564,7 @@ client.controller('ClientSectionLayoutController',[
                                             metadata.layoutSections.forEach(function (section) {
                                                 if (section.Component != null && section.Component != undefined && section.Component.catagory == 'RelatedListComponent') {
                                                     comps.forEach(function (comp) {
-                                                        if (comp.id = section.ComponentId) {
+                                                        if (comp.id == section.ComponentId) {
                                                             section.Component = comp;
                                                         }
                                                     });
