@@ -6,6 +6,9 @@ client.factory('clientLayoutService',['$http',function($http){
             data.slds = true;
             return $http.post('/api/service/layout/metadata',data);
         },
+        metadataforrelatedlistcomp: function (data) {
+            return $http.post('/api/service/layout/metadataforrelatedlistcomp', data);
+        },
         sobjectMetadata: function(data){
             data.slds = true;
             return $http.post('/api/service/layout/sobjectMetadata',data);

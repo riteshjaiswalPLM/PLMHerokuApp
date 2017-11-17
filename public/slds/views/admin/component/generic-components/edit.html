@@ -231,6 +231,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="slds-form-element__group"  ng-if="component.catagory == 'RelatedListComponent'">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="relatedListViewLinkField">View Link Field</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <select class="slds-select" ng-model="component.ComponentDetails[0].configuration.viewLinkField" >
+                                    <option value="">-- None --</option>
+                                    <option value="{{field.name}}" title="{{field.name}}" ng-repeat="field in component.detailSObject.SObjectFields">{{field.label + ' [' + field.type + ((field.calculated) ? ' | formula' : '') + ']'}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="slds-form-element__group"  ng-if="component.catagory == 'MultiLevelApproval' || component.catagory == 'LineItemComponent'">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">

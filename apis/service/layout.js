@@ -299,4 +299,59 @@ layoutRouter.post('/metadata', function(req, res){
     });
 });
 
+layoutRouter.post('/metadataforrelatedlistcomp', function (req, res) {
+    var componentIds = req.body;
+    console.log(componentIds);
+
+    var compMetadata = db.Components.findAll({
+        include: [{
+            model: db.ComponentDetail,
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        }, {
+            model: db.SObject,
+            as: 'detailSObject',
+            include: {
+                model: db.SObjectLayout,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                where: {
+                    type: {
+                        $in: ['List', 'Edit']
+                    }
+                }
+            },
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        }],
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+            id: {
+                $in: componentIds
+            }
+        }
+    });
+
+    compMetadata.then(function (resultMetadata) {
+        if (resultMetadata === undefined || resultMetadata === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while fetching component metdata.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: {
+                    compMetadata: resultMetadata
+                }
+            });
+        }
+    });
+});
+
 module.exports = layoutRouter;

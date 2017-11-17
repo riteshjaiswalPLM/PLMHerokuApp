@@ -1,8 +1,8 @@
 'use strict';
 
 client.controller('RelatedListComponentController', [
-	'$scope', '$http', 'blockUI', '$dialog', 'clientSObjectService',
-	function ($scope, $http, blockUI, $dialog, clientSObjectService) {
+	'$scope', '$http', 'blockUI', '$dialog', '$state', 'clientSObjectService',
+	function ($scope, $http, blockUI, $dialog, $state, clientSObjectService) {
 
 		var componentBlock = blockUI.instances.get("RelatedListComponentBlock" + $scope.section.id);
 		$scope.search = function (page, pageSize) {
@@ -18,7 +18,6 @@ client.controller('RelatedListComponentController', [
 						console.log(whereClauseString.substring(whereClauseString.indexOf("{") + 1, whereClauseString.indexOf("}")) + "Field not configured in layout")
 						break;
 					}
-
 				}
 			}
 			var queryObject = {
@@ -28,7 +27,7 @@ client.controller('RelatedListComponentController', [
 				limit: pageSize,
 				page: page
 			};
-			componentBlock.start('Loading invoice line items...');
+			componentBlock.start('Loading line items...');
 
 			clientSObjectService.search(queryObject)
 				.success(function (response) {
@@ -45,6 +44,47 @@ client.controller('RelatedListComponentController', [
 					$dialog.alert('Server error occured while querying data.', 'Error', 'pficon pficon-error-circle-o');
 					componentBlock.stop();
 				});
+		};
+
+		$scope.showlink = function () {
+			if ($scope.section.Component.catagory == 'RelatedListComponent' && $scope.section.Component.detailSObject
+				&& $scope.section.Component.detailSObject.keyPrefix != null
+				&& $scope.section.Component.detailSObject.keyPrefix != "") {
+				return $state.href('client.' + $scope.section.Component.detailSObject.keyPrefix + '.' + 'details');
+			}
+		}
+
+		$scope.doAction = function (record) {
+			var _editAction = undefined;
+			var editCriteria = undefined;
+			angular.forEach($scope.section.Component.detailSObject.SObjectLayouts, function (layout) {
+				if (layout.type == 'Edit' & layout.active == true) {
+					_editAction = {
+						type: 'record',
+						label: 'edit',
+						state: 'client.' + $scope.section.Component.detailSObject.keyPrefix + '.' + 'edit',
+					}
+				}
+				else if (layout.type == 'List') {
+					angular.forEach(layout.btnCriteria, function (btnCriteria) {
+						if (btnCriteria.keyName == 'Edit') {
+							editCriteria = btnCriteria.criteria;
+						}
+					});
+				}
+			});
+			if (_editAction != undefined) {
+				_editAction['criteria'] = editCriteria;
+			}
+			$state.go('client.' + $scope.section.Component.detailSObject.keyPrefix + '.' + 'details', {
+				data: {
+					record: record,
+					editAction: _editAction,
+					isFromRelatedList: true,
+					parentStateParamData: $state.params.data,
+					parentState: $state.current.name,
+				}
+			});
 		};
 
 		$scope.init = function () {

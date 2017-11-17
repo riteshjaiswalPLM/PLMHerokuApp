@@ -547,9 +547,45 @@ client.controller('ClientSectionLayoutController',[
                         $scope.blockUI.layoutBlock.stop();
                         if(response.success){
                             // $scope.metadata = response.data.metadata;
-                            $timeout(function(){
-                                $scope.loadSObjectDetails(response.data.metadata);
-                            },0);
+                            var metadata = response.data.metadata;
+                            var componentIds = [];
+                            metadata.layoutSections.forEach(function (section) {
+                                if (section.Component != null && section.Component != undefined && section.Component.catagory == 'RelatedListComponent') {
+                                    componentIds.push(section.ComponentId);
+                                }
+                            });
+                            if (componentIds.length > 0) {
+                                $scope.blockUI.layoutBlock.start('Loading layout...');
+                                clientLayoutService.metadataforrelatedlistcomp(componentIds)
+                                    .success(function (response2) {
+                                        $scope.blockUI.layoutBlock.stop();
+                                        if (response2.success) {
+                                            var comps = response2.data.compMetadata;
+                                            metadata.layoutSections.forEach(function (section) {
+                                                if (section.Component != null && section.Component != undefined && section.Component.catagory == 'RelatedListComponent') {
+                                                    comps.forEach(function (comp) {
+                                                        if (comp.id = section.ComponentId) {
+                                                            section.Component = comp;
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            $timeout(function () {
+                                                $scope.loadSObjectDetails(metadata);
+                                            }, 0);
+                                        }
+                                        else {
+                                            $timeout(function () {
+                                                $scope.loadSObjectDetails(metadata);
+                                            }, 0);
+                                        }
+                                    });
+                            }
+                            else {
+                                $timeout(function(){
+                                    $scope.loadSObjectDetails(metadata);
+                                },0);
+                            }
                         }else{
                             $dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
                         }
