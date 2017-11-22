@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div class="slds-grid slds-scrollable--y" block-ui="loadReports" style="height: calc(100vh - 228px);">
+    <div class="slds-grid slds-scrollable--y slds-scrollable--x" block-ui="loadReports" style="height: calc(100vh - 228px);">
         <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="height: calc(100vh - 260px);">
             <thead>
                 <tr class="slds-text-title--caps">
@@ -73,7 +73,7 @@
                         <p>Click <a href="" ng-click="createReport()"><strong>Create Report</strong></a> to add new <strong>Report</strong>.</p>
                     </td>
                 </tr>
-                <tr ng-repeat="report in $root.filteredReports = (reports | filter: reportsFilter)">
+                <tr ng-repeat="report in $root.filteredReports = (reports | filter: reportsFilter)" ng-dblclick="edit(report)">
                     <td data-label="Report Name">
                         <div class="slds-truncate" title="{{ report.reportName }}">{{ report.reportName }}</div>
                     </td>
