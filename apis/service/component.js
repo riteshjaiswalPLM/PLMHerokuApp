@@ -919,7 +919,7 @@ componentRouter.post('/savelineitemdata', function(req, res){
                 if(err){
                     return res.json({
                         success: false,
-                        message: 'Error occured while saving invoice line item.',
+                        message: 'Error occured while saving  line item.',
                         err:err.toString()
                     });
                 }
@@ -937,7 +937,7 @@ componentRouter.post('/savelineitemdata', function(req, res){
                 if(err){
                     return res.json({
                         success: false,
-                        message: 'Error occured while saving invoice line item.',
+                        message: 'Error occured while saving  line item.',
                         err:err.toString()
                     });
                 }
@@ -987,7 +987,7 @@ componentRouter.post('/savelineitemdata', function(req, res){
             if(err){
                 return res.json({
                     success: false,
-                    message: 'Error occured while saving invoice line item.',
+                    message: 'Error occured while saving line item.',
                     err:err.toString()
                 });
             }

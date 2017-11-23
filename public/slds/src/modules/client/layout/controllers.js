@@ -809,7 +809,7 @@ client.controller('ClientSectionLayoutController',[
                     if(section.readonly === false && section.rendered === true){
                         angular.forEach(section.columns,function(fields, columnIndex){
                             angular.forEach(fields,function(field,fieldIndex){
-                                if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
+                                if(field.SObjectField.updateable === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
                                     if (field.SObjectField.type === "multipicklist" && field.value != null) {
                                         field.value = field.value.toString().replace(/\,/g, ';');
                                     }
@@ -822,7 +822,7 @@ client.controller('ClientSectionLayoutController',[
                     if(section.rendered === true){
                         angular.forEach(section.columns,function(fields, columnIndex){
                             angular.forEach(fields,function(field,fieldIndex){
-                                if(field.SObjectField.custom === true && field.enable === true && field.rendered != undefined && field.rendered === true){
+                                if(field.SObjectField.updateable === true && field.enable === true && field.rendered != undefined && field.rendered === true){
                                 	allSObjectData[field.SObjectField.name] = field.value;
                                 }
                             });
@@ -931,7 +931,7 @@ client.controller('ClientSectionLayoutController',[
                     if(section.readonly === false && section.rendered === true){
                         angular.forEach(section.columns,function(fields, columnIndex){
                             angular.forEach(fields,function(field,fieldIndex){
-                                if(field.SObjectField.custom === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
+                                if(field.SObjectField.updateable === true && field.readonly === false && field.enable === true && field.rendered != undefined && field.rendered === true){
                                     if (field.SObjectField.type === "multipicklist") {
                                         if (field.value !== undefined && field.value !== null) {
                                             field.value = field.value.toString().replace(/\,/g, ';');

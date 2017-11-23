@@ -206,7 +206,8 @@ sobjectRouter.post('/new', function(req, res){
                             restrictedPicklist: field.restrictedPicklist,
                             scale: field.scale,
                             sortable: field.sortable,
-                            type: field.type,
+                            //type: field.type,
+                            type: (field.type ==='combobox') ? 'picklist' : field.type,
                             unique: field.unique,
                             updateable: field.updateable,
                             SObjectId: newSObject.id

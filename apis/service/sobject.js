@@ -363,11 +363,33 @@ sobjectRouter.post('/deletefile', function (req, res) {
 sobjectRouter.post('/details', function(req, res){
     var queryObject = req.body;
     console.log(queryObject);
+    
     var nameField="name";
-    if(sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("name") === -1 && sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("Name") === -1){
-        sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].push('Name');
-    }
-    global.sfdc
+    var sObjectDetails = db.SObjectField.findOne({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        include: {
+            model: db.SObject,
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            },
+            where: {
+                name: queryObject.sObject
+            }
+        },
+        where: {
+            name: 'Name'
+        }
+    });
+    sObjectDetails.then(function (sObjectDetail) {
+        console.log("sObjectDetail", sObjectDetail)
+        if (sObjectDetail != null && sObjectDetail != undefined) {
+           if(sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("name") === -1 && sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("Name") === -1){
+            sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].push('Name');
+            }
+        }
+        global.sfdc
         .sobject(queryObject.sObject)
         .select(global.sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type])
         .where(queryObject.whereFields)
@@ -393,6 +415,7 @@ sobjectRouter.post('/details', function(req, res){
                 }
             });
         });
+    });
 });
 
 sobjectRouter.post('/save', function(req, res){
