@@ -407,7 +407,10 @@ sobjectRouter.post('/details', function(req, res){
                     message: 'No such record found!'
                 });
             }
-            
+            var record = records[0];
+            if (sObjectDetail == null || sObjectDetail == undefined) {
+                record.Name = record.Id;
+            }
             return res.json({
                 success: true,
                 data: {
@@ -806,30 +809,64 @@ var saveSobjectDetail = function(queryObject,req,res){
                 errMsg:err.toString()
             });
         }else{
-            global.sfdc
-            .sobject(queryObject.sObject.name)
-            .select('Name')
-            .where({id:ret.id})
-            .execute(function(err, records){
-                if(err || records.length ==0){
-                    return res.json({
-                        success: false,
-                        message: 'Error occured while creating new records.',
-                        error: err
-                    });
+            var sObjectDetails = db.SObjectField.findOne({
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                include: {
+                    model: db.SObject,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    },
+                    where: {
+                        name: queryObject.sObject.name
+                    }
+                },
+                where: {
+                    name: 'Name'
                 }
-                if(queryObject.trackerId != undefined && queryObject.trackerId != null){
-                    queryObject.sObject.data.Id = ret.id; 
-                    queryObject.currentUserId=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
-                    var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
-                    if(!isUploadFileSuccess){
-                        global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);
-                        global.sfdc.sobject(queryObject.sObject.name).destroy(queryObject.sObject.data.Id);
+            });
+            sObjectDetails.then(function (sObjectDetail) {
+                console.log("sObjectDetail", sObjectDetail);
+                var selectField = 'Id';
+                if (sObjectDetail != null && sObjectDetail != undefined) {
+                    selectField = 'Name';
+                }
+                global.sfdc
+                .sobject(queryObject.sObject.name)
+                .select(selectField)
+                .where({id:ret.id})
+                .execute(function(err, records){
+                    if(err || records.length ==0){
                         return res.json({
                             success: false,
-                            message: 'Error occured while creating new record.',
+                            message: 'Error occured while creating new records.',
                             error: err
                         });
+                    }
+                    if(queryObject.trackerId != undefined && queryObject.trackerId != null){
+                        queryObject.sObject.data.Id = ret.id; 
+                        queryObject.currentUserId=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
+                        var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
+                        if(!isUploadFileSuccess){
+                            global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);
+                            global.sfdc.sobject(queryObject.sObject.name).destroy(queryObject.sObject.data.Id);
+                            return res.json({
+                                success: false,
+                                message: 'Error occured while creating new record.',
+                                error: err
+                            });
+                        }
+                        else{
+                            deleteFilesFromHerokuAfterUpload(queryObject.files);
+                            return res.json({
+                                success: true,
+                                data: {
+                                    id: ret.id,
+                                    message:records[0][selectField] +' has been created successfully!'
+                                }
+                            });
+                        } 
                     }
                     else{
                         deleteFilesFromHerokuAfterUpload(queryObject.files);
@@ -837,22 +874,12 @@ var saveSobjectDetail = function(queryObject,req,res){
                             success: true,
                             data: {
                                 id: ret.id,
-                                message:records[0].Name +' has been created successfully!'
+                                message:records[0][selectField] +' has been created successfully!'
                             }
                         });
-                    } 
-                }
-                else{
-                    deleteFilesFromHerokuAfterUpload(queryObject.files);
-                    return res.json({
-                        success: true,
-                        data: {
-                            id: ret.id,
-                            message:records[0].Name +' has been created successfully!'
-                        }
-                    });
-                }
-                
+                    }
+                    
+                });
             });
             
         }
