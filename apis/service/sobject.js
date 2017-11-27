@@ -363,8 +363,7 @@ sobjectRouter.post('/deletefile', function (req, res) {
 sobjectRouter.post('/details', function(req, res){
     var queryObject = req.body;
     console.log(queryObject);
-    
-    var nameField="name";
+
     var sObjectDetails = db.SObjectField.findOne({
         attributes: {
             exclude: ['createdAt', 'updatedAt']
@@ -407,9 +406,8 @@ sobjectRouter.post('/details', function(req, res){
                     message: 'No such record found!'
                 });
             }
-            var record = records[0];
             if (sObjectDetail == null || sObjectDetail == undefined) {
-                record.Name = record.Id;
+                records[0].Name = records[0].Id;
             }
             return res.json({
                 success: true,
