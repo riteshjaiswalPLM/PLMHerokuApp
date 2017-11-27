@@ -384,8 +384,8 @@ sobjectRouter.post('/details', function(req, res){
     sObjectDetails.then(function (sObjectDetail) {
         console.log("sObjectDetail", sObjectDetail)
         if (sObjectDetail != null && sObjectDetail != undefined) {
-           if(sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("name") === -1 && sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].indexOf("Name") === -1){
-            sObjectFieldListConfig.FieldListMap[queryObject.sObject+'-'+queryObject.type].push('Name');
+            if (sObjectFieldListConfig.FieldListMap[queryObject.sObject + '-' + queryObject.type] && sObjectFieldListConfig.FieldListMap[queryObject.sObject + '-' + queryObject.type].indexOf("name") === -1 && sObjectFieldListConfig.FieldListMap[queryObject.sObject + '-' + queryObject.type].indexOf("Name") === -1) {
+                sObjectFieldListConfig.FieldListMap[queryObject.sObject + '-' + queryObject.type].push('Name');
             }
         }
         global.sfdc
