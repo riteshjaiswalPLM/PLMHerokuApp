@@ -41,13 +41,13 @@ sobjectRouter.post('/search', function(req, res){
                             if(type === 'date')
                                 whereString +=  key + ' >= ' + criteria[key][innerKey] + " AND ";
                             else
-                                whereString +=  key + ' >= ' + criteria[key][innerKey] + "T00:00:00Z AND ";
+                                whereString += "DAY_ONLY(" + key + ') >= ' + criteria[key][innerKey] + " AND ";
                         }
                         else{
                             if(type === 'date')
                                 whereString +=  key + ' <= ' + criteria[key][innerKey] + " AND ";
                             else
-                                whereString +=  key + ' <= ' + criteria[key][innerKey] + "T00:00:00Z AND ";
+                                whereString += "DAY_ONLY(" + key + ') <= ' + criteria[key][innerKey] + " AND ";
                         }
                     }
                 }
@@ -65,7 +65,7 @@ sobjectRouter.post('/search', function(req, res){
                         if(criteria[key].fieldtype && criteria[key].fieldtype === "string"){
                             whereString += key + " Like '%" + criteria[key].value + "%' AND ";
                         }
-                        else if(criteria[key].fieldtype && (criteria[key].fieldtype === "double" || criteria[key].fieldtype === "currency" || criteria[key].fieldtype === "boolean")){
+                        else if(criteria[key].fieldtype && (criteria[key].fieldtype === "double" || criteria[key].fieldtype === "currency" || criteria[key].fieldtype === "boolean" || criteria[key].fieldtype === "int")){
                             whereString += key + " = " + criteria[key].value + " AND ";
                         }
                         else if(criteria[key].fieldtype && criteria[key].fieldtype === "picklist"){
@@ -75,7 +75,7 @@ sobjectRouter.post('/search', function(req, res){
                             whereString += key + " = " + criteria[key].value + " AND ";
                         }
                         else if(criteria[key].fieldtype && criteria[key].fieldtype === "datetime"){
-                            whereString += key + " = " + criteria[key].value + "T00:00:00Z AND ";
+                            whereString += "DAY_ONLY(" + key + ") = " + criteria[key].value + " AND ";
                         }
                         else{
                             whereString += key + " = '" + criteria[key].value + "' AND ";
@@ -173,13 +173,13 @@ sobjectRouter.post('/export', function (req, res) {
                             if (type === 'date')
                                 whereString += key + ' >= ' + criteria[key][innerKey] + " AND ";
                             else
-                                whereString += key + ' >= ' + criteria[key][innerKey] + "T00:00:00Z AND ";
+                                whereString += "DAY_ONLY(" + key + ') >= ' + criteria[key][innerKey] + " AND ";
                         }
                         else {
                             if (type === 'date')
                                 whereString += key + ' <= ' + criteria[key][innerKey] + " AND ";
                             else
-                                whereString += key + ' <= ' + criteria[key][innerKey] + "T00:00:00Z AND ";
+                                whereString += "DAY_ONLY(" + key + ') <= ' + criteria[key][innerKey] + " AND ";
                         }
                     }
                 }
@@ -197,7 +197,7 @@ sobjectRouter.post('/export', function (req, res) {
                         if (criteria[key].fieldtype && criteria[key].fieldtype === "string") {
                             whereString += key + " Like '%" + criteria[key].value + "%' AND ";
                         }
-                        else if (criteria[key].fieldtype && (criteria[key].fieldtype === "double" || criteria[key].fieldtype === "currency" || criteria[key].fieldtype === "boolean")) {
+                        else if (criteria[key].fieldtype && (criteria[key].fieldtype === "double" || criteria[key].fieldtype === "currency" || criteria[key].fieldtype === "boolean" || criteria[key].fieldtype === "int")) {
                             whereString += key + " = " + criteria[key].value + " AND ";
                         }
                         else if (criteria[key].fieldtype && criteria[key].fieldtype === "picklist") {
@@ -207,7 +207,7 @@ sobjectRouter.post('/export', function (req, res) {
                             whereString += key + " = " + criteria[key].value + " AND ";
                         }
                         else if (criteria[key].fieldtype && criteria[key].fieldtype === "datetime") {
-                            whereString += key + " = " + criteria[key].value + "T00:00:00Z AND ";
+                            whereString += "DAY_ONLY(" + key + ") = " + criteria[key].value + " AND ";
                         }
                         else {
                             whereString += key + " = '" + criteria[key].value + "' AND ";

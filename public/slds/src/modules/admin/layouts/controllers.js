@@ -467,6 +467,10 @@ admin.controller('AdminLayoutsEditListController',[
             '$scope','$state','$stateParams','layoutService','sobjectService','blockUI','$dialog','$timeout','$adminLookups','$adminModals',
     function($scope , $state , $stateParams , layoutService , sobjectService , blockUI , $dialog , $timeout , $adminLookups,$adminModals ){
         $scope.searchCriteriaFieldsDropCallBack = function(event, index, item, external, type, allowedType){
+            if (item.SObjectField.type === "textarea") {
+                $dialog.alert('Textarea field not allowed in Search Criteria Field configuration');
+                return false;
+            }
             if($scope.isDuplicate($scope.searchCriteriaFields,item)){
                 return false;
             }
