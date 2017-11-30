@@ -243,6 +243,11 @@ admin.config(function($stateProvider) {
             controller: "AdminSetupLogoConfigController",
             title: "Logo Configuration"
         })
+        .state("admin.setup.tabconfig",{
+            templateUrl: "slds/views/admin/setup/tabconfig/view.html",
+            controller: "AdminSetupTabConfigController",
+            title: "Tab Configuration"
+        })
         //-- TemplateConfiguration
         .state("admin.setup.templateconfiguration", {
             templateUrl: "slds/views/admin/setup/templateconfig/index.html",

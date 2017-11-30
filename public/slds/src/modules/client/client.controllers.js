@@ -27,6 +27,7 @@ client.controller('ClientController',[
             authService.loadstates($rootScope.user())
                 .success(function(response){
                     if(response.success){
+                        $scope.showReportTab = response.data.reportTab;
                         if(response.data.hasOwnProperty('profile')){
                             $scope.profile = angular.copy(response.data.profile);
                             response.data.states.push($scope.profile[0]);

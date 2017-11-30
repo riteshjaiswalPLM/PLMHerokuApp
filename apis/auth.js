@@ -193,7 +193,7 @@ authRouter.post('/states', function(req, res){
                         created: true
                     }
                 }).then(function(tabs) {
-                    var states = [], profile = [];
+                    var states = [], profile = [], reportTab = false;
                     if(global.config.dashboardConfig.active){
                         states.push({
                             dynamic: true,
@@ -265,26 +265,38 @@ authRouter.post('/states', function(req, res){
                         }
                         
                     });
-                    if(global.config.archivalConfig.active){
-                        states.push({
-                            dynamic: true,
-                            name: 'client.archival',
-                            //controller: 'ClientArchivalController', ClientArchivalsController
-                            controller: 'ClientArchivalsController',
-                            //templateUrl: viewPrefix + 'views/client/archival.html',
-                            templateUrl: viewPrefix + 'views/client/index.html',
-                            title: global.config.archivalConfig.title,
-                            params:{
-                                icon: global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'icon'],
-                                LayoutId:null,
-                                showRefreshResult: global.config.archivalConfig.showRefreshResult
-                            },
-                            tab:{
-                                label: global.config.archivalConfig.tabLabel,
-                                icon: (global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON']) ? global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON'] : null,
+                    var tabConfigs = db.TabConfig.findOne({
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt']
+                        }
+                    });
+                    tabConfigs.then(function (tabConfig) {
+                        if (tabConfig !== undefined && tabConfig !== null) {
+                            if (tabConfig.reportTab === true) {
+                                reportTab = true;
                             }
-                        });
-                    }
+                            if (global.config.archivalConfig.active && tabConfig.archivalTab === true) {
+                                states.push({
+                                    dynamic: true,
+                                    name: 'client.archival',
+                                    //controller: 'ClientArchivalController', ClientArchivalsController
+                                    controller: 'ClientArchivalsController',
+                                    //templateUrl: viewPrefix + 'views/client/archival.html',
+                                    templateUrl: viewPrefix + 'views/client/index.html',
+                                    title: global.config.archivalConfig.title,
+                                    params:{
+                                        icon: global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'icon'],
+                                        LayoutId:null,
+                                        showRefreshResult: global.config.archivalConfig.showRefreshResult
+                                    },
+                                    tab:{
+                                        label: global.config.archivalConfig.tabLabel,
+                                        icon: (global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON']) ? global.config.archivalConfig[viewPrefix.substring(0, viewPrefix.length - 1)+'tabICON'] : null,
+                                    }
+                                });
+                            }
+                        }
+                    });
                     var where = {};
                     var UserMapping = db.UserMapping.findAll({
                         attributes: {
@@ -318,7 +330,8 @@ authRouter.post('/states', function(req, res){
                                     return res.json({
                                         success: true,
                                         data: {
-                                            states: states
+                                            states: states,
+                                            reportTab: reportTab
                                         }
                                     });
                                 }else{
@@ -347,6 +360,7 @@ authRouter.post('/states', function(req, res){
                                         success: true,
                                         data: {
                                             states: states,
+                                            reportTab: reportTab,
                                             profile: profile
                                         }
                                     });
@@ -357,7 +371,8 @@ authRouter.post('/states', function(req, res){
                             return res.json({
                                 success: true,
                                 data: {
-                                    states: states
+                                    states: states,
+                                    reportTab: reportTab
                                 }
                             });
                         }

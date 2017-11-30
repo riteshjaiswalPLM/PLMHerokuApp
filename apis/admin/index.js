@@ -7,6 +7,7 @@ adminRouter.use('/sobjectfield',require('./sobjectfield'));
 adminRouter.use('/sobjectlayout',require('./sobjectlayout'));
 adminRouter.use('/sobjectlookup',require('./sobjectlookup'));
 adminRouter.use('/tab',require('./tab'));
+adminRouter.use('/tabconfig', require('./tabconfig'));
 adminRouter.use('/icon',require('./icon'));
 adminRouter.use('/language',require('./language'));
 adminRouter.use('/component',require('./component'));
