@@ -1,12 +1,12 @@
 <div ng-if="field.rendered">
         <input  class="bootstrap-touchspin slds-input" 
                 id="{{ field.SObjectField.name + index }}" 
-                type="text" 
-                pf-touch-spin 
+                type="number" 
+                step="1"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                 ng-model="model[field.SObjectField.name]" 
                 name="{{ field.SObjectField.name + index }}" 
                 ng-required="field.required"
-                ng-if="!readonly"
-                readonly>
+                ng-if="!readonly">
         <span ng-if="readonly" ng-bind="model[field.SObjectField.name] | number: 0"></span>
 </div>
