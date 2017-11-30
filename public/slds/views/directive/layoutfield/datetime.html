@@ -12,7 +12,7 @@
             </div>
         </div>
     <!--<span ng-if="field.readonly" ng-bind="field.value | date: 'medium'">--</span>-->
-    <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="$root.formateDateAndDateTime(field.value,$root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium'"></label>
+    <label ng-if="field.readonly" class="slds-form-element__label" style="margin-top:.2rem;margin-bottom: 0;" ng-bind="$root.formateDateAndDateTime(field.value,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium'"></label>
 </div>
 <!--REPLACE WITH FOLLOWING WHILE USING DATETIME-->
 
