@@ -10,6 +10,12 @@ client.factory('ClientProfileService',['$http',function($http){
         },
         changepassword: function(data){
             return $http.post('/api/service/profile/changepassword', data);
+        },
+        setAvatarForUser: function (data) {
+            return $http.post('/api/service/profile/setAvatarForUser', data);
+        },
+        getUserProfileImg: function (data) {
+            return $http.post('/api/service/profile/getUserProfileImg', data);
         }
     };
 }]);

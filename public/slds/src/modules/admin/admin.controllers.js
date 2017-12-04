@@ -1,13 +1,24 @@
 /**
  * Admin Controllers
  */
-admin.controller('AdminController',['$scope','$rootScope','$state','$http',function($scope,$rootScope,$state,$http){
+admin.controller('AdminController',['$scope','$rootScope','$state','$http','ClientProfileService',function($scope,$rootScope,$state,$http,ClientProfileService){
+    $scope.getUserProfileImg = function () {
+        ClientProfileService.getUserProfileImg({ Id: 'Admin' })
+            .success(function (response) {
+                if (response.success) {
+                    $scope.userProfileImg = response.path;
+                }
+            });
+    };
+
     $scope.init = function(){ 
         $scope.isArchivalActive=false;
         _$translateProvider.translations('en',{});
         _$translateProvider.use('en');
         _$translateProvider.useSanitizeValueStrategy(null);
         console.log('AdminController loaded!');
+        $scope.userProfileImg = '/resources/images/profiles/adminAvatar.jpg';
+        $scope.getUserProfileImg();
         $http.post('/api/admin/archival/checkArchivalActive',{})
         .success(function (response) {
             $scope.isArchivalActive = response.success;

@@ -1,4 +1,4 @@
-<div class="slds-col slds-size--1-of-1" block-ui="manageProfileOtherSettingsBlockLayout">
+<div class="slds-col slds-size--1-of-1" block-ui="ChangeProfileImgLayoutBlock">
     <div class="slds-page-header slds-page-header--object-home">
         <div class="slds-grid">
             <div class="slds-col slds-has-flexi-truncate">
@@ -6,24 +6,14 @@
                     <div class="slds-media__figure">
                         <span class="slds-icon_container slds-icon-standard-user">
                             <svg class="slds-icon slds-p-around--xx-small" aria-hidden="true">
-                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#settings"></use>
+                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#yubi_key"></use>
                             </svg>
                         </span>
                     </div>
                     <div class="slds-media__body">
-                        <p class="slds-text-title--caps slds-line-height--reset" translate>Profile</p>
-                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="New" translate>Other Settings</h1>
+                        <p class="slds-text-title--caps slds-line-height--reset" translate="">Security</p>
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="New" translate="">Change Profile</h1>
                     </div>
-                </div>
-            </div>
-            <div class="slds-col slds-no-flex slds-grid slds-align-top">
-                <div class="slds-button-group" role="group">
-                    <button class="slds-button slds-button--brand" ng-click="save()">
-                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                            <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
-                        </svg>
-                        {{'Save' | translate}}
-                    </button>
                 </div>
             </div>
         </div>
@@ -33,36 +23,6 @@
         </div>
         <div class="slds-size--1-of-3 slds-panel__section">
             <fieldset class="slds-form--compound">
-                <div class="slds-form-element__group">
-                    <div class="slds-form-element__row">
-                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
-                            <label class="slds-form-element__label" for="languageSelector" translate>Select Default Language</label>
-                            <select class="slds-select" id="languageSelector"  ng-options="language as (language.name + ' - ' + language.code) for language in languagelist | orderBy:'name' track by language.name" ng-model="otherSetting.Language" >
-                                <option value="">-- None --</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="slds-form-element__group">
-                    <div class="slds-form-element__row">
-                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
-                            <label class="slds-form-element__label" for="timezoneSelector" translate>Select Default Time Zone</label>
-                            <select class="slds-select" id="timezoneSelector"  ng-options="timezone.id as timezone.name for timezone in timezones | orderBy: name" ng-model="otherSetting.TimeZoneId" >
-                                <option value="">-- None --</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="slds-form-element__group">
-                    <div class="slds-form-element__row">
-                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
-                            <label class="slds-form-element__label" for="localeSelector" translate>Select Default Locale</label>
-                            <select class="slds-select" id="localeSelector"  ng-options="locale.id as locale.name for locale in locales | orderBy: 'name'" ng-model="otherSetting.LocaleId" >
-                            <option value="">-- None --</option>
-                        </select>
-                        </div>
-                    </div>
-                </div>
                 <div class="slds-form-element__group">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
@@ -172,26 +132,3 @@
         </div>
     </div>
 </div>
-<!--
-<div class="edit-layout" block-ui="manageProfileOtherSettingsBlockLayout" style="min-height: 300px;">
-    <div class="form-actions-top">
-        <button class="btn btn-primary" type="button" ng-click="save()"><i class="fa fa-check"></i> {{'Save' | translate}}</button>
-    </div>
-    <div class="panel-body row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <form class="form-horizontal">
-                <div class="form-group sobject-layout-field">
-                    <label class="col-sm-5 control-label" for="languageSelector" translate>Select Default Language</label>
-                    <div class="col-sm-7">
-                        <select pf-select id="languageSelector"  ng-options="language as (language.name + ' - ' + language.code) for language in languagelist | orderBy:'name' track by language.name" ng-model="otherSetting.Language" >
-                            <option value="">-- None --</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="form-actions-bottom">
-        <button class="btn btn-primary" type="button" ng-click="save()"><i class="fa fa-check"></i> {{'Save' | translate}}</button>
-    </div>
-</div>-->

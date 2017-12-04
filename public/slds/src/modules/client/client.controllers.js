@@ -2,8 +2,8 @@
  * Client Controllers
  */
 client.controller('ClientController',[
-            '$scope','$rootScope','$state','$dialog','authService',
-    function($scope , $rootScope , $state , $dialog , authService){
+            '$scope','$rootScope','$state','$dialog','authService','ClientProfileService',
+    function($scope , $rootScope , $state , $dialog , authService , ClientProfileService){
         $scope.tabs = []
         $scope.profile = {};
 
@@ -39,9 +39,22 @@ client.controller('ClientController',[
                     $dialog.alert('Unexpected error occured!');
                 });
         };
+
+        $scope.getUserProfileImg = function () {
+            var userData = JSON.parse($rootScope.user().userdata);
+            ClientProfileService.getUserProfileImg({ Id: userData.Id })
+                .success(function (response) {
+                    if (response.success) {
+                        $scope.userProfileImg = response.path;
+                    }
+                });
+        };
+
         $scope.init = function(){
             console.log('ClientController loaded!');
+            $scope.userProfileImg = '/resources/images/profiles/userAvatar.jpg';
             $scope.loadClientStates();
+            $scope.getUserProfileImg();
         };
         $scope.init();
     }
