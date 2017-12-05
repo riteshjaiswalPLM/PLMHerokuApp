@@ -4,14 +4,14 @@
                 id="{{field.SObjectField.name + index}}"
                 ng-model="field.value" 
                 ng-disabled="{{ field.disabled }}"
-                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
+                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues | orderBy: 'label'"
                 ng-if="!field.readonly && !field.criteriaField">
             <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
         </select>
         <select id="{{field.SObjectField.name + index}}"
                 ng-model="field.value" 
                 ng-disabled="{{ field.disabled }}"
-                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues"
+                ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues | orderBy: 'label'"
                 ng-if="!field.readonly && field.criteriaField"
                 class="slds-select slds-p-horizontal--x-small">
             <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>

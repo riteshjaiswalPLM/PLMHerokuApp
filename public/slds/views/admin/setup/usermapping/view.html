@@ -62,10 +62,10 @@
                             <label class="slds-form-element__label">Username field</label>
                             <div class="slds-form-element__control">
                                 <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.UsernameField.label }}</label>
-                                <select ng-if="enableEdit === true && usermapping.UsernameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                <select ng-if="enableEdit === true && usermapping.UsernameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.UsernameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                <select ng-if="enableEdit === true && !usermapping.UsernameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.UsernameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                             </div>
@@ -74,10 +74,10 @@
                             <label class="slds-form-element__label">Firstname field</label>
                             <div class="slds-form-element__control">
                                 <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.FirstnameField.label }}</label>
-                                <select ng-if="enableEdit === true && usermapping.FirstnameField.id" class="slds-select slds-p-horizontal--x-small"  ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                <select ng-if="enableEdit === true && usermapping.FirstnameField.id" class="slds-select slds-p-horizontal--x-small"  ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.FirstnameField.id" class="slds-select slds-p-horizontal--x-small"  ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                <select ng-if="enableEdit === true && !usermapping.FirstnameField.id" class="slds-select slds-p-horizontal--x-small"  ng-model="usermapping.FirstnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                             </div>
@@ -86,10 +86,10 @@
                             <label class="slds-form-element__label">Lastname field</label>
                             <div class="slds-form-element__control">
                                 <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.LastnameField.label }}</label>
-                                <select ng-if="enableEdit === true && usermapping.LastnameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                <select ng-if="enableEdit === true && usermapping.LastnameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.LastnameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'}">
+                                <select ng-if="enableEdit === true && !usermapping.LastnameField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.LastnameField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'string'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                             </div>
@@ -98,10 +98,10 @@
                             <label class="slds-form-element__label">Email field</label>
                             <div class="slds-form-element__control">
                                 <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.EmailField.label }}</label>
-                                <select ng-if="enableEdit === true && usermapping.EmailField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'}">
+                                <select ng-if="enableEdit === true && usermapping.EmailField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.EmailField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'}">
+                                <select ng-if="enableEdit === true && !usermapping.EmailField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.EmailField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | filter: {type: 'email'} | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                             </div>
@@ -110,10 +110,10 @@
                             <label class="slds-form-element__label">Federation Id field</label>
                             <div class="slds-form-element__control">
                                 <label ng-if="enableEdit === false" class="slds-text-body--regular">{{ usermapping.FederationIdField.label }}</label>
-                                <select ng-if="enableEdit === true && usermapping.FederationIdField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.FederationIdField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields ">
+                                <select ng-if="enableEdit === true && usermapping.FederationIdField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.FederationIdField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.FederationIdField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.FederationIdField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields ">
+                                <select ng-if="enableEdit === true && !usermapping.FederationIdField.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.FederationIdField" ng-options="field as field.label for field in usermapping.SObject.SObjectFields | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                             </div>
@@ -146,10 +146,10 @@
                             <label class="slds-form-element__label">Active criteria</label>
                             <div class="slds-form-element__control">
                                 <label class="slds-text-body--regular" ng-if="enableEdit === false"><strong>{{ usermapping.activeCriteria.when.label + ' ' + usermapping.activeCriteria.operator + ' ' + usermapping.activeCriteria.value }}</strong></label>
-                                <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                <select ng-if="enableEdit === true && !usermapping.activeCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.activeCriteria.when" ng-options="field as field.label for field in criteriaFields | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                                 <span>&nbsp;</span>
@@ -171,10 +171,10 @@
                             <label class="slds-form-element__label">Sync criteria</label>
                             <div class="slds-form-element__control">
                                 <label class="slds-text-body--regular"  ng-if="enableEdit === false"><strong>{{ usermapping.syncCriteria.when.label + ' ' + usermapping.syncCriteria.operator + ' ' + usermapping.syncCriteria.value }}</strong></label>
-                                <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                <select style='width:30%' ng-if="enableEdit === true && usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
-                                <select ng-if="enableEdit === true && !usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields">
+                                <select ng-if="enableEdit === true && !usermapping.syncCriteria.when.id" class="slds-select slds-p-horizontal--x-small" ng-model="usermapping.syncCriteria.when" ng-options="field as field.label for field in criteriaFields | orderBy: 'label'">
                                     <option value="">-- None --</option>
                                 </select>
                                 <span>&nbsp;</span>
