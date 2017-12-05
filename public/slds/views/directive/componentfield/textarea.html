@@ -2,6 +2,7 @@
     <textarea   id="{{ field.SObjectField.name + index}}"
                 ng-model="model[field.SObjectField.name]"
                 class="form-control"
+                style="overflow: hidden; overflow-y: auto;"
                 rows="3"
                 ng-required="field.required"
                 ng-if="!readonly">
