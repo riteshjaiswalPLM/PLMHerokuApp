@@ -717,7 +717,13 @@ client.controller('ClientSectionLayoutController',[
                     $state.go(stateName,parentData);
                 }
                 else{
-                    $state.go(stateName);
+                    if (stateName.endsWith('create')) {
+                        $state.go(stateName, {}, { reload: true });
+                        // $state.go('client.dashboard');
+                    }
+                    else {
+                        $state.go(stateName);
+                    }
                 }
             }  
         };
