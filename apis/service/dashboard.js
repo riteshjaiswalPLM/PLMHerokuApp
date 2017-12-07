@@ -38,6 +38,9 @@ dashboardRouter.post('/getdashboardcomponentmetadata', function(req, res){
         attributes: {
             exclude: ['createdAt','updatedAt','title','deleted']
         },
+        where: {
+            active: true
+        },
         order: [
             ['order'],
             [db.DashboardContainersComponents, 'order']
