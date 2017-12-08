@@ -170,7 +170,7 @@ archivalRouter.post('/search', function (req, res) {
         });
         console.log("req.body.whereFields", req.body.whereFields)
         console.log("req.body.whereFields", whereCluase)
-        var base64encode=new Buffer(global.config.archivalConfig.GenericSearch.AWSS3Key+':'+global.config.archivalConfig.GenericSearch.AWSS3Secret,'UTF-8');
+        var base64encode=new Buffer(global.config.archivalConfig.GenericDB.AWSS3Key+':'+global.config.archivalConfig.GenericDB.AWSS3Secret,'UTF-8');
         var secret = base64encode.toString('base64');
         
         var headers = {
@@ -183,7 +183,8 @@ archivalRouter.post('/search', function (req, res) {
         }
         request.post({
             //url: "http://54.88.100.146:8080/AkritivArchiveApp/archive/process/search",
-            url: global.config.archivalConfig.GenericSearch.AWSEC2Url,
+            //url: "http://54.88.100.146/AkritivArchiveApp/archive/process",
+            url: global.config.archivalConfig.GenericDB.AWSEC2Url  +"/search",
             headers: headers,
             json: {
                 columns: [],
@@ -264,10 +265,10 @@ archivalRouter.post('/details', function (req, res) {
         });
 
         //var s3 = new AWS.S3({ accessKeyId: "AKIAIVT7MWOS2HOX6OBA", secretAccessKey: "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", region: "us-east-1" }); // Pass in opts to S3 if necessary
-        var s3 = new AWS.S3({ accessKeyId: global.config.archivalConfig.AWSS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.AWSS3.AWSS3Secret, region: global.config.archivalConfig.AWSS3.AWSS3Region });
+        var s3 = new AWS.S3({ accessKeyId: global.config.archivalConfig.GenericS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.GenericS3.AWSS3Secret, region: global.config.archivalConfig.GenericS3.AWSS3Region });
         var getParams = {
             //Bucket: 'eipp-genpact', // your bucket name,
-            Bucket: global.config.archivalConfig.AWSS3.AWSS3Bucket,
+            Bucket: global.config.archivalConfig.GenericS3.AWSS3Bucket,
             // Key: 'shared1/ESMQA/Invoice/ESMI-00000781/ESMI-00000781.JSON' // path to the object you're looking for
             Key: S3RootFolder + '/' + queryObject.recrods[uniqueKeyFieldName] + '/' + queryObject.recrods[uniqueKeyFieldName] + '.JSON'
             //Key: 'shared1/ESMQA/Invoice/' + queryObject.recrods[uniqueKeyFieldName] + '/' + queryObject.recrods[uniqueKeyFieldName] + '.JSON' // path to the object you're looking for
@@ -301,7 +302,7 @@ archivalRouter.post('/details', function (req, res) {
 archivalRouter.post('/searchDetails', function (req, res) {
     var queryObject = req.body;
     //var s3 = new AWS.S3({ accessKeyId: "AKIAIVT7MWOS2HOX6OBA", secretAccessKey: "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", region: "us-east-1" }); // Pass in opts to S3 if necessary
-    var s3 = new AWS.S3({ accessKeyId: global.config.archivalConfig.AWSS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.AWSS3.AWSS3Secret, region: global.config.archivalConfig.AWSS3.AWSS3Region });
+    var s3 = new AWS.S3({ accessKeyId: global.config.archivalConfig.GenericS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.GenericS3.AWSS3Secret, region: global.config.archivalConfig.GenericS3.AWSS3Region });
     var S3RootFolder = '';
     var ParentField = '';
     global.config.archivalConfig.ObjectSetup.forEach(function (objectSetup) {
@@ -322,7 +323,7 @@ archivalRouter.post('/searchDetails', function (req, res) {
         }
     });
     var params = {
-        Bucket: global.config.archivalConfig.AWSS3.AWSS3Bucket,
+        Bucket: global.config.archivalConfig.GenericS3.AWSS3Bucket,
         Delimiter: '/',
         Prefix: S3RootFolder + '/' + urlKey + '/'
     }
@@ -350,7 +351,7 @@ archivalRouter.post('/searchDetails', function (req, res) {
             if (isValid == 1) {
                 var getParams = {
                     //Bucket: 'eipp-genpact', // your bucket name,
-                    Bucket: global.config.archivalConfig.AWSS3.AWSS3Bucket,
+                    Bucket: global.config.archivalConfig.GenericS3.AWSS3Bucket,
                     Key: content.Key // path to the object you're looking for
                 }
                 s3.getObject(getParams, function (err, data) {

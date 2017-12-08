@@ -420,23 +420,23 @@ global.config.archivalConfig.refreshConfig = () => {
         }
     })
     archivalSetupDetail.then(function (archivalSetupDetail) {
-        global.config.archivalConfig.GenericSearch = {};
-        global.config.archivalConfig.AWSS3 = {};
+        global.config.archivalConfig.GenericDB = {};
+        global.config.archivalConfig.GenericS3 = {};
         archivalSetupDetail.forEach(function (detailData) {
-            if (detailData.ArchivalNamespace == 'GenericSearch') {
-                global.config.archivalConfig.GenericSearch = {};
-                global.config.archivalConfig.GenericSearch.AWSEC2Url = detailData.AWSEC2Url;
-                global.config.archivalConfig.GenericSearch.AWSS3Secret = detailData.AWSS3Secret;
+            if (detailData.ArchivalNamespace == 'GenericDB') {
+                global.config.archivalConfig.GenericDB = {};
+                global.config.archivalConfig.GenericDB.AWSEC2Url = detailData.AWSEC2Url;
+                global.config.archivalConfig.GenericDB.AWSS3Secret = detailData.AWSS3Secret;
                 //global.config.archivalConfig.ArchivalNamespace = archivalSetupDetail.ArchivalNamespace;
-                global.config.archivalConfig.GenericSearch.AWSS3Key = detailData.AWSS3Key;
+                global.config.archivalConfig.GenericDB.AWSS3Key = detailData.AWSS3Key;
             }
-            else if (detailData.ArchivalNamespace == 'AWSS3') {
-                global.config.archivalConfig.AWSS3 = {};
-                global.config.archivalConfig.AWSS3.AWSS3Secret = detailData.AWSS3Secret;
+            else if (detailData.ArchivalNamespace == 'GenericS3') {
+                global.config.archivalConfig.GenericS3 = {};
+                global.config.archivalConfig.GenericS3.AWSS3Secret = detailData.AWSS3Secret;
                 // global.config.archivalConfig.AWSS3.ArchivalNamespace = archivalSetupDetail.ArchivalNamespace;
-                global.config.archivalConfig.AWSS3.AWSS3Key = detailData.AWSS3Key;
-                global.config.archivalConfig.AWSS3.AWSS3Region = detailData.AWSS3Region;
-                global.config.archivalConfig.AWSS3.AWSS3Bucket = detailData.AWSS3Bucket;
+                global.config.archivalConfig.GenericS3.AWSS3Key = detailData.AWSS3Key;
+                global.config.archivalConfig.GenericS3.AWSS3Region = detailData.AWSS3Region;
+                global.config.archivalConfig.GenericS3.AWSS3Bucket = detailData.AWSS3Bucket;
             }
 
         });

@@ -11,10 +11,10 @@ var mime = require('mime');
 var AWS = require('aws-sdk');
 
 archivalcomponentRouter.post('/getfiledata', function (req, res) {
-    var s3 = new AWS.S3({ accessKeyId: global.config.archivalConfig.AWSS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.AWSS3.AWSS3Secret, region: global.config.archivalConfig.AWSS3.AWSS3Region });
+    var s3 = new AWS.S3({ accessKeyId: global.config.archivalConfig.GenericS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.GenericS3.AWSS3Secret, region: global.config.archivalConfig.GenericS3.AWSS3Region });
     var filepath = req.body.path;
     var getParams = {
-        Bucket: global.config.archivalConfig.AWSS3.AWSS3Bucket,
+        Bucket: global.config.archivalConfig.GenericS3.AWSS3Bucket,
         Key: filepath
     }
     res.attachment(filepath);
@@ -36,7 +36,7 @@ archivalcomponentRouter.post('/uploadedfilelist', function (req, res) {
     });
 
     if (render) {
-        AWS.config.update({ accessKeyId: global.config.archivalConfig.AWSS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.AWSS3.AWSS3Secret, region: global.config.archivalConfig.AWSS3.AWSS3Region });
+        AWS.config.update({ accessKeyId: global.config.archivalConfig.GenericS3.AWSS3Key, secretAccessKey: global.config.archivalConfig.GenericS3.AWSS3Secret, region: global.config.archivalConfig.GenericS3.AWSS3Region });
         var s3 = new AWS.S3();
         var urlKey = '';
         Object.keys(queryObject.dataModel).forEach((sObjectkey) => {
@@ -45,7 +45,7 @@ archivalcomponentRouter.post('/uploadedfilelist', function (req, res) {
             }
         });
         var params = {
-            Bucket: global.config.archivalConfig.AWSS3.AWSS3Bucket,
+            Bucket: global.config.archivalConfig.GenericS3.AWSS3Bucket,
             Delimiter: '/',
             Prefix: S3RootFolder + '/' + urlKey + '/' + 'Attachments' + '/'
         }
