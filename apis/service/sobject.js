@@ -432,11 +432,6 @@ sobjectRouter.post('/save', function(req, res){
                 model: global.db.SObjectField,
                 attributes: {
                     exclude: ['createdAt','updatedAt']
-                },
-                where: {
-                    referenceTo: {
-                        $like: '%akritivtlm__Tracker__c%'
-                    }
                 }
             },
             where: {
@@ -469,25 +464,51 @@ sobjectRouter.post('/save', function(req, res){
             console.log('daa',queryObject.sObject.data)
             if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0]!=undefined && sObjectDetail[0].SObjectFields[0] != undefined){
                 // sObjectDetail[0].SObjectFields[0].name
-                var trackerData = {
-                    akritivtlm__Input_Source__c: 'Manual - Buyer Portal',
-                    akritivtlm__DocArrival_Date__c: dateFormat(now,"GMT:yyyy-MM-dd'T'hh:mm:ss.sss'Z'"),
-                    akritivtlm__Upload_Date__c: dateFormat(now,"GMT:yyyy-MM-dd'T'hh:mm:ss.sss'Z'")
-                };
-                global.sfdc.sobject('akritivtlm__Tracker__c')
-                    .create(trackerData, function(err, ret){
-                        if(err || !ret.success){
-                            return res.json({
-                                success: false,
-                                message: 'Error occured while updating record.',
-                                error: err
-                            });
-                        }else{
-                            queryObject.trackerId = ret.id;
-                            queryObject.sObject.data[sObjectDetail[0].SObjectFields[0].name] = ret.id; 
-                            return saveSobjectDetail(queryObject,req,res);
+                var sObjectWithTracker = global.db.SObject.findAll({
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    },
+                    include: {
+                        model: global.db.SObjectField,
+                        attributes: {
+                            exclude: ['createdAt', 'updatedAt']
+                        },
+                        where: {
+                            referenceTo: {
+                                $like: '%akritivtlm__Tracker__c%'
+                            }
                         }
-                    });
+                    },
+                    where: {
+                        name: queryObject.sObject.name
+                    }
+                });
+                sObjectWithTracker.then(function (sObjectWithTrackerDetail) {
+                    if (sObjectWithTrackerDetail != null && sObjectWithTrackerDetail != undefined && sObjectWithTrackerDetail[0] != undefined && sObjectWithTrackerDetail[0].SObjectFields[0] != undefined) {
+                        var trackerData = {
+                            akritivtlm__Input_Source__c: 'Manual - Buyer Portal',
+                            akritivtlm__DocArrival_Date__c: dateFormat(now,"GMT:yyyy-MM-dd'T'hh:mm:ss.sss'Z'"),
+                            akritivtlm__Upload_Date__c: dateFormat(now,"GMT:yyyy-MM-dd'T'hh:mm:ss.sss'Z'")
+                        };
+                        global.sfdc.sobject('akritivtlm__Tracker__c')
+                            .create(trackerData, function(err, ret){
+                                if(err || !ret.success){
+                                    return res.json({
+                                        success: false,
+                                        message: 'Error occured while updating record.',
+                                        error: err
+                                    });
+                                }else{
+                                    queryObject.trackerId = ret.id;
+                                    queryObject.sObject.data[sObjectWithTrackerDetail[0].SObjectFields[0].name] = ret.id; 
+                                    return saveSobjectDetail(queryObject,req,res);
+                                }
+                            });
+                    }
+                    else {
+                        return saveSobjectDetail(queryObject, req, res);
+                    }
+                });
             }
             else{
                 return saveSobjectDetail(queryObject,req,res);
