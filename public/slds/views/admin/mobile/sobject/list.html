@@ -59,7 +59,7 @@
                 <tr ng-if="sObjects.length > 0 && $root.filteredsObjects.length === 0">
                     <td colspan="8" class="slds-blank-slate"><div class="slds-truncate slds-align--absolute-center">No SObject found for applied filter.</div></td>
                 </tr>
-                <tr ng-repeat="sObj in $root.filteredsObjects = (sObjects | filter: { label : sObjectsFilter})">
+                <tr ng-repeat="sObj in $root.filteredsObjects = (sObjects | filter: { label : sObjectsFilter} | orderBy : 'label')">
                     <td data-label="Label">
                         <div class="slds-truncate" title="{{ sObj.label }}">
                             <strong>{{ sObj.label }}<strong>

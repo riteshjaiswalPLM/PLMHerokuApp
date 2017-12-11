@@ -75,7 +75,7 @@
                             </tr>
                         </thead>
                         <tbody >
-                            <tr ng-repeat="sObj in sfdcSObjects | filter: { label : sfdcSObjectsFilter}">
+                            <tr ng-repeat="sObj in sfdcSObjects | filter: { label : sfdcSObjectsFilter} | orderBy : 'label'">
                                 <td class="slds-truncate" data-label="Label" style="white-space:normal !important;max-width:250px" title="{{ sObj.label }}"><strong>{{ sObj.label }}</strong></td>
                                 <td class="slds-truncate" data-label="Api Name" style="white-space:normal !important;max-width:250px !important"  title="{{ sObj.name }}">{{ sObj.name }}</td>
                                 <td data-label="Custom" style="white-space:normal !important;">
@@ -153,7 +153,7 @@
                                 </tr>
                             </thead>
                             <tbody >
-                                <tr ng-repeat="sObj in sObjects | filter: { label : sObjectsFilter}">
+                                <tr ng-repeat="sObj in sObjects | filter: { label : sObjectsFilter} | orderBy : 'label'">
                                     <td class="slds-truncate" data-label="Label" style="white-space:normal !important;max-width:250px" title="{{sObj.label}}"><strong>{{ sObj.label }}<strong></td>
                                     <td class="slds-truncate" data-label="Api Name" style="white-space:normal !important;max-width:250px !important;" title="{{sObj.name}}" title="{{sObj.name}}">{{ sObj.name }}</td>
                                     <td data-label="Custom" style="white-space:normal !important;">

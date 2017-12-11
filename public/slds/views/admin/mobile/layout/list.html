@@ -76,7 +76,7 @@
                         <p>Click <a href="" ng-click="openSObjectLayoutsLookup()"><strong>Create Layout</strong></a> to add new <strong>Layout</strong>.</p>
                     </td>
                 </tr>
-                <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: layoutsFilter)">
+                <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: layoutsFilter | orderBy : 'SObject.label')">
                     <td data-label="SObject">
                         <div class="slds-truncate" title="{{ layout.SObject.label }} : {{ layout.type }} layout">{{ layout.SObject.label }}</div>
                     </td>
