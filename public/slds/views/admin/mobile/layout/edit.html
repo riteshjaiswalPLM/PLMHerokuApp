@@ -11,8 +11,9 @@
                         </span>
                     </div>
                     <div class="slds-media__body">
-                        <p class="slds-text-title--caps slds-line-height--reset">Edit Layout</p>
-                        <h1 ng-if="showSideBar === false" class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ layout.SObject.label + ' ' + layout.type }}">{{ layout.SObject.label + ' : ' + layout.type + ' layout' }}</h1>
+                        <p ng-if="showSideBar === undefined" class="slds-text-title--caps slds-line-height--reset">List Layout</p>
+                        <p ng-if="showSideBar === true || showSideBar === false" class="slds-text-title--caps slds-line-height--reset">Edit Layout</p>
+                        <h1 ng-if="showSideBar === undefined || showSideBar === false" class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ layout.SObject.label + ' ' + layout.type }}">{{ layout.SObject.label + ' : ' + layout.type + ' layout' }}</h1>
                         <h1 ng-if="showSideBar === true" class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ layout.SObject.label + ' ' + layout.type }}">{{ layout.SObject.label + ' : ' + layout.type + ' layout (' + getDisplayText(mobileEditLayoutConfig.governingFieldValue) + ')'}}</h1>
                     </div>
                 </div>
