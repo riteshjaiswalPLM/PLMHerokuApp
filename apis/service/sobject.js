@@ -487,23 +487,38 @@ sobjectRouter.post('/save', function(req, res){
                     if (sObjectWithTrackerDetail != null && sObjectWithTrackerDetail != undefined && sObjectWithTrackerDetail[0] != undefined && sObjectWithTrackerDetail[0].SObjectFields[0] != undefined) {
                         var trackerData = {
                             akritivtlm__Input_Source__c: 'Manual - Buyer Portal',
-                            akritivtlm__DocArrival_Date__c: dateFormat(now,"GMT:yyyy-MM-dd'T'hh:mm:ss.sss'Z'"),
-                            akritivtlm__Upload_Date__c: dateFormat(now,"GMT:yyyy-MM-dd'T'hh:mm:ss.sss'Z'")
+                            akritivtlm__DocArrival_Date__c: dateFormat(now,"isoDateTime"),
+                            akritivtlm__Upload_Date__c: dateFormat(now,"isoDateTime")
                         };
-                        global.sfdc.sobject('akritivtlm__Tracker__c')
-                            .create(trackerData, function(err, ret){
-                                if(err || !ret.success){
-                                    return res.json({
-                                        success: false,
-                                        message: 'Error occured while updating record.',
-                                        error: err
-                                    });
-                                }else{
-                                    queryObject.trackerId = ret.id;
-                                    queryObject.sObject.data[sObjectWithTrackerDetail[0].SObjectFields[0].name] = ret.id; 
-                                    return saveSobjectDetail(queryObject,req,res);
-                                }
-                            });
+                        var trackerSObject = global.db.SObject.findOne({
+                            attributes: ['config'],
+                            where: {
+                                name: 'akritivtlm__Tracker__c'
+                            }
+                        });
+                        trackerSObject.then(function (trackerSObjectDetail) {
+                            if (trackerSObjectDetail != null && trackerSObjectDetail != undefined
+                                && trackerSObjectDetail.config != null && trackerSObjectDetail.config != undefined
+                                && trackerSObjectDetail.config.sobjectconfig != undefined
+                                && trackerSObjectDetail.config.sobjectconfig.dataToMap != undefined
+                                && trackerSObjectDetail.config.sobjectconfig.dataToMap.akritivtlm__Input_Source__c != undefined) {
+                                trackerData.akritivtlm__Input_Source__c = trackerSObjectDetail.config.sobjectconfig.dataToMap.akritivtlm__Input_Source__c;
+                            }
+                            global.sfdc.sobject('akritivtlm__Tracker__c')
+                                .create(trackerData, function(err, ret){
+                                    if(err || !ret.success){
+                                        return res.json({
+                                            success: false,
+                                            message: 'Error occured while updating record.',
+                                            error: err
+                                        });
+                                    }else{
+                                        queryObject.trackerId = ret.id;
+                                        queryObject.sObject.data[sObjectWithTrackerDetail[0].SObjectFields[0].name] = ret.id;
+                                        return saveSobjectDetail(queryObject,req,res);
+                                    }
+                                });
+                        });
                     }
                     else {
                         return saveSobjectDetail(queryObject, req, res);
