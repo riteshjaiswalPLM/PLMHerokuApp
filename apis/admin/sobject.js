@@ -610,7 +610,26 @@ sobjectRouter.post('/sync', function(req, res){
                                 });
                             
                             }
-                    }); 
+                    });
+                    //UPDATE SOBJECT
+                    db.SObject.update({
+                        label: meta.label,
+                        labelPlural: meta.labelPlural,
+                        custom: meta.custom,
+                        customSetting: meta.customSetting,
+                        createable: meta.createable,
+                        deletable: meta.deletable,
+                        layoutable: meta.layoutable,
+                        mergeable: meta.mergeable,
+                        queryable: meta.queryable,
+                        replicateable: meta.replicateable,
+                        retrieveable: meta.retrieveable,
+                        updateable: meta.updateable
+                    }, {
+                            where: {
+                                id: sobject.id
+                            }
+                        });
                 }
             });
         callback();
