@@ -105,6 +105,7 @@ admin.controller('AdminSetupSObjectsListController',[
                     });
                     sobjectService.syncSObjects(soobjectList).
                     success(function(response){
+                        $scope.loadSObjects();
                         $scope.blockUI.synchronizeSobject.stop();
                     }).
                     error(function(response){
