@@ -7,6 +7,12 @@ client.controller('UploadAttachmentController',
 		var AttachmentBlock = blockUI.instances.get('AttachmentBlock');
 		var uploadedFiles=0;
         
+		$scope.refreshDiv = function (div) {
+			if (document.getElementById(div)) {
+				document.getElementById(div).innerHTML = document.getElementById(div).innerHTML + "<br>" + $scope.customMessage;
+			}
+		};
+
 		$scope.getUploadedFiles = function (){
 			var sObjectData = {
 				parentId: $scope.ctrl.stateParamData.record.Id
@@ -102,23 +108,25 @@ client.controller('UploadAttachmentController',
         		}
         		else
     			{
-        			blackListedFiles += file.name + ",";
+        			blackListedFiles += file.name + " , ";
     			}
         	});
 
 			if(blackListedFiles.length > 0)
 			{
-				$dialog.alert('Extention is black listed for ' + blackListedFiles,'Validation Alert','pficon-warning-triangle-o');
+				blackListedFiles = blackListedFiles.substring(0, blackListedFiles.length - 3);
+				$dialog.alert('Please select valid file.<br />Allowed file : ' + $scope.allowedExtentions, 'Validation Alert', 'pficon-warning-triangle-o');
 			}
 	        	
 	        	
         	angular.forEach(errFiles,function(errFile){
-        		sizeExceededFiles += errFile.name + ","
+        		sizeExceededFiles += errFile.name + " , ";
         	});
         	
         	if(sizeExceededFiles.length > 0)
         	{
-				$dialog.alert('Error occured, may be size limit exceeded for files ' + sizeExceededFiles,'Error','pficon pficon-error-circle-o');
+				sizeExceededFiles = sizeExceededFiles.substring(0, sizeExceededFiles.length - 3);
+				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
         	}
 		};
 	    
@@ -264,6 +272,7 @@ client.controller('UploadAttachmentController',
 			$scope.primaryFileName = "";
 			$scope.attachmentDetails = {};
 			$scope.allowedSize = $scope.section.Component.ComponentDetails[0].configuration.allowedSize;
+			$scope.customMessage = $scope.section.Component.ComponentDetails[0].configuration.customMessage;
 			$scope.allowedExt = $scope.section.Component.ComponentDetails[0].configuration.allowedExt;
 			$scope.allowedExtForPrime = $scope.section.Component.ComponentDetails[0].configuration.allowedExtForPrime;
 			$scope.allowAttachPrime = $scope.section.Component.ComponentDetails[0].configuration.allowAttachPrime;
@@ -276,7 +285,7 @@ client.controller('UploadAttachmentController',
 			$scope.uploadAttachmentController = this;
 			console.log( $scope.section.title +" UploadAttachmentsComponentController Initializing...");
 		};
-		
+
 		$scope.initComponent();
 	}
 ]);

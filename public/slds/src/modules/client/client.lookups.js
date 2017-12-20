@@ -69,6 +69,12 @@ clientLookup.controller('UploadAttachmentModalController', [
 
         $scope.initModalController = function () {
             $scope.data = data.data;
+            $scope.data.customMessageForPopup = [];
+            $scope.data.customMessageForPopup.push('Note : Please limit your files to a maximum of ' + $scope.data.allowedSize + 'MB in size.');
+            var tmp = $scope.data.customMessage.split('<br>');
+            angular.forEach(tmp, function (message) {
+                $scope.data.customMessageForPopup.push(message);
+            });
             console.info('ClientDetailsLayoutController loaded!');
         };
 

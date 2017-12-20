@@ -78,7 +78,7 @@
 	<div class="slds-col slds-size--1-of-1">
 		<form class="slds-form--horizontal">
 			<div style="text-align: center;">
-				<label  class="">Note : Please limit your files to a maximum of {{allowedSize}}MB in size.</label>
+				<div id="divAttachmentNotes" data-ng-init="refreshDiv('divAttachmentNotes');">Note : Please limit your files to a maximum of {{allowedSize}}MB in size.</div>
 			</div>
 		</form>
 	</div>

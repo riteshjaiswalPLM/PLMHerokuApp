@@ -57,7 +57,7 @@
             <div class="slds-col slds-size--1-of-1">
                 <form class="slds-form--horizontal">
                     <div style="text-align: center;">
-                        <label  class="">Note : Please limit your files to a maximum of {{data.allowedSize}}MB in size.</label>
+                        <div ng-repeat="message in data.customMessageForPopup">{{message}}</div>
                     </div>
                 </form>
             </div>

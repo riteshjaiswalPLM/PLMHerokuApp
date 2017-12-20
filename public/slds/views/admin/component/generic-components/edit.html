@@ -231,6 +231,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-size--1-of-1">
+                            <label class="slds-form-element__label" for="customMessage">Custom Message ?</label>
+                            <input type="text" id="customMessage" class="slds-input" ng-model="component.ComponentDetails[0].configuration.customMessage" placeholder="Specify multiple messages separated by '<br>'" />
+                        </div>
+                    </div>
+                </div>
                 <div class="slds-form-element__group"  ng-if="component.catagory == 'RelatedListComponent'">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-size--1-of-1">
