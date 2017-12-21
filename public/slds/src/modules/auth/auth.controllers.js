@@ -42,6 +42,10 @@ auth.controller('LoginController',[
                 password: null
             }
             $scope.enableLanguages=$rootScope.enableLanguages;
+            $scope.isOnlyEnglish = false;
+            if ($scope.enableLanguages != undefined && $scope.enableLanguages.length == 1 && $scope.enableLanguages[0].code == 'en') {
+                $scope.isOnlyEnglish = true;
+            }
             $scope.currentLanguages=($cookies.getObject('languageCode')==undefined ||$cookies.getObject('languageCode')=="")?'en':$cookies.getObject('languageCode');
         };
         $scope.init();

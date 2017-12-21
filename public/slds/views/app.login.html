@@ -85,7 +85,7 @@
                 <div class="slds-size--8-of-12 slds-grid">
                     
                     <div class="slds-size--1-of-1 slds-text-heading_large" style="text-align: center;padding-top:10px">
-                        <span class="help-block slds-text-heading_large" style="padding:5px" ng-repeat="language in enableLanguages">
+                        <span class="help-block slds-text-heading_large" style="padding:5px" ng-if="!isOnlyEnglish" ng-repeat="language in enableLanguages">
                             <a href style="color: #00B0F0;text-decoration: none;font-size: 14px" ng-click="setLanguage(language.code)" ng-if="language.code!=currentLanguages">
                                 {{language.label}}
                             </a>
