@@ -247,6 +247,16 @@ admin.controller('AdminGenericComponentsEditController',[
             	$scope.component.ComponentDetails[0].configuration.fields[index].requiredCriteria = criteria;
             });
         };
+        $scope.mergeURLnText = function () {
+            angular.forEach($scope.templateURLs, function (url) {
+                $scope.URLTextsResult.push({
+                    'url': url
+                });
+            });
+            angular.forEach($scope.urlTexts, function (urlText, index) {
+                $scope.URLTextsResult[index].urlText = urlText;
+            });
+        };
         $scope.loadComponentDetails = function(){
             if($scope.component.id !== undefined && !$scope.blockUI.layoutBlock.state().blocking){
                 $scope.blockUI.layoutBlock.start('Loading component details...');
@@ -258,12 +268,22 @@ admin.controller('AdminGenericComponentsEditController',[
                                 angular.forEach($scope.component.ComponentDetails[0].configuration.allowedExt.split(','),function(ext){
                                     $scope.allowedExtentions.push(ext);
                                 });
-                                
+                                if ($scope.component.ComponentDetails[0].configuration.templateURLs) {
+                                    angular.forEach($scope.component.ComponentDetails[0].configuration.templateURLs.split(','), function (url) {
+                                        $scope.templateURLs.push(url);
+                                    });
+                                }      
+                                if ($scope.component.ComponentDetails[0].configuration.urlTexts) {
+                                    angular.forEach($scope.component.ComponentDetails[0].configuration.urlTexts.split(','), function (urlTest) {
+                                        $scope.urlTexts.push(urlTest);
+                                    });
+                                }
                                 if($scope.component.ComponentDetails[0].configuration.allowAttachPrime != undefined && $scope.component.ComponentDetails[0].configuration.allowAttachPrime == true){
                                     angular.forEach($scope.component.ComponentDetails[0].configuration.allowedExtForPrime.split(','),function(ext){
                                         $scope.allowedExtentionsForPrime.push(ext);
                                     });
                                 }
+                                $scope.mergeURLnText();
                             }
                             if($scope.component.catagory === 'MultiLevelApproval'){
                             	$scope.refSObjects = response.data.refSObjects;
@@ -359,6 +379,36 @@ admin.controller('AdminGenericComponentsEditController',[
 					$scope.component.ComponentDetails[0].configuration.allowedExt += ',';
 			});
 		};
+        $scope.addAllowedUrls = function (templateURLs, urlTexts, urlValue, urlTextValue) {
+            if ((/[,"\[\]#{|^~`}]/).test(urlValue)) {
+                return false;
+            }
+            if ((/[,"\[\]#{|^~`}]/).test(urlTextValue)) {
+                return false;
+            }
+            if (templateURLs.indexOf(urlValue) == -1) {
+                templateURLs.push(urlValue);
+                urlTexts.push(urlTextValue);
+                $scope.URLTextsResult.push({
+                    'url': urlValue,
+                    'urlText': urlTextValue
+                });
+            }
+        }
+        $scope.concatAllowedUrls = function () {
+            $scope.component.ComponentDetails[0].configuration.templateURLs = '';
+            $scope.component.ComponentDetails[0].configuration.urlTexts = '';
+            angular.forEach($scope.templateURLs, function (url, key) {
+                $scope.component.ComponentDetails[0].configuration.templateURLs += url;
+                if ($scope.templateURLs.length - 1 != key)
+                    $scope.component.ComponentDetails[0].configuration.templateURLs += ',';
+            });
+            angular.forEach($scope.urlTexts, function (url, key) {
+                $scope.component.ComponentDetails[0].configuration.urlTexts += url;
+                if ($scope.urlTexts.length - 1 != key)
+                    $scope.component.ComponentDetails[0].configuration.urlTexts += ',';
+            });
+        };
         $scope.openSObjectsLookup = function(){
         	var whereClause = {
                 criteria: {
@@ -710,7 +760,10 @@ admin.controller('AdminGenericComponentsEditController',[
         $scope.init = function(){
             console.log('AdminGenericComponentsEditController loaded!');
             $scope.initBlockUiBlocks();
-            $scope.allowedExtentions=[]; 
+            $scope.allowedExtentions=[];
+            $scope.templateURLs = [];
+            $scope.urlTexts = [];
+            $scope.URLTextsResult = [];
             $scope.allowedExtentionsForPrime=[];
             $scope.referenceSObjectNames=[];
             $scope.picklistValues = [];

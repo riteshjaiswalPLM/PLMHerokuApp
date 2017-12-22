@@ -700,6 +700,81 @@
                 </div>
             </article>
         </div>
+        <div class="slds-size--1-of-2 slds-p-horizontal--medium" style="margin-top: 15px !important;">
+            <article class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container">
+                                <svg class="slds-icon slds-icon--small" aria-hidden="true">
+                                    <use xlink:href="/slds221/assets/icons/doctype-sprite/svg/symbols.svg#attachment"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2><span class="slds-text-heading--small">TemplateURLs</span></h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-scrollable--x">
+                    <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
+                        <thead>
+                            <tr class="slds-text-title--caps">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="URL">URL</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="URL TEXT">URL TEXT</div>
+                                </th>
+                                <th scope="col" scope="col" style="text-align: center;width: 80px;">
+                                    <div class="slds-truncate" title="Action">Action</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="slds-hint-parent" ng-repeat="urlRes in URLTextsResult">
+                                <td data-label="URL">
+                                    <div class="slds-truncate" title="{{ urlRes.url }}">{{ urlRes.url }}</div>
+                                </td>
+                                <td data-label="URL Text">
+                                    <div class="slds-truncate" title="{{ urlRes.urlText }}">{{ urlRes.urlText }}</div>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="slds-truncate slds-align--absolute-center">
+                                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error" ng-click="templateURLs.splice($index,1);urlTexts.splice($index,1);URLTextsResult.splice($index,1);concatAllowedUrls();">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-card__footer">
+                    <form class="slds-form--inline">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="txtAllowUrl">URL</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" id="url" class="slds-input" ng-model="url" />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="txtUrlTest">URL Text</label>
+                            <div class="slds-form-element__control">
+                                <input type="text" id="urlTest" class="slds-input" ng-model="urlText" />
+                            </div>
+                        </div>
+                        <div class="slds-form-element">
+                            <button type="button" ng-disabled="!(url && urlText)" ng-click="addAllowedUrls(templateURLs,urlTexts,url,urlText);url='';urlText='';concatAllowedUrls();"
+                                class="slds-button slds-button--brand">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </div>
     </div>
 </div>
 

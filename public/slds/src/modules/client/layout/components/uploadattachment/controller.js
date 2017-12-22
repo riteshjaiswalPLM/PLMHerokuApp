@@ -274,8 +274,21 @@ client.controller('UploadAttachmentController',
 			$scope.allowedSize = $scope.section.Component.ComponentDetails[0].configuration.allowedSize;
 			$scope.customMessage = $scope.section.Component.ComponentDetails[0].configuration.customMessage;
 			$scope.allowedExt = $scope.section.Component.ComponentDetails[0].configuration.allowedExt;
+			$scope.templateURLs = $scope.section.Component.ComponentDetails[0].configuration.templateURLs ? $scope.section.Component.ComponentDetails[0].configuration.templateURLs.split(',') : $scope.section.Component.ComponentDetails[0].configuration.templateURLs;
+			$scope.urlTexts = $scope.section.Component.ComponentDetails[0].configuration.urlTexts ? $scope.section.Component.ComponentDetails[0].configuration.urlTexts.split(',') : $scope.section.Component.ComponentDetails[0].configuration.urlTexts;
+			$scope.URLTextsResult = [];
 			$scope.allowedExtForPrime = $scope.section.Component.ComponentDetails[0].configuration.allowedExtForPrime;
 			$scope.allowAttachPrime = $scope.section.Component.ComponentDetails[0].configuration.allowAttachPrime;
+			if ($scope.templateURLs != undefined && $scope.urlTexts != undefined) {
+				angular.forEach($scope.templateURLs, function (tmpUrl) {
+					$scope.URLTextsResult.push({
+						'url': tmpUrl
+					});
+				});
+				angular.forEach($scope.urlTexts, function (tmpUrlTxt, index) {
+					$scope.URLTextsResult[index].urlText = tmpUrlTxt;
+				});
+			}
 			if($scope.type == 'detail')
 				$scope.typeNew = undefined;
 			if($scope.type !== 'create'){
@@ -285,7 +298,7 @@ client.controller('UploadAttachmentController',
 			$scope.uploadAttachmentController = this;
 			console.log( $scope.section.title +" UploadAttachmentsComponentController Initializing...");
 		};
-
+		
 		$scope.initComponent();
 	}
 ]);

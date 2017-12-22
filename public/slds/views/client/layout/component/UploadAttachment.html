@@ -83,6 +83,13 @@
 		</form>
 	</div>
 	<div class="slds-col slds-size--1-of-1">
+		<form class="slds-form--horizontal">
+			<div style="text-align: center;">
+				<label ng-repeat="urlRes in URLTextsResult"><a href="{{urlRes.url}}">{{urlRes.urlText}}</a><br/></label>
+			</div>
+		</form>
+	</div>
+	<div class="slds-col slds-size--1-of-1">
 		<form class="">
 			<div class="">
 				<div class="panel panel-default" >
