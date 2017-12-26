@@ -210,21 +210,6 @@ clientLookup.controller('BulkOperationController', [
             $scope.baseCtrl = this;
             console.info('BulkOperationController loaded!');
             $scope.dataModel = {};
-            $scope.templateURLs = $scope.section.Component.ComponentDetails[0].configuration.templateURLs ? $scope.section.Component.ComponentDetails[0].configuration.templateURLs.split(',') : $scope.section.Component.ComponentDetails[0].configuration.templateURLs;
-			$scope.urlTexts = $scope.section.Component.ComponentDetails[0].configuration.urlTexts ? $scope.section.Component.ComponentDetails[0].configuration.urlTexts.split(',') : $scope.section.Component.ComponentDetails[0].configuration.urlTexts;
-			$scope.URLTextsResult = [];
-			$scope.allowedExtForPrime = $scope.section.Component.ComponentDetails[0].configuration.allowedExtForPrime;
-			$scope.allowAttachPrime = $scope.section.Component.ComponentDetails[0].configuration.allowAttachPrime;
-			if ($scope.templateURLs != undefined && $scope.urlTexts != undefined) {
-				angular.forEach($scope.templateURLs, function (tmpUrl) {
-					$scope.URLTextsResult.push({
-						'url': tmpUrl
-					});
-				});
-				angular.forEach($scope.urlTexts, function (tmpUrlTxt, index) {
-					$scope.URLTextsResult[index].urlText = tmpUrlTxt;
-				});
-			}
         };
         $scope.initModalController();
     }
