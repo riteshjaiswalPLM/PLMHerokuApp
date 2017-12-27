@@ -73,7 +73,7 @@
                 <tr ng-if="layouts.length === 0">
                     <td colspan="6" class="slds-blank-slate">
                         <h1>No Layout added.</h1>
-                        <p>Click <a href="" ng-click="openSObjectLayoutsLookup()"><strong>Create Layout</strong></a> to add new <strong>Layout</strong>.</p>
+                        <p>Add SObjects from '<strong>SObjects</strong>' tab under '<strong>Mobile</strong>' tab to add new <strong>Layout</strong>.</p>
                     </td>
                 </tr>
                 <tr ng-repeat="layout in $root.filteredLayouts = (layouts | filter: layoutsFilter | orderBy : 'SObject.label')">
