@@ -265,9 +265,11 @@ admin.controller('AdminGenericComponentsEditController',[
                         if(response.success === true){
                             $scope.component = response.data.component;
                             if($scope.component.catagory === 'UploadAttachment'){
-                                angular.forEach($scope.component.ComponentDetails[0].configuration.allowedExt.split(','),function(ext){
-                                    $scope.allowedExtentions.push(ext);
-                                });
+                                if ($scope.component.ComponentDetails[0].configuration.allowedExt) {
+                                    angular.forEach($scope.component.ComponentDetails[0].configuration.allowedExt.split(','),function(ext){
+                                        $scope.allowedExtentions.push(ext);
+                                    });
+                                }
                                 if ($scope.component.ComponentDetails[0].configuration.templateURLs) {
                                     angular.forEach($scope.component.ComponentDetails[0].configuration.templateURLs.split(','), function (url) {
                                         $scope.templateURLs.push(url);
@@ -278,7 +280,8 @@ admin.controller('AdminGenericComponentsEditController',[
                                         $scope.urlTexts.push(urlTest);
                                     });
                                 }
-                                if($scope.component.ComponentDetails[0].configuration.allowAttachPrime != undefined && $scope.component.ComponentDetails[0].configuration.allowAttachPrime == true){
+                                if ($scope.component.ComponentDetails[0].configuration.allowAttachPrime != undefined && $scope.component.ComponentDetails[0].configuration.allowAttachPrime == true
+                                    && $scope.component.ComponentDetails[0].configuration.allowedExtForPrime) {
                                     angular.forEach($scope.component.ComponentDetails[0].configuration.allowedExtForPrime.split(','),function(ext){
                                         $scope.allowedExtentionsForPrime.push(ext);
                                     });
