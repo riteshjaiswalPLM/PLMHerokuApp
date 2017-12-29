@@ -8,7 +8,7 @@ client.controller('UploadAttachmentController',
 		var uploadedFiles=0;
         
 		$scope.refreshDiv = function (div) {
-			if (document.getElementById(div)) {
+			if (document.getElementById(div) && $scope.customMessage != undefined && $scope.customMessage != '') {
 				document.getElementById(div).innerHTML = document.getElementById(div).innerHTML + "<br>" + $scope.customMessage;
 			}
 		};
