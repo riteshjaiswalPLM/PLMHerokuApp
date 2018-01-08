@@ -60,6 +60,7 @@ client.controller('UploadAttachmentController',
 		$scope.selectFile = function(files, errFiles) {
 			var blackListedFiles="";
 			var sizeExceededFiles="";
+			var duplicateFiles = "";
 			if($scope.primaryDoc.primaryDocument)
 			{
 				$scope.allowedExtentions=[];
@@ -82,7 +83,8 @@ client.controller('UploadAttachmentController',
 	        		angular.forEach($scope.files,function(fileInScope){
 	        			if(fileInScope.name == file.name)
         				{
-	        				pushOnScope = false;
+							duplicateFiles += file.name + " , ";
+							pushOnScope = false;
 	        				if($scope.primaryDoc.primaryDocument  && $scope.primaryFileName == "" && fileInScope.name == file.name)
 	        					fileInScope.primaryDocument = true;
 		        			else
@@ -100,7 +102,7 @@ client.controller('UploadAttachmentController',
 	        		if(pushOnScope)
         			{
 	        			if($scope.primaryDoc.primaryDocument && $scope.primaryFileName == file.name)
-	        				file.primaryDocument = true;
+	        			file.primaryDocument = true;
 	        			else
 	        				file.primaryDocument = false;
 	        			$scope.files.push(file);
@@ -116,6 +118,10 @@ client.controller('UploadAttachmentController',
 			{
 				blackListedFiles = blackListedFiles.substring(0, blackListedFiles.length - 3);
 				$dialog.alert('Please select valid file.<br />Allowed file : ' + $scope.allowedExtentions, 'Validation Alert', 'pficon-warning-triangle-o');
+			}
+			if (duplicateFiles != "") {
+				duplicateFiles = duplicateFiles.substring(0, duplicateFiles.length - 3);
+				$dialog.alert('Duplicate attachment(s) ' + duplicateFiles + ' not allowed to upload.', 'Validation Alert', 'pficon-warning-triangle-o')
 			}
 	        	
 	        	
