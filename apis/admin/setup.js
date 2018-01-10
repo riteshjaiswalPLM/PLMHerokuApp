@@ -512,13 +512,16 @@ setupRouter.post('/ssoconfig/save', function(req, res){
 
 setupRouter.post('/logoconfig/homelogo', function(req, res){
     var form = new formidable.IncomingForm();
-    var fileName;
     form.multiples = true;
     form.uploadDir = "./public/resources/images/";
     form.parse(req);
+    var ext = "";
+    var imageString = "";
 
     form.on('file', function(field, file) {
-        fs.rename(file.path, path.join(form.uploadDir, 'homeLogo'+file.name.toLowerCase().substr(file.name.indexOf("."),file.name.length - 1) ));
+        ext = file.name.toLowerCase().substr(file.name.indexOf("."), file.name.length - 1);
+        imageString = fs.readFileSync(path.join(__dirname) + '/../../' + file.path).toString("base64");
+        fs.rename(file.path, path.join(form.uploadDir, 'homeLogo' + ext));
     });
 
     form.on('error', function(err) {
@@ -529,21 +532,36 @@ setupRouter.post('/logoconfig/homelogo', function(req, res){
     });
 
     form.on('end', function() {
-        return res.json({
-            success: true,
-            fileName: fileName
-        });
+        db.Logo.update({
+            logo: imageString
+        }, {
+                where: {
+                    title: "Home Logo"
+                }
+            }).then(function () {
+                return res.json({
+                    success: true
+                });
+            }).catch(function (err) {
+                return res.json({
+                    success: false,
+                    error: err
+                });
+            });
     });
 });
 setupRouter.post('/logoconfig/headerlogo', function(req, res){
     var form = new formidable.IncomingForm();
-    var fileName;
     form.multiples = true;
     form.uploadDir = "./public/resources/images/logo/";
     form.parse(req);
+    var ext = "";
+    var imageString = "";
 
     form.on('file', function(field, file) {
-        fs.rename(file.path, path.join(form.uploadDir, 'headerLogo'+file.name.toLowerCase().substr(file.name.indexOf("."),file.name.length - 1) ));
+        ext = file.name.toLowerCase().substr(file.name.indexOf("."), file.name.length - 1);
+        imageString = fs.readFileSync(path.join(__dirname) + '/../../' + file.path).toString("base64");
+        fs.rename(file.path, path.join(form.uploadDir, 'headerLogo' + ext));
     });
 
     form.on('error', function(err) {
@@ -554,10 +572,22 @@ setupRouter.post('/logoconfig/headerlogo', function(req, res){
     });
 
     form.on('end', function() {
-        return res.json({
-            success: true,
-            fileName: fileName
-        });
+        db.Logo.update({
+            logo: imageString
+        }, {
+                where: {
+                    title: "Header Logo"
+                }
+            }).then(function () {
+                return res.json({
+                    success: true
+                });
+            }).catch(function (err) {
+                return res.json({
+                    success: false,
+                    error: err
+                });
+            });
     });
 });
 

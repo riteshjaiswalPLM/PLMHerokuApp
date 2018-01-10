@@ -11,8 +11,9 @@ module.exports = {
         var locale = require('./locale');
         var ssoconfig = require('./ssoconfig');
         var template = require('./template');
+        var logo = require('./logo');
         
-        var objectsToSync = [application, sfdc, icon, user, language, translation, timezone, locale, ssoconfig,template];
+        var objectsToSync = [application, sfdc, icon, user, language, translation, timezone, locale, ssoconfig, template, logo];
         
         async.each(objectsToSync, function(object, callback){
             object.sync(models, function(err){
