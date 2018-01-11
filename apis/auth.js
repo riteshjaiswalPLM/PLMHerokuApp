@@ -38,7 +38,7 @@ global.authenticate = (credential, where, isSSOLogin,data, callback)=>{
             }
         }],
         attributes: {
-            exclude: ['createdAt','updatedAt','RoleId','active','LanguageId']
+            exclude: ['createdAt','updatedAt','RoleId','active','LanguageId','profileImage']
         },
         where: where
     });

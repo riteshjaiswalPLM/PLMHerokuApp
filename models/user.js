@@ -77,6 +77,10 @@ module.exports = function(sequelize, DataTypes){
         faderationId:{
             type: DataTypes.STRING,
             unique: true
+        },
+        profileImage: {
+            type: DataTypes.TEXT,
+            allowNull: true
         }
     },{
         classMethods: {

@@ -165,7 +165,9 @@ profileRouter.post('/changepassword', function(req, res){
 profileRouter.post('/setAvatarForUser', function (req, res) {
     var avatarpath = path.join("./public/slds221/assets/images/", req.body.avatar + ".jpg");
     var filepath = path.join("./public/resources/images/profiles/", req.body.Id + "userAvatar.jpg");
+    var imageString = "";
     try {
+        imageString = fs.readFileSync(path.join(__dirname) + '/../../' + avatarpath).toString("base64");
         let readStream = fs.createReadStream(avatarpath);
         readStream.once('error', (err) => {
             return res.json({
@@ -176,10 +178,50 @@ profileRouter.post('/setAvatarForUser', function (req, res) {
         });
 
         readStream.once('end', () => {
-            return res.json({
-                success: true,
-                path: path.join("/resources/images/profiles/", req.body.Id + "userAvatar.jpg")
-            });
+            if (req.body.Id != undefined && req.body.Id != "" && req.body.Id != "Admin") {
+                db.User.update({
+                    profileImage: imageString
+                }, {
+                        where: {
+                            id: req.body.Id
+                        }
+                    }).then(function () {
+                        return res.json({
+                            success: true,
+                            path: path.join("/resources/images/profiles/", req.body.Id + "userAvatar.jpg")
+                        });
+                    }).catch(function (err) {
+                        return res.json({
+                            success: false,
+                            error: err
+                        });
+                    });
+            }
+            else if (req.body.Id != undefined && req.body.Id == "Admin") {
+                db.User.update({
+                    profileImage: imageString
+                }, {
+                        where: {
+                            username: "Administrator"
+                        }
+                    }).then(function () {
+                        return res.json({
+                            success: true,
+                            path: path.join("/resources/images/profiles/", req.body.Id + "userAvatar.jpg")
+                        });
+                    }).catch(function (err) {
+                        return res.json({
+                            success: false,
+                            error: err
+                        });
+                    });
+            }
+            else {
+                return res.json({
+                    success: true,
+                    path: path.join("/resources/images/profiles/", req.body.Id + "userAvatar.jpg")
+                });
+            }
         });
 
         readStream.pipe(fs.createWriteStream(filepath));
@@ -201,11 +243,6 @@ profileRouter.post('/getUserProfileImg', function (req, res) {
                 success: true,
                 path: path.join("/resources/images/profiles/", req.body.Id + "userAvatar.jpg")
             });
-        } else if (err.code == 'ENOENT') {
-            return res.json({
-                success: true,
-                path: '/resources/images/profiles/userAvatar.jpg'
-            });
         } else {
             return res.json({
                 success: true,
@@ -220,17 +257,22 @@ profileRouter.post('/userProfileImgconfig', function (req, res) {
     form.multiples = true;
     form.uploadDir = "./public/resources/images/profiles/";
     form.parse(req);
+    var imageString = "";
+    var userID = "";
 
     form.on('file', function (field, file) {
         if (req.cookies != undefined && req.cookies != null && req.cookies.user != undefined && req.cookies.user != null && req.cookies.user != '') {
             var userObject = JSON.parse(req.cookies.user);
+            imageString = fs.readFileSync(path.join(__dirname) + '/../../' + file.path).toString("base64");
             if (userObject != undefined && userObject != null && userObject.userdata != undefined && userObject.userdata != null && userObject.userdata != '' && userObject.username != 'Administrator') {
                 var userData = JSON.parse(userObject.userdata);
                 if (userData != undefined && userData != null && userData.Id != undefined && userData.Id != null && userData.Id != '') {
+                    userID = userData.Id;
                     fs.rename(file.path, path.join(form.uploadDir, userData.Id + 'userAvatar.jpg'));
                 }
             }
             else if (userObject != undefined && userObject != null && userObject.username == 'Administrator') {
+                userID = 'Administrator';
                 fs.rename(file.path, path.join(form.uploadDir, 'AdminuserAvatar.jpg'));
             }
         }
@@ -244,9 +286,47 @@ profileRouter.post('/userProfileImgconfig', function (req, res) {
     });
 
     form.on('end', function () {
-        return res.json({
-            success: true
-        });
+        if (userID != undefined && userID != "" && userID != "Administrator") {
+            db.User.update({
+                profileImage: imageString
+            }, {
+                    where: {
+                        id: userID
+                    }
+                }).then(function () {
+                    return res.json({
+                        success: true
+                    });
+                }).catch(function (err) {
+                    return res.json({
+                        success: false,
+                        error: err
+                    });
+                });
+        }
+        else if (userID != undefined && userID == "Administrator") {
+            db.User.update({
+                profileImage: imageString
+            }, {
+                    where: {
+                        username: userID
+                    }
+                }).then(function () {
+                    return res.json({
+                        success: true
+                    });
+                }).catch(function (err) {
+                    return res.json({
+                        success: false,
+                        error: err
+                    });
+                });
+        }
+        else {
+            return res.json({
+                success: true
+            });
+        }
     });
 });
 

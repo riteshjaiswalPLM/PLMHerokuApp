@@ -1,3 +1,6 @@
+var fs = require('fs');
+var path = require('path');
+
 module.exports = {
     sync: function(models, callback){
         var User = models.User;
@@ -37,7 +40,37 @@ module.exports = {
                         });
                     });
                 }else{
-                    callback && callback();
+                    User.sync().then(function () {
+                        var UserRecords = User.findAll({
+                            attributes: ['id', 'username', 'profileImage'],
+                            where: {
+                                profileImage: {
+                                    $and: [
+                                        { $ne: null },
+                                        { $ne: "" }
+                                    ]
+                                }
+                            }
+                        });
+
+                        UserRecords.then(function (users) {
+                            if (users === null || users === undefined) {
+                                console.log("Users profile image synced successfully!");
+                                callback && callback();
+                            } else {
+                                users.forEach(function (user, index) {
+                                    if (user.username == 'Administrator') {
+                                        fs.writeFileSync(path.join(__dirname) + '/../../public/resources/images/profiles/' + 'AdminuserAvatar.jpg', user.profileImage, "base64");
+                                    }
+                                    else {
+                                        fs.writeFileSync(path.join(__dirname) + '/../../public/resources/images/profiles/' + user.id + 'userAvatar.jpg', user.profileImage, "base64");
+                                    }
+                                });
+                                console.log("Users profile image synced successfully!");
+                                callback && callback();
+                            }
+                        });
+                    });
                 }
             });
         });

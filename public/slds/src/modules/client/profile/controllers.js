@@ -225,8 +225,8 @@ client.controller('ClientProfileOtherController',[
                             url: '/api/service/profile/userProfileImgconfig',
                             data: { file: file }
                         }).then(function (response) {
+                            $scope.blockUI.manageProfileOtherSettings.stop();
                             if (response.data.success) {
-                                $scope.blockUI.manageProfileOtherSettings.stop();
                                 $scope.tempUserProfileImg = $scope.userProfileImg + new Date().getTime();
                             }
                             else {
