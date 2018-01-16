@@ -236,9 +236,9 @@ client.controller('ClientArchivalController', [
         };
         $scope.applyOrderBy = function (field) {
             if ($scope.searchResult && $scope.searchResult.length > 0) {
-                $scope.predicate = field.SObjectField.name;
-                $scope.reverse = ($scope.predicate === field.SObjectField.name) ? !$scope.reverse : false;
-                $scope.searchResult = orderBy($scope.searchResult, field.SObjectField.name, $scope.reverse);
+                $scope.predicate = field.SObjectField.ArchivalSobjectFields[0].name;
+                $scope.reverse = ($scope.predicate === field.SObjectField.ArchivalSobjectFields[0].name) ? !$scope.reverse : false;
+                $scope.searchResult = orderBy($scope.searchResult, field.SObjectField.ArchivalSobjectFields[0].name.toLowerCase(), $scope.reverse);
 
                 $scope.stateCache.orderByField = field;
                 $appCache.put($state.current.name, $scope.stateCache);

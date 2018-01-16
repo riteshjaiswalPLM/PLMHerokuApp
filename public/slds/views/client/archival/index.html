@@ -143,11 +143,13 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr ng-if="searchResult.length === 0"  class="search-result-tr">
+                                    <td colspan="{{resultFields.length + 1}}">
+                                        <h1 class="slds-blank-slate" style="padding:5px" translate>No Record found.</h1>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div ng-if="searchResult.length === 0">
-                            <h1 colspan="{{resultFields.length}}" class="slds-blank-slate" style="padding:5px" translate>No Record found.</h1>
-                        </div>
                     </div>
                 </div>
             </div>
