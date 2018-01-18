@@ -14,19 +14,16 @@ clientLookup.controller('UploadAttachmentModalController', [
 
         $scope.save = function () {
             $scope.data.uploadAttachmentErrors = [];
-
             var uploadedFiles = 0;
             var notPersistedFileList = "";
-
             angular.forEach($scope.data.files, function (file) {
                 if (!file.isPersisted) {
-                    notPersistedFileList += file.name + ",";
+                    notPersistedFileList += file.name + " , ";
                 }
                 else {
                     uploadedFiles++;
                 }
             });
-
             if (notPersistedFileList.length > 0) {
                 $dialog.alert(notPersistedFileList + ' not uploaded. Please upload it either remove it.', 'Error', 'pficon pficon-error-circle-o');
                 AttachmentBlock.stop();
@@ -39,6 +36,21 @@ clientLookup.controller('UploadAttachmentModalController', [
             if (uploadedFiles > 0 && uploadedFiles == $scope.data.files.length) {
                 $scope.data.attachmentDetails.files = $scope.data.files;
                 $scope.data.attachmentDetails.id = $scope.data.ctrl.stateParamData.record.Id;
+                var sizeExceededFiles = "";
+                var selectTotalFiles = 0;
+                var checkFlag = false;
+                var pushOnScope = true;
+                
+                angular.forEach($scope.attachments, function (errRecord) {
+                    selectTotalFiles += errRecord.BodyLength;
+                });
+                if ($scope.recordSize === true && selectTotalFiles > 1000000) {
+                    pushOnScope = false;
+                    checkFlag = true;
+                    $dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
+                    AttachmentBlock.stop();
+                    return false;
+                }
                 $http.post("api/service/component/savepopupattachment", $scope.data.attachmentDetails)
                     .success(function (response) {
                         if (response.success) {
@@ -78,6 +90,8 @@ clientLookup.controller('UploadAttachmentModalController', [
             angular.forEach(tmp, function (message) {
                 $scope.data.customMessageForPopup.push(message);
             });
+            $scope.perFileSize = $scope.data.perFileSize
+			$scope.recordSize = $scope.data.recordSize;
             console.info('ClientDetailsLayoutController loaded!');
         };
 

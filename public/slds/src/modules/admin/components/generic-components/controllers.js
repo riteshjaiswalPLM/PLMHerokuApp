@@ -189,6 +189,14 @@ admin.controller('AdminGenericComponentsEditController',[
             if(field.isRequired)
                 field.readOnly=false;
         }; 
+        $scope.onChangePerFileSize = function(file){
+            if(file.sizePerFile)
+                file.sizePerRecord=false;
+        };
+        $scope.onChangePerRecordSize = function(record){
+            if(record.sizePerRecord)
+                record.sizePerFile=false;
+        }; 
         $scope.openRecallCriteriaModal = function(){
     		if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
     			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');

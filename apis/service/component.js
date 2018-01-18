@@ -108,7 +108,8 @@ componentRouter.post('/deleteexistingattachment', function (req, res) {
                 return res.json({
                     success: true,
                     filename: attachment.Name,
-                    message: "File Deleted successfully"
+                    message: "File Deleted successfully",
+                    BodyLength: attachment.BodyLength
                 });
             }
             else{

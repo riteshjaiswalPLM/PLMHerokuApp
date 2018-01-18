@@ -19,10 +19,24 @@ client.controller('UploadAttachmentController',
 			}
 			AttachmentBlock.start('Fetching uploaded file list.');
 			$http.post("/api/service/component/uploadedfilelist", sObjectData)
-	    		.success(function(response){
-					if(response.success){
+				.success(function (response) {
+					var blackListedFiles = "";
+					var sizeExceededFiles = "";
+					var selectTotalFiles = 0;
+					var checkFlag = false;
+					var pushOnScope = true;
+					var duplicateFiles = "";
+					if (response.success) {
 						$scope.attachments = response.data.attachments;
-					} 
+						angular.forEach($scope.attachments, function (errRecord) {
+							selectTotalFiles += errRecord.BodyLength;
+						});
+						if ($scope.recordSize === true  && selectTotalFiles > 1000000) {
+							pushOnScope = false;
+							checkFlag = true;
+							document.getElementById("btnCheck").disabled = true;
+						}
+					}
 					else {
 						$dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
 					}
@@ -61,6 +75,10 @@ client.controller('UploadAttachmentController',
 			var blackListedFiles="";
 			var sizeExceededFiles="";
 			var duplicateFiles = "";
+			var selectTotalFiles = 0 ;
+			var checkFlag = false;
+			var pushOnScope = true;
+			var uploadedFiles = 0;
 			if($scope.primaryDoc.primaryDocument)
 			{
 				$scope.allowedExtentions=[];
@@ -75,11 +93,35 @@ client.controller('UploadAttachmentController',
 					$scope.allowedExtentions.push(ext);
 				});
 			}
+			angular.forEach($scope.files, function (errRecord) {
+				selectTotalFiles += errRecord.size;
+			});
+			if (($scope.recordSize === true && selectTotalFiles > 1000000) || ($scope.recordSize === undefined && selectTotalFiles > 1000000)) {
+				pushOnScope = false;
+				checkFlag = true;
+				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
+				return false;
+			}
+			angular.forEach(files, function (errRecord) {
+				selectTotalFiles += errRecord.size;
+			});
+			if (($scope.recordSize === true && selectTotalFiles > 1000000) || ($scope.recordSize === undefined && selectTotalFiles > 1000000)) {
+				pushOnScope = false;
+				checkFlag = true;
+				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
+				return false;
+			}
 			angular.forEach(files,function(file){
         		if(($scope.allowedExtentions.indexOf(file.name.toLowerCase().substr(file.name.lastIndexOf("."),file.name.length - 1)) > -1) && (file.size/(1024*1024) <= $scope.allowedSize))
         		{
         			file.isPersisted = false;
 	        		var pushOnScope = true;
+					angular.forEach($scope.attachments, function (duplicateFile) {
+						if (duplicateFile.Name === file.name) {
+							duplicateFiles += file.name + " , ";
+							pushOnScope = false;
+						}
+					});
 	        		angular.forEach($scope.files,function(fileInScope){
 	        			if(fileInScope.name == file.name)
         				{
@@ -113,7 +155,6 @@ client.controller('UploadAttachmentController',
         			blackListedFiles += file.name + " , ";
     			}
         	});
-
 			if(blackListedFiles.length > 0)
 			{
 				blackListedFiles = blackListedFiles.substring(0, blackListedFiles.length - 3);
@@ -133,7 +174,7 @@ client.controller('UploadAttachmentController',
         	{
 				sizeExceededFiles = sizeExceededFiles.substring(0, sizeExceededFiles.length - 3);
 				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
-        	}
+        	}	
 		};
 	    
 		$scope.primaryDocumentClicked = function(primaryDoc){
@@ -142,7 +183,7 @@ client.controller('UploadAttachmentController',
 		
 	    $scope.attachFiles = function(files)
 	    {
-	    	AttachmentBlock.start("Attaching File...");
+			AttachmentBlock.start("Attaching File...");
 	        angular.forEach($scope.files, function(file) {
 	        	if(files == file)
         		{
@@ -158,7 +199,7 @@ client.controller('UploadAttachmentController',
 					$scope.uploadAttachments(file)
 						.then(function(response){
 							if(response.data.success)
-							{
+							{	
 								file.fileName = response.data.fileName;
 								file.originalFileName = file.name;
 								file.fileType = file.type;
@@ -186,9 +227,30 @@ client.controller('UploadAttachmentController',
 				AttachmentBlock.start('Deleting file...');
 				$http.post("/api/service/component/deleteexistingattachment", attachment)
 					.success(function(response){
-						if(response.success){
-							attachment.IsDeleted=true;
-							$dialog.alert(response.filename + ' deleted successfully.','','')
+						if (response.success) {
+							var selectTotalFiles = 0;
+							var checkFlag = false;
+							var pushOnScope = true;
+							attachment.IsDeleted = true;
+							var currentDeleteFile = 0;
+							currentDeleteFile = response.BodyLength;
+							$dialog.alert(response.filename + ' deleted successfully.', '', '')
+							angular.forEach($scope.attachments, function (errRecord) {
+								selectTotalFiles += errRecord.BodyLength;
+							});
+							if ($scope.recordSize === true && selectTotalFiles - currentDeleteFile > 1000000) {
+								pushOnScope = false;
+								checkFlag = true;
+								document.getElementById("btnCheck").disabled = true;
+							}
+							else if ($scope.recordSize === false && selectTotalFiles - currentDeleteFile > 1000000) {
+								pushOnScope = false;
+								checkFlag = true;
+								document.getElementById("btnCheck").disabled = true;
+							}
+							else {
+								document.getElementById("btnCheck").disabled = false;
+							}
 						} 
 						else {
 							$dialog.alert(response.message,'Error','pficon pficon-error-circle-o');
@@ -278,6 +340,8 @@ client.controller('UploadAttachmentController',
 			$scope.primaryFileName = "";
 			$scope.attachmentDetails = {};
 			$scope.allowedSize = $scope.section.Component.ComponentDetails[0].configuration.allowedSize;
+			$scope.perFileSize = $scope.section.Component.ComponentDetails[0].configuration.sizePerFile;
+			$scope.recordSize = $scope.section.Component.ComponentDetails[0].configuration.sizePerRecord;
 			$scope.customMessage = $scope.section.Component.ComponentDetails[0].configuration.customMessage;
 			$scope.allowedExt = $scope.section.Component.ComponentDetails[0].configuration.allowedExt;
 			$scope.templateURLs = $scope.section.Component.ComponentDetails[0].configuration.templateURLs ? $scope.section.Component.ComponentDetails[0].configuration.templateURLs.split(',') : $scope.section.Component.ComponentDetails[0].configuration.templateURLs;

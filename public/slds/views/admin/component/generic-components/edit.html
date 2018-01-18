@@ -556,9 +556,23 @@
             <fieldset class="slds-form--compound">
                 <div class="slds-form-element__group">
                     <div class="slds-form-element__row">
-                        <div class="slds-form-element slds-size--1-of-1" style="padding-bottom: 8px;">
+                        <div class="slds-form-element slds-size--1-of-3">
                             <label class="slds-form-element__label" for="componentFileSize">Maximum File Size</label>
-                            <input type="number" id="componentFileSize" class="slds-input" ng-model="component.ComponentDetails[0].configuration.allowedSize">
+                            <input type="number" id="componentFileSize" placeholder="Maximum file size in MB" class="slds-input" style="width: 85%;"
+                                ng-model="component.ComponentDetails[0].configuration.allowedSize"> MB
+                        </div>
+                        <div class="slds-form-element slds-size--1-of-3" ng-init="component.ComponentDetails[0].configuration.sizePerFile = component.ComponentDetails[0].configuration.sizePerFile === undefined ? false : component.ComponentDetails[0].configuration.sizePerFile"
+                            style="width: 40%;">
+                            <label class="slds-form-element__label" for="allowPerFileSize">Per File</label>
+                            <slds-switch id="allowPerFileSize" switch-change="onChangePerFileSize(component.ComponentDetails[0].configuration);" ng-model="component.ComponentDetails[0].configuration.sizePerFile"
+                                on-text="Yes" off-text="No" show-texts="false" />
+                        </div>
+                        <div class="slds-form-element slds-size--1-of-3" ng-init="component.ComponentDetails[0].configuration.sizePerRecord = component.ComponentDetails[0].configuration.sizePerRecord === undefined ? false : component.ComponentDetails[0].configuration.sizePerRecord"
+                            style="width: 40%;">
+                            <label class="slds-form-element__label" for="componentPerRecordSize">Per Record</label>
+                            <slds-switch id="componentPerRecordSize" switch-change="onChangePerRecordSize(component.ComponentDetails[0].configuration);"
+                                ng-model="component.ComponentDetails[0].configuration.sizePerRecord" on-text="Yes" off-text="No"
+                                show-texts="false" />
                         </div>
                     </div>
                 </div>
