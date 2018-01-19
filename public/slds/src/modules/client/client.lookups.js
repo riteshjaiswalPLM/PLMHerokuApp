@@ -40,11 +40,12 @@ clientLookup.controller('UploadAttachmentModalController', [
                 var selectTotalFiles = 0;
                 var checkFlag = false;
                 var pushOnScope = true;
-                
+                var MbToBytes = 0;
+				MbToBytes = ($scope.allowedSize * 1048576);
                 angular.forEach($scope.attachments, function (errRecord) {
                     selectTotalFiles += errRecord.BodyLength;
                 });
-                if ($scope.recordSize === true && selectTotalFiles > 1000000) {
+                if (($scope.recordSize === true && selectTotalFiles > MbToBytes) || ($scope.recordSize === undefined && selectTotalFiles > MbToBytes)) {
                     pushOnScope = false;
                     checkFlag = true;
                     $dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');

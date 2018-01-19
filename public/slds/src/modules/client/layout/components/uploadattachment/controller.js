@@ -26,12 +26,14 @@ client.controller('UploadAttachmentController',
 					var checkFlag = false;
 					var pushOnScope = true;
 					var duplicateFiles = "";
+					var MbToBytes = 0;
+					MbToBytes = ($scope.allowedSize * 1048576);
 					if (response.success) {
 						$scope.attachments = response.data.attachments;
 						angular.forEach($scope.attachments, function (errRecord) {
 							selectTotalFiles += errRecord.BodyLength;
 						});
-						if ($scope.recordSize === true  && selectTotalFiles > 1000000) {
+						if ($scope.recordSize === true  && selectTotalFiles > MbToBytes) {
 							pushOnScope = false;
 							checkFlag = true;
 							document.getElementById("btnCheck").disabled = true;
@@ -79,6 +81,8 @@ client.controller('UploadAttachmentController',
 			var checkFlag = false;
 			var pushOnScope = true;
 			var uploadedFiles = 0;
+			var MbToBytes = 0;
+			MbToBytes = ($scope.allowedSize * 1048576);
 			if($scope.primaryDoc.primaryDocument)
 			{
 				$scope.allowedExtentions=[];
@@ -96,7 +100,7 @@ client.controller('UploadAttachmentController',
 			angular.forEach($scope.files, function (errRecord) {
 				selectTotalFiles += errRecord.size;
 			});
-			if (($scope.recordSize === true && selectTotalFiles > 1000000) || ($scope.recordSize === undefined && selectTotalFiles > 1000000)) {
+			if (($scope.recordSize === true && selectTotalFiles > MbToBytes) || ($scope.recordSize === undefined && selectTotalFiles > MbToBytes)) {
 				pushOnScope = false;
 				checkFlag = true;
 				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
@@ -105,7 +109,13 @@ client.controller('UploadAttachmentController',
 			angular.forEach(files, function (errRecord) {
 				selectTotalFiles += errRecord.size;
 			});
-			if (($scope.recordSize === true && selectTotalFiles > 1000000) || ($scope.recordSize === undefined && selectTotalFiles > 1000000)) {
+			if (($scope.recordSize === true && selectTotalFiles > MbToBytes) || ($scope.recordSize === undefined && selectTotalFiles > MbToBytes)) {
+				pushOnScope = false;
+				checkFlag = true;
+				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
+				return false;
+			}
+			if (($scope.recordSize === false && selectTotalFiles > MbToBytes) || ($scope.recordSize === undefined && selectTotalFiles > MbToBytes)) {
 				pushOnScope = false;
 				checkFlag = true;
 				$dialog.alert('The allowed size limit ' + $scope.allowedSize + 'MB for attachment(s) ' + sizeExceededFiles + ' has been exceeded. Please select a file within size limit ' + $scope.allowedSize + 'MB.', 'Validation Alert', 'pficon-warning-triangle-o');
@@ -117,7 +127,7 @@ client.controller('UploadAttachmentController',
         			file.isPersisted = false;
 	        		var pushOnScope = true;
 					angular.forEach($scope.attachments, function (duplicateFile) {
-						if (duplicateFile.Name === file.name) {
+						if (duplicateFile.IsDeleted == false && duplicateFile.Name === file.name) {
 							duplicateFiles += file.name + " , ";
 							pushOnScope = false;
 						}
@@ -234,16 +244,13 @@ client.controller('UploadAttachmentController',
 							attachment.IsDeleted = true;
 							var currentDeleteFile = 0;
 							currentDeleteFile = response.BodyLength;
+							var MbToBytes = 0;
+							MbToBytes = ($scope.allowedSize * 1048576);
 							$dialog.alert(response.filename + ' deleted successfully.', '', '')
 							angular.forEach($scope.attachments, function (errRecord) {
 								selectTotalFiles += errRecord.BodyLength;
 							});
-							if ($scope.recordSize === true && selectTotalFiles - currentDeleteFile > 1000000) {
-								pushOnScope = false;
-								checkFlag = true;
-								document.getElementById("btnCheck").disabled = true;
-							}
-							else if ($scope.recordSize === false && selectTotalFiles - currentDeleteFile > 1000000) {
+							if ($scope.recordSize === true && selectTotalFiles - currentDeleteFile > MbToBytes) {
 								pushOnScope = false;
 								checkFlag = true;
 								document.getElementById("btnCheck").disabled = true;
