@@ -102,7 +102,7 @@
 								<tr class="slds-text-title--caps">
 									<th style="font-weight: 600;"  title=""></th>
 									<th style="font-weight: 600;" title="File">{{'File' | translate}}</th>
-									<th style="font-weight: 600;" title="Size in Bytes">{{'Size in Bytes' | translate}}</th>
+									<th style="font-weight: 600;" title="Size in Mb">{{'Size in Mb' | translate}}</th>
 									<th style="font-weight: 600;" title="Upload">{{'Upload' | translate}}</th>
 								</tr>
 							</thead>
@@ -110,7 +110,7 @@
 								<tr ng-repeat="file in files ">
 									<td style="width: 10%;" class="slds-truncate" data-label="Delete"  title=""><a href="" data-ng-click="deleteFile(file)">delete</a></td>
 									<td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="File"  title="{{file.name}}"><strong>{{ file.name }}</strong></td>
-									<td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="Size in Bytes"   title="{{ file.size }}">{{file.size}}</td>
+									<td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="Size in Mb"   title="{{ file.size/1048576 }}">{{file.size/1048576}}</td>
 									<td data-label="Upload" style="width: 30%;" >
 										<!--<a href="" ng-show="!file.isPersisted" data-ng-click="attachFiles(file)" class ="btn btn-success fileinput-button dz-clickable">Upload</a> 
 										<label data-ng-if="primaryFileName == file.name" style="margin-bottom: 0;">Primary Document</label>-->
@@ -164,7 +164,7 @@
 											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
 										</td>
 										<td style="width: 40%;max-width: 200px" class="slds-truncate" data-label="Title"  title="{{attachment.Name}}"><strong>{{ attachment.Name }}</strong></td>
-										<td style="width: 10%;" class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.BodyLength/1024 | number : 2}} KB</td>
+										<td style="width: 10%;" class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.BodyLength/1048576 | number : 2}} MB</td>
 										<td style="width: 20%;" class="slds-truncate" data-label="ContentType"   title="{{ sObj.ContentType }}">{{attachment.ContentType}}</td>
 										<td style="width: 20%;" data-label="Download" >
 											<div class="slds-truncate slds-align--absolute-center" >

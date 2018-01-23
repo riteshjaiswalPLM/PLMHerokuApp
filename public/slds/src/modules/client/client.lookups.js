@@ -25,6 +25,7 @@ clientLookup.controller('UploadAttachmentModalController', [
                 }
             });
             if (notPersistedFileList.length > 0) {
+                notPersistedFileList = notPersistedFileList.substring(0, notPersistedFileList.length - 3);
                 $dialog.alert(notPersistedFileList + ' not uploaded. Please upload it either remove it.', 'Error', 'pficon pficon-error-circle-o');
                 AttachmentBlock.stop();
                 return;

@@ -196,7 +196,7 @@ admin.controller('AdminGenericComponentsEditController',[
         $scope.onChangePerRecordSize = function(record){
             if(record.sizePerRecord)
                 record.sizePerFile=false;
-        }; 
+        };
         $scope.openRecallCriteriaModal = function(){
     		if(!$scope.component.approvalDetailSObject || !$scope.component.SObject){
     			$dialog.alert('SObject and Approval Detail SObject Are mandatory!','Error','pficon pficon-error-circle-o');
@@ -705,6 +705,13 @@ admin.controller('AdminGenericComponentsEditController',[
                 var componentToSave = angular.copy($scope.component);
                 componentToSave.sobjectname = componentToSave.SObject.name;
                 componentToSave.SObjectId = componentToSave.SObject.id;
+                componentToSave.allowedSize = componentToSave.ComponentDetails[0].configuration.allowedSize;
+                if ($scope.component.catagory === 'UploadAttachment') {
+                    if (componentToSave.allowedSize === undefined || componentToSave.allowedSize === null || componentToSave.allowedSize <= 0) {
+                        $dialog.alert('Please enter positive number as File Size.', 'Error', 'pficon pficon-error-circle-o');
+                        return false;
+                    }
+                }
                 if($scope.component.catagory === 'MultiLevelApproval'){
                 	componentToSave.approvalDetailSObjectId = componentToSave.approvalDetailSObject.id; 
                 	componentToSave.ComponentDetails[0].configuration.approvalDetailSObjectName = componentToSave.approvalDetailSObject.name;
