@@ -248,7 +248,9 @@ client.controller('UploadAttachmentController',
 							MbToBytes = ($scope.allowedSize * 1048576);
 							$dialog.alert(response.filename + ' deleted successfully.', '', '')
 							angular.forEach($scope.attachments, function (errRecord) {
-								selectTotalFiles += errRecord.BodyLength;
+								if ($scope.attachments.IsDeleted === false) {
+									selectTotalFiles += errRecord.BodyLength;
+								}
 							});
 							if ($scope.recordSize === true && selectTotalFiles - currentDeleteFile > MbToBytes) {
 								pushOnScope = false;
