@@ -42,7 +42,7 @@ clientLookup.controller('UploadAttachmentModalController', [
                 var checkFlag = false;
                 var pushOnScope = true;
                 var MbToBytes = 0;
-				MbToBytes = ($scope.allowedSize * 1048576);
+				MbToBytes = $scope.allowedSize * 1048576;
                 angular.forEach($scope.attachments, function (errRecord) {
                     selectTotalFiles += errRecord.BodyLength;
                 });
@@ -94,6 +94,7 @@ clientLookup.controller('UploadAttachmentModalController', [
             });
             $scope.perFileSize = $scope.data.perFileSize
 			$scope.recordSize = $scope.data.recordSize;
+            $scope.allowedSize = $scope.data.allowedSize;
             console.info('ClientDetailsLayoutController loaded!');
         };
 
