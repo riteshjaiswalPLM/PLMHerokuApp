@@ -83,7 +83,7 @@ if(!global.hasOwnProperty('sfdc')){
                 console.info(">>> username      : " + sfdc.username);
                 console.info(">>> password      : " + sfdc.password+sfdc.token);
                 
-                global.sfdc.jsForceConnection.login(sfdc.username,sfdc.password + sfdc.token, function (err, userInfo) {
+                global.sfdc.jsForceConnection.login(sfdc.username,sfdc.password + (sfdc.token ? sfdc.token : ''), function (err, userInfo) {
                     if(err){
                         console.error(err);
                         callback && callback({
