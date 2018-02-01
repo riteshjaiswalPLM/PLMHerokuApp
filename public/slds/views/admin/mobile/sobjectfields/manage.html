@@ -65,7 +65,7 @@
                                 <th style="white-space:normal !important;" title="Custom">Custom</th>
                                 <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions">Actions
                                     <span class="slds-checkbox">
-                                        <input type="checkbox" ng-model="data.chkLocalObjFieldSelectAll" id="chkLocalObjFieldSelectAll" ng-click="callObjFieldSelectAll(data.chkLocalObjFieldSelectAll, sfdcSObjectFields)" />
+                                        <input type="checkbox" ng-model="data.chkLocalObjFieldSelectAll" id="chkLocalObjFieldSelectAll" ng-click="callObjFieldSelectAll(data.chkLocalObjFieldSelectAll, (sfdcSObjectFields | filter: { label : sfdcSObjectsFilter}))" />
                                         <label class="slds-checkbox__label" for="chkLocalObjFieldSelectAll" style="width: 0px;height:0px;">
                                             <span class="slds-checkbox--faux" style="margin:0px"></span>
                                             <span class="slds-form-element__label"></span>
@@ -143,7 +143,7 @@
                                     <th style="white-space:normal !important;" title="Custom">Custom</th>
                                     <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions" >Actions
                                         <span class="slds-checkbox">
-                                            <input type="checkbox" ng-model="data.chkMobileObjFieldSelectAll" id="chkMobileObjFieldSelectAll" ng-click="callObjFieldSelectAll(data.chkMobileObjFieldSelectAll, sObjectFields)" />
+                                            <input type="checkbox" ng-model="data.chkMobileObjFieldSelectAll" id="chkMobileObjFieldSelectAll" ng-click="callObjFieldSelectAll(data.chkMobileObjFieldSelectAll, (sObjectFields | filter: { label : sObjectsFilter}))" />
                                             <label class="slds-checkbox__label" for="chkMobileObjFieldSelectAll" style="width: 0px;height:0px;">
                                                 <span class="slds-checkbox--faux" style="margin:0px"></span>
                                                 <span class="slds-form-element__label"></span>

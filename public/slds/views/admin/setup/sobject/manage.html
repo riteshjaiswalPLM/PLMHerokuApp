@@ -65,7 +65,7 @@
                                 <th style="white-space:normal !important;" title="Custom">Custom</th>
                                 <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions">Actions
                                     <span class="slds-checkbox">
-                                        <input type="checkbox" ng-model="data.chkSfObjSelectAll" id="chkSfObjSelectAll" ng-click="callSfObjSelectAll(data.chkSfObjSelectAll, sfdcSObjects)" />
+                                        <input type="checkbox" ng-model="data.chkSfObjSelectAll" id="chkSfObjSelectAll" ng-click="callSfObjSelectAll(data.chkSfObjSelectAll, (sfdcSObjects | filter: { label : sfdcSObjectsFilter}))" />
                                         <label class="slds-checkbox__label" for="chkSfObjSelectAll" style="width: 0px;height:0px;">
                                             <span class="slds-checkbox--faux" style="margin:0px"></span>
                                             <span class="slds-form-element__label"></span>
@@ -143,7 +143,7 @@
                                     <th style="white-space:normal !important;" title="Custom">Custom</th>
                                     <th style="white-space:no-wrap !important;text-align:center;min-width:100px;"  title="Actions" >Actions
                                         <span class="slds-checkbox">
-                                            <input type="checkbox" ng-model="data.chkLocalObjSelectAll" id="chkLocalObjSelectAll" ng-click="callSfObjSelectAll(data.chkLocalObjSelectAll, sObjects)" />
+                                            <input type="checkbox" ng-model="data.chkLocalObjSelectAll" id="chkLocalObjSelectAll" ng-click="callSfObjSelectAll(data.chkLocalObjSelectAll, (sObjects | filter: { label : sObjectsFilter}))" />
                                             <label class="slds-checkbox__label" for="chkLocalObjSelectAll" style="width: 0px;height:0px;">
                                                 <span class="slds-checkbox--faux" style="margin:0px"></span>
                                                 <span class="slds-form-element__label"></span>

@@ -254,18 +254,36 @@ admin.controller('AdminSetupSObjectsManageController',[
             return;
         }
 
+        var duplicate = false;
+        var duplicateObjs = [];
         $scope.currentSObjectIndex = 0;
         var stopSync = $scope.$watch(function () {
             return $scope.currentSObjectIndex;
         }, function (newValue, oldValue) {
             if (newValue === 0 || newValue === (oldValue + 1)) {
                 if (newValue === sObjectsToSync.length) {
+                    if (duplicateObjs.length > 0) {
+                        $dialog.alert('Duplicate entry found for ' + duplicateObjs.toString(), 'Duplicate', 'pficon pficon-warning-triangle-o');
+                    }
                     stopSync();
                     $scope.loadSObjects();
                 } else {
-                    $scope.newSObject(sObjectsToSync[newValue], function () {
-                        $scope.currentSObjectIndex++;
+                    duplicate = false;
+                    angular.forEach($scope.sObjects, function (sObj) {
+                        if (!duplicate && sObj.name === sObjectsToSync[newValue].name) {
+                            duplicate = true;
+                            duplicateObjs.push(sObj.label);
+                        }
                     });
+                    if (!duplicate) {
+                        $scope.newSObject(sObjectsToSync[newValue], function () {
+                            $scope.currentSObjectIndex++;
+                        });
+                    }
+                    else
+                    {
+                        $scope.currentSObjectIndex++;
+                    }
                 }
             }
         });
@@ -279,17 +297,17 @@ admin.controller('AdminSetupSObjectsManageController',[
         $scope.blockUI.sObjectActions.start('Synchronizing '+ sObject.label +'...');
         // $scope.blockUI.sObjectActions.start('Saving new SObject...');
         
-        var duplicate = false;
-        angular.forEach($scope.sObjects,function(sObj){
-            if(!duplicate && sObj.name === sObject.name){
-                duplicate = true;
-            }
-        });
-        if(duplicate){
-            $dialog.alert('Duplicate entry found for '+ sObject.label, 'Duplicate', 'pficon pficon-warning-triangle-o');
-            $scope.blockUI.sObjectActions.stop();
-            return;
-        }
+        // var duplicate = false;
+        // angular.forEach($scope.sObjects,function(sObj){
+        //     if(!duplicate && sObj.name === sObject.name){
+        //         duplicate = true;
+        //     }
+        // });
+        // if(duplicate){
+        //     $dialog.alert('Duplicate entry found for '+ sObject.label, 'Duplicate', 'pficon pficon-warning-triangle-o');
+        //     $scope.blockUI.sObjectActions.stop();
+        //     return;
+        // }
         
         sobjectService.newSObject(sObject)
             .success(function(response){
