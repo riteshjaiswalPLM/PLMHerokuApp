@@ -88,10 +88,8 @@ client.controller('ClientArchivalController', [
                 angular.forEach($scope.resultFields, function (field, index) {
                     selectFields.push(field);
                 });
-
                 var whereFields = {};
                 whereFields['$and'] = [];
-                var whereClauseFields = {};
                 var validateFields = {};
                 angular.forEach($scope.criteriaFields, function (field, index) {
                     if (field.value !== undefined && field.value !== null && field.value !== '') {
@@ -101,39 +99,23 @@ client.controller('ClientArchivalController', [
                             if (field.tofield) {
                                 if (fieldType === "date" || fieldType === "datetime") {
                                     var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = { $lt: dataValue };
-                                    if (whereClauseFields[field.SObjectField.name] == undefined) {
-                                        whereClauseFields[field.SObjectField.name] = {}
-                                    }
-                                    whereClauseFields[field.SObjectField.name]["$lt"] = dataValue;
+                                    dataObj[field.SObjectField.name] = { $lt: dataValue, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_tofield"] = field;
                                 }
                                 else {
-                                    dataObj[field.SObjectField.name] = { $lt: field.value };
+                                    dataObj[field.SObjectField.name] = { $lt: field.value, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_tofield"] = field;
-                                    if (whereClauseFields[field.SObjectField.name] == undefined) {
-                                        whereClauseFields[field.SObjectField.name] = {}
-                                    }
-                                    whereClauseFields[field.SObjectField.name]["$lt"] = field.value;
                                 }
                             }
                             else {
                                 if (fieldType === "date" || fieldType === "datetime") {
                                     var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = { $gt: dataValue };
+                                    dataObj[field.SObjectField.name] = { $gt: dataValue, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_fromfield"] = field;
-                                    if (whereClauseFields[field.SObjectField.name] == undefined) {
-                                        whereClauseFields[field.SObjectField.name] = {}
-                                    }
-                                    whereClauseFields[field.SObjectField.name]["$gt"] = dataValue;
                                 }
                                 else {
-                                    dataObj[field.SObjectField.name] = { $gt: field.value };
+                                    dataObj[field.SObjectField.name] = { $gt: field.value, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_fromfield"] = field;
-                                    if (whereClauseFields[field.SObjectField.name] == undefined) {
-                                        whereClauseFields[field.SObjectField.name] = {}
-                                    }
-                                    whereClauseFields[field.SObjectField.name]["$gt"] = field.value;
                                 }
 
                             }
@@ -143,19 +125,22 @@ client.controller('ClientArchivalController', [
                                 var data = {};
                                 if (field.oldType && field.oldType === "picklist") {
                                     data[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join("','") : field.value;
-                                    whereClauseFields[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join("','") : field.value;
+                                    whereFields[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join("','") : field.value;
                                 }
                                 else if (fieldType === "date" || fieldType === "datetime") {
                                     var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
                                     data[field.SObjectField.name] = dataValue;
-                                    whereClauseFields[field.SObjectField.name] = dataValue;
+                                    whereFields[field.SObjectField.name] = dataValue;
                                 }
                                 else if (fieldType && fieldType === "string") {
-                                    whereClauseFields[field.SObjectField.name] = '%' + field.value + '%';
+                                    whereFields[field.SObjectField.name] = '%' + field.value + '%';
+                                }
+                                else if (fieldType && fieldType === "double") {
+                                    whereFields[field.SObjectField.name] = field.value;
                                 }
                                 else {
-                                    data[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join(';') : field.value;
-                                    whereClauseFields[field.SObjectField.name] = (angular.isArray(field.value)) ? field.value.join(';') : field.value;
+                                    data[field.SObjectField.name] = {value: (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype: field.SObjectField.type };
+                                    whereFields[field.SObjectField.name] = {value: (angular.isArray(field.value)) ? field.value.join(';') : field.value, fieldtype: field.SObjectField.type };
                                 }
                                 whereFields['$and'].push(data);
                             }
@@ -183,7 +168,7 @@ client.controller('ClientArchivalController', [
                     sObject: $scope.reportData.SObject,
                     ArchivalSobjectId: $scope.reportData.ArchivalSobjectId,
                     selectFields: selectFields,
-                    whereFields: whereClauseFields,
+                    whereFields: whereFields,
                     limit: pageSize,
 
                     page: page
@@ -191,14 +176,6 @@ client.controller('ClientArchivalController', [
 
                 if (!$scope.blockUI.reportBlock.state().blocking) {
                     $scope.blockUI.reportBlock.start('Loading Report...');
-                    var filterparams = [], filtermap = {};
-                    angular.forEach($scope.criteriaFields, function (obj, key) {
-                        if (angular.isDefined(obj.value) && obj.value != '' && obj.type != 'picklist') {
-                            filtermap[obj.name] = '*' + obj.value + '*';
-                        } else {
-                            filtermap[obj.name] = obj.value;
-                        }
-                    });
                     clientArchivalService.search(queryObject)
                         .success(function (response) {
                             if (response.success) {

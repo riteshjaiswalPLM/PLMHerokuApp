@@ -159,6 +159,46 @@ archivalRouter.post('/search', function (req, res) {
         console.log("ArchivalSobjects:", archivalSobjects);
         var sobjectDataField = [];
         var whereCluase = {};
+        if (queryObject && queryObject.whereFields && queryObject.whereFields.hasOwnProperty('$and')) {
+            queryObject.whereFields['$and'].forEach(function (criteria, index) {
+                for (key in criteria) {
+                    if (criteria[key].type && (criteria[key].type === 'date' || criteria[key].type === 'datetime')) {
+                        var type = criteria[key].type;
+                        delete criteria[key].type;
+                        for (innerKey in criteria[key]) {
+                            if (innerKey === '$gt') {
+                                if (type === 'date') {
+                                    whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                }
+                                else {
+                                    whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "" + "T00:00:00Z  ";
+                                }
+                            }
+                            else {
+                                if (type === 'date'){
+                                    whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                }
+                                else{
+                                    whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "" + "T00:00:00Z  ";
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if (criteria[key].type) {
+                            delete criteria[key].type;
+                            for (innerKey in criteria[key]) {
+                                if (innerKey === '$gt') {
+                                    whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                } else {
+                                whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
         archivalSobjects.ArchivalSobjectFields.forEach(function (field) {
             if (("," + selectFields + ",").indexOf("," + field.SObjectField.name + ",") != -1) {
                 sobjectDataField.push(field.name.toLowerCase());
@@ -166,7 +206,6 @@ archivalRouter.post('/search', function (req, res) {
             if (req.body.whereFields[field.SObjectField.name] != undefined) {
                 whereCluase[field.name] = '' + req.body.whereFields[field.SObjectField.name];
             }
-
         });
         console.log("req.body.whereFields", req.body.whereFields)
         console.log("req.body.whereFields", whereCluase)
@@ -190,7 +229,7 @@ archivalRouter.post('/search', function (req, res) {
                 columns: [],
                 filters: whereCluase,
                 table: archivalSobjects.name
-            }
+            } 
         }, function (err, httpResponse, body) {
             if (err) return res.json({ success: false, message: err });
             return res.json({ success: true, data: { searchResult: body.records } });
