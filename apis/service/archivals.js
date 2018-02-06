@@ -318,6 +318,7 @@ archivalRouter.post('/details', function (req, res) {
             if (err) {
                 return res.json({
                     success: false,
+                    message: err.message,
                     data: {
                         dataModel: null
                     }
