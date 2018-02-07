@@ -107,7 +107,7 @@
 								</tr>
 							</thead>
 							<tbody >
-								<tr ng-repeat="file in files ">
+								<tr ng-repeat="file in files | reverse">
 									<td style="width: 10%;" class="slds-truncate" data-label="Delete"  title=""><a href="" data-ng-click="deleteFile(file)">delete</a></td>
 									<td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="File"  title="{{file.name}}"><strong>{{ file.name }}</strong></td>
 									<td style="width: 30%;max-width: 200px" class="slds-truncate" data-label="Size in Mb"   title="{{ file.size/1048576 }}">{{file.size/1048576}}</td>
