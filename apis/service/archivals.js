@@ -168,30 +168,63 @@ archivalRouter.post('/search', function (req, res) {
                         for (innerKey in criteria[key]) {
                             if (innerKey === '$gt') {
                                 if (type === 'date') {
-                                    whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                    if (key.includes("__c")) {
+                                        whereCluase[key.split("__")[1] + '@@from@@'] = criteria[key][innerKey] + "";
+                                    }
+                                    else {
+                                        whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                    }
                                 }
                                 else {
-                                    whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "" + "T00:00:00Z  ";
+                                    if (type === 'datetime') {
+                                        if (key.includes("__c")) {
+                                            whereCluase[key.split("__")[1] + '@@from@@'] = criteria[key][innerKey] + "";
+                                        }
+                                        else {
+                                            whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                        }
+                                    }
                                 }
                             }
                             else {
-                                if (type === 'date'){
-                                    whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                if (type === 'date') {
+                                    if (key.includes("__c")) {
+                                        whereCluase[key.split("__")[1] + '@@to@@'] = criteria[key][innerKey] + "";
+                                    }
+                                    else {
+                                        whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                    }
                                 }
-                                else{
-                                    whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "" + "T00:00:00Z  ";
+                                else {
+                                    if (type === 'datetime') {
+                                        if (key.includes("__c")) {
+                                            whereCluase[key.split("__")[1] + '@@to@@'] = criteria[key][innerKey] + "";
+                                        }
+                                        else {
+                                            whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "" ;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+                    
                     else {
                         if (criteria[key].type) {
                             delete criteria[key].type;
                             for (innerKey in criteria[key]) {
                                 if (innerKey === '$gt') {
-                                    whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                    if (innerKey.includes("__c")) {
+                                        whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                    }
+                                    else
+                                        whereCluase[key.split("__")[1] + '@@from@@'] = criteria[key][innerKey] + "";
                                 } else {
-                                whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                    if (innerKey.includes("__c")) {
+                                        whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                    }
+                                    else
+                                        whereCluase[key.split("__")[1] + '@@to@@'] = criteria[key][innerKey] + "";
                                 }
                             }
                         }
@@ -220,6 +253,7 @@ archivalRouter.post('/search', function (req, res) {
             //"impl": global.config.archivalConfig.GenericSearch.AWSS3Key
             "impl": global.config.archivalConfig.ImplementationName
         }
+        console.log("whereCluase123----",whereCluase);
         request.post({
             //url: "http://54.88.100.146:8080/AkritivArchiveApp/archive/process/search",
             //url: "http://54.88.100.146/AkritivArchiveApp/archive/process",
