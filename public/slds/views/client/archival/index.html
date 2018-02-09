@@ -38,7 +38,7 @@
                         <button class="" ng-click="search(1,pageSize)" style="width:0px;float:left;padding: 0px;border-width: 0px;"></button>
                         <div class="slds-form--horizontal slds-grid slds-wrap slds-p-around--small slds-border--bottom">
                             <div class="slds-form-element slds-size--1-of-2 slds-p-horizontal--small" style="margin-top: 0.5rem !important;" ng-repeat="field in criteriaFields"
-                                ng-init="field.SObjectField.type= (field.oldType ?field.oldType : field.SObjectField.type) ;field.oldType=field.SObjectField.type;field.SObjectField.type= (field.SObjectField.type === 'picklist' ? 'multipicklist' : field.SObjectField.type)">
+                                ng-init="field.SObjectField.type= (field.oldType ?field.oldType : field.SObjectField.type) ;field.oldType=field.SObjectField.type;field.SObjectField.type= (field.SObjectField.type === 'multipicklist' ? 'picklist' : field.SObjectField.type)">
                                 <label class="slds-form-element__label slds-p-right--small" for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none;"
                                     translate>
                                     {{ field.label }}
