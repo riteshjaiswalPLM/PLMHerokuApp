@@ -159,85 +159,54 @@ archivalRouter.post('/search', function (req, res) {
         console.log("ArchivalSobjects:", archivalSobjects);
         var sobjectDataField = [];
         var whereCluase = {};
-        if (queryObject && queryObject.whereFields && queryObject.whereFields.hasOwnProperty('$and')) {
-            queryObject.whereFields['$and'].forEach(function (criteria, index) {
-                for (key in criteria) {
-                    if (criteria[key].type && (criteria[key].type === 'date' || criteria[key].type === 'datetime')) {
-                        var type = criteria[key].type;
-                        delete criteria[key].type;
-                        for (innerKey in criteria[key]) {
-                            if (innerKey === '$gt') {
-                                if (type === 'date') {
-                                    if (key.includes("__c")) {
-                                        whereCluase[key.split("__")[1] + '@@from@@'] = criteria[key][innerKey] + "";
-                                    }
-                                    else {
-                                        whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
-                                    }
-                                }
-                                else {
-                                    if (type === 'datetime') {
-                                        if (key.includes("__c")) {
-                                            whereCluase[key.split("__")[1] + '@@from@@'] = criteria[key][innerKey] + "";
-                                        }
-                                        else {
-                                            whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                if (type === 'date') {
-                                    if (key.includes("__c")) {
-                                        whereCluase[key.split("__")[1] + '@@to@@'] = criteria[key][innerKey] + "";
-                                    }
-                                    else {
-                                        whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
-                                    }
-                                }
-                                else {
-                                    if (type === 'datetime') {
-                                        if (key.includes("__c")) {
-                                            whereCluase[key.split("__")[1] + '@@to@@'] = criteria[key][innerKey] + "";
-                                        }
-                                        else {
-                                            whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "" ;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    else {
-                        if (criteria[key].type) {
-                            delete criteria[key].type;
-                            for (innerKey in criteria[key]) {
-                                if (innerKey === '$gt') {
-                                    if (innerKey.includes("__c")) {
-                                        whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
-                                    }
-                                    else
-                                        whereCluase[key.split("__")[1] + '@@from@@'] = criteria[key][innerKey] + "";
-                                } else {
-                                    if (innerKey.includes("__c")) {
-                                        whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
-                                    }
-                                    else
-                                        whereCluase[key.split("__")[1] + '@@to@@'] = criteria[key][innerKey] + "";
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
         archivalSobjects.ArchivalSobjectFields.forEach(function (field) {
             if (("," + selectFields + ",").indexOf("," + field.SObjectField.name + ",") != -1) {
                 sobjectDataField.push(field.name.toLowerCase());
             }
             if (req.body.whereFields[field.SObjectField.name] != undefined) {
                 whereCluase[field.name] = '' + req.body.whereFields[field.SObjectField.name];
+            }
+            else {
+                if (queryObject && queryObject.whereFields && queryObject.whereFields.hasOwnProperty('$and')) {
+                    queryObject.whereFields['$and'].forEach(function (criteria, index) {
+                        for (key in criteria) {
+                            if (criteria[key].type && (criteria[key].type === 'date' || criteria[key].type === 'datetime')) {
+                                var type = criteria[key].type;
+                                delete criteria[key].type;
+                                for (innerKey in criteria[key]) {
+                                    if (innerKey === '$gt') {
+                                        if (type === 'date') {
+                                            whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                        }
+                                        else {
+                                            whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                        }
+                                    }
+                                    else {
+                                        if (type === 'date') {
+                                            whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                        }
+                                        else {
+                                            whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                if (criteria[key].type) {
+                                    delete criteria[key].type;
+                                    for (innerKey in criteria[key]) {
+                                        if (innerKey === '$gt') {
+                                            whereCluase[key + '@@from@@'] = criteria[key][innerKey] + "";
+                                        } else {
+                                            whereCluase[key + '@@to@@'] = criteria[key][innerKey] + "";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }
         });
         console.log("req.body.whereFields", req.body.whereFields)
@@ -253,7 +222,6 @@ archivalRouter.post('/search', function (req, res) {
             //"impl": global.config.archivalConfig.GenericSearch.AWSS3Key
             "impl": global.config.archivalConfig.ImplementationName
         }
-        console.log("whereCluase123----",whereCluase);
         request.post({
             //url: "http://54.88.100.146:8080/AkritivArchiveApp/archive/process/search",
             //url: "http://54.88.100.146/AkritivArchiveApp/archive/process",

@@ -99,22 +99,22 @@ client.controller('ClientArchivalController', [
                             if (field.tofield) {
                                 if (fieldType === "date" || fieldType === "datetime") {
                                     var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = { $lt: dataValue, type: field.SObjectField.type };
+                                    dataObj[field.SObjectField.ArchivalSobjectFields[0].name] = { $lt: dataValue, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_tofield"] = field;
                                 }
                                 else {
-                                    dataObj[field.SObjectField.name] = { $lt: field.value, type: field.SObjectField.type };
+                                    dataObj[field.SObjectField.ArchivalSobjectFields[0].name] = { $lt: field.value, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_tofield"] = field;
                                 }
                             }
                             else {
                                 if (fieldType === "date" || fieldType === "datetime") {
                                     var dataValue = field.value.getFullYear() + "-" + ("0" + (field.value.getMonth() + 1)).slice(-2) + "-" + ("0" + field.value.getDate()).slice(-2);
-                                    dataObj[field.SObjectField.name] = { $gt: dataValue, type: field.SObjectField.type };
+                                    dataObj[field.SObjectField.ArchivalSobjectFields[0].name] = { $gt: dataValue, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_fromfield"] = field;
                                 }
                                 else {
-                                    dataObj[field.SObjectField.name] = { $gt: field.value, type: field.SObjectField.type };
+                                    dataObj[field.SObjectField.ArchivalSobjectFields[0].name] = { $gt: field.value, type: field.SObjectField.type };
                                     validateFields[field.SObjectField.name + "_fromfield"] = field;
                                 }
 
