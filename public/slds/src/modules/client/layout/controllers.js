@@ -887,14 +887,10 @@ client.controller('ClientSectionLayoutController',[
                     angular.forEach(componentSaveCall,function(saveCall){
                         $scope[saveCall]();
                     });
-                    var uploadedFiles = 0;
                     var notPersistedFileList = "";
                     angular.forEach($scope.files, function (file) {
                         if (!file.isPersisted) {
                             notPersistedFileList += file.name + " , ";
-                        }
-                        else {
-                            uploadedFiles++;
                         }
                     });
                     if (notPersistedFileList.length > 0) {
