@@ -887,6 +887,22 @@ client.controller('ClientSectionLayoutController',[
                     angular.forEach(componentSaveCall,function(saveCall){
                         $scope[saveCall]();
                     });
+                    var uploadedFiles = 0;
+                    var notPersistedFileList = "";
+                    angular.forEach($scope.files, function (file) {
+                        if (!file.isPersisted) {
+                            notPersistedFileList += file.name + " , ";
+                        }
+                        else {
+                            uploadedFiles++;
+                        }
+                    });
+                    if (notPersistedFileList.length > 0) {
+                        notPersistedFileList = notPersistedFileList.substring(0, notPersistedFileList.length - 3);
+                        $dialog.alert(notPersistedFileList + ' not uploaded. Please upload it either remove it.', 'Error', 'pficon pficon-error-circle-o');
+                        $scope.blockUI.layoutBlock.stop();
+                        return;
+                    }
                     clientSObjectService.save(queryObject)
                         .success(function(response){
                             $scope.blockUI.layoutBlock.stop();
