@@ -1,12 +1,12 @@
 angular.module('angular-lightning.datepicker', [])
 
-.constant('DateConfig', {
-	numWeeksShown: 5,
-	dateFormat: 'MM/DD/YYYY',
-	dateModel: 'YYYY-MM-DD',
-	dateTimeFormat: 'MM/DD/YYYY hh:mm A',
-	datetimeModel: 'YYYY-MM-DD HH:mm:ss'
-})
+	.constant('DateConfig', {
+		numWeeksShown: 5,
+		dateFormat: 'DD/MM/YYYY',
+		dateModel: 'YYYY-MM-DD',
+		dateTimeFormat: 'DD/MM/YYYY hh:mm A',
+		datetimeModel: 'YYYY-MM-DD HH:mm:ss'
+	})
 
 .service('DateService', ['DateConfig', function(DateConfig) {
 	'use strict';
@@ -119,8 +119,7 @@ angular.module('angular-lightning.datepicker', [])
 
 		ngModelCtrl.$parsers.push(function(value) {
 			if (value) {
-				value = moment(value);
-				
+				value = moment(value,dateFormat);
 				$scope.hour = value.hour();
 				if (value.format('A') === 'PM') {
 					$scope.hour -= 12;
