@@ -131,25 +131,31 @@
                                                         </div>
                                                     </td>
                                                     <td style="max-width:200px;width:{{100/component.Component.ComponentDetail.configuration.fields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}"
-                                                        ng-if="field.hidden === false" ng-repeat="field in component.Component.ComponentDetail.configuration.fields"
-                                                        title="{{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
-                                                        === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
-                                                        | number: field.SObjectField.scale) : (field.SObjectField.type ===
-                                                        'date') ? (result[field.SObjectField.name] | date: 'dd/MM/yyyy')
-                                                        : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
-                                                        | date: 'dd/MM/yyyy h:mm:ss a') : result[field.SObjectField.name] }}">
-                                                        <div align="center" ng-if="field.SObjectField.type === 'reference' && field.SObjectField.relationshipName.indexOf('Tracker_Id__r')!=-1 && result[field.SObjectField.relationshipName][field.reference]!=null && field.reference.indexOf('Primary_Document_ID__c')!==-1">
-                                                            <a title=""  href="#" ng-click="openAttachment(result[field.SObjectField.relationshipName][field.reference])"><img src="/resources/images/icon-pdf.png" alt="View File" style="height: 19px;"/></a>
-                                                        </div>
-                                                        <label ng-if="!(field.SObjectField.type === 'reference' && field.SObjectField.relationshipName.indexOf('Tracker_Id__r')!=-1 && result[field.SObjectField.relationshipName][field.reference]!=null && field.reference.indexOf('Primary_Document_ID__c')!==-1)">{{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
-                                                        === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
-                                                        | number: field.SObjectField.scale) : (field.SObjectField.type ===
-                                                        'date') ? (result[field.SObjectField.name] | date: 'dd/MM/yyyy')
-                                                        : (field.SObjectField.type === 'datetime') ? (result[field.SObjectField.name]
-                                                        | date: 'dd/MM/yyyy h:mm:ss a') : result[field.SObjectField.name] }}
+                                                         ng-if="field.hidden === false" ng-repeat="field in component.Component.ComponentDetail.configuration.fields"
+                                                         title="{{ (field.SObjectField.type === 'reference') 
+                                                         ? result[field.SObjectField.relationshipName][field.reference] 
+                                                         : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                                         ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                                         : (field.SObjectField.type === 'date') 
+                                                         ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                                         : (field.SObjectField.type === 'datetime')
+                                                         ? (result[field.SObjectField.name] | date: 'medium')
+                                                         : result[field.SObjectField.name] }}" class="{{ 'td-'+field.SObjectField.type }}">
+                                                         <div align="center" ng-if="field.SObjectField.type === 'reference' && field.SObjectField.relationshipName.indexOf('Tracker_Id__r')!=-1 && result[field.SObjectField.relationshipName][field.reference]!=null && field.reference.indexOf('Primary_Document_ID__c')!==-1">
+                                                         <a title="" href="#" ng-click="openAttachment(result[field.SObjectField.relationshipName][field.reference])"><img src="/resources/images/icon-pdf.png" alt="View File" style="height: 19px;"/></a>
+                                                         </div>
+                                                        <label ng-if="!(field.SObjectField.type === 'reference' && field.SObjectField.relationshipName.indexOf('Tracker_Id__r')!=-1 && result[field.SObjectField.relationshipName][field.reference]!=null && field.reference.indexOf('Primary_Document_ID__c')!==-1)">
+                                                        {{ (field.SObjectField.type === 'reference') 
+                                                        ? result[field.SObjectField.relationshipName][field.reference] 
+                                                        : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
+                                                        ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
+                                                        : (field.SObjectField.type === 'date') 
+                                                        ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                                        : (field.SObjectField.type === 'datetime')
+                                                        ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
+                                                        : result[field.SObjectField.name] }}
                                                         </label>
-                                                    </td>
-                                                    
+                                                        </td>
                                                 </tr>
                                             </tbody>
                                         </table>
