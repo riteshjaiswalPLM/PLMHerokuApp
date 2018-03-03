@@ -138,7 +138,21 @@ reportRouter.post('/search', function (req, res) {
     });
     Report.then(function (report) {
         if (report !== undefined && report !== null && report.whereClause !== undefined && report.whereClause !== null && report.whereClause !== "") {
-            whereString = report.whereClause + " AND ";
+            if (report.whereClause.match(/{LOGGED_IN_USER\..+}/g)) {
+                whereString = report.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? report.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : report.whereClause;
+                while (whereString.match(/{LOGGED_IN_USER\..+}/g)) {
+                    try {
+                        whereString = whereString.replace(whereString.substring(whereString.indexOf('{LOGGED_IN_USER.'), whereString.indexOf('}') + 1), JSON.parse(JSON.parse(req.cookies.user).userdata)[whereString.substring(whereString.indexOf('{LOGGED_IN_USER.') + 16, whereString.indexOf('}'))]);
+                    }
+                    catch (err) {
+                        console.log('err', err)
+                    }
+                }
+            }
+            else {
+                whereString = report.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? report.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : report.whereClause;
+            }
+            whereString = whereString + " AND ";
         }
 
         if (queryObject && queryObject.whereFields && queryObject.whereFields.hasOwnProperty('$and')) {
@@ -271,7 +285,21 @@ reportRouter.post('/export', function (req, res) {
     });
     Report.then(function (report) {
         if (report !== undefined && report !== null && report.whereClause !== undefined && report.whereClause !== null && report.whereClause !== "") {
-            whereString = report.whereClause + " AND ";
+            if (report.whereClause.match(/{LOGGED_IN_USER\..+}/g)) {
+                whereString = report.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? report.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : report.whereClause;
+                while (whereString.match(/{LOGGED_IN_USER\..+}/g)) {
+                    try {
+                        whereString = whereString.replace(whereString.substring(whereString.indexOf('{LOGGED_IN_USER.'), whereString.indexOf('}') + 1), JSON.parse(JSON.parse(req.cookies.user).userdata)[whereString.substring(whereString.indexOf('{LOGGED_IN_USER.') + 16, whereString.indexOf('}'))]);
+                    }
+                    catch (err) {
+                        console.log('err', err)
+                    }
+                }
+            }
+            else {
+                whereString = report.whereClause.indexOf('{LOGGED_IN_USER}') > -1 ? report.whereClause.replace(/{LOGGED_IN_USER}/g, JSON.parse(JSON.parse(req.cookies.user).userdata).Name) : report.whereClause;
+            }
+            whereString = whereString + " AND ";
         }
 
         if (queryObject && queryObject.whereFields && queryObject.whereFields.hasOwnProperty('$and')) {
