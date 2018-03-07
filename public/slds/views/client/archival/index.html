@@ -96,15 +96,15 @@
                             <thead>
                                 <tr class="slds-text-title--caps">
                                     <th scope="col" style="min-width:150px;" class="th-actions">Action</th>
-                                    <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
-                                        ng-click="applyOrderBy(field)" ng-repeat="field in resultFields" ng-hide="field.hidden">
+                                    <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.ArchivalSobjectFields[0].name}"
+                                        ng-click="applyOrderBy(field)" ng-repeat="field in resultFields">
                                         <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-if = "searchResult" ng-repeat="result in searchResult | startFrom: (currentPage*pageSize) | limitTo:pageSize"  class="search-result-tr">
-                                    <td class="td-actions">
+                                 <tr ng-if = "searchResult" ng-repeat="result in searchResult | startFrom: (currentPage*pageSize) | limitTo:pageSize"  class="search-result-tr">
+                                     <td class="td-actions">
                                         <div class="slds-truncate slds-align--absolute-center">
                                             <div class="slds-button-group" role="group">
                                                 <button title="{{ action.label | translate}}" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
@@ -118,24 +118,22 @@
                                         </div>
                                     </td>
                                     <td style="max-width:200px;width:{{100/resultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}"
-                                        title="{{ (field.SObjectField.type === 'reference') 
-                                    ? result[field.SObjectField.relationshipName][field.reference] 
-                                    : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
-                                        ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
-                                            : (field.SObjectField.type === 'datetime')
-                                                ? (result[field.SObjectField.name] | date: 'medium')
-                                                : result[field.SObjectField.name] }}" class="{{ 'td-'+field.SObjectField.type }}"
-                                        ng-repeat="field in resultFields " ng-hide="field.hidden">
-                                        <div class="slds-truncate">
-                                            {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
-                                            === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.ArchivalSobjectFields[0].name]
-                                            | number: field.SObjectField.scale) 
-                                            : (field.SObjectField.type === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.ArchivalSobjectFields[0].name],$root.user().TimeZone.code,
+                                        title="{{ (field.SObjectField.type === 'date') ? 
+                                            ($root.formateDateAndDateTime(result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)], $root.user().TimeZone.code,
+                                            $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                            :(field.SObjectField.type === 'datetime') ? 
+                                            ($root.formateDateAndDateTime(result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)],$root.user().TimeZone.code,
                                             $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
-                                            : result[field.SObjectField.ArchivalSobjectFields[0].name] }}
-                                        </div>
-                                        <div>
-                                            {{result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)]}}
+                                            :result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)]}}" class="{{ 'td-'+field.SObjectField.type }}"
+                                        ng-repeat="field in resultFields">
+                                         <div class="slds-truncate">
+                                            {{ (field.SObjectField.type === 'date') ? 
+                                            ($root.formateDateAndDateTime(result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)], $root.user().TimeZone.code,
+                                            $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
+                                            :(field.SObjectField.type === 'datetime') ? 
+                                            ($root.formateDateAndDateTime(result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)],$root.user().TimeZone.code,
+                                            $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
+                                            :result[(field.SObjectField.ArchivalSobjectFields[0].name | lowercase)]}}
                                         </div>
                                     </td>
                                 </tr>
