@@ -351,10 +351,14 @@ client.controller('ClientArchivalDetailLayoutController', [
                                     if (action.SObject.name === fields.ObjectName && ("," + invoiceConfig.RelatedItemsforDisplay + ",").indexOf("," + fields.Name + ",") != -1) {
                                         relatedListItem.push(action);
                                     }
-                                    else if (action.SObject.name.toLowerCase().endsWith("__history") && fields.ArchiveFieldHistory === true
-                                        && ((fields.ObjectName.toLowerCase().lastIndexOf("__c") != -1 && action.SObject.name.substring(0, action.SObject.name.toLowerCase().lastIndexOf('__history')) == fields.ObjectName.substring(0, fields.ObjectName.toLowerCase().lastIndexOf("__c")))
-                                            || (fields.ObjectName.toLowerCase.lastIndexOf("__c") == -1 && action.SObject.name.substring(0, action.SObject.name.toLowerCase().lastIndexOf('__history')) == fields.ObjectName))) {
-                                        relatedListItem.push(action);
+                                    var str = action.SObject.name.toLowerCase();
+                                    if (str.length >= 9) {
+                                        var subStr = str.substring(str.length - 9, str.length);
+                                        if (subStr.length >= 9 && subStr == "__history" && fields.ArchiveFieldHistory === true
+                                            && ((fields.ObjectName.toLowerCase().lastIndexOf("__c") != -1 && action.SObject.name.substring(0, action.SObject.name.toLowerCase().lastIndexOf('__history')) == fields.ObjectName.substring(0, fields.ObjectName.toLowerCase().lastIndexOf("__c")))
+                                                || (fields.ObjectName.toLowerCase.lastIndexOf("__c") == -1 && action.SObject.name.substring(0, action.SObject.name.toLowerCase().lastIndexOf('__history')) == fields.ObjectName))) {
+                                            relatedListItem.push(action);
+                                        }
                                     }
                                 });
                             });

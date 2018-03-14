@@ -696,9 +696,15 @@ client.controller('ClientSectionLayoutController',[
                     $state.go(stateName,parentData);
                 }
                 else{
-                    if (stateName.endsWith('create')) {
-                        $state.go(stateName, {}, { reload: true });
-                        // $state.go('client.dashboard');
+                    if (stateName.length >= 6) {
+                        var subStr = stateName.substring(stateName.length - 6, stateName.length);
+                        if (subStr == 'create') {
+                            $state.go(stateName, {}, { reload: true });
+                            // $state.go('client.dashboard');
+                        }
+                        else {
+                            $state.go(stateName);
+                        }
                     }
                     else {
                         $state.go(stateName);
@@ -723,9 +729,15 @@ client.controller('ClientSectionLayoutController',[
                     $state.go(stateName,parentData);
                 }
                 else{
-                    if (stateName.endsWith('create')) {
-                        $state.go(stateName, {}, { reload: true });
-                        // $state.go('client.dashboard');
+                    if (stateName.length >= 6) {
+                        var subStr = stateName.substring(stateName.length - 6, stateName.length);
+                        if (subStr == 'create') {
+                            $state.go(stateName, {}, { reload: true });
+                            // $state.go('client.dashboard');
+                        }
+                        else {
+                            $state.go(stateName);
+                        }
                     }
                     else {
                         $state.go(stateName);
