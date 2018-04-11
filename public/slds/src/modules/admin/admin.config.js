@@ -354,6 +354,12 @@ admin.config(function($stateProvider) {
             title: "Dashboard Components"
         })
 
+        // Bulk Creation Config
+        .state("admin.bulkcreationconfig", {
+            templateUrl: "slds/views/admin/bulkcreationconfig/index.html",
+            controller: "AdminBulkCreationConfigController",
+            title: "Bulk Creation Config"
+        })
         .state("admin.clientdashboard",{
             templateUrl: "slds/views/admin/clientdashboard/dashboard-design.html",
             controller: 'AdminClientDashboardDesignController'
