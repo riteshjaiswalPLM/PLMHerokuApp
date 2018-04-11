@@ -53,8 +53,8 @@ csvUploadconfigRouter.post('/getfieldmapping', function (req, res) {
         } else {
             var referenceSObjectNames = [];
             CSVUploadConfig.forEach(function (field, ind) {
-                if (field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1) {
-                    referenceSObjectNames.push(field.referenceTo[0]);
+                if (field.datatype === 'reference' && referenceSObjectNames.indexOf(field.referenceSObjectName) === -1) {
+                    referenceSObjectNames.push(field.referenceSObjectName);
                 }
             });
 
@@ -124,7 +124,7 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
                 datatype: fieldsmapping.type,
                 required: !fieldsmapping.nillable,
                 isUniqueField: fieldsmapping.isUniqueField,
-                referenceTableName: fieldsmapping.relationshipName,
+                referenceTableName: fieldsmapping.referenceTo[0],
                 referenceFieldName: fieldsmapping.reference,
                 [SObjectType]: fieldsmapping[SObjectType],
                 defaultValue: fieldsmapping.defaultValue

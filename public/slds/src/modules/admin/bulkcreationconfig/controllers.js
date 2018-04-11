@@ -34,13 +34,11 @@ admin.controller('AdminBulkCreationConfigController', [
                         if (response.success) {
                             $scope.section.columns[0] = response.data.mappedFields;
                             angular.forEach($scope.section.columns[0], function (field) {
-                                if($scope.SObject == undefined && field.SObjectId != undefined)
-                                {
+                                if ($scope.SObject == undefined && field.SObjectId != undefined) {
                                     $scope.SObject = field.SObject;
                                     field.isOf = "mainSObject";
                                 }
-                                else if($scope.detailSObject == undefined && field.detailSObjectId != undefined)
-                                {
+                                else if ($scope.detailSObject == undefined && field.detailSObjectId != undefined) {
                                     $scope.detailSObject = field.detailSObject;
                                     field.isOf = "detailSObject";
                                 }
@@ -53,25 +51,50 @@ admin.controller('AdminBulkCreationConfigController', [
                                 field.subtype = 'SObject-Mapping-Field';
                                 field.columns = 1;
 
-                                angular.forEach($scope.usersObjectFields, function (_field) {
-                                    if (field.name == _field.name) {
-                                        field.id = _field.id;
-                                        field.nillable = _field.nillable;
-                                        field.deleted = false;
-                                    }
-                                });
-
-                                if (field.type == "reference") {
-                                    angular.forEach($scope.usersObjectFields, function (_field) {
+                                if (field.isOf == "mainSObject") {
+                                    angular.forEach($scope.SObject.SObjectFields, function (_field) {
                                         if (field.name == _field.name) {
-                                            field.SObjectField = angular.copy(_field);
+                                            field.id = _field.id;
+                                            field.nillable = _field.nillable;
+                                            field.deleted = false;
                                         }
                                     });
-                                    field.relationshipName = field.referenceTableName;
-                                    delete field.referenceTableName;
-                                    field.reference = field.referenceFieldName;
-                                    delete field.referenceFieldName;
-                                    field.refSObjects = {};
+
+                                    if (field.type == "reference") {
+                                        angular.forEach($scope.SObject.SObjectFields, function (_field) {
+                                            if (field.name == _field.name) {
+                                                field.SObjectField = angular.copy(_field);
+                                            }
+                                        });
+                                        field.relationshipName = field.referenceTableName;
+                                        delete field.referenceTableName;
+                                        field.reference = field.referenceFieldName;
+                                        delete field.referenceFieldName;
+                                        field.refSObjects = {};
+                                    }
+                                }
+
+                                if (field.isOf == "detailSObject") {
+                                    angular.forEach($scope.detailSObject.SObjectFields, function (_field) {
+                                        if (field.name == _field.name) {
+                                            field.id = _field.id;
+                                            field.nillable = _field.nillable;
+                                            field.deleted = false;
+                                        }
+                                    });
+
+                                    if (field.type == "reference") {
+                                        angular.forEach($scope.detailSObject.SObjectFields, function (_field) {
+                                            if (field.name == _field.name) {
+                                                field.SObjectField = angular.copy(_field);
+                                            }
+                                        });
+                                        field.relationshipName = field.referenceTableName;
+                                        delete field.referenceTableName;
+                                        field.reference = field.referenceFieldName;
+                                        delete field.referenceFieldName;
+                                        field.refSObjects = {};
+                                    }
                                 }
 
                                 field.csvfieldddformat = '-1';
@@ -161,12 +184,10 @@ admin.controller('AdminBulkCreationConfigController', [
             item.csvfieldtimeformat = '-1';
             item.csvFieldFormat = item.csvfieldddformat + item.csvfielddatesep + item.csvfieldmmformat + item.csvfielddatesep + item.csvfieldyyformat + item.csvfieldtimeformat;
 
-            if($scope.SObject && $scope.SObject.id == item.SObjectId)
-            {
+            if ($scope.SObject && $scope.SObject.id == item.SObjectId) {
                 item.isOf = "mainSObject";
             }
-            else if($scope.detailSObject && $scope.detailSObject.id == item.SObjectId)
-            {
+            else if ($scope.detailSObject && $scope.detailSObject.id == item.SObjectId) {
                 item.isOf = "detailSObject";
                 item.detailSObjectId = item.SObjectId;
             }
