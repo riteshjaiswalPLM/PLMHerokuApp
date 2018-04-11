@@ -25,4 +25,5 @@ adminRouter.use('/profile',require('./profile'));
 adminRouter.use('/archival',require('./archival'));
 adminRouter.use('/mobilesso',require('./mobilesso'));
 adminRouter.use('/templateconfig',require('./templateconfig'));
+adminRouter.use('/bulkuploadconfig',require('./bulkuploadconfig'));
 module.exports = adminRouter;
