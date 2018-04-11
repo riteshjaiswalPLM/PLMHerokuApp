@@ -173,6 +173,44 @@
         </div>
     </div>
 
+    <!-- SONAM <h3 class="slds-section__title" ng-if="layout.type !== 'Details'">Error Handling</h3>
+    <div class="layout-section-container" ng-if="layout.type !== 'Details'">
+        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                    <tr>
+                        <td>
+                            <div class="slds-form-element__group">
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--9-of-12">
+                                        <label class="slds-form-element__label" for="ErrorHandlingSObject">SObject</label>
+                                        <select id="ErrorHandlingSObject" class="slds-select" ng-model="layout.ErrorHandlingSObject" ng-change="loadErrorHandlingSObjectFields(false);">
+                                            <option value="">-- None --</option>
+                                            <option ng-repeat="sobject in layoutRelatedLists | orderBy:'SObject.label'" value="{{sobject.SObject.name}}">{{sobject.SObject.label}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-form-element__group">
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--9-of-12">
+                                        <label class="slds-form-element__label" for="ErrorHandlingSObjectField">Field</label>
+                                        <select id="ErrorHandlingSObjectField" class="slds-select" ng-model="layout.ErrorHandlingSObjectField">
+                                            <option value="">-- None --</option>
+                                            <option ng-repeat="field in ErrorHandlingSObjectFields | orderBy:'label'" value="{{field.name}}">{{field.label}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div> SONAM -->
+
     <div class="slds-box slds-theme--default slds-theme--alert-texture slds-m-vertical--medium">
         <p><h3 class="slds-section__title slds-text-title--caps slds-align--absolute-center">Action Buttons</h3></p>
     </div>

@@ -67,6 +67,18 @@ module.exports = function(sequelize, DataTypes){
             defaultValue: function () {
                 return false;
             }
+        /* SONAM },
+        ErrorHandlingSObject: {
+            type: DataTypes.STRING,
+            defaultValue: function () {
+                return undefined;
+            }
+        },
+        ErrorHandlingSObjectField: {
+            type: DataTypes.STRING,
+            defaultValue: function () {
+                return undefined;
+            } SONAM */
         }
     },{
         classMethods: {

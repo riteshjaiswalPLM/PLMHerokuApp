@@ -599,6 +599,18 @@ layoutRouter.post('/saveeditlayout', function(req, res){
                 }
             });
     }
+    /* SONAM var updateFields = {};
+    if (editLayout.primaryAttachmentRequired !== undefined && editLayout.primaryAttachmentRequired !== null) {
+        updateFields.primaryAttachmentRequired = editLayout.primaryAttachmentRequired;
+    }
+    updateFields.ErrorHandlingSObject = editLayout.ErrorHandlingSObject ? editLayout.ErrorHandlingSObject : null;
+    updateFields.ErrorHandlingSObjectField = editLayout.ErrorHandlingSObjectField ? editLayout.ErrorHandlingSObjectField : null;
+
+    db.SObjectLayout.update(updateFields, {
+        where: {
+            id: editLayout.id
+        }
+    }); SONAM */
 
     var createOrUpdateSection = function(section,callback){
         if(section.id === undefined && section.deleted === false){
