@@ -19,45 +19,9 @@ admin.controller('AdminBulkCreationConfigController', [
             $adminLookups.sObject(whereClause, function (sObject) {
                 if (SObject !== 'detailSObject') {
                     $scope.SObject = sObject;
-                    var referenceSObjectNames = [];
-                    angular.forEach($scope.SObject.SObjectFields, function (field) {
-                        if (field.type === 'reference') {
-                            field.SObjectField = angular.copy(field);
-                            if (referenceSObjectNames.indexOf(field.referenceTo[0]) === -1) {
-                                referenceSObjectNames.push(field.referenceTo[0]);
-                            }
-                        }
-                    });
-                    var where = { referenceSObjectNames: referenceSObjectNames };
-                    sobjectService.loadSObjects(where)
-                        .success(function (response) {
-                            if (response.success === true) {
-                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
-                                    $scope.refSObjects[sObject.name] = sObject;
-                                });
-                            }
-                        });
                 }
                 else {
                     $scope.detailSObject = sObject;
-                    var referenceSObjectNames = [];
-                    angular.forEach($scope.detailSObject.SObjectFields, function (field) {
-                        if (field.type === 'reference') {
-                            field.SObjectField = angular.copy(field);
-                            if (referenceSObjectNames.indexOf(field.referenceTo[0]) === -1) {
-                                referenceSObjectNames.push(field.referenceTo[0]);
-                            }
-                        }
-                    });
-                    var where = { referenceSObjectNames: referenceSObjectNames };
-                    sobjectService.loadSObjects(where)
-                        .success(function (response) {
-                            if (response.success === true) {
-                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
-                                    $scope.refSObjects[sObject.name] = sObject;
-                                });
-                            }
-                        });
                 }
             });
         };
@@ -73,47 +37,11 @@ admin.controller('AdminBulkCreationConfigController', [
                                     $scope.SObject = field.SObject;
                                     field.isOf = "mainSObject";
                                     field.SObjectName = $scope.SObject.label;
-                                    var referenceSObjectNames = [];
-                                    angular.forEach($scope.SObject.SObjectFields, function (_field) {
-                                        if (_field.type === 'reference') {
-                                            _field.SObjectField = angular.copy(_field);
-                                            if (referenceSObjectNames.indexOf(_field.referenceTo[0]) === -1) {
-                                                referenceSObjectNames.push(_field.referenceTo[0]);
-                                            }
-                                        }
-                                    });
-                                    var where = { referenceSObjectNames: referenceSObjectNames };
-                                    sobjectService.loadSObjects(where)
-                                        .success(function (response) {
-                                            if (response.success === true) {
-                                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
-                                                    $scope.refSObjects[sObject.name] = sObject;
-                                                });
-                                            }
-                                        });
                                 }
                                 else if ($scope.detailSObject == undefined && field.detailSObjectId != undefined) {
                                     $scope.detailSObject = field.detailSObject;
                                     field.isOf = "detailSObject";
                                     field.SObjectName = $scope.detailSObject.label;
-                                    var referenceSObjectNames = [];
-                                    angular.forEach($scope.detailSObject.SObjectFields, function (_field) {
-                                        if (_field.type === 'reference') {
-                                            _field.SObjectField = angular.copy(_field);
-                                            if (referenceSObjectNames.indexOf(_field.referenceTo[0]) === -1) {
-                                                referenceSObjectNames.push(_field.referenceTo[0]);
-                                            }
-                                        }
-                                    });
-                                    var where = { referenceSObjectNames: referenceSObjectNames };
-                                    sobjectService.loadSObjects(where)
-                                        .success(function (response) {
-                                            if (response.success === true) {
-                                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
-                                                    $scope.refSObjects[sObject.name] = sObject;
-                                                });
-                                            }
-                                        });
                                 }
                                 else if ($scope.SObject && $scope.SObject.id == field.SObjectId) {
                                     field.isOf = "mainSObject";
@@ -145,7 +73,6 @@ admin.controller('AdminBulkCreationConfigController', [
                                                 field.SObjectField = angular.copy(_field);
                                             }
                                         });
-                                        field.refSObjects = {};
                                     }
                                 }
 
@@ -164,7 +91,6 @@ admin.controller('AdminBulkCreationConfigController', [
                                                 field.SObjectField = angular.copy(_field);
                                             }
                                         });
-                                        field.refSObjects = {};
                                     }
                                 }
                             });
@@ -343,7 +269,6 @@ admin.controller('AdminBulkCreationConfigController', [
             $scope.initBlockUiBlocks();
             $scope.SObject = undefined;
             $scope.detailSObject = undefined;
-            $scope.refSObjects = {};
             $scope.valueMapping = [];
             $scope.fieldMapping = [];
             $scope.getFieldMapping();
