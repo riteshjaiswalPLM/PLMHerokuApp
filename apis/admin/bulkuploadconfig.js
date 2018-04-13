@@ -103,58 +103,18 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
         else if (fieldsmapping.isOf == 'detailSObject') {
             SObjectType = 'detailSObjectId';
         }
-        if (fieldsmapping.type == 'datetime' || fieldsmapping.type == 'date') {
-            recordsToInsert.push({
-                sfFieldName: fieldsmapping.name,
-                label: fieldsmapping.label,
-                csvFieldName: fieldsmapping.csvFieldName,
-                datatype: fieldsmapping.type,
-                datatypeFormat: fieldsmapping.csvFieldFormat,
-                required: !fieldsmapping.nillable,
-                isUniqueField: fieldsmapping.isUniqueField,
-                [SObjectType]: fieldsmapping[SObjectType],
-                defaultValue: fieldsmapping.defaultValue
-            });
-        }
-        else if (fieldsmapping.type == 'reference') {
-            recordsToInsert.push({
-                sfFieldName: fieldsmapping.name,
-                label: fieldsmapping.label,
-                csvFieldName: fieldsmapping.csvFieldName,
-                datatype: fieldsmapping.type,
-                required: !fieldsmapping.nillable,
-                isUniqueField: fieldsmapping.isUniqueField,
-                referenceTableName: fieldsmapping.referenceTo[0],
-                referenceFieldName: fieldsmapping.reference,
-                [SObjectType]: fieldsmapping[SObjectType],
-                defaultValue: fieldsmapping.defaultValue
-            });
-        }
-        else if (fieldsmapping.type == 'string') {
-            recordsToInsert.push({
-                sfFieldName: fieldsmapping.name,
-                label: fieldsmapping.label,
-                csvFieldName: fieldsmapping.csvFieldName,
-                datatype: fieldsmapping.type,
-                stringLength: fieldsmapping.length,
-                required: !fieldsmapping.nillable,
-                isUniqueField: fieldsmapping.isUniqueField,
-                [SObjectType]: fieldsmapping[SObjectType],
-                defaultValue: fieldsmapping.defaultValue
-            });
-        }
-        else {
-            recordsToInsert.push({
-                sfFieldName: fieldsmapping.name,
-                label: fieldsmapping.label,
-                csvFieldName: fieldsmapping.csvFieldName,
-                datatype: fieldsmapping.type,
-                required: !fieldsmapping.nillable,
-                isUniqueField: fieldsmapping.isUniqueField,
-                [SObjectType]: fieldsmapping[SObjectType],
-                defaultValue: fieldsmapping.defaultValue
-            });
-        }
+
+        recordsToInsert.push({
+            mappingType: fieldsmapping.mappingType,
+            sfFieldName: fieldsmapping.name,
+            label: fieldsmapping.label,
+            csvFieldName: fieldsmapping.csvFieldName,
+            datatype: fieldsmapping.type,
+            required: !fieldsmapping.nillable,
+            isUniqueField: fieldsmapping.isUniqueField,
+            [SObjectType]: fieldsmapping[SObjectType],
+            defaultValue: fieldsmapping.defaultValue
+        });
     });
 
     //Delete existing mapping

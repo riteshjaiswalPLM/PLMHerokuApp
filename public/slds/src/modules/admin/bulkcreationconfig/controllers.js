@@ -1,8 +1,8 @@
 'use strict';
 
 admin.controller('AdminBulkCreationConfigController', [
-    '$scope', '$rootScope', '$state', '$adminLookups', 'CSVUploadConfig', 'blockUI', '$dialog',
-    function ($scope, $rootScope, $state, $adminLookups, CSVUploadConfig, blockUI, $dialog) {
+    '$scope', '$rootScope', '$state', '$adminLookups', 'CSVUploadConfigService', 'sobjectService', 'blockUI', '$dialog',
+    function ($scope, $rootScope, $state, $adminLookups, CSVUploadConfigService, sobjectService, blockUI, $dialog) {
 
         $scope.openSObjectsLookup = function (SObject) {
             var whereClause = {
@@ -19,35 +19,114 @@ admin.controller('AdminBulkCreationConfigController', [
             $adminLookups.sObject(whereClause, function (sObject) {
                 if (SObject !== 'detailSObject') {
                     $scope.SObject = sObject;
+                    var referenceSObjectNames = [];
+                    angular.forEach($scope.SObject.SObjectFields, function (field) {
+                        if (field.type === 'reference') {
+                            field.SObjectField = angular.copy(field);
+                            if (referenceSObjectNames.indexOf(field.referenceTo[0]) === -1) {
+                                referenceSObjectNames.push(field.referenceTo[0]);
+                            }
+                        }
+                    });
+                    var where = { referenceSObjectNames: referenceSObjectNames };
+                    sobjectService.loadSObjects(where)
+                        .success(function (response) {
+                            if (response.success === true) {
+                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
+                                    $scope.refSObjects[sObject.name] = sObject;
+                                });
+                            }
+                        });
                 }
                 else {
                     $scope.detailSObject = sObject;
+                    var referenceSObjectNames = [];
+                    angular.forEach($scope.detailSObject.SObjectFields, function (field) {
+                        if (field.type === 'reference') {
+                            field.SObjectField = angular.copy(field);
+                            if (referenceSObjectNames.indexOf(field.referenceTo[0]) === -1) {
+                                referenceSObjectNames.push(field.referenceTo[0]);
+                            }
+                        }
+                    });
+                    var where = { referenceSObjectNames: referenceSObjectNames };
+                    sobjectService.loadSObjects(where)
+                        .success(function (response) {
+                            if (response.success === true) {
+                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
+                                    $scope.refSObjects[sObject.name] = sObject;
+                                });
+                            }
+                        });
                 }
             });
         };
 
         $scope.getFieldMapping = function () {
-            if (!$scope.blockUI.existingMapping.state().blocking) {
-                $scope.blockUI.existingMapping.start('Loading ...');
-                CSVUploadConfig.getFieldMapping()
+            if (!$scope.blockUI.sObjectFieldsMapping.state().blocking) {
+                $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
+                CSVUploadConfigService.getFieldMapping()
                     .success(function (response) {
                         if (response.success) {
-                            $scope.section.columns[0] = response.data.mappedFields;
-                            angular.forEach($scope.section.columns[0], function (field) {
+                            angular.forEach(response.data.mappedFields, function (field) {
                                 if ($scope.SObject == undefined && field.SObjectId != undefined) {
                                     $scope.SObject = field.SObject;
                                     field.isOf = "mainSObject";
+                                    field.SObjectName = $scope.SObject.label;
+                                    var referenceSObjectNames = [];
+                                    angular.forEach($scope.SObject.SObjectFields, function (_field) {
+                                        if (_field.type === 'reference') {
+                                            _field.SObjectField = angular.copy(_field);
+                                            if (referenceSObjectNames.indexOf(_field.referenceTo[0]) === -1) {
+                                                referenceSObjectNames.push(_field.referenceTo[0]);
+                                            }
+                                        }
+                                    });
+                                    var where = { referenceSObjectNames: referenceSObjectNames };
+                                    sobjectService.loadSObjects(where)
+                                        .success(function (response) {
+                                            if (response.success === true) {
+                                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
+                                                    $scope.refSObjects[sObject.name] = sObject;
+                                                });
+                                            }
+                                        });
                                 }
                                 else if ($scope.detailSObject == undefined && field.detailSObjectId != undefined) {
                                     $scope.detailSObject = field.detailSObject;
                                     field.isOf = "detailSObject";
+                                    field.SObjectName = $scope.detailSObject.label;
+                                    var referenceSObjectNames = [];
+                                    angular.forEach($scope.detailSObject.SObjectFields, function (_field) {
+                                        if (_field.type === 'reference') {
+                                            _field.SObjectField = angular.copy(_field);
+                                            if (referenceSObjectNames.indexOf(_field.referenceTo[0]) === -1) {
+                                                referenceSObjectNames.push(_field.referenceTo[0]);
+                                            }
+                                        }
+                                    });
+                                    var where = { referenceSObjectNames: referenceSObjectNames };
+                                    sobjectService.loadSObjects(where)
+                                        .success(function (response) {
+                                            if (response.success === true) {
+                                                angular.forEach(response.data.sObjects, function (sObject, sObjectIndex) {
+                                                    $scope.refSObjects[sObject.name] = sObject;
+                                                });
+                                            }
+                                        });
+                                }
+                                else if ($scope.SObject && $scope.SObject.id == field.SObjectId) {
+                                    field.isOf = "mainSObject";
+                                    field.SObjectName = $scope.SObject.label;
+                                }
+                                else if ($scope.detailSObject && $scope.detailSObject.id == field.detailSObjectId) {
+                                    field.isOf = "detailSObject";
+                                    field.SObjectName = $scope.detailSObject.label;
                                 }
                                 field.type = field.datatype;
                                 delete field.datatype;
                                 field.name = field.sfFieldName;
                                 delete field.sfFieldName;
-                                field.length = field.stringLength;
-                                delete field.stringLength;
                                 field.subtype = 'SObject-Mapping-Field';
                                 field.columns = 1;
 
@@ -66,10 +145,6 @@ admin.controller('AdminBulkCreationConfigController', [
                                                 field.SObjectField = angular.copy(_field);
                                             }
                                         });
-                                        field.relationshipName = field.referenceTableName;
-                                        delete field.referenceTableName;
-                                        field.reference = field.referenceFieldName;
-                                        delete field.referenceFieldName;
                                         field.refSObjects = {};
                                     }
                                 }
@@ -89,84 +164,35 @@ admin.controller('AdminBulkCreationConfigController', [
                                                 field.SObjectField = angular.copy(_field);
                                             }
                                         });
-                                        field.relationshipName = field.referenceTableName;
-                                        delete field.referenceTableName;
-                                        field.reference = field.referenceFieldName;
-                                        delete field.referenceFieldName;
                                         field.refSObjects = {};
-                                    }
-                                }
-
-                                field.csvfieldddformat = '-1';
-                                field.csvfieldmmformat = '-1';
-                                field.csvfieldyyformat = '-1';
-                                field.csvfielddatesep = '-1';
-                                field.csvfieldtimeformat = '-1';
-                                field.csvFieldFormat = field.datatypeFormat;
-
-                                if (field.type == 'datetime') {
-                                    field.csvfieldtimeformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf(" ") + 1);
-                                    field.datatypeFormat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf(" "));
-
-                                    if (field.datatypeFormat.indexOf('-') != -1) {
-                                        field.csvfielddatesep = '-';
-                                        field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf("-"));
-                                        field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf("-") + 1, field.datatypeFormat.lastIndexOf("-"));
-                                        field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf("-") + 1);
-                                    }
-                                    else if (field.datatypeFormat.indexOf('/') != -1) {
-                                        field.csvfielddatesep = '/';
-                                        field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf("/"));
-                                        field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf("/") + 1, field.datatypeFormat.lastIndexOf("/"));
-                                        field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf("/") + 1);
-                                    }
-                                    else if (field.datatypeFormat.indexOf(' ') != -1) {
-                                        field.csvfielddatesep = 'space';
-                                        field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf(" "));
-                                        field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf(" ") + 1, field.datatypeFormat.lastIndexOf(" "));
-                                        field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf(" ") + 1);
-                                    }
-                                }
-                                if (field.type == 'date') {
-                                    if (field.datatypeFormat.indexOf('-') != -1) {
-                                        field.csvfielddatesep = '-';
-                                        field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf("-"));
-                                        field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf("-") + 1, field.datatypeFormat.lastIndexOf("-"));
-                                        field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf("-") + 1);
-                                    }
-                                    else if (field.datatypeFormat.indexOf('/') != -1) {
-                                        field.csvfielddatesep = '/';
-                                        field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf("/"));
-                                        field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf("/") + 1, field.datatypeFormat.lastIndexOf("/"));
-                                        field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf("/") + 1);
-                                    }
-                                    else if (field.datatypeFormat.indexOf(' ') != -1) {
-                                        field.csvfielddatesep = 'space';
-                                        field.csvfieldddformat = field.datatypeFormat.substring(0, field.datatypeFormat.indexOf(" "));
-                                        field.csvfieldmmformat = field.datatypeFormat.substring(field.datatypeFormat.indexOf(" ") + 1, field.datatypeFormat.lastIndexOf(" "));
-                                        field.csvfieldyyformat = field.datatypeFormat.substring(field.datatypeFormat.lastIndexOf(" ") + 1);
                                     }
                                 }
                             });
 
-                            angular.forEach($scope.section.columns[0], function (field, fieldOrder) {
+                            angular.forEach(response.data.mappedFields, function (field, fieldOrder) {
                                 field.order = fieldOrder;
+                                if (field.mappingType == "Value Mapping") {
+                                    $scope.valueMapping.push(field);
+                                }
+                                else if (field.mappingType == "Field Mapping") {
+                                    $scope.fieldMapping.push(field);
+                                }
                             });
                         }
                         else {
                             $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
                         }
-                        $scope.blockUI.existingMapping.stop();
+                        $scope.blockUI.sObjectFieldsMapping.stop();
                     })
                     .error(function () {
                         $dialog.alert('Error occured while loading config fields.', 'Error', 'pficon pficon-error-circle-o');
-                        $scope.blockUI.existingMapping.stop();
+                        $scope.blockUI.sObjectFieldsMapping.stop();
                     });
             }
         };
 
         $scope.fieldsDropCallBack = function (event, index, item, external, type, section, columnNumber) {
-            var sectionFields = section.columns[0];
+            var sectionFields = section;
 
             if ($scope.isDuplicate(sectionFields, item)) {
                 return false;
@@ -175,27 +201,22 @@ admin.controller('AdminBulkCreationConfigController', [
             item.subtype = 'SObject-Mapping-Field';
             item.columns = columnNumber;
             item.order = index;
+            item.defaultValue = '';
             item.isUniqueField = false;
             item.csvFieldName = '';
-            item.csvfieldddformat = '-1';
-            item.csvfieldmmformat = '-1';
-            item.csvfieldyyformat = '-1';
-            item.csvfielddatesep = '-1';
-            item.csvfieldtimeformat = '-1';
-            item.csvFieldFormat = item.csvfieldddformat + item.csvfielddatesep + item.csvfieldmmformat + item.csvfielddatesep + item.csvfieldyyformat + item.csvfieldtimeformat;
 
             if ($scope.SObject && $scope.SObject.id == item.SObjectId) {
                 item.isOf = "mainSObject";
+                item.SObjectName = $scope.SObject.label;
             }
             else if ($scope.detailSObject && $scope.detailSObject.id == item.SObjectId) {
                 item.isOf = "detailSObject";
                 item.detailSObjectId = item.SObjectId;
+                item.SObjectName = $scope.detailSObject.label;
             }
 
-            angular.forEach(section.columns, function (fields) {
-                angular.forEach(fields, function (field, fieldOrder) {
-                    field.order = fieldOrder;
-                });
+            angular.forEach(section, function (field, fieldOrder) {
+                field.order = fieldOrder;
             });
 
             return item;
@@ -236,7 +257,7 @@ admin.controller('AdminBulkCreationConfigController', [
 
             if (item.columns !== undefined && angular.isArray(item.columns)) {
                 angular.forEach(item.columns, function (fields) {
-                    angular.forEach(fields, function (field, fieldIndex) {
+                    angular.forEach(fields, function (field) {
                         field.deleted = true;
                     });
                 });
@@ -244,7 +265,7 @@ admin.controller('AdminBulkCreationConfigController', [
         };
 
         $scope.syncUniqueRadio = function (thisfield) {
-            var fields = $scope.section.columns[0];
+            var fields = $scope.fieldMapping;
             angular.forEach(fields, function (field) {
                 field.isUniqueField = false;
             });
@@ -252,80 +273,58 @@ admin.controller('AdminBulkCreationConfigController', [
         };
 
         $scope.saveFieldMapping = function () {
-            var configs = $scope.section.columns[0];
             var isValid = true;
-            var isUniqueFieldConfigured = false;
-            angular.forEach(configs, function (config) {
-                if (config.isUniqueField) {
-                    isUniqueFieldConfigured = true;
-                }
-                config.csvFieldFormat = config.csvfieldddformat + config.csvfielddatesep + config.csvfieldmmformat + config.csvfielddatesep + config.csvfieldyyformat;
-                if (config.type == 'datetime') {
-                    config.csvFieldFormat = config.csvFieldFormat + " " + config.csvfieldtimeformat;
-                }
-                if (config.csvFieldName == '' && isValid) {
-                    $dialog.alert("Please enter CSV field name for '" + config.label + "' field.");
+            angular.forEach($scope.valueMapping, function (config) {
+                if (config.defaultValue == '' && isValid) {
+                    $dialog.alert("Please enter Default Value for '" + config.label + "' field.");
                     isValid = false;
                 }
-                if ((config.type == 'datetime' || config.type == 'date') && isValid) {
-                    if (config.csvFieldFormat.indexOf('-1') != -1) {
-                        $dialog.alert("Please enter date and/or time format for '" + config.label + "' field.");
+            });
+            if (isValid) {
+                var fieldMappingConfigs = $scope.fieldMapping;
+                var isUniqueFieldConfigured = false;
+                angular.forEach(fieldMappingConfigs, function (config) {
+                    if (config.isUniqueField) {
+                        isUniqueFieldConfigured = true;
+                    }
+                    if (config.csvFieldName == '' && isValid) {
+                        $dialog.alert("Please enter CSV field name for '" + config.label + "' field.");
                         isValid = false;
                     }
-                    else {
-                        var dd = 0, mm = 0, yy = 0;
-                        if (config.csvfieldddformat == 'DD') {
-                            dd = 0;
-                        } else if (config.csvfieldddformat == 'MM') {
-                            dd = 1;
-                        } else if (config.csvfieldddformat == 'YY' || config.csvfieldddformat == 'YYYY') {
-                            dd = 2;
-                        }
-                        if (config.csvfieldmmformat == 'DD') {
-                            mm = 0;
-                        } else if (config.csvfieldmmformat == 'MM') {
-                            mm = 1;
-                        } else if (config.csvfieldmmformat == 'YY' || config.csvfieldmmformat == 'YYYY') {
-                            mm = 2;
-                        }
-                        if (config.csvfieldyyformat == 'DD') {
-                            yy = 0;
-                        } else if (config.csvfieldyyformat == 'MM') {
-                            yy = 1;
-                        } else if (config.csvfieldyyformat == 'YY' || config.csvfieldyyformat == 'YYYY') {
-                            yy = 2;
-                        }
+                });
 
-                        if (dd == mm || dd == yy || mm == yy) {
-                            $dialog.alert("Please enter valid date format for '" + config.label + "' field.");
-                            isValid = false;
-                        }
+                if (isValid && fieldMappingConfigs.length > 0) {
+                    if (!isUniqueFieldConfigured) {
+                        $dialog.alert("Please select Unique field.");
                     }
-                }
-            });
-
-            if (isValid && configs.length > 0) {
-                if (!isUniqueFieldConfigured) {
-                    $dialog.alert("Please select Unique field.");
-                }
-                else {
-                    if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && $scope.section.columns[0].length > 0) {
-                        $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
-                        CSVUploadConfig.saveFieldMapping($scope.section.columns[0])
-                            .success(function (response) {
-                                if (response.success) {
-                                    $dialog.alert("Field mappings saved successfully.");
-                                    $scope.init();
-                                }
-                                else {
-                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                                }
-                                $scope.blockUI.sObjectFieldsMapping.stop();
-                            })
-                            .error(function () {
-                                $dialog.alert('Error occured while saving field mappings.', 'Error', 'pficon pficon-error-circle-o');
-                                $scope.blockUI.sObjectFieldsMapping.stop();
+                    else {
+                        if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && $scope.valueMapping.length > 0) {
+                            $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
+                            var configs = angular.copy($scope.valueMapping);
+                            angular.forEach(configs, function (config) {
+                                config.mappingType = 'Value Mapping';
                             });
+                            angular.forEach(fieldMappingConfigs, function (config) {
+                                config.mappingType = 'Field Mapping';
+                                configs.push(config);
+                            });
+                            CSVUploadConfigService.saveFieldMapping(configs)
+                                .success(function (response) {
+                                    if (response.success) {
+                                        $dialog.alert("Field mappings saved successfully.");
+                                        $scope.blockUI.sObjectFieldsMapping.stop();
+                                        $scope.init();
+                                    }
+                                    else {
+                                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                                        $scope.blockUI.sObjectFieldsMapping.stop();
+                                    }
+                                })
+                                .error(function () {
+                                    $dialog.alert('Error occured while saving field mappings.', 'Error', 'pficon pficon-error-circle-o');
+                                    $scope.blockUI.sObjectFieldsMapping.stop();
+                                });
+                        }
                     }
                 }
             }
@@ -333,8 +332,7 @@ admin.controller('AdminBulkCreationConfigController', [
 
         $scope.initBlockUiBlocks = function () {
             $scope.blockUI = {
-                sObjectFieldsMapping: blockUI.instances.get('sObjectFieldsMapping'),
-                existingMapping: blockUI.instances.get('existingMapping')
+                sObjectFieldsMapping: blockUI.instances.get('sObjectFieldsMapping')
             };
         };
 
@@ -345,8 +343,9 @@ admin.controller('AdminBulkCreationConfigController', [
             $scope.initBlockUiBlocks();
             $scope.SObject = undefined;
             $scope.detailSObject = undefined;
-            $scope.section = {};
-            $scope.section.columns = [[]];
+            $scope.refSObjects = {};
+            $scope.valueMapping = [];
+            $scope.fieldMapping = [];
             $scope.getFieldMapping();
         };
         $scope.init();

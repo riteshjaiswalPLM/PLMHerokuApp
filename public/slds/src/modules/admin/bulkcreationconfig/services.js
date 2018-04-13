@@ -1,6 +1,6 @@
 'use strict';
 
-admin.factory('CSVUploadConfig', ['$http', function ($http) {
+admin.factory('CSVUploadConfigService', ['$http', function ($http) {
     return {
         getFieldMapping: function () {
             return $http.post('/api/admin/bulkuploadconfig/getfieldmapping');
