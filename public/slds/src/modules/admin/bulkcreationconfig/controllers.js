@@ -1,8 +1,8 @@
 'use strict';
 
 admin.controller('AdminBulkCreationConfigController', [
-    '$scope', '$rootScope', '$state', '$adminLookups', 'CSVUploadConfigService', 'sobjectService', 'blockUI', '$dialog',
-    function ($scope, $rootScope, $state, $adminLookups, CSVUploadConfigService, sobjectService, blockUI, $dialog) {
+    '$scope', '$rootScope', '$state', '$adminLookups', 'CSVUploadConfigService', 'blockUI', '$dialog',
+    function ($scope, $rootScope, $state, $adminLookups, CSVUploadConfigService, blockUI, $dialog) {
 
         $scope.openSObjectsLookup = function (SObject) {
             var whereClause = {
@@ -17,11 +17,43 @@ admin.controller('AdminBulkCreationConfigController', [
                 }
             }
             $adminLookups.sObject(whereClause, function (sObject) {
-                if (SObject !== 'detailSObject') {
-                    $scope.SObject = sObject;
-                }
-                else {
-                    $scope.detailSObject = sObject;
+                if (sObject !== undefined) {
+                    if (SObject !== 'detailSObject') {
+                        if ($scope.SObject == undefined || $scope.SObject.id == sObject.id) {
+                            $scope.SObject = sObject;
+                        }
+                        else {
+                            $scope.SObject = sObject;
+                            angular.forEach($scope.valueMapping, function (field, index) {
+                                if (field.SObjectId != undefined && field.SObjectId != $scope.SObject.id) {
+                                    $scope.valueMapping.splice(index, 1);
+                                }
+                            });
+                            angular.forEach($scope.fieldMapping, function (field, index) {
+                                if (field.SObjectId != undefined && field.SObjectId != $scope.SObject.id) {
+                                    $scope.fieldMapping.splice(index, 1);
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        if ($scope.detailSObject == undefined || $scope.detailSObject.id == sObject.id) {
+                            $scope.detailSObject = sObject;
+                        }
+                        else {
+                            $scope.detailSObject = sObject;
+                            angular.forEach($scope.valueMapping, function (field, index) {
+                                if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
+                                    $scope.valueMapping.splice(index, 1);
+                                }
+                            });
+                            angular.forEach($scope.fieldMapping, function (field, index) {
+                                if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
+                                    $scope.fieldMapping.splice(index, 1);
+                                }
+                            });
+                        }
+                    }
                 }
             });
         };
@@ -62,7 +94,6 @@ admin.controller('AdminBulkCreationConfigController', [
                                     angular.forEach($scope.SObject.SObjectFields, function (_field) {
                                         if (field.name == _field.name) {
                                             field.id = _field.id;
-                                            field.nillable = _field.nillable;
                                             field.deleted = false;
                                         }
                                     });
@@ -80,7 +111,6 @@ admin.controller('AdminBulkCreationConfigController', [
                                     angular.forEach($scope.detailSObject.SObjectFields, function (_field) {
                                         if (field.name == _field.name) {
                                             field.id = _field.id;
-                                            field.nillable = _field.nillable;
                                             field.deleted = false;
                                         }
                                     });
@@ -118,9 +148,7 @@ admin.controller('AdminBulkCreationConfigController', [
         };
 
         $scope.fieldsDropCallBack = function (event, index, item, external, type, section, columnNumber) {
-            var sectionFields = section;
-
-            if ($scope.isDuplicate(sectionFields, item)) {
+            if ($scope.isDuplicate(item)) {
                 return false;
             }
 
@@ -128,7 +156,6 @@ admin.controller('AdminBulkCreationConfigController', [
             item.columns = columnNumber;
             item.order = index;
             item.defaultValue = '';
-            item.isUniqueField = false;
             item.csvFieldName = '';
 
             if ($scope.SObject && $scope.SObject.id == item.SObjectId) {
@@ -148,23 +175,25 @@ admin.controller('AdminBulkCreationConfigController', [
             return item;
         };
 
-        $scope.isDuplicate = function (fields, item) {
+        $scope.isDuplicate = function (item) {
             var duplicate = false;
-            angular.forEach(fields, function (field, index) {
+            angular.forEach($scope.valueMapping, function (field, index) {
                 if (!duplicate) {
                     if (field.id === item.id && !field.deleted) {
                         duplicate = true;
                     }
                 }
             });
-            return duplicate;
-        };
-
-        $scope.removeFieldsStore = function (section, item) {
-            if (section.deletedFields == undefined) {
-                section.deletedFields = [];
+            if (!duplicate) {
+                angular.forEach($scope.fieldMapping, function (field, index) {
+                    if (!duplicate) {
+                        if (field.id === item.id && !field.deleted) {
+                            duplicate = true;
+                        }
+                    }
+                });
             }
-            section.deletedFields.push(item);
+            return duplicate;
         };
 
         $scope.removeAndReorder = function (items, item, index) {
@@ -190,14 +219,6 @@ admin.controller('AdminBulkCreationConfigController', [
             }
         };
 
-        $scope.syncUniqueRadio = function (thisfield) {
-            var fields = $scope.fieldMapping;
-            angular.forEach(fields, function (field) {
-                field.isUniqueField = false;
-            });
-            thisfield.isUniqueField = true;
-        };
-
         $scope.saveFieldMapping = function () {
             var isValid = true;
             angular.forEach($scope.valueMapping, function (config) {
@@ -207,50 +228,40 @@ admin.controller('AdminBulkCreationConfigController', [
                 }
             });
             if (isValid) {
-                var fieldMappingConfigs = $scope.fieldMapping;
-                var isUniqueFieldConfigured = false;
-                angular.forEach(fieldMappingConfigs, function (config) {
-                    if (config.isUniqueField) {
-                        isUniqueFieldConfigured = true;
-                    }
+                angular.forEach($scope.fieldMapping, function (config) {
                     if (config.csvFieldName == '' && isValid) {
                         $dialog.alert("Please enter CSV field name for '" + config.label + "' field.");
                         isValid = false;
                     }
                 });
 
-                if (isValid && fieldMappingConfigs.length > 0) {
-                    if (!isUniqueFieldConfigured) {
-                        $dialog.alert("Please select Unique field.");
-                    }
-                    else {
-                        if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && $scope.valueMapping.length > 0) {
-                            $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
-                            var configs = angular.copy($scope.valueMapping);
-                            angular.forEach(configs, function (config) {
-                                config.mappingType = 'Value Mapping';
-                            });
-                            angular.forEach(fieldMappingConfigs, function (config) {
-                                config.mappingType = 'Field Mapping';
-                                configs.push(config);
-                            });
-                            CSVUploadConfigService.saveFieldMapping(configs)
-                                .success(function (response) {
-                                    if (response.success) {
-                                        $dialog.alert("Field mappings saved successfully.");
-                                        $scope.blockUI.sObjectFieldsMapping.stop();
-                                        $scope.init();
-                                    }
-                                    else {
-                                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                                        $scope.blockUI.sObjectFieldsMapping.stop();
-                                    }
-                                })
-                                .error(function () {
-                                    $dialog.alert('Error occured while saving field mappings.', 'Error', 'pficon pficon-error-circle-o');
+                if (isValid && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0)) {
+                    if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0)) {
+                        $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
+                        var configs = angular.copy($scope.valueMapping);
+                        angular.forEach(configs, function (config) {
+                            config.mappingType = 'Value Mapping';
+                        });
+                        angular.forEach($scope.fieldMapping, function (config) {
+                            config.mappingType = 'Field Mapping';
+                            configs.push(config);
+                        });
+                        CSVUploadConfigService.saveFieldMapping(configs)
+                            .success(function (response) {
+                                if (response.success) {
+                                    $dialog.alert("Field mappings saved successfully.");
                                     $scope.blockUI.sObjectFieldsMapping.stop();
-                                });
-                        }
+                                    $scope.init();
+                                }
+                                else {
+                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                                    $scope.blockUI.sObjectFieldsMapping.stop();
+                                }
+                            })
+                            .error(function () {
+                                $dialog.alert('Error occured while saving field mappings.', 'Error', 'pficon pficon-error-circle-o');
+                                $scope.blockUI.sObjectFieldsMapping.stop();
+                            });
                     }
                 }
             }

@@ -110,8 +110,6 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
             label: fieldsmapping.label,
             csvFieldName: fieldsmapping.csvFieldName,
             datatype: fieldsmapping.type,
-            required: !fieldsmapping.nillable,
-            isUniqueField: fieldsmapping.isUniqueField,
             [SObjectType]: fieldsmapping[SObjectType],
             defaultValue: fieldsmapping.defaultValue
         });
@@ -124,6 +122,13 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
         .then(function () {
             return res.json({
                 success: true
+            });
+        })
+        .catch(function (err) {
+            return res.json({
+                success: false,
+                message: 'Error occured while saving field mappings.',
+                error: err
             });
         });
 });

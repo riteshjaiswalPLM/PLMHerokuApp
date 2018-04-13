@@ -23,13 +23,6 @@ module.exports = function (sequelize, DataTypes) {
         defaultValue: {
             type: DataTypes.STRING,
             allowNull: true
-        },
-        isUniqueField: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: function () {
-                return false;
-            }
         }
     }, {
             classMethods: {

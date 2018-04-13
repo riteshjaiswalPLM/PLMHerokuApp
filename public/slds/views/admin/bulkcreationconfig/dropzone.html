@@ -98,7 +98,7 @@
                             </div>
                             <div class="slds-col slds-no-flex slds-grid slds-align-middle">
                                 <div class="slds-button-group slds-field-actions" role="group">
-                                    <button ng-click="removeFieldsStore(valueMapping,field);removeAndReorder(valueMapping,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <button ng-click="removeAndReorder(valueMapping,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                         </svg>
@@ -120,10 +120,9 @@
             style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
             <thead>
                 <tr class="slds-text-title--caps">
-                    <th style="white-space:normal !important; width: 15%; text-align: center !important;" title="Unique Field">Unique Field</th>
                     <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="Object">Object</th>
                     <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="Salesforce Field">Salesforce Field</th>
-                    <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="CSV File Field">CSV File Field</th>
+                    <th style="white-space:normal !important; width: 40%; text-align: center !important;" title="CSV File Field">CSV File Field</th>
                     <th style="white-space:normal !important; width: 10%; text-align: center !important;"></th>
                 </tr>
             </thead>
@@ -136,9 +135,6 @@
                 </div>
                 <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in fieldMapping" dnd-draggable="field" dnd-effect-allowed="move"
                     dnd-moved="fieldMapping.splice($index,1)" dnd-type="'sObjectField'">
-                    <span>
-                        <slds-switch ng-model="field.isUniqueField" on-text="true" off-text="false" ng-click="syncUniqueRadio(field)" style="width: 15%;float: left !important;text-align: center !important;" />
-                    </span>
                     <label class="slds-form-element__label" style="font-weight: 600;width: 25%;text-align: center !important;">
                         <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.SObjectName }}"><i class="fa fa-exclamation-circle"></i></a>
                         {{ field.SObjectName }}
@@ -160,7 +156,7 @@
                             </div>
                             <div class="slds-col slds-no-flex slds-grid slds-align-middle">
                                 <div class="slds-button-group slds-field-actions" role="group">
-                                    <button ng-click="removeFieldsStore(fieldMapping,field);removeAndReorder(fieldMapping,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                    <button ng-click="removeAndReorder(fieldMapping,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
                                         </svg>
