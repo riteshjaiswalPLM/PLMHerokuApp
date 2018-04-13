@@ -11,6 +11,12 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: function () {
                 return false;
             }
+        },
+        bulkUploadTab: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: function () {
+                return false;
+            }
         }
     });
     return TabConfig;

@@ -11,7 +11,8 @@ tabConfigRouter.post('/fetchConfig', function (req, res) {
         if (tabConfig === undefined || tabConfig === null || tabConfig.length == 0) {
             db.TabConfig.create({
                 reportTab: false,
-                archivalTab: false
+                archivalTab: false,
+                bulkUploadTab: false
             }).then(function (newTabConfig) {
                 return res.json({
                     success: true,

@@ -35,6 +35,12 @@
                                 <slds-switch id="fieldArchivalTab" switch-change="onChangeSave({archivalTab: tabConfig.archivalTab})" ng-model="tabConfig.archivalTab" on-text="Yes" off-text="No" />
                             </div>
                         </div>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="fieldBulkUploadTab">Bulk Upload tab required ?</label>
+                            <div class="slds-form-element__control">
+                                <slds-switch id="fieldBulkUploadTab" switch-change="onChangeSave({bulkUploadTab: tabConfig.bulkUploadTab})" ng-model="tabConfig.bulkUploadTab" on-text="Yes" off-text="No" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
