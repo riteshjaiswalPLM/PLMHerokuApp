@@ -70,7 +70,7 @@
             </thead>
         </table>
         <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
-            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="valueMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, valueMapping, $index+1)"
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="valueMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, valueMapping, $index+1, true)"
                 dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
                 <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
                     Drop field here
@@ -128,7 +128,7 @@
             </thead>
         </table>
         <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
-            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="fieldMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, fieldMapping, $index+1)"
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="fieldMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, fieldMapping, $index+1, true)"
                 dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
                 <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
                     Drop field here
@@ -170,4 +170,54 @@
             </div>
         </div>
     </div>
+    <article class="slds-card" style="margin-top: 10px !important;">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__body slds-size--1-of-3">
+                    <h2>
+                        <span class="slds-text-heading--small">Unique Key</span>
+                    </h2>
+                </div>
+                <div class="slds-form-element slds-size--1-of-3">
+                    <div class="slds-form-element__control slds-grid slds-box--border">
+                        <select class="slds-select" ng-model="uniqueKey" ng-change="test(uniqueKey);">
+                            <option value="">-- None --</option>
+                            <option value="{{field.name}}" title="{{field.name}}" ng-repeat="field in SObject.SObjectFields | orderBy:'label'">{{ field.label }} ({{ field.type }})</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-size--1-of-3">
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-p-around--x-small slds-border--top" style="margin-bottom: 0;background-color: white;">
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="uniqueKeyMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, uniqueKeyMapping, $index+1, false)"
+                dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
+                <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
+                    Drop field here
+                </div>
+                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in uniqueKeyMapping" dnd-draggable="field" dnd-effect-allowed="move"
+                    dnd-moved="uniqueKeyMapping.splice($index,1)" dnd-type="'sObjectField'" style="padding-left: 100px !important; padding-right: 100px !important;">
+                    <label class="slds-form-element__label" style="font-weight: 600;width: 90%;text-align: center !important;">
+                        <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.label }} ({{ field.type }}) [{{ field.SObjectName }}]"><i class="fa fa-exclamation-circle"></i></a>
+                        {{ field.label }} ({{ field.type }}) [{{ field.SObjectName }}]
+                    </label>
+                    <div class="slds-form-element__control" style="width: 10%;">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-no-flex slds-grid slds-align-middle">
+                                <div class="slds-button-group slds-field-actions" role="group">
+                                    <button ng-click="removeAndReorder(uniqueKeyMapping,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
 </div>

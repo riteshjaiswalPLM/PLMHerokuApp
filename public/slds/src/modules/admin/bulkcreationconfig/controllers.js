@@ -24,16 +24,25 @@ admin.controller('AdminBulkCreationConfigController', [
                         }
                         else {
                             $scope.SObject = sObject;
-                            angular.forEach($scope.valueMapping, function (field, index) {
+                            for (var i = $scope.valueMapping.length - 1; i >= 0; i--) {
+                                var field = $scope.valueMapping[i];
                                 if (field.SObjectId != undefined && field.SObjectId != $scope.SObject.id) {
-                                    $scope.valueMapping.splice(index, 1);
+                                    $scope.valueMapping.splice(i, 1);
                                 }
-                            });
-                            angular.forEach($scope.fieldMapping, function (field, index) {
+                            }
+                            for (var i = $scope.fieldMapping.length - 1; i >= 0; i--) {
+                                var field = $scope.fieldMapping[i];
                                 if (field.SObjectId != undefined && field.SObjectId != $scope.SObject.id) {
-                                    $scope.fieldMapping.splice(index, 1);
+                                    $scope.fieldMapping.splice(i, 1);
                                 }
-                            });
+                            }
+                            $scope.uniqueKey = undefined;
+                            for (var i = $scope.uniqueKeyMapping.length - 1; i >= 0; i--) {
+                                var field = $scope.uniqueKeyMapping[i];
+                                if (field.SObjectId != undefined && field.SObjectId != $scope.SObject.id) {
+                                    $scope.uniqueKeyMapping.splice(i, 1);
+                                }
+                            }
                         }
                     }
                     else {
@@ -42,16 +51,24 @@ admin.controller('AdminBulkCreationConfigController', [
                         }
                         else {
                             $scope.detailSObject = sObject;
-                            angular.forEach($scope.valueMapping, function (field, index) {
+                            for (var i = $scope.valueMapping.length - 1; i >= 0; i--) {
+                                var field = $scope.valueMapping[i];
                                 if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
-                                    $scope.valueMapping.splice(index, 1);
+                                    $scope.valueMapping.splice(i, 1);
                                 }
-                            });
-                            angular.forEach($scope.fieldMapping, function (field, index) {
+                            }
+                            for (var i = $scope.fieldMapping.length - 1; i >= 0; i--) {
+                                var field = $scope.fieldMapping[i];
                                 if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
-                                    $scope.fieldMapping.splice(index, 1);
+                                    $scope.fieldMapping.splice(i, 1);
                                 }
-                            });
+                            }
+                            for (var i = $scope.uniqueKeyMapping.length - 1; i >= 0; i--) {
+                                var field = $scope.uniqueKeyMapping[i];
+                                if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
+                                    $scope.uniqueKeyMapping.splice(i, 1);
+                                }
+                            }
                         }
                     }
                 }
@@ -133,6 +150,10 @@ admin.controller('AdminBulkCreationConfigController', [
                                 else if (field.mappingType == "Field Mapping") {
                                     $scope.fieldMapping.push(field);
                                 }
+                                else if (field.mappingType == "Unique Key") {
+                                    $scope.uniqueKeyMapping.push(field);
+                                    $scope.uniqueKey = field.name;
+                                }
                             });
                         }
                         else {
@@ -147,8 +168,8 @@ admin.controller('AdminBulkCreationConfigController', [
             }
         };
 
-        $scope.fieldsDropCallBack = function (event, index, item, external, type, section, columnNumber) {
-            if ($scope.isDuplicate(item)) {
+        $scope.fieldsDropCallBack = function (event, index, item, external, type, section, columnNumber, checkDuplicate) {
+            if ($scope.isDuplicate(item, checkDuplicate)) {
                 return false;
             }
 
@@ -175,17 +196,28 @@ admin.controller('AdminBulkCreationConfigController', [
             return item;
         };
 
-        $scope.isDuplicate = function (item) {
+        $scope.isDuplicate = function (item, checkDuplicate) {
             var duplicate = false;
-            angular.forEach($scope.valueMapping, function (field, index) {
-                if (!duplicate) {
-                    if (field.id === item.id && !field.deleted) {
-                        duplicate = true;
+            if (checkDuplicate) {
+                angular.forEach($scope.valueMapping, function (field, index) {
+                    if (!duplicate) {
+                        if (field.id === item.id && !field.deleted) {
+                            duplicate = true;
+                        }
                     }
+                });
+                if (!duplicate) {
+                    angular.forEach($scope.fieldMapping, function (field, index) {
+                        if (!duplicate) {
+                            if (field.id === item.id && !field.deleted) {
+                                duplicate = true;
+                            }
+                        }
+                    });
                 }
-            });
-            if (!duplicate) {
-                angular.forEach($scope.fieldMapping, function (field, index) {
+            }
+            if (!checkDuplicate) {
+                angular.forEach($scope.uniqueKeyMapping, function (field, index) {
                     if (!duplicate) {
                         if (field.id === item.id && !field.deleted) {
                             duplicate = true;
@@ -235,33 +267,47 @@ admin.controller('AdminBulkCreationConfigController', [
                     }
                 });
 
-                if (isValid && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0)) {
-                    if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0)) {
-                        $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
-                        var configs = angular.copy($scope.valueMapping);
-                        angular.forEach(configs, function (config) {
-                            config.mappingType = 'Value Mapping';
-                        });
-                        angular.forEach($scope.fieldMapping, function (config) {
-                            config.mappingType = 'Field Mapping';
-                            configs.push(config);
-                        });
-                        CSVUploadConfigService.saveFieldMapping(configs)
-                            .success(function (response) {
-                                if (response.success) {
-                                    $dialog.alert("Field mappings saved successfully.");
-                                    $scope.blockUI.sObjectFieldsMapping.stop();
-                                    $scope.init();
-                                }
-                                else {
-                                    $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
-                                    $scope.blockUI.sObjectFieldsMapping.stop();
-                                }
-                            })
-                            .error(function () {
-                                $dialog.alert('Error occured while saving field mappings.', 'Error', 'pficon pficon-error-circle-o');
-                                $scope.blockUI.sObjectFieldsMapping.stop();
+                if (isValid) {
+                    if (($scope.uniqueKey == undefined || $scope.uniqueKey == '') && $scope.uniqueKeyMapping.length > 0) {
+                        $dialog.alert("Please select Unique Key or Remove Unique Key combination.");
+                        isValid = false;
+                    }
+                    else if ($scope.uniqueKey != undefined && $scope.uniqueKey != '' && $scope.uniqueKeyMapping.length == 0) {
+                        $dialog.alert("Please add Unique Key combination or remove Unique Key selection.");
+                        isValid = false;
+                    }
+                    if (isValid) {
+                        if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0 || $scope.uniqueKeyMapping.length > 0)) {
+                            $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
+                            var configs = angular.copy($scope.valueMapping);
+                            angular.forEach(configs, function (config) {
+                                config.mappingType = 'Value Mapping';
                             });
+                            angular.forEach($scope.fieldMapping, function (config) {
+                                config.mappingType = 'Field Mapping';
+                                configs.push(config);
+                            });
+                            angular.forEach($scope.uniqueKeyMapping, function (config) {
+                                config.mappingType = 'Unique Key';
+                                configs.push(config);
+                            });
+                            CSVUploadConfigService.saveFieldMapping({ uniqueKey: $scope.uniqueKey, configs: configs })
+                                .success(function (response) {
+                                    if (response.success) {
+                                        $dialog.alert("Field mappings saved successfully.");
+                                        $scope.blockUI.sObjectFieldsMapping.stop();
+                                        $scope.init();
+                                    }
+                                    else {
+                                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                                        $scope.blockUI.sObjectFieldsMapping.stop();
+                                    }
+                                })
+                                .error(function () {
+                                    $dialog.alert('Error occured while saving field mappings.', 'Error', 'pficon pficon-error-circle-o');
+                                    $scope.blockUI.sObjectFieldsMapping.stop();
+                                });
+                        }
                     }
                 }
             }
@@ -272,7 +318,9 @@ admin.controller('AdminBulkCreationConfigController', [
                 sObjectFieldsMapping: blockUI.instances.get('sObjectFieldsMapping')
             };
         };
-
+        $scope.test = function (uniqueKey) {
+            $scope.uniqueKey = uniqueKey;
+        };
         $scope.init = function () {
             console.log('AdminBulkCreationConfigController loaded!');
             $scope.sidePanel = 'slds/views/admin/bulkcreationconfig/sidepanel.html';
@@ -282,6 +330,8 @@ admin.controller('AdminBulkCreationConfigController', [
             $scope.detailSObject = undefined;
             $scope.valueMapping = [];
             $scope.fieldMapping = [];
+            $scope.uniqueKey = undefined;
+            $scope.uniqueKeyMapping = [];
             $scope.getFieldMapping();
         };
         $scope.init();

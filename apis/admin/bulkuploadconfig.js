@@ -92,7 +92,8 @@ csvUploadconfigRouter.post('/getfieldmapping', function (req, res) {
 });
 
 csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
-    var fieldsmappings = req.body;
+    var uniqueKey = req.body.uniqueKey;
+    var fieldsmappings = req.body.configs;
     var recordsToInsert = [];
 
     fieldsmappings.forEach(function (fieldsmapping) {
@@ -103,16 +104,27 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
         else if (fieldsmapping.isOf == 'detailSObject') {
             SObjectType = 'detailSObjectId';
         }
-
-        recordsToInsert.push({
-            mappingType: fieldsmapping.mappingType,
-            sfFieldName: fieldsmapping.name,
-            label: fieldsmapping.label,
-            csvFieldName: fieldsmapping.csvFieldName,
-            datatype: fieldsmapping.type,
-            [SObjectType]: fieldsmapping[SObjectType],
-            defaultValue: fieldsmapping.defaultValue
-        });
+        if (fieldsmapping.mappingType != 'Unique Key') {
+            recordsToInsert.push({
+                mappingType: fieldsmapping.mappingType,
+                sfFieldName: fieldsmapping.name,
+                label: fieldsmapping.label,
+                csvFieldName: fieldsmapping.csvFieldName,
+                datatype: fieldsmapping.type,
+                [SObjectType]: fieldsmapping[SObjectType],
+                defaultValue: fieldsmapping.defaultValue
+            });
+        }
+        else if (fieldsmapping.mappingType == 'Unique Key') {
+            recordsToInsert.push({
+                mappingType: fieldsmapping.mappingType,
+                sfFieldName: uniqueKey,
+                label: fieldsmapping.label,
+                csvFieldName: fieldsmapping.name,
+                datatype: fieldsmapping.type,
+                [SObjectType]: fieldsmapping[SObjectType]
+            });
+        }
     });
 
     //Delete existing mapping

@@ -2,7 +2,7 @@ module.exports = function (sequelize, DataTypes) {
     var CSVUploadConfig = sequelize.define("CSVUploadConfig", {
         mappingType: {
             type: DataTypes.ENUM,
-            values: ['Value Mapping', 'Field Mapping']
+            values: ['Value Mapping', 'Field Mapping', 'Unique Key']
         },
         sfFieldName: {
             type: DataTypes.STRING,
@@ -12,15 +12,19 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        csvFieldName: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         datatype: {
             type: DataTypes.STRING,
             allowNull: false
         },
+        csvFieldName: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         defaultValue: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        uniqueKeyFieldName: {
             type: DataTypes.STRING,
             allowNull: true
         }
