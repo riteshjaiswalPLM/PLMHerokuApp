@@ -11,4 +11,5 @@ serviceRouter.use('/archived',require('./archival'));
 serviceRouter.use('/report',require('./report'));
 serviceRouter.use('/archivals',require('./archivals'));
 serviceRouter.use('/archivalcomponent',require('./archivalcomponent'));
+serviceRouter.use('/sobjectbulkcreation',require('./sobjectbulkcreation'));
 module.exports = serviceRouter;
