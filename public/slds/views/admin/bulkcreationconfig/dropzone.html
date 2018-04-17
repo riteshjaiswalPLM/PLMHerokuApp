@@ -1,5 +1,5 @@
 <div class="slds-form--stacked slds-grow slds-scrollable--y" style="min-height: 100px;" block-ui="sObjectFieldsMapping">
-    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-bottom--large">
+    <div class="slds-size--1-of-1 slds-grid slds-wrap">
         <div class="slds-size--1-of-2 slds-p-around--medium">
             <fieldset class="slds-form--compound">
                 <div class="slds-form-element__group">
@@ -12,8 +12,7 @@
                                     <input readonly type="text" id="SObject" class="slds-lookup__search-input slds-input--bare" ng-model="SObject.label" />
                                 </div>
                                 <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
-                                    <button ng-click="openSObjectsLookup('SObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
-                                        aria-haspopup="true" title="Open lookup modal for SObjects">
+                                    <button ng-click="openSObjectsLookup('SObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                                         </svg>
@@ -35,12 +34,10 @@
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <div class="slds-input-has-icon slds-grow">
                                     <input type="hidden" ng-model="detailSObject">
-                                    <input readonly type="text" id="detailSObject" class="slds-lookup__search-input slds-input--bare" ng-model="detailSObject.label"
-                                    />
+                                    <input readonly type="text" id="detailSObject" class="slds-lookup__search-input slds-input--bare" ng-model="detailSObject.label" />
                                 </div>
                                 <div class="slds-align-middle slds-m-left--xx-small slds-m-right--xx-small slds-shrink-none">
-                                    <button ng-click="openSObjectsLookup('detailSObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button"
-                                        aria-haspopup="true" title="Open lookup modal for SObjects">
+                                    <button ng-click="openSObjectsLookup('detailSObject')" class="slds-button slds-button--icon-border slds-button--icon-small slds-util-button" aria-haspopup="true" title="Open lookup modal for SObjects">
                                         <svg class="slds-button__icon" aria-hidden="true">
                                             <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
                                         </svg>
@@ -58,8 +55,7 @@
         <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
             <h3 class="slds-section__title">Value Mapping</h3>
         </div>
-        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-            style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
             <thead>
                 <tr class="slds-text-title--caps">
                     <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="Object">Object</th>
@@ -70,13 +66,11 @@
             </thead>
         </table>
         <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
-            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="valueMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, valueMapping, $index+1, true)"
-                dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="valueMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, valueMapping, $index+1, true)" dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
                 <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
                     Drop field here
                 </div>
-                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in valueMapping" dnd-draggable="field" dnd-effect-allowed="move"
-                    dnd-moved="valueMapping.splice($index,1)" dnd-type="'sObjectField'">
+                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in valueMapping" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="valueMapping.splice($index,1)" dnd-type="'sObjectField'">
                     <label class="slds-form-element__label" style="font-weight: 600;width: 25%;text-align: center !important;">
                         <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.SObjectName }}"><i class="fa fa-exclamation-circle"></i></a>
                         {{ field.SObjectName }}
@@ -116,8 +110,7 @@
         <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
             <h3 class="slds-section__title">SObject Field Mapping</h3>
         </div>
-        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-            style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
             <thead>
                 <tr class="slds-text-title--caps">
                     <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="Object">Object</th>
@@ -128,13 +121,11 @@
             </thead>
         </table>
         <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
-            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="fieldMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, fieldMapping, $index+1, true)"
-                dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="fieldMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, fieldMapping, $index+1, true)" dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
                 <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
                     Drop field here
                 </div>
-                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in fieldMapping" dnd-draggable="field" dnd-effect-allowed="move"
-                    dnd-moved="fieldMapping.splice($index,1)" dnd-type="'sObjectField'">
+                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in fieldMapping" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="fieldMapping.splice($index,1)" dnd-type="'sObjectField'">
                     <label class="slds-form-element__label" style="font-weight: 600;width: 25%;text-align: center !important;">
                         <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.SObjectName }}"><i class="fa fa-exclamation-circle"></i></a>
                         {{ field.SObjectName }}
@@ -186,18 +177,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="slds-form-element slds-size--1-of-3">
-                </div>
+                <div class="slds-form-element slds-size--1-of-3"></div>
             </header>
         </div>
         <div class="slds-card__body slds-p-around--x-small slds-border--top" style="margin-bottom: 0;background-color: white;">
-            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="uniqueKeyMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, uniqueKeyMapping, $index+1, false)"
-                dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="uniqueKeyMapping" dnd-drop="fieldsDropCallBack(event, index, item, external, type, uniqueKeyMapping, $index+1, false)" dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
                 <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
                     Drop field here
                 </div>
-                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in uniqueKeyMapping" dnd-draggable="field" dnd-effect-allowed="move"
-                    dnd-moved="uniqueKeyMapping.splice($index,1)" dnd-type="'sObjectField'" style="padding-left: 100px !important; padding-right: 100px !important;">
+                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in uniqueKeyMapping" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="uniqueKeyMapping.splice($index,1)" dnd-type="'sObjectField'" style="padding-left: 100px !important; padding-right: 100px !important;">
                     <label class="slds-form-element__label" style="font-weight: 600;width: 90%;text-align: center !important;">
                         <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.label }} ({{ field.type }}) [{{ field.SObjectName }}]"><i class="fa fa-exclamation-circle"></i></a>
                         {{ field.label }} ({{ field.type }}) [{{ field.SObjectName }}]
