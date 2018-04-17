@@ -28,6 +28,7 @@ client.controller('ClientController',[
                 .success(function(response){
                     if(response.success){
                         $scope.showReportTab = response.data.reportTab;
+                        $scope.showBulkUploadTab = response.data.bulkUploadTab;
                         if(response.data.hasOwnProperty('profile')){
                             $scope.profile = angular.copy(response.data.profile);
                             response.data.states.push($scope.profile[0]);

@@ -1,14 +1,5 @@
 var express = require('express');
 var sobjectRouter1 = express.Router();
-var path = require('path');
-var fs = require('fs');
-var dateFormat = require('dateformat');
-var jsForce = require('jsforce');
-var now = new Date();
-var os = require('os');
-var XlsxPopulate = require('xlsx-populate');
-var timestamp = require('unix-timestamp');
-
 
 sobjectRouter1.post('/save', function (req, res) {
 	var queryObject = req.body;
@@ -30,10 +21,9 @@ sobjectRouter1.post('/save', function (req, res) {
 			} else {
 				return res.json({
 					success: true,
-					message: 'successfully inserted record.' + result.length - 1
+					message: 'Records have been created successfully.'
 				});
 			}
-
 		});
 });
 

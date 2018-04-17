@@ -20,10 +20,6 @@
                 <button class="slds-button slds-button--neutral" ng-click="createInvoice()">
                     Bulk Creation Invoice
                 </button>
-                <button class="slds-button slds-button--neutral">
-                    <input type="checkbox" ng-model="upload.ignoreBlank" id="chkIgnoreBlank" />
-                    Ignore Blank from file
-                </button>
                 <file-field class="slds-button slds-button--brand" callback="uploadInvoices" allowed-ext="'.csv'" ng-model="upload.InvoiceFile">
                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"

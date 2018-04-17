@@ -193,7 +193,7 @@ authRouter.post('/states', function(req, res){
                         created: true
                     }
                 }).then(function(tabs) {
-                    var states = [], profile = [], reportTab = false;
+                    var states = [], profile = [], reportTab = false, bulkUploadTab = false;
                     if(global.config.dashboardConfig.active){
                         states.push({
                             dynamic: true,
@@ -275,6 +275,9 @@ authRouter.post('/states', function(req, res){
                             if (tabConfig.reportTab === true) {
                                 reportTab = true;
                             }
+                            if (tabConfig.bulkUploadTab === true) {
+                                bulkUploadTab = true;
+                            }
                             if (global.config.archivalConfig.active && tabConfig.archivalTab === true) {
                                 states.push({
                                     dynamic: true,
@@ -331,7 +334,8 @@ authRouter.post('/states', function(req, res){
                                         success: true,
                                         data: {
                                             states: states,
-                                            reportTab: reportTab
+                                            reportTab: reportTab,
+                                            bulkUploadTab: bulkUploadTab
                                         }
                                     });
                                 }else{
@@ -361,6 +365,7 @@ authRouter.post('/states', function(req, res){
                                         data: {
                                             states: states,
                                             reportTab: reportTab,
+                                            bulkUploadTab: bulkUploadTab,
                                             profile: profile
                                         }
                                     });
@@ -372,7 +377,8 @@ authRouter.post('/states', function(req, res){
                                 success: true,
                                 data: {
                                     states: states,
-                                    reportTab: reportTab
+                                    reportTab: reportTab,
+                                    bulkUploadTab: bulkUploadTab
                                 }
                             });
                         }

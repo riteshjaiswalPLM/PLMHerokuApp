@@ -90,7 +90,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="slds-context-bar__item" ui-sref-active="slds-is-active">
+                <li ng-if="showBulkUploadTab" class="slds-context-bar__item" ui-sref-active="slds-is-active">
                     <a ui-sref="client.bulkcreation" class="slds-context-bar__label-action">
                         <span class="slds-truncate">
                             <svg class="slds-icon slds-icon--x-small slds-icon-text-default slds-m-right--x-small" aria-hidden="true">
