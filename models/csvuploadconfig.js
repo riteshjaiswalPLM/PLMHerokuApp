@@ -23,10 +23,6 @@ module.exports = function (sequelize, DataTypes) {
         defaultValue: {
             type: DataTypes.STRING,
             allowNull: true
-        },
-        uniqueKeyFieldName: {
-            type: DataTypes.STRING,
-            allowNull: true
         }
     }, {
             classMethods: {

@@ -151,8 +151,9 @@ admin.controller('AdminBulkCreationConfigController', [
                                     $scope.fieldMapping.push(field);
                                 }
                                 else if (field.mappingType == "Unique Key") {
-                                    $scope.uniqueKeyMapping.push(field);
                                     $scope.uniqueKey = field.name;
+                                    field.name = field.csvFieldName;
+                                    $scope.uniqueKeyMapping.push(field);
                                 }
                             });
                         }
