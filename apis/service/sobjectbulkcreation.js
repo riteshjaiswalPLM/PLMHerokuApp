@@ -1,21 +1,16 @@
 var express = require('express');
-var sobjectRouter1 = express.Router();
+var sobjectbulkuploadRouter = express.Router();
 
-sobjectRouter1.post('/save', function (req, res) {
+sobjectbulkuploadRouter.post('/save', function (req, res) {
 	var queryObject = req.body;
-
 	var primaryFileName, secondaryFileList, creationObjectIds = [];
-	console.log("sobjectbulkcreation.js -> queryObject : " + queryObject);
-	for (var i = 0; i < queryObject.length; i++) {
-		console.log("sobjectbulkcreation.js -> queryObject.InvoiceFile : " + queryObject.InvoiceFile);
-	}
 
-	global.sfdc.sobject('Invoice__c')
-		.create(queryObject.InvoiceFile, function (err, result) {
+	global.sfdc.sobject(queryObject.sObjectName)
+		.create(queryObject.records, function (err, result) {
 			if (err) {
 				return res.json({
 					success: false,
-					message: 'Error occured while inserting record.',
+					message: 'Error occured while inserting records.',
 					error: err.message
 				});
 			} else {
@@ -27,4 +22,4 @@ sobjectRouter1.post('/save', function (req, res) {
 		});
 });
 
-module.exports = sobjectRouter1;
+module.exports = sobjectbulkuploadRouter;

@@ -16,14 +16,10 @@
                     </div>
                 </div>
             </div>
-            <div class="slds-col slds-no-flex slds-grid slds-align-top">
-                <button class="slds-button slds-button--neutral" ng-click="createInvoice()">
-                    Bulk Creation Invoice
-                </button>
-                <file-field class="slds-button slds-button--brand" callback="uploadInvoices" allowed-ext="'.csv'" ng-model="upload.InvoiceFile">
+            <div class="slds-col slds-no-flex slds-grid slds-align-top" ng-if="valueMapping && fieldMapping && uniqueKeyMapping && (valueMapping.length > 0 || fieldMapping.length > 0 || uniqueKeyMapping.length > 0)">
+                <file-field class="slds-button slds-button--brand" callback="uploadRecords" allowed-ext="'.csv'" ng-model="upload.DataFile">
                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload"
-                        />
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#upload" />
                     </svg>
                     Upload
                 </file-field>
@@ -32,16 +28,14 @@
     </div>
     <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="min-height: 200px !important;">
         <article class="slds-card slds-size--1-of-1">
-            <div class="slds-form--stacked slds-grow slds-scrollable--y" style="min-height: 100px;" block-ui="userUpload">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y" style="min-height: 100px;" block-ui="bulkUpload">
                 <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
-                    <h3 class="slds-section__title">SOBJECT Upload Report</h3>
+                    <h3 class="slds-section__title">SObject Upload Report</h3>
                 </div>
                 <div class="slds-size--1-of-1 slds-panel__section">
-                    <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y slds-scrollable--x;"
-                        style="margin-bottom:0px">
+                    <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y slds-scrollable--x;" style="margin-bottom:0px">
                         <div style="padding:0px;overflow: auto;max-height:290px">
-                            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped"
-                                style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
+                            <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
                                 <thead>
                                     <tr class="slds-text-title--caps">
                                         <th style="white-space:normal !important;" title="Batch ID">Batch ID</th>
@@ -61,8 +55,7 @@
                                         <td>{{ field.batchId }}</td>
                                         <td>{{ field.filename }}</td>
                                         <td>
-                                            {{ ($root.formateDateAndDateTime(field.createdAt,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat)
-                                            | date: 'medium') }}
+                                            {{ ($root.formateDateAndDateTime(field.createdAt,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') }}
                                         </td>
                                         <td>{{ field.createdby }}</td>
                                         <td>{{ field.recordsinserted }}</td>
