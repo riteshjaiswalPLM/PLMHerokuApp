@@ -99,7 +99,7 @@ client.controller('csvUploadController', [
                     });
                     //Set Field API, if it is available in Config
                     angular.forEach($scope.fieldMapping, function (fieldMappingConfig) {
-                        if (fieldMappingConfig.datatype == 'date' || fieldMappingConfig.datatype == 'datetime') {
+                        if ((fieldMappingConfig.datatype == 'date' || fieldMappingConfig.datatype == 'datetime') && record[fieldMappingConfig.csvFieldName] != undefined) {
                             //newRecord[fieldMappingConfig.sfFieldName] = new Date(record[fieldMappingConfig.csvFieldName]);
                             //var d1 = $filter('date')(record[fieldMappingConfig.csvFieldName], "yyyymmdd");
                             //var d2 = $filter('date')(record[fieldMappingConfig.csvFieldName], "yyyyMMdd");
@@ -179,6 +179,9 @@ client.controller('csvUploadController', [
                                 $scope.blockUI.bulkUpload.stop();
                                 $dialog.alert('Error occured while uploading records.', 'Error', 'pficon pficon-error-circle-o');
                             });
+                    }
+                    else {
+                        $scope.blockUI.bulkUpload.stop();
                     }
                 } else {
                     $scope.blockUI.bulkUpload.stop();
