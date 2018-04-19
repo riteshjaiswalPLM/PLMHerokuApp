@@ -62,7 +62,7 @@
                                         <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
                                             class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
                                             style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 1px solid #d8dde6">
-                                            <h3>{{component.label | translate}}</h3>
+                                            <h3>{{component.label | translate}} - ({{searchResult[component.Component.catagory+'Component'+component.id].length}})</h3>
                                         </div>
                                     </div>
                                     <div class="slds-col slds-no-flex slds-grid slds-align-top">
