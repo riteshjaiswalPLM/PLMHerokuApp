@@ -3,23 +3,39 @@ var sobjectbulkuploadRouter = express.Router();
 
 sobjectbulkuploadRouter.post('/save', function (req, res) {
 	var queryObject = req.body;
-	var primaryFileName, secondaryFileList, creationObjectIds = [];
+	console.log(queryObject.records);
 
-	global.sfdc.sobject(queryObject.sObjectName)
-		.create(queryObject.records, function (err, result) {
-			if (err) {
-				return res.json({
-					success: false,
-					message: 'Error occured while inserting records.',
-					error: err.message
+	var uploadRecords = function () {
+		console.log("uploadRecords ====================================");
+		try {
+			global.sfdc.sobject(queryObject.sObjectName)
+				.insertBulk(queryObject.records, function (err, result) {
+					console.log("res received from SF ====================================");
+					if (err) {
+						console.log("err ====================================");
+						console.log(err);
+						console.log("err ====================================");
+					} else {
+						for (var i = 0; i < result.length; i++) {
+							if (result[i].success) {
+								console.log("#" + (i + 1) + " loaded successfully, id = " + result[i].id);
+							} else {
+								console.log("#" + (i + 1) + " error occurred, message = " + result[i].errors.join(', '));
+							}
+						}
+					}
 				});
-			} else {
-				return res.json({
-					success: true,
-					message: 'Records have been created successfully.'
-				});
-			}
-		});
+		}
+		catch (err1) {
+			console.log('eer', err1);
+		}
+	};
+
+	uploadRecords();
+	return res.json({
+		success: true,
+		message: 'Processing...'
+	});
 });
 
 module.exports = sobjectbulkuploadRouter;
