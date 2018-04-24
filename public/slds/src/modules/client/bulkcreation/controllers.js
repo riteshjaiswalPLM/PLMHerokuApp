@@ -9,7 +9,7 @@ client.controller('csvUploadController', [
             CSVUploadConfigService.getFieldMapping()
                 .success(function (response) {
                     if (response.success) {
-                        angular.forEach(response.data.mappedFields, function (field, fieldOrder) {
+                        angular.forEach(response.data.mappedFields, function (field) {
                             if (field.mappingType == "Value Mapping") {
                                 $scope.valueMapping.push(field);
                                 if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
@@ -100,14 +100,8 @@ client.controller('csvUploadController', [
                     //Set Field API, if it is available in Config
                     angular.forEach($scope.fieldMapping, function (fieldMappingConfig) {
                         if ((fieldMappingConfig.datatype == 'date' || fieldMappingConfig.datatype == 'datetime') && record[fieldMappingConfig.csvFieldName] != undefined) {
-                            //newRecord[fieldMappingConfig.sfFieldName] = new Date(record[fieldMappingConfig.csvFieldName]);
-                            //var d1 = $filter('date')(record[fieldMappingConfig.csvFieldName], "yyyymmdd");
-                            //var d2 = $filter('date')(record[fieldMappingConfig.csvFieldName], "yyyyMMdd");
                             var pattern = /(\d{4})(\d{2})(\d{2})/;
                             var date = new Date(record[fieldMappingConfig.csvFieldName].replace(pattern, '$1-$2-$3'));
-                            //console.log(d1);
-                            //console.log(d2);
-                            //console.log(d3);
                             newRecord[fieldMappingConfig.sfFieldName] = date;
                         }
                         else {
