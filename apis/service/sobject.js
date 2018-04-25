@@ -454,6 +454,14 @@ sobjectRouter.post('/save', function(req, res){
                             if(configuration[key][fieldToMapkey]==="LOGIN_USER_ID"){
                                 queryObject.sObject.data[fieldToMapkey]=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
                             }
+                            else if (configuration[key][fieldToMapkey].match(/LOGIN_USER_ID\..+/g)) {
+                                try {
+                                    queryObject.sObject.data[fieldToMapkey] = JSON.parse(JSON.parse(req.cookies.user).userdata)[configuration[key][fieldToMapkey].substring(14)];
+                                }
+                                catch (err) {
+                                    console.log('err', err)
+                                }
+                            }
                             else{
                                 queryObject.sObject.data[fieldToMapkey]=configuration[key][fieldToMapkey];
                             }
