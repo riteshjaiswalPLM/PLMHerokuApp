@@ -37,6 +37,8 @@ sobjectbulkuploadRouter.post('/save', function (req, res) {
                             message: 'Error occured while creating new connection with salesforce!!!'
                         });
                     } else {
+                        jsForceConnection.bulk.pollInterval = 5000; // 5 sec
+                        jsForceConnection.bulk.pollTimeout = 120000; // 120 sec
                         jsForceConnection.sobject(queryObject.sObjectName)
                             .createBulk(queryObject.records, function (err, result) {
                                 console.log("res received from SF ====================================");

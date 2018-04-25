@@ -161,6 +161,52 @@
             </div>
         </div>
     </div>
+    <div class="slds-form--stacked slds-grow slds-scrollable--y">
+        <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
+            <h3 class="slds-section__title">UI Field</h3>
+        </div>
+        <table fixed-header class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="margin-bottom:0px;min-height: 100px !important; width: 100% !important;">
+            <thead>
+                <tr class="slds-text-title--caps">
+                    <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="Object">Object</th>
+                    <th style="white-space:normal !important; width: 25%; text-align: center !important;" title="Salesforce Field">Salesforce Field</th>
+                    <th style="white-space:normal !important; width: 50%; text-align: center !important;"></th>
+                </tr>
+            </thead>
+        </table>
+        <div class="slds-panel__section slds-grid slds-p-vertical--xx-small slds-p-horizontal--none slds-border--top slds-border--bottom">
+            <div class="slds-form--horizontal slds-size--1-of-1" dnd-list="UIField" dnd-drop="fieldsDropCallBack(event, index, item, external, type, UIField, $index+1, true)" dnd-allowed-types="'sObjectField'" style="min-height: 20px;">
+                <div class="dndPlaceholder" style="background-color: #e1d951 !important;">
+                    Drop field here
+                </div>
+                <div class="slds-form-element slds-form-element--draggable" ng-repeat="field in UIField" dnd-draggable="field" dnd-effect-allowed="move" dnd-moved="UIField.splice($index,1)" dnd-type="'sObjectField'">
+                    <label class="slds-form-element__label" style="font-weight: 600;width: 25%;text-align: center !important;">
+                        <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.SObjectName }}"><i class="fa fa-exclamation-circle"></i></a>
+                        {{ field.SObjectName }}
+                    </label>
+                    <label class="slds-form-element__label" style="font-weight: 600;width: 25%;text-align: center !important;">
+                        <a href pf-tooltip data-placement="'top'" ng-if="field.error" style="color: red;" title="{{ field.label }} ({{ field.type }})"><i class="fa fa-exclamation-circle"></i></a>
+                        {{ field.label }} ({{ field.type }})
+                    </label>
+                    <div class="slds-form-element__control" style="width: 40%;"></div>
+                    <div class="slds-form-element__control" style="width: 5%;">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-no-flex slds-grid slds-align-middle">
+                                <div class="slds-button-group slds-field-actions" role="group">
+                                    <button ng-click="removeAndReorder(UIField,field,$index)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small slds-button--icon-error">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <article class="slds-card" style="margin-top: 10px !important;">
         <div class="slds-card__header slds-grid">
             <header class="slds-media slds-media--center slds-has-flexi-truncate">

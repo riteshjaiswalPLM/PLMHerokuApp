@@ -36,6 +36,12 @@ admin.controller('AdminBulkCreationConfigController', [
                                     $scope.fieldMapping.splice(i, 1);
                                 }
                             }
+                            for (var i = $scope.UIField.length - 1; i >= 0; i--) {
+                                var field = $scope.UIField[i];
+                                if (field.SObjectId != undefined && field.SObjectId != $scope.SObject.id) {
+                                    $scope.UIField.splice(i, 1);
+                                }
+                            }
                             $scope.uniqueKey = undefined;
                             for (var i = $scope.uniqueKeyMapping.length - 1; i >= 0; i--) {
                                 var field = $scope.uniqueKeyMapping[i];
@@ -61,6 +67,12 @@ admin.controller('AdminBulkCreationConfigController', [
                                 var field = $scope.fieldMapping[i];
                                 if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
                                     $scope.fieldMapping.splice(i, 1);
+                                }
+                            }
+                            for (var i = $scope.UIField.length - 1; i >= 0; i--) {
+                                var field = $scope.UIField[i];
+                                if (field.detailSObjectId != undefined && field.detailSObjectId != $scope.detailSObject.id) {
+                                    $scope.UIField.splice(i, 1);
                                 }
                             }
                             for (var i = $scope.uniqueKeyMapping.length - 1; i >= 0; i--) {
@@ -150,6 +162,9 @@ admin.controller('AdminBulkCreationConfigController', [
                                 else if (field.mappingType == "Field Mapping") {
                                     $scope.fieldMapping.push(field);
                                 }
+                                else if (field.mappingType == "UI Field") {
+                                    $scope.UIField.push(field);
+                                }
                                 else if (field.mappingType == "Unique Key") {
                                     $scope.uniqueKey = field.name;
                                     field.name = field.csvFieldName;
@@ -209,6 +224,15 @@ admin.controller('AdminBulkCreationConfigController', [
                 });
                 if (!duplicate) {
                     angular.forEach($scope.fieldMapping, function (field, index) {
+                        if (!duplicate) {
+                            if (field.id === item.id && !field.deleted) {
+                                duplicate = true;
+                            }
+                        }
+                    });
+                }
+                if (!duplicate) {
+                    angular.forEach($scope.UIField, function (field, index) {
                         if (!duplicate) {
                             if (field.id === item.id && !field.deleted) {
                                 duplicate = true;
@@ -278,7 +302,7 @@ admin.controller('AdminBulkCreationConfigController', [
                         isValid = false;
                     }
                     if (isValid) {
-                        if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0 || $scope.uniqueKeyMapping.length > 0)) {
+                        if (!$scope.blockUI.sObjectFieldsMapping.state().blocking && ($scope.valueMapping.length > 0 || $scope.fieldMapping.length > 0 || $scope.UIField.length > 0 || $scope.uniqueKeyMapping.length > 0)) {
                             $scope.blockUI.sObjectFieldsMapping.start('Loading ...');
                             var configs = angular.copy($scope.valueMapping);
                             angular.forEach(configs, function (config) {
@@ -290,6 +314,10 @@ admin.controller('AdminBulkCreationConfigController', [
                             });
                             angular.forEach($scope.uniqueKeyMapping, function (config) {
                                 config.mappingType = 'Unique Key';
+                                configs.push(config);
+                            });
+                            angular.forEach($scope.UIField, function (config) {
+                                config.mappingType = 'UI Field';
                                 configs.push(config);
                             });
                             CSVUploadConfigService.saveFieldMapping({ uniqueKey: $scope.uniqueKey, configs: configs })
@@ -331,6 +359,7 @@ admin.controller('AdminBulkCreationConfigController', [
             $scope.detailSObject = undefined;
             $scope.valueMapping = [];
             $scope.fieldMapping = [];
+            $scope.UIField = [];
             $scope.uniqueKey = undefined;
             $scope.uniqueKeyMapping = [];
             $scope.getFieldMapping();

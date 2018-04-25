@@ -2,7 +2,7 @@ module.exports = function (sequelize, DataTypes) {
     var CSVUploadConfig = sequelize.define("CSVUploadConfig", {
         mappingType: {
             type: DataTypes.ENUM,
-            values: ['Value Mapping', 'Field Mapping', 'Unique Key']
+            values: ['Value Mapping', 'Field Mapping', 'UI Field', 'Unique Key']
         },
         sfFieldName: {
             type: DataTypes.STRING,
