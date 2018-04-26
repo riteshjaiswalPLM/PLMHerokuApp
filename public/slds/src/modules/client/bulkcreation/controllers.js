@@ -52,7 +52,7 @@ client.controller('csvUploadController', [
                                 if (response.success) {
                                     angular.forEach(response.data.sObjectFields, function (field) {
                                         angular.forEach(tempUIFields, function (uifield) {
-                                            if (uifield.SObjectField.id == field.id) {
+                                            if (uifield.SObjectField.id == field.ctrlID) {
                                                 uifield.ControllerSObjectField = field;
                                             }
                                         });

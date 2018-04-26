@@ -83,7 +83,7 @@ sobjectbulkuploadRouter.post('/save', function (req, res) {
 sobjectbulkuploadRouter.post('/getSelectedFields', function (req, res) {
     var SObjectFields = db.SObjectField.findAll({
         attributes: {
-            exclude: ['createdAt', 'updatedAt']
+            include: ['id', 'controllerName', 'SObjectId']
         },
         where: {
             id: {
@@ -99,10 +99,42 @@ sobjectbulkuploadRouter.post('/getSelectedFields', function (req, res) {
                 message: 'Error occured while loading sobject fields.'
             });
         } else {
-            return res.json({
-                success: true,
-                data: {
-                    sObjectFields: sObjectFields
+            var names = [];
+            sObjectFields.forEach(function (field, index) {
+                names.push(field.controllerName);
+            });
+            var SObjectCtrlFields = db.SObjectField.findAll({
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                where: {
+                    name: {
+                        $in: names
+                    },
+                    SObjectId: sObjectFields[0].SObjectId
+                }
+            });
+
+            SObjectCtrlFields.then(function (sObjectCtrlFields) {
+                if (sObjectCtrlFields === undefined || sObjectCtrlFields === null) {
+                    return res.json({
+                        success: false,
+                        message: 'Error occured while loading sobject fields.'
+                    });
+                } else {
+                    sObjectCtrlFields.forEach(function (field) {
+                        sObjectFields.forEach(function (cfield) {
+                            if (cfield.controllerName == field.name) {
+                                field.dataValues.ctrlID = cfield.id;
+                            }
+                        });
+                    });
+                    return res.json({
+                        success: true,
+                        data: {
+                            sObjectFields: sObjectCtrlFields
+                        }
+                    });
                 }
             });
         }
