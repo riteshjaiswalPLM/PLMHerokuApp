@@ -80,4 +80,33 @@ sobjectbulkuploadRouter.post('/save', function (req, res) {
     }
 });
 
+sobjectbulkuploadRouter.post('/getSelectedFields', function (req, res) {
+    var SObjectFields = db.SObjectField.findAll({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+            id: {
+                $in: req.body
+            }
+        }
+    });
+
+    SObjectFields.then(function (sObjectFields) {
+        if (sObjectFields === undefined || sObjectFields === null) {
+            return res.json({
+                success: false,
+                message: 'Error occured while loading sobject fields.'
+            });
+        } else {
+            return res.json({
+                success: true,
+                data: {
+                    sObjectFields: sObjectFields
+                }
+            });
+        }
+    });
+});
+
 module.exports = sobjectbulkuploadRouter;

@@ -16,6 +16,7 @@
                     </div>
                 </div>
             </div>
+            <label style="padding-top: 7px; padding-right: 15px;"><a href="https://syscoapflow--partial--c.cs77.content.force.com/servlet/servlet.FileDownload?file=0150t0000005Ajj ">Payment Request Template</a><br/></label>
             <div class="slds-col slds-no-flex slds-grid slds-align-top" ng-if="valueMapping && fieldMapping && uniqueKeyMapping && (valueMapping.length > 0 || fieldMapping.length > 0 || uniqueKeyMapping.length > 0)">
                 <file-field class="slds-button slds-button--brand" callback="uploadRecords" allowed-ext="'.csv'" ng-model="upload.DataFile">
                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
@@ -26,11 +27,37 @@
             </div>
         </div>
     </div>
+    <!--<div ng-if="UIField.length > 0" class="slds-panel__section slds-grid slds-p-vertical--x-small slds-p-horizontal--meduim">
+        <div class="slds-form--horizontal slds-p-horizontal--x-small" style="width: 50%;">
+            <div class="slds-form-element" ng-repeat="field in UIField">
+                <form class="form-horizontal">
+                    <label class="slds-form-element__label slds-p-right--small" style="font-weight: 600;float: none;width:45%;float:left;" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
+                    <div class="slds-form-element__control" style="width:50%;">
+                        <div field-readonly="false" sobject-layout-field base-ctrl="baseCtrl" field="field" model="model" index="$index"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>-->
+    <div ng-if="UIField.length > 0" class="slds-panel__section slds-grid slds-p-vertical--x-small slds-p-horizontal--meduim">
+        <div class="slds-form--horizontal slds-p-horizontal--x-small" style="width: 50%;">
+            <div class="slds-form-element" ng-repeat="field in UIField">
+                <form class="form-horizontal">
+                    <label class="slds-form-element__label slds-p-right--small" style="font-weight: 600;float: none;width:45%;float:left;" for="{{field.SObjectField.name + $index}}" translate>{{ field.label}}</label>
+                    <div class="slds-form-element__control" style="width:50%;">
+                        <select ng-model="Document_Type__c" ng-options="pvalue.value as pvalue.label for pvalue in field.SObjectField.picklistValues | orderBy: 'label'" class="slds-select slds-p-horizontal--x-small">
+                            <option value="" ng-bind-template="-- {{ (criteria) ? 'All' : 'None' }} --">Loading...</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="slds-grid slds-panel slds-wrap slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium" style="min-height: 200px !important;">
         <article class="slds-card slds-size--1-of-1">
             <div class="slds-form--stacked slds-grow slds-scrollable--y" style="min-height: 100px;" block-ui="bulkUpload">
                 <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem;">
-                    <h3 class="slds-section__title">SObject Upload Report</h3>
+                    <h3 class="slds-section__title">Invoice Upload Report</h3>
                 </div>
                 <div class="slds-size--1-of-1 slds-panel__section">
                     <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y slds-scrollable--x;" style="margin-bottom:0px">

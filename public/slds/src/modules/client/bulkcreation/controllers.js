@@ -9,15 +9,32 @@ client.controller('csvUploadController', [
             CSVUploadConfigService.getFieldMapping()
                 .success(function (response) {
                     if (response.success) {
+                        var fieldIDs = [];
+                        var tempUIFields = [];
                         angular.forEach(response.data.mappedFields, function (field) {
                             if (field.mappingType == "Value Mapping") {
                                 $scope.valueMapping.push(field);
+                                $scope.model[field.sfFieldName] = field.defaultValue;
                                 if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
                                     $scope.sObjectName = field.SObject.name;
                                 }
                             }
                             else if (field.mappingType == "Field Mapping") {
                                 $scope.fieldMapping.push(field);
+                                if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
+                                    $scope.sObjectName = field.SObject.name;
+                                }
+                            }
+                            else if (field.mappingType == "UI Field") {
+                                angular.forEach(field.SObject.SObjectFields, function (_field) {
+                                    if (_field.name == field.sfFieldName) {
+                                        field.SObjectField = angular.copy(_field);
+                                        fieldIDs.push(field.SObjectField.id);
+                                    }
+                                });
+                                var newField = angular.copy(field);
+                                delete newField.SObject.SObjectFields;
+                                tempUIFields.push(newField);
                                 if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
                                     $scope.sObjectName = field.SObject.name;
                                 }
@@ -30,6 +47,21 @@ client.controller('csvUploadController', [
                                 }
                             }
                         });
+                        bulkUploadService.getSelectedFields(fieldIDs)
+                            .success(function (response) {
+                                if (response.success) {
+                                    angular.forEach(response.data.sObjectFields, function (field) {
+                                        angular.forEach(tempUIFields, function (uifield) {
+                                            if (uifield.SObjectField.id == field.id) {
+                                                uifield.ControllerSObjectField = field;
+                                            }
+                                        });
+                                    });
+                                }
+                                angular.forEach(tempUIFields, function (tuifield) {
+                                    $scope.UIField.push(tuifield);
+                                });
+                            });
                     }
                     else {
                         $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
@@ -193,11 +225,14 @@ client.controller('csvUploadController', [
         $scope.init = function () {
             console.log('csvUploadController loaded!');
             $scope.initBlockUiBlocks();
+            $scope.baseCtrl = this;
             $scope.valueMapping = [];
             $scope.fieldMapping = [];
+            $scope.UIField = [];
             $scope.uniqueKey = undefined;
             $scope.uniqueKeyMapping = [];
             $scope.sObjectName = undefined;
+            $scope.model = {};
             $scope.upload = {
                 filename: null,
             };
