@@ -15,14 +15,14 @@ client.controller('csvUploadController', [
                             if (field.mappingType == "Value Mapping") {
                                 $scope.valueMapping.push(field);
                                 $scope.model[field.sfFieldName] = field.defaultValue;
-                                if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
-                                    $scope.sObjectName = field.SObject.name;
+                                if ($scope.sObject == undefined && field.SObjectId != undefined) {
+                                    $scope.sObject = field.SObject;
                                 }
                             }
                             else if (field.mappingType == "Field Mapping") {
                                 $scope.fieldMapping.push(field);
-                                if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
-                                    $scope.sObjectName = field.SObject.name;
+                                if ($scope.sObject == undefined && field.SObjectId != undefined) {
+                                    $scope.sObject = field.SObject;
                                 }
                             }
                             else if (field.mappingType == "UI Field") {
@@ -35,15 +35,15 @@ client.controller('csvUploadController', [
                                 var newField = angular.copy(field);
                                 delete newField.SObject.SObjectFields;
                                 tempUIFields.push(newField);
-                                if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
-                                    $scope.sObjectName = field.SObject.name;
+                                if ($scope.sObject == undefined && field.SObjectId != undefined) {
+                                    $scope.sObject = field.SObject;
                                 }
                             }
                             else if (field.mappingType == "Unique Key") {
                                 $scope.uniqueKeyMapping.push(field);
                                 $scope.uniqueKey = field.sfFieldName;
-                                if ($scope.sObjectName == undefined && field.SObjectId != undefined) {
-                                    $scope.sObjectName = field.SObject.name;
+                                if ($scope.sObject == undefined && field.SObjectId != undefined) {
+                                    $scope.sObject = field.SObject;
                                 }
                             }
                         });
@@ -189,7 +189,7 @@ client.controller('csvUploadController', [
                     if ($scope.upload.records.length > 0) {
                         var reqData = {};
                         reqData.records = $scope.upload.records;
-                        reqData.sObjectName = $scope.sObjectName;
+                        reqData.sObjectName = $scope.sObject.name;
                         bulkUploadService.uploadRecords(reqData)
                             .success(function (response) {
                                 $scope.blockUI.bulkUpload.stop();
@@ -231,7 +231,7 @@ client.controller('csvUploadController', [
             $scope.UIField = [];
             $scope.uniqueKey = undefined;
             $scope.uniqueKeyMapping = [];
-            $scope.sObjectName = undefined;
+            $scope.sObject = undefined;
             $scope.model = {};
             $scope.upload = {
                 filename: null,
