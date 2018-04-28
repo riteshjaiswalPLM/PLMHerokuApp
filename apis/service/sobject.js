@@ -593,29 +593,12 @@ sobjectRouter.post('/save', function(req, res){
                     catch(err){
                         console.log('eer',err)
                     }
-                    /* SONAM global.sfdc
-                        .sobject("Error_Message__c")
-                        .select(["Error__c"])
-                        .where({ Invoice__c: queryObject.sObject.data.Id })
-                        .execute(function (err, errRecords) {
-                            if (err || errRecords.length == 0) { SONAM */
-                                return res.json({
-                                    success: false,
-                                    message: msg,
-                                    error: err,
-                                    errMsg:err.toString()
-                                    /* SONAM errMsg: err ? err.toString() : null
-                                });
-                            }
-                            else if (errRecords.length > 0) {
-                                return res.json({
-                                    success: true,
-                                    data: {
-                                        errorMessage: errRecords[0].Error__c
-                                    }
-                                });
-                            } SONAM */
-                        });
+                    return res.json({
+                        success: false,
+                        message: msg,
+                        error: err,
+                        errMsg:err.toString()
+                    });
                 }else{
                     return res.json({
                         success: true,

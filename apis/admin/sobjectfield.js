@@ -3,141 +3,67 @@ var sobjectFieldRouter = express.Router();
 
 sobjectFieldRouter.post('/list', function(req, res){
     var sObject = req.body;
-    /*SONAM if (sObject != undefined && sObject.fromName == true) {
-        var SObjectsRec = db.SObject.findOne({
-            attributes: {
-                include: ['id']
-            },
-            where: { name: sObject.name }
-        });
-
-        SObjectsRec.then(function (SObjectRec) {
-            if (SObjectRec !== undefined && SObjectRec !== null) {
-                var SObjectFields = db.SObjectField.findAll({
-                    attributes: {
-                        exclude: ['createdAt', 'updatedAt']
-                    },
-                    where: {
-                        SObjectId: SObjectRec.id
-                    }
-                });
-
-                SObjectFields.then(function (sObjectFields) {
-                    if (sObjectFields === undefined || sObjectFields === null) {
-                        return res.json({
-                            success: false,
-                            message: 'Error occured while loading sobject fields.'
-                        });
-                    } else {
-                        var referenceSObjectNames = [];
-                        sObjectFields.forEach(function (field) {
-                            if (field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1) {
-                                referenceSObjectNames.push(field.referenceTo[0]);
-                            }
-                        });
-                        var referenceSObjects = db.SObject.findAll({
-                            attributes: {
-                                exclude: ['createdAt', 'updatedAt']
-                            },
-                            include: {
-                                model: db.SObjectField,
-                                attributes: {
-                                    exclude: ['createdAt', 'updatedAt']
-                                }
-                            },
-                            where: {
-                                name: {
-                                    $in: referenceSObjectNames
-                                }
-                            }
-                        });
-                        referenceSObjects.then(function (refSObjects) {
-                            var _refSObjects = {};
-                            refSObjects.forEach(function (refSObject) {
-                                _refSObjects[refSObject.name] = refSObject;
-                            });
-                            return res.json({
-                                success: true,
-                                data: {
-                                    sObjectFields: sObjectFields,
-                                    refSObjects: _refSObjects
-                                }
-                            });
-                        });
-                    }
-                });
-            }
-            else {
-                return res.json({
-                    success: false,
-                    message: 'Error occured while loading sobject fields.'
-                });
-            }
-        });
-    }
-    else {SONAM */
-        var SObjectFields = db.SObjectField.findAll({
-            attributes: {
-                exclude: ['createdAt','updatedAt']
-            },
-            where: {
-                SObjectId: sObject.id
-            }
-        });
-
-        SObjectFields.then(function(sObjectFields) {
-            if(sObjectFields === undefined || sObjectFields === null){
-                return res.json({
-                    success: false,
-                    message: 'Error occured while loading sobject fields.'
-                });
-            }else{
-                var referenceSObjectNames = [];
-                sObjectFields.forEach(function(field){
-                    if(field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1){
-                        referenceSObjectNames.push(field.referenceTo[0]);
-                    }
-                });
-                var referenceSObjects = db.SObject.findAll({
+    var SObjectFields = db.SObjectField.findAll({
+        attributes: {
+            exclude: ['createdAt','updatedAt']
+        },
+        where: {
+            SObjectId: sObject.id
+        }
+    });
+    
+    SObjectFields.then(function(sObjectFields) {
+        if(sObjectFields === undefined || sObjectFields === null){
+            return res.json({
+                success: false,
+                message: 'Error occured while loading sobject fields.'
+            });
+        }else{
+            var referenceSObjectNames = [];
+            sObjectFields.forEach(function(field){
+                if(field.type === 'reference' && referenceSObjectNames.indexOf(field.referenceTo[0]) === -1){
+                    referenceSObjectNames.push(field.referenceTo[0]);
+                }
+            });
+            var referenceSObjects = db.SObject.findAll({
+                attributes: {
+                    exclude: ['createdAt','updatedAt']
+                },
+                include: {
+                    model: db.SObjectField,
                     attributes: {
                         exclude: ['createdAt','updatedAt']
-                    },
-                    include: {
-                        model: db.SObjectField,
-                        attributes: {
-                            exclude: ['createdAt','updatedAt']
-                        }
-                    },
-                    where: {
-                        name: {
-                            $in: referenceSObjectNames
-                        }
+                    }
+                },
+                where: {
+                    name: {
+                        $in: referenceSObjectNames
+                    }
+                }
+            });
+            referenceSObjects.then(function(refSObjects){
+                var _refSObjects = {};
+                refSObjects.forEach(function(refSObject){
+                    _refSObjects[refSObject.name] = refSObject;
+                });
+                // var _sObjectFields = [];
+                // sObjectFields.forEach(function(field){
+                //     _field = JSON.parse(JSON.stringify(field));
+                //     if(field.type === 'reference'){
+                //         _field.reference = _refSObjects[field.referenceTo[0]];
+                //     }
+                //     _sObjectFields.push(_field);
+                // });
+                return res.json({
+                    success: true,
+                    data: {
+                        sObjectFields: sObjectFields,
+                        refSObjects: _refSObjects                           
                     }
                 });
-                referenceSObjects.then(function(refSObjects){
-                    var _refSObjects = {};
-                    refSObjects.forEach(function(refSObject){
-                        _refSObjects[refSObject.name] = refSObject;
-                    });
-                    // var _sObjectFields = [];
-                    // sObjectFields.forEach(function(field){
-                    //     _field = JSON.parse(JSON.stringify(field));
-                    //     if(field.type === 'reference'){
-                    //         _field.reference = _refSObjects[field.referenceTo[0]];
-                    //     }
-                    //     _sObjectFields.push(_field);
-                    // });
-                    return res.json({
-                        success: true,
-                        data: {
-                            sObjectFields: sObjectFields,
-                            refSObjects: _refSObjects
-                        }
-                    });
-                });
-            }
-        });
-    //SONAM}
+            });
+        }
+    });
 });
 
 sobjectFieldRouter.post('/updateForMobile', function(req, res){

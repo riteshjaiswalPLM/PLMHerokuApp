@@ -923,32 +923,6 @@ admin.controller('AdminLayoutsEditEditController',[
             });
             return duplicate;
         };
-        /* SONAM $scope.loadErrorHandlingSObjectFields = function (isFirstCall) {
-            if (isFirstCall) {
-                $scope.ErrorHandlingSObjectFields = [];
-                if ($scope.layout.ErrorHandlingSObject != null && $scope.layout.ErrorHandlingSObject != undefined && $scope.layout.ErrorHandlingSObject != "") {
-                    sobjectService.loadSObjectFields({ fromName: true, name: $scope.layout.ErrorHandlingSObject })
-                        .success(function (response) {
-                            if (response.success) {
-                                $scope.ErrorHandlingSObjectFields = angular.copy(response.data.sObjectFields);
-                            }
-                        });
-                }
-            } else {
-                $scope.ErrorHandlingSObjectFields = [];
-                $scope.layout.ErrorHandlingSObjectField = undefined;
-                if (!$scope.blockUI.editEditLayout.state().blocking && $scope.layout.ErrorHandlingSObject != null && $scope.layout.ErrorHandlingSObject != undefined && $scope.layout.ErrorHandlingSObject != "") {
-                    $scope.blockUI.editEditLayout.start('Loading ...');
-                    sobjectService.loadSObjectFields({ fromName: true, name: $scope.layout.ErrorHandlingSObject })
-                        .success(function (response) {
-                            if (response.success) {
-                                $scope.ErrorHandlingSObjectFields = angular.copy(response.data.sObjectFields);
-                            }
-                            $scope.blockUI.editEditLayout.stop();
-                        });
-                }
-            }
-        }; SONAM */
         $scope.loadEditLayoutContents = function(){
             if(!$scope.blockUI.editEditLayout.state().blocking  && $scope.layout.SObject != null){
                 $scope.blockUI.editEditLayout.start('Loading ...');
@@ -1065,12 +1039,6 @@ admin.controller('AdminLayoutsEditEditController',[
                 return false;
             }
 
-            if ($scope.layout.ErrorHandlingSObject != undefined && $scope.layout.ErrorHandlingSObject != null && $scope.layout.ErrorHandlingSObject != ""
-                && ($scope.layout.ErrorHandlingSObjectField == undefined || $scope.layout.ErrorHandlingSObjectField == null || $scope.layout.ErrorHandlingSObjectField == "")) {
-                $dialog.alert('Please select Error Handling Field or de-select Error Handling SObject.');
-                return false;
-            }
-
             var errorCount = 0;
             angular.forEach($scope.layoutSections, function(section){
                 if(!section.isComponent){
@@ -1115,8 +1083,6 @@ admin.controller('AdminLayoutsEditEditController',[
                 layoutService.saveEditLayout({ 
                     layoutSections: $scope.layoutSections,
                     type: $scope.layout.type,
-                    ErrorHandlingSObject: $scope.layout.ErrorHandlingSObject ? $scope.layout.ErrorHandlingSObject : undefined,
-                    ErrorHandlingSObjectField: $scope.layout.ErrorHandlingSObjectField ? $scope.layout.ErrorHandlingSObjectField : undefined,
                     id: $scope.layout.id
                 })
                 .success(function(response){
@@ -1141,9 +1107,6 @@ admin.controller('AdminLayoutsEditEditController',[
             console.log('AdminLayoutsEditEditController loaded!');
             $scope.initEditLayoutBlockUiBlocks();
             $scope.loadEditLayoutContents();
-            if ($scope.layout != undefined && $scope.layout.ErrorHandlingSObject != undefined) {
-                $scope.loadErrorHandlingSObjectFields(true);
-            }
         };
         $scope.init();
     }

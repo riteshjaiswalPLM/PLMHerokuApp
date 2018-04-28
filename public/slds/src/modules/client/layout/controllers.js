@@ -918,9 +918,6 @@ client.controller('ClientSectionLayoutController',[
                                 if(response.data.message!=undefined){
                                     Notifications.success(response.data.message);
                                 }
-                                /* SONAM else if (response.data.errorMessage != undefined) {
-                                    $dialog.alert(response.data.errorMessage, 'Validation Alert', 'pficon-warning-triangle-o');
-                                } SONAM */
                                 $scope.back.saveGo();
                             }else{
                                 $dialog.alert(response.message,'Validation Alert','pficon-warning-triangle-o');
