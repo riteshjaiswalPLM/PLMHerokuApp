@@ -116,7 +116,6 @@ sobjectbulkuploadRouter.post('/save', function (req, res) {
 
                                 var CSVLoadHistoryObj = {
                                     File_Name__c: queryObject.filename,
-                                    ContentType__c: 'application/csv',
                                     Error_Status__c: isError,
                                     Updated_By__c: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
                                 };
