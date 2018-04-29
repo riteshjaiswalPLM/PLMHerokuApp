@@ -92,6 +92,7 @@ csvUploadconfigRouter.post('/getfieldmapping', function (req, res) {
 });
 
 csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
+    var templateURL = req.body.templateURL;
     var uniqueKey = req.body.uniqueKey;
     var fieldsmappings = req.body.configs;
     var recordsToInsert = [];
@@ -112,7 +113,8 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
                 csvFieldName: fieldsmapping.csvFieldName,
                 datatype: fieldsmapping.type,
                 [SObjectType]: fieldsmapping[SObjectType],
-                defaultValue: fieldsmapping.defaultValue
+                defaultValue: fieldsmapping.defaultValue,
+                templateURL: templateURL
             });
         }
         else if (fieldsmapping.mappingType == 'Unique Key') {
@@ -122,7 +124,8 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
                 label: fieldsmapping.label,
                 csvFieldName: fieldsmapping.name,
                 datatype: fieldsmapping.type,
-                [SObjectType]: fieldsmapping[SObjectType]
+                [SObjectType]: fieldsmapping[SObjectType],
+                templateURL: templateURL
             });
         }
     });

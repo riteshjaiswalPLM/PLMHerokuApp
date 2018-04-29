@@ -1,8 +1,8 @@
 'use strict';
 
-client.controller('csvUploadController', [
-    '$scope', '$rootScope', '$state', '$filter', '$stateParams', 'CSVUploadConfigService', 'bulkUploadService', 'blockUI', '$dialog',
-    function ($scope, $rootScope, $state, $filter, $stateParams, CSVUploadConfigService, bulkUploadService, blockUI, $dialog) {
+client.controller('CSVUploadController', [
+    '$scope', '$rootScope', '$http', 'CSVUploadConfigService', 'bulkUploadService', 'blockUI', '$dialog',
+    function ($scope, $rootScope, $http, CSVUploadConfigService, bulkUploadService, blockUI, $dialog) {
 
         $scope.getFieldMapping = function () {
             $scope.blockUI.bulkUpload.start('Loading ...');
@@ -12,6 +12,9 @@ client.controller('csvUploadController', [
                         var fieldIDs = [];
                         var tempUIFields = [];
                         angular.forEach(response.data.mappedFields, function (field) {
+                            if ($scope.config.templateURL == undefined || $scope.config.templateURL == '') {
+                                $scope.config.templateURL = field.templateURL;
+                            }
                             if (field.mappingType == "Value Mapping") {
                                 $scope.valueMapping.push(field);
                                 $scope.model[field.sfFieldName] = field.defaultValue;
@@ -74,6 +77,66 @@ client.controller('csvUploadController', [
                 });
         };
 
+        $scope.getUploadHistory = function () {
+            $scope.blockUI.bulkUpload.start('Loading ...');
+            bulkUploadService.getUploadHistory()
+                .success(function (response) {
+                    $scope.blockUI.bulkUpload.stop();
+                    if (response.success) {
+                        $scope.historyRecords = response.data.historyRecords;
+                    }
+                    else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function (response) {
+                    $scope.blockUI.bulkUpload.stop();
+                    $dialog.alert('Error occured while loading upload history.', 'Error', 'pficon pficon-error-circle-o');
+                });
+        };
+
+        $scope.getFile = function (id) {
+            bulkUploadService.getFile({ id: id })
+                .success(function (response) {
+                    if (response.success) {
+                        $scope.getFileData(response.data.record.Body, response.data.record.Name);
+                    }
+                    else {
+                        $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
+                    }
+                })
+                .error(function (response) {
+                    $dialog.alert('Error occured while downloading file.', 'Error', 'pficon pficon-error-circle-o');
+                });
+        };
+
+        $scope.getFileData = function (body, name) {
+            var attachmentData = {
+                name: name,
+                body: body
+            }
+            $scope.blockUI.bulkUpload.start('Loading file...');
+            $http.post("/api/service/component/getfiledata", attachmentData, { cache: true, responseType: 'arraybuffer' })
+                .success(function (response, status, headers, config) {
+                    $scope.blockUI.bulkUpload.stop();
+                    var objectUrl = URL.createObjectURL(new Blob([response], { type: headers()['content-type'] }));
+                    if (navigator.appVersion.toString().indexOf('.NET') > 0 || navigator.userAgent.toString().indexOf('MSIE') != -1) { // for IE browser
+                        window.navigator.msSaveBlob(new Blob([response], { type: headers()['content-type'] }), decodeURI(name));
+                    } else { // for other browsers
+                        var a = $("<a style='display: none;'/>");
+                        a.attr("href", objectUrl);
+                        a.attr("download", decodeURI(name));
+                        $("body").append(a);
+                        a[0].click();
+                        // window.URL.revokeObjectURL(objectUrl);
+                        a.remove();
+                    }
+                })
+                .error(function () {
+                    $scope.blockUI.bulkUpload.stop()
+                });
+        };
+
         $scope.csvToJSON = function (csv) {
             var lines = csv.replace(/\"/g, "").replace(/\r/g, "").split("\n");
             var result = [];
@@ -101,6 +164,25 @@ client.controller('csvUploadController', [
                 }
             }
             return result;
+        };
+
+        $scope.validateFile = function (record) {
+            var valid = true;
+            //Set Field API, if it is available in Config
+            angular.forEach($scope.fieldMapping, function (fieldMappingConfig) {
+                if (valid && fieldMappingConfig.csvFieldName != undefined && record[fieldMappingConfig.csvFieldName] == undefined) {
+                    $dialog.alert(fieldMappingConfig.csvFieldName + " Field is missing in CSV.");
+                    valid = false;
+                }
+            });
+            //Set UI Field API, if UI Field value available from UI
+            angular.forEach($scope.UIField, function (UIFieldConfig) {
+                if (valid && (UIFieldConfig.value == undefined || UIFieldConfig.value == null || UIFieldConfig.value == '')) {
+                    $dialog.alert("Please Enter value for Field " + UIFieldConfig.label + ".");
+                    valid = false;
+                }
+            });
+            return valid;
         };
 
         $scope.createRecords = function (records) {
@@ -140,6 +222,12 @@ client.controller('csvUploadController', [
                             if (fieldMappingConfig.csvFieldName != undefined && record[fieldMappingConfig.csvFieldName] != undefined) {
                                 newRecord[fieldMappingConfig.sfFieldName] = record[fieldMappingConfig.csvFieldName];
                             }
+                        }
+                    });
+                    //Set UI Field API, if UI Field value available from UI
+                    angular.forEach($scope.UIField, function (UIFieldConfig) {
+                        if (UIFieldConfig.value != undefined && UIFieldConfig.value != null && UIFieldConfig.value != '') {
+                            newRecord[UIFieldConfig.sfFieldName] = UIFieldConfig.value;
                         }
                     });
                     //Set Unique Key
@@ -183,28 +271,34 @@ client.controller('csvUploadController', [
                 if ($scope.upload.DataFile.length > 0) {
                     $scope.blockUI.bulkUpload.stop();
                     $scope.blockUI.bulkUpload.start('Uploading ...');
-                    $scope.upload.username = $rootScope.user().username;
-                    $scope.upload.records = $scope.createRecords($scope.upload.DataFile);
+                    if ($scope.validateFile($scope.upload.DataFile[0])) {
+                        $scope.upload.records = $scope.createRecords($scope.upload.DataFile);
 
-                    if ($scope.upload.records.length > 0) {
-                        var reqData = {};
-                        reqData.records = $scope.upload.records;
-                        reqData.sObjectName = $scope.sObject.name;
-                        bulkUploadService.uploadRecords(reqData)
-                            .success(function (response) {
-                                $scope.blockUI.bulkUpload.stop();
-                                $scope.upload.DataFile = undefined;
-                                $scope.upload.records = undefined;
-                                if (response.success) {
-                                    $dialog.alert(response.message);
-                                } else {
-                                    $dialog.alert(response.error, 'Error', 'pficon pficon-error-circle-o');
-                                }
-                            })
-                            .error(function (response) {
-                                $scope.blockUI.bulkUpload.stop();
-                                $dialog.alert('Error occured while uploading records.', 'Error', 'pficon pficon-error-circle-o');
-                            });
+                        if ($scope.upload.records.length > 0) {
+                            var reqData = {};
+                            reqData.records = $scope.upload.records;
+                            reqData.sObjectName = $scope.sObject.name;
+                            reqData.filename = $scope.upload.filename;
+                            bulkUploadService.uploadRecords(reqData)
+                                .success(function (response) {
+                                    $scope.blockUI.bulkUpload.stop();
+                                    $scope.upload.DataFile = undefined;
+                                    $scope.upload.records = undefined;
+                                    if (response.success) {
+                                        $dialog.alert(response.message);
+                                        $scope.getUploadHistory();
+                                    } else {
+                                        $dialog.alert(response.error, 'Error', 'pficon pficon-error-circle-o');
+                                    }
+                                })
+                                .error(function (response) {
+                                    $scope.blockUI.bulkUpload.stop();
+                                    $dialog.alert('Error occured while uploading records.', 'Error', 'pficon pficon-error-circle-o');
+                                });
+                        }
+                        else {
+                            $scope.blockUI.bulkUpload.stop();
+                        }
                     }
                     else {
                         $scope.blockUI.bulkUpload.stop();
@@ -223,7 +317,7 @@ client.controller('csvUploadController', [
         };
 
         $scope.init = function () {
-            console.log('csvUploadController loaded!');
+            console.log('CSVUploadController loaded!');
             $scope.initBlockUiBlocks();
             $scope.baseCtrl = this;
             $scope.valueMapping = [];
@@ -235,9 +329,14 @@ client.controller('csvUploadController', [
             $scope.model = {};
             $scope.upload = {
                 filename: null,
+                username: ($rootScope.user().firstname || $rootScope.user().lastname) ? (($rootScope.user().firstname ? $rootScope.user().firstname : '') + ' ' + ($rootScope.user().lastname ? $rootScope.user().lastname : '')) : $rootScope.user().username
             };
+            $scope.config = {
+                templateURL: ''
+            }
             $scope.historyRecords = {};
             $scope.getFieldMapping();
+            $scope.getUploadHistory();
         };
         $scope.init();
     }]);

@@ -23,6 +23,9 @@ module.exports = function (sequelize, DataTypes) {
         defaultValue: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        templateURL: {
+            type: DataTypes.STRING
         }
     }, {
             classMethods: {

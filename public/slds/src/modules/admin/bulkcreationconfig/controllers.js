@@ -112,6 +112,9 @@ admin.controller('AdminBulkCreationConfigController', [
                                     field.isOf = "detailSObject";
                                     field.SObjectName = $scope.detailSObject.label;
                                 }
+                                if ($scope.config.templateURL == undefined || $scope.config.templateURL == '') {
+                                    $scope.config.templateURL = field.templateURL;
+                                }
                                 field.type = field.datatype;
                                 delete field.datatype;
                                 field.name = field.sfFieldName;
@@ -320,7 +323,7 @@ admin.controller('AdminBulkCreationConfigController', [
                                 config.mappingType = 'UI Field';
                                 configs.push(config);
                             });
-                            CSVUploadConfigService.saveFieldMapping({ uniqueKey: $scope.uniqueKey, configs: configs })
+                            CSVUploadConfigService.saveFieldMapping({ templateURL: $scope.config.templateURL, uniqueKey: $scope.uniqueKey, configs: configs })
                                 .success(function (response) {
                                     if (response.success) {
                                         $dialog.alert("Field mappings saved successfully.");
@@ -362,6 +365,9 @@ admin.controller('AdminBulkCreationConfigController', [
             $scope.UIField = [];
             $scope.uniqueKey = undefined;
             $scope.uniqueKeyMapping = [];
+            $scope.config = {
+                templateURL: ''
+            }
             $scope.getFieldMapping();
         };
         $scope.init();

@@ -30,7 +30,7 @@ client.config(function ($stateProvider) {
         })
         .state('client.bulkcreation', {
             templateUrl: 'slds/views/client/bulkcreation/upload.html',
-            controller: 'csvUploadController',
+            controller: 'CSVUploadController',
             title: 'CSV Upload'
         })
         .state('client.archival', {
