@@ -37,6 +37,13 @@ client.controller('CSVUploadController', [
                                 });
                                 var newField = angular.copy(field);
                                 delete newField.SObject.SObjectFields;
+                                if (newField.datatype == "picklist") {
+                                    angular.forEach(newField.SObjectField.picklistValues, function (picklistValue, index) {
+                                        if (picklistValue.value == "Individual Payment Request") {
+                                            newField.SObjectField.picklistValues.splice(index, 1);
+                                        }
+                                    });
+                                }
                                 tempUIFields.push(newField);
                                 if ($scope.sObject == undefined && field.SObjectId != undefined) {
                                     $scope.sObject = field.SObject;
@@ -172,6 +179,7 @@ client.controller('CSVUploadController', [
             angular.forEach($scope.fieldMapping, function (fieldMappingConfig) {
                 if (valid && fieldMappingConfig.csvFieldName != undefined && record[fieldMappingConfig.csvFieldName] == undefined) {
                     $dialog.alert(fieldMappingConfig.csvFieldName + " Field is missing in CSV.");
+                    document.getElementsByName("uploads[]")[0].value = '';
                     valid = false;
                 }
             });
@@ -179,6 +187,7 @@ client.controller('CSVUploadController', [
             angular.forEach($scope.UIField, function (UIFieldConfig) {
                 if (valid && (UIFieldConfig.value == undefined || UIFieldConfig.value == null || UIFieldConfig.value == '')) {
                     $dialog.alert("Please Enter value for Field " + UIFieldConfig.label + ".");
+                    document.getElementsByName("uploads[]")[0].value = '';
                     valid = false;
                 }
             });
@@ -237,6 +246,7 @@ client.controller('CSVUploadController', [
                             if (valid) {
                                 if (newRecord[uniqueKeyMappingConfig.csvFieldName] == undefined || newRecord[uniqueKeyMappingConfig.csvFieldName] == '') {
                                     $dialog.alert("Unique Key Combination doesn't found from Record.");
+                                    document.getElementsByName("uploads[]")[0].value = '';
                                     valid = false;
                                     newRecords = [];
                                 }
@@ -261,6 +271,7 @@ client.controller('CSVUploadController', [
             var name = document.getElementsByName("uploads[]")[0].value;
             if (name.substr(name.length - 4).toLowerCase() != '.csv') {
                 $dialog.alert("Please upload valid CSV file");
+                document.getElementsByName("uploads[]")[0].value = '';
             } else {
                 $scope.upload.filename = name.substr(name.lastIndexOf("\\") + 1);
                 var file = $scope.upload.DataFile;
@@ -289,11 +300,13 @@ client.controller('CSVUploadController', [
                                         $scope.getUploadHistory();
                                     } else {
                                         $dialog.alert(response.error, 'Error', 'pficon pficon-error-circle-o');
+                                        document.getElementsByName("uploads[]")[0].value = '';
                                     }
                                 })
                                 .error(function (response) {
                                     $scope.blockUI.bulkUpload.stop();
                                     $dialog.alert('Error occured while uploading records.', 'Error', 'pficon pficon-error-circle-o');
+                                    document.getElementsByName("uploads[]")[0].value = '';
                                 });
                         }
                         else {
@@ -306,6 +319,7 @@ client.controller('CSVUploadController', [
                 } else {
                     $scope.blockUI.bulkUpload.stop();
                     $dialog.alert("No records found in file.");
+                    document.getElementsByName("uploads[]")[0].value = '';
                 }
             }
         };

@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-            <label ng-if="config.templateURL" style="padding-top: 7px; padding-right: 15px;"><a href="{{config.templateURL}}">Payment Request Template</a><br/></label>
+            <label ng-if="config.templateURL" style="padding-top: 7px; padding-right: 15px;"><a href="{{config.templateURL}}">Sample Template</a><br/></label>
             <div class="slds-col slds-no-flex slds-grid slds-align-top" ng-if="valueMapping && fieldMapping && uniqueKeyMapping && (valueMapping.length > 0 || fieldMapping.length > 0 || uniqueKeyMapping.length > 0)">
                 <file-field class="slds-button slds-button--brand" callback="uploadRecords" allowed-ext="'.csv'" ng-model="upload.DataFile">
                     <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
@@ -65,7 +65,14 @@
                                             {{ ($root.formateDateAndDateTime(field.CreatedDate,$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') }}
                                         </td>
                                         <td>{{ upload.username }}</td>
-                                        <td>{{ field.Error_Status__c }}</td>
+                                        <td>
+                                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" ng-if="field.Error_Status__c == true">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check" />
+                                            </svg>
+                                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true" ng-if="field.Error_Status__c == false">
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close" />
+                                            </svg>
+                                        </td>
                                         <td>
                                             <a href ng-click="getFile(field.Id)"><span class="fa fa-chevron-circle-left"></span>View</a>
                                         </td>
