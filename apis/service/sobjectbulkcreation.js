@@ -54,6 +54,9 @@ sobjectbulkuploadRouter.post('/createFile', function (req, res) {
 
 sobjectbulkuploadRouter.post('/save', function (req, res) {
     var queryObject = req.body;
+    console.log("START==========================================");
+    console.log(new Date());
+    console.log("START==========================================");
 
     global.db.Salesforce.findAll().then(function (sfdcs) {
         var sfdc = sfdcs[0];
@@ -87,75 +90,104 @@ sobjectbulkuploadRouter.post('/save', function (req, res) {
                         error: 'Error occured while creating new connection with salesforce!!!'
                     });
                 } else {
-                    jsForceConnection.bulk.pollInterval = 5000; // 5 sec
-                    jsForceConnection.bulk.pollTimeout = 120000; // 120 sec
-                    jsForceConnection.sobject(queryObject.sObjectName)
-                        .createBulk(queryObject.records, function (err, result) {
-                            if (err) {
-                                console.log("err ====================================");
-                                console.log(err);
-                                console.log("err ====================================");
-                            } else {
-                                var resultArr = [];
-                                var isError = false;
-                                queryObject.records.forEach(function (rec, index) {
-                                    var resultRec = rec;
-                                    resultRec.id = result[index].id;
-                                    resultRec.success = result[index].success;
-                                    resultRec.created = result[index].created;
-                                    if (!isError && result[index].errors != null && result[index].errors.length > 0) {
-                                        isError = true;
-                                    }
-                                    resultRec.errors = result[index].errors.join(', ');
-                                    resultArr.push(resultRec);
-                                });
+                    var startUploadInBackground = function () {
+                        jsForceConnection.bulk.pollInterval = 5000; // 5 sec
+                        jsForceConnection.bulk.pollTimeout = 120000; // 120 sec
+                        var start = 0;
+                        var stop = 25;
+                        var results = [];
+                        try {
+                            let startUploadInBatch = (records, start, stop, results) => {
+                                if (records.length == 0) {
+                                    var resultArr = [];
+                                    var isError = false;
+                                    console.log("Final recs length " + queryObject.records.length);
+                                    console.log("Final res length " + results.length);
+                                    queryObject.records.forEach(function (rec, index) {
+                                        var resultRec = rec;
+                                        resultRec.id = results[index].id;
+                                        resultRec.success = results[index].success;
+                                        resultRec.created = results[index].created;
+                                        if (!isError && results[index].errors != null && results[index].errors.length > 0) {
+                                            isError = true;
+                                        }
+                                        resultRec.errors = results[index].errors.join(', ');
+                                        resultArr.push(resultRec);
+                                    });
 
-                                var file = path.join(os.tmpdir(), "Result" + timestamp.now() + ".csv");
-                                var keys = Object.keys(resultArr[0]);
-                                var csv = json2csv({ data: resultArr, fields: keys });
+                                    var file = path.join(os.tmpdir(), "Result" + timestamp.now() + ".csv");
+                                    var keys = Object.keys(resultArr[0]);
+                                    var csv = json2csv({ data: resultArr, fields: keys });
 
-                                var CSVLoadHistoryObj = {
-                                    File_Name__c: queryObject.filename,
-                                    Error_Status__c: isError,
-                                    Updated_By__c: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
-                                };
-                                jsForceConnection.sobject('CSV_Load_History__c').create(CSVLoadHistoryObj, function (CSVLoadHistoryObjerr, CSVLoadHistoryObjret) {
-                                    if (CSVLoadHistoryObjerr) {
-                                        console.log(CSVLoadHistoryObjerr);
-                                        jsForceConnection.logout();
-                                        return res.json({
-                                            success: false,
-                                            error: CSVLoadHistoryObjerr.message
-                                        });
-                                    }
-                                    else {
-                                        var AttachmentObj = {
-                                            ParentId: CSVLoadHistoryObjret.id,
-                                            Name: queryObject.filename,
-                                            Body: new Buffer(csv).toString('base64'),
-                                            ContentType: 'application/csv',
-                                            Description: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
-                                        };
-                                        jsForceConnection.sobject('Attachment').create(AttachmentObj, function (AttachmentObjerr, AttachmentObjret) {
-                                            if (AttachmentObjerr) {
-                                                jsForceConnection.logout();
-                                                return res.json({
-                                                    success: false,
-                                                    error: AttachmentObjerr.message
+                                    var CSVLoadHistoryObj = {
+                                        File_Name__c: queryObject.filename,
+                                        Error_Status__c: isError,
+                                        Updated_By__c: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
+                                    };
+                                    jsForceConnection.sobject('CSV_Load_History__c').create(CSVLoadHistoryObj, function (CSVLoadHistoryObjerr, CSVLoadHistoryObjret) {
+                                        if (CSVLoadHistoryObjerr) {
+                                            console.log(CSVLoadHistoryObjerr);
+                                            jsForceConnection.logout();
+                                        }
+                                        else {
+                                            var AttachmentObj = {
+                                                ParentId: CSVLoadHistoryObjret.id,
+                                                Name: queryObject.filename,
+                                                Body: new Buffer(csv).toString('base64'),
+                                                ContentType: 'application/csv',
+                                                Description: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
+                                            };
+                                            jsForceConnection.sobject('Attachment').create(AttachmentObj, function (AttachmentObjerr, AttachmentObjret) {
+                                                if (AttachmentObjerr) {
+                                                    jsForceConnection.logout();
+                                                }
+                                                else {
+                                                    console.log("END==========================================");
+                                                    console.log(new Date());
+                                                    console.log("END==========================================");
+                                                    jsForceConnection.logout();
+                                                }
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    jsForceConnection.sobject(queryObject.sObjectName)
+                                        .createBulk(records, function (err, result) {
+                                            if (err) {
+                                                console.log("err ====================================");
+                                                console.log(err);
+                                                console.log("err ====================================");
+                                                for (var i = start; i < stop; i++) {
+                                                    var tmpRes = {};
+                                                    tmpRes.errors = [];
+                                                    tmpRes.errors.push(err.message);
+                                                    results.push(tmpRes);
+                                                }
+                                                start = stop;
+                                                stop = stop + 25;
+                                                startUploadInBatch(queryObject.records.slice(start, stop), start, stop, results);
+                                            } else {
+                                                result.forEach(function (resrec) {
+                                                    results.push(resrec);
                                                 });
-                                            }
-                                            else {
-                                                jsForceConnection.logout();
-                                                return res.json({
-                                                    success: true,
-                                                    message: 'Processing Done...'
-                                                });
+                                                start = stop;
+                                                stop = stop + 25;
+                                                startUploadInBatch(queryObject.records.slice(start, stop), start, stop, results);
                                             }
                                         });
-                                    }
-                                });
-                            }
-                        });
+                                }
+                            };
+                            startUploadInBatch(queryObject.records.slice(start, stop), start, stop, results);
+                        }
+                        catch (e) {
+                            console.log("recursive err " + e);
+                        }
+                    };
+                    startUploadInBackground();
+                    return res.json({
+                        success: true,
+                        message: "Upload request has been acknowledged. Please view upload report after some time to check the result."
+                    });
                 }
             });
         } else {
