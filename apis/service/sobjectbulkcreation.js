@@ -107,7 +107,6 @@ sobjectbulkuploadRouter.post('/save', function (req, res) {
                                         var resultRec = rec;
                                         resultRec.id = results[index].id;
                                         resultRec.success = results[index].success;
-                                        resultRec.created = results[index].created;
                                         if (!isError && results[index].errors != null && results[index].errors.length > 0) {
                                             isError = true;
                                         }
