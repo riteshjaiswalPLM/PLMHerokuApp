@@ -26,11 +26,11 @@
             </fieldset>
         </div>
         <div class="slds-size--1-of-2 slds-p-around--medium">
-            <fieldset class="slds-form--compound">
+            <!--<fieldset class="slds-form--compound">
                 <div class="slds-form-element__group">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
-                            <!--<label class="slds-form-element__label" for="detailSObject">Detail SObject</label>
+                            <label class="slds-form-element__label" for="detailSObject">Detail SObject</label>
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <div class="slds-input-has-icon slds-grow">
                                     <input type="hidden" ng-model="detailSObject">
@@ -44,7 +44,35 @@
                                         <span class="slds-assistive-text">Open lookup modal for SObjects</span>
                                     </button>
                                 </div>
-                            </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>-->
+        </div>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-wrap">
+        <div class="slds-size--1-of-2 slds-p-around--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
+                            <label class="slds-form-element__label" for="helpDocURL">Help Document URL</label>
+                            <div class="slds-form-element__control slds-grid slds-box--border">
+                                <div class="slds-input-has-icon slds-grow">
+                                    <input type="text" id="helpDocURL" class="slds-lookup__search-input slds-input--bare" ng-model="config.helpDocURL" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="slds-size--1-of-2 slds-p-around--medium">
+            <fieldset class="slds-form--compound">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
                             <label class="slds-form-element__label" for="templateURL">Template URL</label>
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <div class="slds-input-has-icon slds-grow">

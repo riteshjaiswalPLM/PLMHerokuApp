@@ -12,6 +12,9 @@ client.controller('CSVUploadController', [
                         var fieldIDs = [];
                         var tempUIFields = [];
                         angular.forEach(response.data.mappedFields, function (field) {
+                            if ($scope.config.helpDocURL == undefined || $scope.config.helpDocURL == '') {
+                                $scope.config.helpDocURL = field.helpDocURL;
+                            }
                             if ($scope.config.templateURL == undefined || $scope.config.templateURL == '') {
                                 $scope.config.templateURL = field.templateURL;
                             }
@@ -346,6 +349,7 @@ client.controller('CSVUploadController', [
                 username: ($rootScope.user().firstname || $rootScope.user().lastname) ? (($rootScope.user().firstname ? $rootScope.user().firstname : '') + ' ' + ($rootScope.user().lastname ? $rootScope.user().lastname : '')) : $rootScope.user().username
             };
             $scope.config = {
+                helpDocURL: '',
                 templateURL: ''
             }
             $scope.historyRecords = {};

@@ -92,6 +92,7 @@ csvUploadconfigRouter.post('/getfieldmapping', function (req, res) {
 });
 
 csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
+    var helpDocURL = req.body.helpDocURL;
     var templateURL = req.body.templateURL;
     var uniqueKey = req.body.uniqueKey;
     var fieldsmappings = req.body.configs;
@@ -114,6 +115,7 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
                 datatype: fieldsmapping.type,
                 [SObjectType]: fieldsmapping[SObjectType],
                 defaultValue: fieldsmapping.defaultValue,
+                helpDocURL: helpDocURL,
                 templateURL: templateURL
             });
         }
@@ -125,6 +127,7 @@ csvUploadconfigRouter.post('/savefieldmapping', function (req, res) {
                 csvFieldName: fieldsmapping.name,
                 datatype: fieldsmapping.type,
                 [SObjectType]: fieldsmapping[SObjectType],
+                helpDocURL: helpDocURL,
                 templateURL: templateURL
             });
         }

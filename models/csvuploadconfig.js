@@ -24,6 +24,9 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
+        helpDocURL: {
+            type: DataTypes.STRING
+        },
         templateURL: {
             type: DataTypes.STRING
         }
