@@ -161,15 +161,21 @@ client.controller('CSVUploadController', [
                         }
                     }
                     if (currentline.length > 0) {
+                        var isBlankline = true;
                         for (var j = 0; j < headers.length; j++) {
                             if (currentline[j] === "null") {
                                 obj[headers[j]] = null;
                             }
                             else {
                                 obj[headers[j]] = currentline[j].trim();
+                                if (currentline[j].trim() != "") {
+                                    isBlankline = false;
+                                }
                             }
                         }
-                        result.push(obj);
+                        if (!isBlankline) {
+                            result.push(obj);
+                        }
                     }
                 }
             }
