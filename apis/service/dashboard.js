@@ -343,8 +343,10 @@ dashboardRouter.post('/exportData', function (req, res) {
                                 }
                             }
                             else {
-                                delete innerJSON[key];
-                                fieldChanged = true;
+                                if (innerJSON != null && innerJSON != undefined) {
+                                    delete innerJSON[key];
+                                    fieldChanged = true;
+                                }
                             }
                         });
 
