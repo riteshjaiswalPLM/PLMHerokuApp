@@ -9,6 +9,7 @@ client.controller('ClientProfileManageController',[
             $stateParams.data = {}; $state.current.params={};
             $state.current.params.metadata = $stateParams.metadata;
             $scope.template = 'slds/views/client/layout/edit.html';
+            $scope.icon = 'settings';
             var rootUser= JSON.parse($rootScope.user().userdata);
             $stateParams.data['record'] = {
                 Id: rootUser.Id,
