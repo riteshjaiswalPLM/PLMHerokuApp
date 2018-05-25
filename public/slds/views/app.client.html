@@ -24,15 +24,15 @@
 
         <ul class="slds-global-header__item slds-grid slds-grid--vertical-align-center">
             <li slds-dropdown-menu class="slds-dropdown-trigger slds-dropdown-trigger--click slds-m-left--x-small">
-                <button class="slds-button" title="{{ $root.user().firstname + ' ' + $root.user().lastname }}" aria-haspopup="true">
+                <button class="slds-button" title="{{ ($root.user().firstname ? $root.user().firstname : '') + ' ' + ($root.user().lastname ? $root.user().lastname : '') }}" aria-haspopup="true">
                     <span class="slds-avatar slds-avatar--circle slds-avatar--medium">
-                        <img src="{{userProfileImg}}" alt="{{ $root.user().firstname + ' ' + $root.user().lastname }}" />
+                        <img src="{{userProfileImg}}" alt="{{ ($root.user().firstname ? $root.user().firstname : '') + ' ' + ($root.user().lastname ? $root.user().lastname : '') }}" />
                     </span>
                 </button>
                 <div class="slds-dropdown slds-dropdown--right slds-dropdown--small">
                     <ul class="slds-dropdown__list" role="menu">
                         <li class="slds-dropdown__header" role="separator">
-                            <span class="slds-text-title--caps">{{ $root.user().firstname + ' ' + $root.user().lastname }}</span>
+                            <span class="slds-text-title--caps">{{ ($root.user().firstname ? $root.user().firstname : '') + ' ' + ($root.user().lastname ? $root.user().lastname : '') }}</span>
                         </li>
                         <li class="slds-has-divider--top-space" role="separator"></li>
                         <li ng-repeat="userProfile in profile" class="slds-dropdown__item" role="presentation">
