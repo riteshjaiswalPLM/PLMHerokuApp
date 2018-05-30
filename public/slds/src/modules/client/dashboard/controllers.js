@@ -360,7 +360,7 @@ client.controller('ClientDashboardController', [
                 });
             }
             if (cnt > 30) {
-                $dialog.alert("Maximum 30 records are allowed at a time for bulk approval process.");
+                $dialog.alert("Maximum 30 records are allowed for Bulk Operation");
                 return;
             }
             if (isChecked) {
