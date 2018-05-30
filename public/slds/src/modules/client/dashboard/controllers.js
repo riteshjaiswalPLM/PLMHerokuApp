@@ -310,7 +310,7 @@ client.controller('ClientDashboardController', [
                     cnt++;
                 });
                 if (cnt > 30) {
-                    $dialog.alert("Maximum 30 record allow at time for multi-approve process");
+                    $dialog.alert("Maximum 30 records are allowed for Bulk Operation");
                 }
                 return;
             }
