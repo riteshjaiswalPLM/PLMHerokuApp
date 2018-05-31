@@ -21,7 +21,7 @@
                                 === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
                                 | number: field.SObjectField.scale) : (field.SObjectField.type === 'date') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
                                 $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate') : (field.SObjectField.type
-                                === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                === 'datetime' && result[field.SObjectField.name] != '' && result[field.SObjectField.name] != null) ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
                                 $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') : (field.SObjectField.name
                                 == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined) ? sObjectMetaData[result[field.SObjectField.name]]
                                 : result[field.SObjectField.name] }}
@@ -45,7 +45,7 @@
                                 === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
                                 | number: field.SObjectField.scale) : (field.SObjectField.type === 'date') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
                                 $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate') : (field.SObjectField.type
-                                === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                === 'datetime' && result[field.SObjectField.name] != '' && result[field.SObjectField.name] != null) ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
                                 $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') : (field.SObjectField.name
                                 == "Field" && sObjectMetaData[result[field.SObjectField.name]] != undefined) ? sObjectMetaData[result[field.SObjectField.name]]
                                 : result[field.SObjectField.name] }}
