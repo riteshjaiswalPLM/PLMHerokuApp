@@ -184,14 +184,18 @@ client.controller('CSVUploadController', [
 
         $scope.validateFile = function (record) {
             var valid = true;
+            var fieldList = "";
             //Set Field API, if it is available in Config
             angular.forEach($scope.fieldMapping, function (fieldMappingConfig) {
-                if (valid && fieldMappingConfig.csvFieldName != undefined && record[fieldMappingConfig.csvFieldName] == undefined) {
-                    $dialog.alert(fieldMappingConfig.csvFieldName + " Field is missing in CSV.");
+                if (fieldMappingConfig.csvFieldName != undefined && record[fieldMappingConfig.csvFieldName] == undefined) {
+                    fieldList += fieldMappingConfig.csvFieldName + ", ";
                     document.getElementsByName("uploads[]")[0].value = '';
                     valid = false;
                 }
             });
+            if (!valid) {
+                $dialog.alert(fieldList.substring(0, fieldList.length - 2) + " Field is missing in CSV.");
+            }
             //Set UI Field API, if UI Field value available from UI
             angular.forEach($scope.UIField, function (UIFieldConfig) {
                 if (valid && (UIFieldConfig.value == undefined || UIFieldConfig.value == null || UIFieldConfig.value == '')) {
