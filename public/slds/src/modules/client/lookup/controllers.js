@@ -124,7 +124,7 @@ client.controller('ClientSObjectLookupController',[
                 whereClauseStringTmp = whereClauseStringTmp.replace(whereClauseStringTmp.substring(start - 8, stop + 1), fieldTobeReplaced);
             }
             if (fieldsTobeReplaced.length > 0) {
-                clientSObjectService.getFieldType({ sobjectname: $scope.dataModal.attributes.type, fieldname: fieldsTobeReplaced })
+                clientSObjectService.getFieldType({ sobjectname: (($scope.dataModal && $scope.dataModal.attributes) ? $scope.dataModal.attributes.type : $scope.dataModal.SObjectName), fieldname: fieldsTobeReplaced })
                     .success(function (response) {
                         if (response.success) {
                             while (whereClauseString.indexOf('{PARENT') > -1) {
@@ -135,7 +135,12 @@ client.controller('ClientSObjectLookupController',[
                                     whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced] ? $scope.dataModal[fieldTobeReplaced].toString().split(';').join("','") : '');
                                 }
                                 else {
-                                    whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);
+                                    if ($scope.dataModal[fieldTobeReplaced] != undefined && $scope.dataModal[fieldTobeReplaced] != null) {
+                                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), $scope.dataModal[fieldTobeReplaced]);
+                                    }
+                                    else {
+                                        whereClauseString = whereClauseString.replace(whereClauseString.substring(start - 8, stop + 1), '');
+                                    }
                                 }
                             }
                             parentCall = true;

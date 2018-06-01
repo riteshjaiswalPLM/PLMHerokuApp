@@ -1056,6 +1056,9 @@ client.controller('ClientSectionLayoutController',[
             $scope.files = [];
             $scope.dataModel = {};
             $scope.stateParamMetaData = $state.current.params.metadata;
+            if ($scope.stateParamMetaData != undefined && $scope.stateParamMetaData.sobject != undefined && $scope.stateParamMetaData.sobject.name != undefined) {
+                $scope.dataModel.SObjectName = $scope.stateParamMetaData.sobject.name;
+            }
             $scope.stateParamData = $stateParams.data;
             $scope.initBlockUiBlocks();
             $scope.loadsObjectMetadata();
