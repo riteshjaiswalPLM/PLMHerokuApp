@@ -34,7 +34,7 @@ var LocalesToCreate = [{name:"Arabic (United Arab Emirates)", code:"ar_AE", date
 {name:"Danish (Denmark)", code:"da_DK", dateTimeFormat:"DD-MM-YYYY HH:mm:ss", dateFormat:"DD-MM-YYYY"},
 {name:"Spanish (Puerto Rico)", code:"es_PR", dateTimeFormat:"MM-DD-YYYY hh:mm:ss a", dateFormat:"MM-DD-YYYY"},
 {name:"Vietnamese (Vietnam)", code:"vi_VN", dateTimeFormat:"HH:mm:ss DD/MM/YYYY", dateFormat:"DD/MM/YYYY"},
-{name:"English (United States)", code:"en_US", dateTimeFormat:"MM/DD/YYYY h:mm:ss a", dateFormat:"MM/DD/YYYY"},
+{name:"English (United States)", code:"en_US", dateTimeFormat:"M/D/YYYY h:mm A", dateFormat:"M/D/YYYY"},
 {name:"Serbian (Montenegro)", code:"sr_ME", dateTimeFormat:"DD.MMMM.YYYY HH.mm.ss", dateFormat:"DD.MMMM.YYYY"},
 {name:"Swedish (Sweden)", code:"sv_SE", dateTimeFormat:"[den ]DD MMMM YYYY [kl ]H:mm", dateFormat:"[den ]DD MMMM YYYY"},
 {name:"Spanish (Bolivia)", code:"es_BO", dateTimeFormat:"DD-MM-YYYY hh:mm:ss a", dateFormat:"DD-MM-YYYY"},
