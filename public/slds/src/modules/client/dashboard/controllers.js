@@ -14,7 +14,7 @@ client.controller('ClientDashboardController', [
                 else {
                     $scope.stateCache = $appCache.get($state.current.name);
                     if ($scope.stateCache.btnClick === "save" && $scope.stateCache.cacheReference !== undefined && $scope.stateCache.recordReference !== undefined) {
-                        $scope.loadData($scope.stateCache.configuration,$scope.stateCache.catagory+ 'Component' + $scope.stateCache.componentId,$scope.stateCache.catagory+ $scope.stateCache.componentId + 'Block' ,$scope.stateCache.label, $scope.stateCache.allowedType, true);
+                        $scope.loadData($scope.stateCache.configuration, $scope.stateCache.catagory + 'Component' + $scope.stateCache.componentId, $scope.stateCache.catagory + $scope.stateCache.componentId + 'Block', $scope.stateCache.label, $scope.stateCache.allowedType, true);
                         $scope.searchResult = $scope.stateCache.searchResult;
                         $appCache.put($state.current.name, $scope.stateCache);
                     }
@@ -45,13 +45,13 @@ client.controller('ClientDashboardController', [
             }
         };
 
-        $scope.openAttachment = function(id){
+        $scope.openAttachment = function (id) {
             // _newWindow=window.open("api/salesforce/getAttachmentFile?id="+id,"_blank",'width=400,height=400')
             // _newWindow.document.title = "My New Title";
-            var url= "api/salesforce/getAttachmentFile?id="+id
-            var title="My New Title"
-            var w=window.innerWidth/2;
-            var h=window.innerHeight-100;
+            var url = "api/salesforce/getAttachmentFile?id=" + id
+            var title = "My New Title"
+            var w = window.innerWidth / 2;
+            var h = window.innerHeight - 100;
             // Fixes dual-screen position                         Most browsers      Firefox
             var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
             var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
@@ -67,7 +67,7 @@ client.controller('ClientDashboardController', [
             if (window.focus) {
                 newWindow.focus();
             }
-		};
+        };
         $scope.applyOrderBy = function (field, records) {
             if ($scope.searchResult[records] && $scope.searchResult[records].length > 0) {
                 $scope.predicate = field.SObjectField.name;
@@ -82,15 +82,15 @@ client.controller('ClientDashboardController', [
             $appCache.remove($state.current.name);
             $scope.init();
         };
-        $scope.doAction = function (stateCacheName, action, record, recordActions, relativeField,configuration,catagory,componentId,label,allowedType) {
+        $scope.doAction = function (stateCacheName, action, record, recordActions, relativeField, configuration, catagory, componentId, label, allowedType) {
             $scope.stateCache = $appCache.get($state.current.name);
             $scope.stateCache.cacheReference = stateCacheName;
             $scope.stateCache.recordReference = record;
             $appCache.put($state.current.name, $scope.stateCache);
             $scope.stateCache.configuration = configuration;
-            $scope.stateCache.catagory  = catagory;
-            $scope.stateCache.componentId  = componentId;
-            $scope.stateCache.label  = label;
+            $scope.stateCache.catagory = catagory;
+            $scope.stateCache.componentId = componentId;
+            $scope.stateCache.label = label;
             $scope.stateCache.allowedType = allowedType;
             var _editAction = undefined;
             if (relativeField) {
@@ -124,7 +124,7 @@ client.controller('ClientDashboardController', [
                     if (recordActions[0].label === 'Edit' && $scope.criteriaValidation(recordActions[0], record)) {
                         _action = recordActions[0];
                     }
-                    else if (recordActions[0].label !== 'Edit'  && $scope.criteriaValidation(recordActions[0], record)) {
+                    else if (recordActions[0].label !== 'Edit' && $scope.criteriaValidation(recordActions[0], record)) {
                         _action = recordActions[0];
                     }
 
@@ -175,8 +175,158 @@ client.controller('ClientDashboardController', [
                         blockui.stop();
                         if (response.success) {
                             $scope.searchResult[records] = response.data.records;
+                            console.log($scope.searchResult[records]);
+                            var overDuefilter = [];
+                            for (var i = 0; i < $scope.searchResult[records].length; i++) {
+                                if ($scope.searchResult[records][i].OverdueIn__c != "Overdue") {
+                                    overDuefilter.push($scope.searchResult[records][i]);
+                                }
+                            }
+                            var pendingStatus = [];
+                            for (var i = 0; i < $scope.searchResult[records].length; i++) {
+                                if ($scope.searchResult[records][i].Status__c == "Awaiting Email Response") {
+                                    pendingStatus.push($scope.searchResult[records][i]);
+                                }
+                            }
+                            //This is filtering status dashboard
+                            var readyforproc = [],pendingforarch = [],startStatus = [],awaitingEmailRes = [],CaseOnHold = [];
+                            for (var i = 0; i < $scope.searchResult[records].length; i++) {
+                                if ($scope.searchResult[records][i].Status__c == "Ready For Processing") {
+                                    readyforproc.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Status__c == "Start") {
+                                    startStatus.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Status__c == "Awaiting Email Response") {
+                                    awaitingEmailRes.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Status__c == "Case on Hold") {
+                                    CaseOnHold.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Status__c == "Pending For Archival") {
+                                    pendingforarch.push($scope.searchResult[records][i]);
+                                }                              
+                                
+                            }
+                            // This is for Case Priority Dashboard
+                            var lowPriorty = [],highPriority = [],mediumPriorty = [],normalPriority=[];
+                            for (var i = 0; i < $scope.searchResult[records].length; i++) {
+                                if ($scope.searchResult[records][i].Priority__c == "Low") {
+                                    lowPriorty.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Priority__c == "High") {
+                                    highPriority.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Priority__c == "Medium") {
+                                    mediumPriorty.push($scope.searchResult[records][i]);
+                                }
+                                if ($scope.searchResult[records][i].Priority__c == "Normal") {
+                                    normalPriority.push($scope.searchResult[records][i]);
+                                }                                                           
+                                
+                            }    
                             $scope.stateCache.searchResult = $scope.searchResult;
                             $appCache.put($state.current.name, $scope.stateCache);
+                            var myChart = Highcharts.chart('container', 
+                            {
+                                chart: {
+                                    type:'column'
+                                },
+                                title: {
+                                    text: 'My Cases'
+                                },                                                            
+                                xAxis : {
+                                    categories: ['My Cases','Pending Cases', 'Overdue'],
+                                    crosshair: true                                    
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Cases'
+                                    }
+                                },
+                                tooltip: {
+                                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                        '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                                    footerFormat: '</table>',
+                                    shared: true,
+                                    useHTML: true
+                                },
+                                plotOptions: {
+                                    column: {
+                                        pointPadding: 0.3,
+                                        borderWidth: 0
+                                     }
+                                },
+                                series: [
+                                    {
+                                        name: 'My cases',
+                                        data: [{
+                                            color: '#56c9f2',
+                                            y: $scope.searchResult[records].length
+                                        }, {
+                                            name: 'Pending',
+                                            color: '#6091e1',
+                                            y: pendingStatus.length
+                                        },
+                                        {
+                                            name: 'Overdues In',
+                                            color: '#a691ef',
+                                            y: overDuefilter.length
+                                        }
+                                        ],
+                                        color: '#00a3e2'
+
+                                    }
+                                ]
+                            });
+                            var myChart2 = Highcharts.chart('container2', {
+                                chart: {
+                                    type: 'bar'
+                                },
+                                title: {
+                                    text: 'Cases'
+                                },
+                                xAxis: {
+                                    categories: ['Ready For Processing', 'Pending For Archival', 'Awaiting Email Response','Start','Case On Hold']
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: 'Cases'
+                                    }
+                                },
+                                series: [{
+                                    name: 'Cases',
+                                    data: [readyforproc.length, pendingforarch.length, awaitingEmailRes.length, startStatus.length, CaseOnHold.length]
+                                }, ]
+                            });
+                            var myChart3 = Highcharts.chart('container3', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: 'Cases'
+                                },
+                                xAxis: {
+                                    categories: ['Low', 'Medium', 'High','Normal']
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: 'Cases'
+                                    }
+                                },
+                                series: [
+                                    {
+                                        name: 'Case Priority',
+                                        data: [lowPriorty.length, mediumPriorty.length, highPriority.length, normalPriority.length],
+                                        color: '#a691ef',  
+                                    },
+                                    
+                                                          
+                                ]
+                            });
+
                         }
                         else {
                             $dialog.alert(response.message, 'Error', 'pficon pficon-error-circle-o');
@@ -368,7 +518,7 @@ client.controller('ClientDashboardController', [
                     $dialog.alert("Please select at least one record");
                 }
                 if (cnt > 0) {
-                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField,bulkOperationTitle:configuration.bulkOperationTitle }, function () {
+                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField, bulkOperationTitle: configuration.bulkOperationTitle }, function () {
                         $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory + 'Component' + component.id, component.Component.catagory + component.id + 'Block', component.label, allowedType, true);
                         $scope.data.InvoiceApproveFieldSelectAll = false;
                     });
@@ -385,6 +535,7 @@ client.controller('ClientDashboardController', [
             $scope.showRefreshResult = $stateParams.showRefreshResult;
             $scope.searchResult = {};
             $scope.stateCache = $appCache.get($state.current.name)
+            console.log('NOw data is Execute');
             $scope.getDashboardComponentMetadata();
             $scope.btnExportDis = false;
             $scope.data = {

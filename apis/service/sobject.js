@@ -361,6 +361,7 @@ sobjectRouter.post('/deletefile', function (req, res) {
     });
 });
 sobjectRouter.post('/details', function(req, res){
+    console.log("In detail object");
     var queryObject = req.body;
     console.log(queryObject);
 
@@ -766,48 +767,101 @@ var uploadFileOnSalesforce = function(queryObject){
                     fileUploadedSuccess = false;
                     return;
                 }
-                else{
+                /*else{
+                    console.log('File Attachment');
                     var fileObj = { 
                         ParentId: queryObject.sObject.data.Id,
                         Name : fileToBeSaved.originalFileName,
                         Body: new Buffer(fileData).toString('base64'),
                         ContentType : fileToBeSaved.fileType,
-                        Description : queryObject.currentUserId
+                        Description : queryObject.currentUserId                        
                     };
-                    global.sfdc.sobject('Attachment').create(fileObj, function(err, ret){
+                    global.sfdc.sobject('ContentVersion').create(fileObj, function(err, ret){
                         if(err || !ret.success){
                             deleteAttachment(attachmentIdArray);
                             fileUploadedSuccess = false;
                             return;
                         }
                         else{
-                            attachmentIdArray.push(ret.id);
-                            if(fileToBeSaved.isPrimary==true){
-                                
-                                fileToBeSaved.Id = ret.id;
-                                fileToBeSaved.trackerId = queryObject.trackerId;
-                                 updateTracker(fileToBeSaved,function(isTrackerUpdateSuccess){
-                                    if(!isTrackerUpdateSuccess){
-                                        deleteAttachment(attachmentIdArray);
-                                        fileUploadedSuccess = false;
-                                        return;
-                                    }
-                                    else{
-                                        fileUploadedSuccess = true;
-                                        return;
-                                    }
-                                 });
-                                
-                            }
-                            else{
-                                fileUploadedSuccess = true;
-                                return;
-                            }
+                            
+                            attachmentIdArray.push(ret.id);                            
+                            fileUploadedSuccess = true;
+                            return;
+                            
                         }
                     });
-                }
+                }*/
+                
+                    var cvObj = {
+                        PathOnClient: fileToBeSaved.originalFileName,
+                        Title :fileToBeSaved.originalFileName,
+                        VersionData: new Buffer(fileData).toString('base64')
+                        //Description: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
+                        
+                    };
+                    global.sfdc.sobject('ContentVersion').create(cvObj, function (cverr, ret) {
+                        var cvIdArray =[];
+                        
+                        if (cverr || !ret.success) {
+                            cvIdArray.push(ret.id);
+                            deleteContentVersion(cvIdArray, cdlIdArray);
+                            /*return res.json({
+                                success: false,
+                                message: 'Error occured while saving Attachment attachments.'
+                            });*/
+                            fileUploadedSuccess =false;
+                        }
+                        else {
+                                //var cvIdArray =[];
+                                cvIdArray.push(ret.id);
+                                global.sfdc.sobject('ContentVersion')
+                                .select('ContentDocumentId')
+                                .where({ Id: ret.id })
+                                .execute(function (err, cvrecord) {
+                                    if (err) {
+                                        deleteContentVersion(cvIdArray, cdlIdArray);
+                                        /*return res.json({
+                                            success: false,
+                                            message: 'Error occured while saving Attachment attachments.'
+                                        });*/
+                                        fileUploadedSuccess = false;
+                                    }
+
+                                    var cdlObj = {
+                                        LinkedEntityId: queryObject.sObject.data.Id,
+                                        ContentDocumentId: cvrecord[0].ContentDocumentId,
+                                        ShareType: 'V',
+                                        Visibility:'AllUsers'
+                                    };
+                                    global.sfdc.sobject('ContentDocumentLink').create(cdlObj, function (cdlerr, cdlret) {
+                                        if (cdlerr || !cdlret.success) {
+                                            deleteContentVersion(cvIdArray, cdlIdArray);
+                                            /*return res.json({
+                                                success: false,
+                                                message: 'Error occured while saving Attachment attachments.'
+                                            });*/
+                                            fileUploadedSuccess =false;
+                                        }
+                                        else {
+                                            var cdlIdArray = [];
+                                            cdlIdArray.push(cdlret.id);
+                                            if (cvIdArray.length === queryObject.files.length && cdlIdArray.length === queryObject.files.length) {
+                                               /* return res.json({
+                                                    success: true
+                                                });*/
+                                                fileUploadedSuccess = true;
+                                            }
+                                            
+
+                                        }
+                                    });
+                                });
+                        }
+                    });
+            
             });
         });
+        
         return fileUploadedSuccess;
     }
     return true;
@@ -890,6 +944,7 @@ var saveSobjectDetail = function(queryObject,req,res){
                 if (sObjectDetail != null && sObjectDetail != undefined) {
                     selectField = 'Name';
                 }
+               
                 global.sfdc
                 .sobject(queryObject.sObject.name)
                 .select(selectField)
@@ -905,7 +960,10 @@ var saveSobjectDetail = function(queryObject,req,res){
                     if(queryObject.trackerId != undefined && queryObject.trackerId != null){
                         queryObject.sObject.data.Id = ret.id; 
                         queryObject.currentUserId=JSON.parse(JSON.parse(req.cookies.user).userdata).Id;
-                        var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
+                        
+                        console.log("File upload sucess");
+                        console.log(isUploadFileSuccess);
+
                         if(!isUploadFileSuccess){
                             global.sfdc.sobject('akritivtlm__Tracker__c').destroy(queryObject.trackerId);
                             global.sfdc.sobject(queryObject.sObject.name).destroy(queryObject.sObject.data.Id);
@@ -927,6 +985,12 @@ var saveSobjectDetail = function(queryObject,req,res){
                         } 
                     }
                     else{
+                        queryObject.sObject.data.Id = ret.id; 
+                        var isUploadFileSuccess = uploadFileOnSalesforce(queryObject);
+                        
+                        if(isUploadFileSuccess){
+                            console.log("File upload sucess");
+                        }
                         deleteFilesFromHerokuAfterUpload(queryObject.files);
                         return res.json({
                             success: true,

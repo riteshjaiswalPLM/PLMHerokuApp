@@ -11,8 +11,9 @@
                         </span>
                     </div>
                     <div class="slds-media__body">
-                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p>
-                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Search {{ $root.title() }}"> {{'Search '+ $root.title() | translate }}</h1>
+                        <!--<p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p>-->
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="Search {{ $root.title() }}">
+                            {{ $root.title() | translate }}</h1>
                     </div>
                 </div>
             </div>
@@ -31,92 +32,102 @@
     <div class="" style="height: calc(100vh - 156px);">
         <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small">
             <form role="form">
-            <div class="slds-form--stacked slds-grow">
-                <div class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;" ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
-                    <h3>{{'Search Criteria' | translate}}</h3>
-                </div>
-                <button class="" ng-click="search(1,pageSize)" style="width:0px;float:left;padding: 0px;border-width: 0px;"></button>
-                <div block-ui="searchCriteriaBlock" class="slds-form--horizontal slds-grid slds-wrap slds-p-around--small slds-border--bottom" ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
-                    <div class="slds-form-element slds-size--1-of-2 slds-p-horizontal--small" 
-                        style="margin-top: 0.5rem !important;"
-                        ng-repeat="field in searchCriteriaFields" 
-                    ng-init="field.SObjectField.type= (field.oldType ?field.oldType : field.SObjectField.type) ;field.oldType=field.SObjectField.type;field.SObjectField.type= (field.SObjectField.type === 'picklist' ? 'multipicklist' : field.SObjectField.type)" >
-                        <label class="slds-form-element__label slds-p-right--small"  for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none;" translate>
-                            {{ field.label }}
-                        </label>
-                        <div class="slds-form-element__control">
-                            <div class="col-sm-7" sobject-layout-field field="field" criteria="'true'" index="$index"></div>
+                <div class="slds-form--stacked slds-grow">
+
+                    <div ng-click="showHideComponent()" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="padding: .5rem 1.5rem .5rem 1.5rem;cursor: pointer"
+                        ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
+                        <h3>{{'Search Criteria' | translate}}</h3>
+                    </div>
+                    <div class="slds-is-{{open}}">
+                        <button class="slds-is-collapsed" ng-click="search(1,pageSize)" style="width:0px;float:left;padding: 0px;border-width: 0px;"></button>
+                        <div block-ui="searchCriteriaBlock" class="slds-form--horizontal slds-grid slds-wrap slds-p-around--small slds-border--bottom"
+                            ng-if="searchCriteriaFields != undefined && searchCriteriaFields.length !== 0">
+                            <div class="slds-form-element slds-size--1-of-2 slds-p-horizontal--small" style="margin-top: 0.5rem !important;" ng-repeat="field in searchCriteriaFields"
+                                ng-init="field.SObjectField.type= (field.oldType ?field.oldType : field.SObjectField.type) ;field.oldType=field.SObjectField.type;field.SObjectField.type= (field.SObjectField.type === 'picklist' ? 'multipicklist' : field.SObjectField.type)">
+                                <label class="slds-form-element__label slds-p-right--small" for="{{field.SObjectField.name + $index}}" style="font-weight: 600;float: none;"
+                                    translate>
+                                    {{ field.label }}
+                                </label>
+                                <div class="slds-form-element__control">
+                                    <div class="col-sm-7" sobject-layout-field field="field" criteria="'true'" index="$index"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" ng-if="(searchCriteriaFields != undefined && searchCriteriaFields.length !== 0) || (searchResultFields != undefined && searchResultFields.length !== 0)">
+                            <div style="width: 230px;">
+                                <select class="slds-select" style="width: auto;" ng-disabled="searchCriteriaFields.length === 0" data-style="btn-default page-dropdown"
+                                    ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in pageSizes"
+                                    id="pageSize">
+                                </select>&nbsp; {{'Items per page' | translate}}.
+                            </div>
+                            <div class="slds-align--absolute-center">
+                                <div class="slds-button-group" role="group">
+                                    <button class="slds-button slds-button--brand" ng-disabled="searchCriteriaFields == undefined || searchCriteriaFields.length === 0 || searchResultFields.length === 0"
+                                        ng-click="search(1,pageSize)">
+                                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                        </svg>
+                                        {{'Search' | translate}}
+                                    </button>
+                                    <button class="slds-button slds-button--neutral" ng-disabled="searchCriteriaFields == undefined || searchCriteriaFields.length === 0"
+                                        ng-click="reset()">
+                                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
+                                        </svg>
+                                        {{'Reset' | translate}} 
+                                    </button>
+                                    <button class="slds-button slds-button--neutral" ng-click="exportToExcel()" ng-disabled="btnExportDis || searchResultFields.length === 0">
+                                        <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
+                                        </svg>
+                                        {{'Export' | translate}}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="slds-button-group" role="group">
+                                <button class="slds-button slds-button--neutral" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)"
+                                    ng-click="search(currentPage - 1, pageSize)">
+                                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
+                                    </svg>
+                                    {{'Previous' | translate}}
+                                </button>
+                                <button class="slds-button slds-p-horizontal--medium">{{currentPage}}</button>
+                                <button class="slds-button slds-button--neutral" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize"
+                                    ng-click="search(currentPage + 1, pageSize)">
+                                    {{'Next' | translate}}
+                                    <svg class="slds-button__icon slds-button__icon--right" aria-hidden="true">
+                                        <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
-                <div class="slds-grid slds-grid--align-spread slds-theme--shade slds-p-around--small" ng-if="(searchCriteriaFields != undefined && searchCriteriaFields.length !== 0) || (searchResultFields != undefined && searchResultFields.length !== 0)">
-                    <div style="width: 230px;">
-                        <select class="slds-select" style="width: auto;" ng-disabled="searchCriteriaFields.length === 0" data-style="btn-default page-dropdown" ng-model="pageSize" ng-change="search(1,pageSize)" ng-options="size as size for size in pageSizes" id="pageSize">
-                        </select>&nbsp; {{'Items per page' | translate}}.
-                    </div>
-                    <div class="slds-align--absolute-center">
-                        <div class="slds-button-group" role="group">
-                            <button class="slds-button slds-button--brand" ng-disabled="searchCriteriaFields == undefined || searchCriteriaFields.length === 0 || searchResultFields.length === 0" ng-click="search(1,pageSize)">
-                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
-                                </svg>
-                                {{'Search' | translate}}
-                            </button>
-                            <button class="slds-button slds-button--neutral" ng-disabled="searchCriteriaFields == undefined || searchCriteriaFields.length === 0" ng-click="reset()">
-                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
-                                </svg>
-                                {{'Reset' | translate}}
-                            </button>
-                             <button class="slds-button slds-button--neutral" ng-click="exportToExcel()" ng-disabled="btnExportDis || searchResultFields.length === 0">
-                                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
-                                </svg>
-                                {{'Export' | translate}}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="slds-button-group" role="group">
-                        <button class="slds-button slds-button--neutral" ng-disabled="currentPage <= 1 || !searchResult || (currentPage <= 1 && searchResult.length === 0)" ng-click="search(currentPage - 1, pageSize)">
-                            <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"></use>
-                            </svg>
-                            {{'Previous' | translate}}
-                        </button>
-                        <button class="slds-button slds-p-horizontal--medium">{{currentPage}}</button>
-                        <button class="slds-button slds-button--neutral" ng-disabled="currentPage < 1 || !searchResult || searchResult.length === 0 || hasMore === false || searchResult.length < pageSize" ng-click="search(currentPage + 1, pageSize)">
-                            {{'Next' | translate}}
-                            <svg class="slds-button__icon slds-button__icon--right" aria-hidden="true">
-                                <use xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                            
-            </div>
             </form>
         </div>
         <div block-ui="searchResultBlock" ng-if="searchResultFields.length>0">
-            <div  class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="overflow: auto;margin:.75rem;max-height: 400px;min-height:200px ">
-                <table  class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height: {{ (searchResult.length===0) ? 0 : 400 }}px;height:auto">
+            <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small" style="overflow: auto;margin:.75rem;max-height: 400px;min-height:200px ">
+                <table class="slds-table slds-table--compaq slds-table--bordered slds-table--cell-buffer slds-table--striped" style="max-height: {{ (searchResult.length===0) ? 0 : 400 }}px;height:auto">
                     <thead>
                         <tr class="slds-text-title--caps">
-                            <th scope="col"  class="th-actions" style="font-weight: 600;">{{ 'Action' | translate}}</th>
-                            <th  scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" 
-                                ng-class="{'th-sorted': predicate === field.SObjectField.name}" 
-                                ng-click="applyOrderBy(field)" 
-                                ng-repeat="field in searchResultFields" >
+                            <th scope="col" class="th-actions" style="font-weight: 600;">{{ 'Action' | translate}}</th>
+                            <th scope="col" class="th-sortable {{ 'th-'+field.SObjectField.type }}" ng-class="{'th-sorted': predicate === field.SObjectField.name}"
+                                ng-click="applyOrderBy(field)" ng-repeat="field in searchResultFields">
                                 <div class="slds-truncate" style="font-weight: 600;" title="{{ field.label | translate}}">{{ field.label | translate}}</div>
                             </th>
-                           
+
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
-                            <td   class="td-actions" >
-                                <div class="slds-truncate slds-align--absolute-center" >
+                            <td class="td-actions">
+                                <div class="slds-truncate slds-align--absolute-center">
                                     <div class="slds-button-group" role="group">
-                                        <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
+                                        <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)"
+                                            class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
                                             <svg class="slds-button__icon" aria-hidden="true">
                                                 <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
                                             </svg>
@@ -125,7 +136,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td style="max-width:200px;width:{{100/searchResultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}" 
+                            <td style="max-width:200px;width:{{100/searchResultFields.length}}%" class="slds-truncate {{ 'td-'+field.SObjectField.type }}"
                                 title="{{ (field.SObjectField.type === 'reference') 
                                     ? result[field.SObjectField.relationshipName][field.reference] 
                                     : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
@@ -134,20 +145,19 @@
                                             ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
                                             : (field.SObjectField.type === 'datetime')
                                                 ? (result[field.SObjectField.name] | date: 'medium')
-                                                : result[field.SObjectField.name] }}" 
-                                class="{{ 'td-'+field.SObjectField.type }}" 
+                                                : result[field.SObjectField.name] }}" class="{{ 'td-'+field.SObjectField.type }}"
                                 ng-repeat="field in searchResultFields">
                                 <div class="slds-truncate">
-                                {{ (field.SObjectField.type === 'reference') 
-                                    ? result[field.SObjectField.relationshipName][field.reference] 
-                                    : (field.SObjectField.type === 'double' || field.SObjectField.type === 'currency') 
-                                        ? (result[field.SObjectField.name] | number: field.SObjectField.scale) 
-                                        : (field.SObjectField.type === 'date') 
-                                        ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate')
-                                            : (field.SObjectField.type === 'datetime')
-                                                ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code, $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium')
-                                                : result[field.SObjectField.name] }}</div></td>
-                            
+                                    {{ (field.SObjectField.type === 'reference') ? result[field.SObjectField.relationshipName][field.reference] : (field.SObjectField.type
+                                    === 'double' || field.SObjectField.type === 'currency') ? (result[field.SObjectField.name]
+                                    | number: field.SObjectField.scale) : (field.SObjectField.type === 'date') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                    $root.user().Locale.name, $root.user().Locale.dateFormat) | date: 'mediumDate') : (field.SObjectField.type
+                                    === 'datetime') ? ($root.formateDateAndDateTime(result[field.SObjectField.name],$root.user().TimeZone.code,
+                                    $root.user().Locale.name, $root.user().Locale.dateTimeFormat) | date: 'medium') : result[field.SObjectField.name]
+                                    }}
+                                </div>
+                            </td>
+
                         </tr>
                         <tr ng-if="searchResult.length === 0" class="search-result-tr">
                             <td colspan="{{searchResultFields.length + 1}}">
@@ -156,7 +166,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>  
+            </div>
         </div>
     </div>
 </div>

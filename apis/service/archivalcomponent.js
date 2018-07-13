@@ -27,6 +27,7 @@ archivalcomponentRouter.post('/uploadedfilelist', function (req, res) {
     var render = false;
     var S3RootFolder = '';
     var ParentField = '';
+    debugger;
     global.config.archivalConfig.ObjectSetup.forEach(function (objectSetup) {
         if (objectSetup.ObjectName.toLowerCase() == queryObject.name.toLowerCase()) {
             S3RootFolder = objectSetup.S3RootFolder;

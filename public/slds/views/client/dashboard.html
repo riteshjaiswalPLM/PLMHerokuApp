@@ -11,7 +11,7 @@
                         </span>
                     </div>
                     <div class="slds-media__body">
-                        <p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p>
+                        <!--<p class="slds-text-title--caps slds-line-height--reset">{{ $root.title() | translate }}</p-->
                         <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="{{ $root.title() }}">{{'Dashboard' | translate}}</h1>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh'}}"></use>
                         </svg>
-                         {{'Refresh Results' | translate}}
+                        {{'Refresh Results' | translate}}
                     </button>
                 </div>
             </div>
@@ -33,18 +33,14 @@
             <a href="#" ng-click="refresh();"><span class="pficon pficon-refresh"></span> {{'Refresh Results' | translate}}</a>
         </div>
         <h1><i class="{{icon}}"></i>&nbsp;&nbsp;{{ $root.title() | translate}}</h1>
-    </div>--> 
-        <div style="height: calc(100vh - 156px);" class="slds-scrollable--y">
+    </div>-->
+    <div style="height: calc(100vh - 156px);" class="slds-scrollable--y">
         <div id="accordion-markup-outer" style="margin:20px;">
-            <div class="slds-form--stacked slds-grow" ng-repeat="container in containersMetaData | orderBy: 'order'" style="border: 1px solid #d8dde6;margin-bottom: 10px">
-                <div ng-init="$index === 0?container.isCollapse=true:container.isCollapse=false" ng-click="showHideContainers(container,containersMetaData);"
-                    class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 1px solid #d8dde6">
-                    <h3>{{container.label | translate}}</h3>
-                </div>
-                <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y" style="margin-bottom:0px">
+            <div class="slds-form--stacked slds-grow" ng-repeat="container in containersMetaData | orderBy: 'order'">
+                <div ng-init="container.isCollapse=true"  class="slds-panel slds-grid slds-grid--vertical slds-nowrap slds-m-bottom--xx-small slds-scrollable--y" style="margin-bottom:0px">
                     <div class="slds-is-{{container.isCollapse ? 'expanded' : 'collapsed'}}" id="{{container.id}}">
                         <div id="accordion-markup-inner{{container.id}}" style="margin:20px;margin-bottom:0px ">
-                            <div class="slds-form--stacked slds-grow" ng-repeat="component in container.DashboardContainersComponents | orderBy: 'order'"
+                            <div class="" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false" ng-repeat="component in container.DashboardContainersComponents | orderBy: 'order'"
                                 style="border: 1px solid #d8dde6;margin-bottom: 10px">
                                 <!--<div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
                                     class="slds-panel__section slds-has-divider--bottom slds-section-title--divider" style="cursor:pointer;padding: .5rem 1.5rem .5rem 1.5rem;border-bottom: 3px solid #d8dde6">
@@ -57,7 +53,7 @@
                                         </button>
                                     </span>
                                 </div>-->
-                                <div class="slds-grid">
+                                <!--<div class="slds-grid">
                                     <div class="slds-col slds-has-flexi-truncate">
                                         <div ng-click="showHideComponent(container,component);" ng-init="loadData(component.Component.ComponentDetail.configuration, component.Component.catagory+'Component'+component.id, component.Component.catagory+component.id+'Block', component.label, container.allowedType);$index === 0?component.isCollapse=true:component.isCollapse=false"
                                             class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
@@ -65,7 +61,7 @@
                                             <h3>{{component.label | translate}} - ({{searchResult[component.Component.catagory+'Component'+component.id].length}})</h3>
                                         </div>
                                     </div>
-                                    <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                                    <!--<div class="slds-col slds-no-flex slds-grid slds-align-top">
                                         <div class="slds-button-group" role="group" class="slds-panel__section slds-has-divider--bottom slds-section-title--divider"
                                             style="cursor:pointer;border-bottom: 1px solid #d8dde6;height:32px">
                                             <button title="{{'Export' | translate}}" class="slds-button slds-button--brand " style="border-bottom:0px;padding:0px 10px" ng-click="exportData(component.Component.ComponentDetail.configuration, container.allowedType, component.label)"
@@ -110,8 +106,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!--<tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" ng-dblclick="doDefaultAction(result, component.Component.ComponentDetail.recordActions)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">-->
-                                                <tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
+                                                <!--<!--<tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" ng-dblclick="doDefaultAction(result, component.Component.ComponentDetail.recordActions)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">-->
+            <!--<tr ng-repeat="result in searchResult[component.Component.catagory+'Component'+component.id]" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
                                                     <td ng-init="result.isChecked = false"  ng-show="component.Component.multipleApprove">
                                                         <input type="checkbox" style="vertical-align: middle;" ng-show="component.Component.multipleApprove" ng-model="result.isChecked" ng-click="syncObjFieldCheckbox('InvoiceApproveFieldSelectAll', searchResult[component.Component.catagory+'Component'+component.id])"
                                                         />
@@ -171,7 +167,25 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
+            <div class="slds-grid">
+                <div class="slds-col slds-size_3-of-12">
+                    <span>
+                            <div id="container" style="width: 350px; height: 350px; margin: 0 auto"></div>
+                    </span>
+                </div>
+                
+                <div class="slds-col slds-size_3-of-12">
+                    <span>
+                            <div id="container2" style="width: 350px; height: 350px; margin: 0 auto"></div>
+                    </span>
+                </div>                
+                <div class="slds-col slds-size_3-of-12">
+                    <span>
+                            <div id="container3" style="width: 350px; height: 350px; margin: 0 auto"></div>
+                    </span>
+                </div>
+            </div>            
         </div>
     </div>
     <!--<div class="panel panel-default" ng-repeat="container in containersMetaData | orderBy: 'order'">

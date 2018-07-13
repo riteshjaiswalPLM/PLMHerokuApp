@@ -192,8 +192,9 @@ dashboardRouter.post('/loadData', function(req, res){
             // }
             return res.json({
                 success: true,
-                data: {
+                data: {                    
                     records: records,
+                    
                     // currentPage: (records.length === 0) ? 0 : queryObject.page,
                     // hasMore: hasMore
                 }

@@ -31,7 +31,7 @@ client.controller('UploadAttachmentController',
 					if (response.success) {
 						$scope.attachments = response.data.attachments;
 						angular.forEach($scope.attachments, function (errRecord) {
-							selectTotalFiles += errRecord.BodyLength;
+							selectTotalFiles += errRecord.ContentDocument.ContentSize;
 						});
 						if ($scope.recordSize === true  && selectTotalFiles > MbToBytes) {
 							pushOnScope = false;
@@ -198,14 +198,14 @@ client.controller('UploadAttachmentController',
 	        	if(files == file)
         		{
 	        		var response;
-		        	if(file.name != $scope.primaryFileName)
+		        	/*if(file.name != $scope.primaryFileName)
 	        		{
 						file.isPrimary = false;
 	        		}
 		        	else
 	        		{
 						file.isPrimary = true;
-	        		}
+					}*/
 					$scope.uploadAttachments(file)
 						.then(function(response){
 							if(response.data.success)

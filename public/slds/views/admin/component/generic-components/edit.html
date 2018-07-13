@@ -58,10 +58,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-form-element__group" ng-if="component.catagory == 'LineItemComponent' || component.catagory == 'RelatedListComponent'">
+                <div class="slds-form-element__group" ng-if="component.catagory == 'LineItemComponent' || component.catagory == 'RelatedListComponent' || component.catagory == 'UploadAttachment'">
                     <div class="slds-form-element__row">
                         <div class="slds-form-element slds-lookup slds-size--1-of-1" data-select="single">
-                            <label class="slds-form-element__label" for="detailSObject">Line Item SObject</label>
+                            <label class="slds-form-element__label" for="detailSObject" ng-if="component.catagory == 'LineItemComponent' || component.catagory == 'RelatedListComponent'">Line Item SObject</label>
+                            <label class="slds-form-element__label" for="detailSObject" ng-if="component.catagory == 'UploadAttachment'">Attachment SObject</label>
                             <div class="slds-form-element__control slds-grid slds-box--border">
                                 <div class="slds-input-has-icon slds-grow">
                                     <input type="hidden" ng-model="component.detailSObject">

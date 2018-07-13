@@ -2,14 +2,20 @@ if(!global.hasOwnProperty('config')){
     global.config = {
         constant: require('./constant'),
         db: {
-            dbname:     'lightning_product_qa',
+            //dbname:     'baxter-uat',
+            //dbname:     'esm-mitie-local',
+            //dbname:     'esmqa2',
+            //dbname:     'esmqa',
+            //dbname:     'mhi',
+            dbname:     'newplm',
+            //dbname:     'esm-devhub',
             username:   'postgres',
-            password:   'admin@123'
+            password:   'admin'
         },
         sfdc: {
-            username: 'mekyush.jariwala@esmdev.com',
-            password: 'akritiv@123',
-            token: 'pz7obelVbXKHo7qrH1xsJYaC',
+            username: 'moxesh.shah@coraplm.dev',
+            password: 'Shahmox@31200#',
+            token: '',
             environment: 'PRODUCTION'
         },
         demo_sfdc: {

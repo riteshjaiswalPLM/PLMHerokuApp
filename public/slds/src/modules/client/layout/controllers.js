@@ -67,7 +67,6 @@ client.controller('ClientListLayoutController',[
                                         $scope.searchResultFields.push(field);
                                     }
                                 });
-                                
                                 $scope.stateCache.metadata = {
                                     searchCriteriaFields: $scope.searchCriteriaFields,
                                     searchResultFields: $scope.searchResultFields,
@@ -123,7 +122,12 @@ client.controller('ClientListLayoutController',[
                 $scope.search(1, $scope.pageSize);
             },100);
         };
-
+        $scope.showHideComponent = function(){
+            if($scope.open === "collapsed")
+                $scope.open = "expanded";
+            else
+                $scope.open = "collapsed"; 
+        };
         $scope.getWhereFieldsForsearch = function (callback) {
             var whereFields = {};
             whereFields['$and']=[];
@@ -491,6 +495,7 @@ client.controller('ClientListLayoutController',[
             $scope.initBlockUiBlocks();
             $scope.loadLayoutMetadata();
             $scope.btnExportDis = false;
+            $scope.open = "collapsed";
         };
         $scope.init();
     }

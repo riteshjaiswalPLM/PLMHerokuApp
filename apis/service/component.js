@@ -49,7 +49,14 @@ componentRouter.post('/savepopupattachment', function (req, res) {
                     });
                 }
                 else{
-                    var fileObj = { 
+                    if (attachmentDetails.attachmentSObject == undefined) {
+                        return res.json({
+                            success: false,
+                            message: 'Attachment SObject is not configured in Component.'
+                        });
+                    }
+                    console.log('Attachment');
+                    /*var fileObj = { 
                         ParentId: attachmentDetails.id,
                         Name : fileToBeSaved.originalFileName,
                         Body: new Buffer(fileData).toString('base64'),
@@ -72,7 +79,64 @@ componentRouter.post('/savepopupattachment', function (req, res) {
                                 });
                             }
                         }
-                    });
+                    });*/
+
+                    if (attachmentDetails.attachmentSObject == "ContentVersion") {
+                        var cvObj = {
+                            PathOnClient: fileToBeSaved.originalFileName,
+                            VersionData: new Buffer(fileData).toString('base64'),
+                            Description: JSON.parse(JSON.parse(req.cookies.user).userdata).Id
+                            
+                        };
+                        global.sfdc.sobject('ContentVersion').create(cvObj, function (cverr, ret) {
+                            if (cverr || !ret.success) {
+                                deleteContentVersion(cvIdArray, cdlIdArray);
+                                return res.json({
+                                    success: false,
+                                    message: 'Error occured while saving Attachment attachments.'
+                                });
+                            }
+                            else {
+                                cvIdArray.push(ret.id);
+                                    global.sfdc.sobject('ContentVersion')
+                                    .select('ContentDocumentId')
+                                    .where({ Id: ret.id })
+                                    .execute(function (err, cvrecord) {
+                                        if (err) {
+                                            deleteContentVersion(cvIdArray, cdlIdArray);
+                                            return res.json({
+                                                success: false,
+                                                message: 'Error occured while saving Attachment attachments.'
+                                            });
+                                        }
+
+                                        var cdlObj = {
+                                            LinkedEntityId: attachmentDetails.id,
+                                            ContentDocumentId: cvrecord[0].ContentDocumentId,
+                                            ShareType: 'V',
+                                            Visibility:'AllUsers'
+                                        };
+                                        global.sfdc.sobject('ContentDocumentLink').create(cdlObj, function (cdlerr, cdlret) {
+                                            if (cdlerr || !cdlret.success) {
+                                                deleteContentVersion(cvIdArray, cdlIdArray);
+                                                return res.json({
+                                                    success: false,
+                                                    message: 'Error occured while saving Attachment attachments.'
+                                                });
+                                            }
+                                            else {
+                                                cdlIdArray.push(cdlret.id);
+                                                if (cvIdArray.length === attachmentDetails.files.length && cdlIdArray.length === attachmentDetails.files.length) {
+                                                    return res.json({
+                                                        success: true
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    });
+                            }
+                        });
+                    }
                 }
             });
         });
@@ -150,11 +214,12 @@ componentRouter.post('/getfiledata', function (req, res) {
 });
 
 componentRouter.post('/uploadedfilelist', function(req, res){
-    var columnToBeSelected = "Id, IsDeleted, ParentId, Name, ContentType, BodyLength, Body, CreatedDate, Description";
+    var columnToBeSelected = "ContentDocument.Owner.Name,ContentDocument.LatestPublishedVersion.Flag__c,ContentDocument.Id,ContentDocument.Title,ContentDocument.FileType,ContentDocument.LatestPublishedVersionId, LinkedEntityId, Id,ContentDocument.LastModifiedDate,ContentDocument.FileExtension,ContentDocument.ContentSize";
+    
     var whereCluse = {
-        ParentId: req.body.parentId
+        LinkedEntityId: req.body.parentId
     };
-    global.sfdc.sobject('Attachment')
+    global.sfdc.sobject('ContentDocumentLink')
         .select(columnToBeSelected)
         .where(whereCluse)
         .execute(function(err, records){
@@ -171,7 +236,7 @@ componentRouter.post('/uploadedfilelist', function(req, res){
                 data: {
                     attachments: records
                 }
-            });
+            }); 
         });
 });
 
