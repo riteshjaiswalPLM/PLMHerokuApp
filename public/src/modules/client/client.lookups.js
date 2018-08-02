@@ -42,7 +42,8 @@ clientLookup.controller('UploadAttachmentModalController',[
 	    	if(uploadedFiles > 0 && uploadedFiles == $scope.data.files.length)
 	    	{
 	    		$scope.data.attachmentDetails.files = $scope.data.files; 
-		    	$scope.data.attachmentDetails.id= $scope.data.ctrl.stateParamData.record.Id;
+                $scope.data.attachmentDetails.id= $scope.data.ctrl.stateParamData.record.Id;
+                $scope.data.attachmentDetails.attachmentSObject = "ContentVersion";
 		    	$http.post("api/service/component/savepopupattachment", $scope.data.attachmentDetails)
 					.success(function(response){
 						if(response.success){

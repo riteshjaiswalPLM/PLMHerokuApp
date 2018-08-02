@@ -53,6 +53,8 @@ clientLookup.controller('UploadAttachmentModalController', [
                     AttachmentBlock.stop();
                     return false;
                 }
+                console.log($scope.data);
+                $scope.data.attachmentDetails.attachmentSObject = "ContentVersion";
                 $http.post("api/service/component/savepopupattachment", $scope.data.attachmentDetails)
                     .success(function (response) {
                         if (response.success) {

@@ -97,19 +97,21 @@ componentRouter.post('/savepopupattachment', function (req, res) {
                                 });
                             }
                             else {
-                                cvIdArray.push(ret.id);
+                                var cvIdArray =[];
+                                    cvIdArray.push(ret.id);
                                     global.sfdc.sobject('ContentVersion')
                                     .select('ContentDocumentId')
                                     .where({ Id: ret.id })
                                     .execute(function (err, cvrecord) {
                                         if (err) {
+                                            //cvIdArray.push(ret.Id);
                                             deleteContentVersion(cvIdArray, cdlIdArray);
                                             return res.json({
                                                 success: false,
                                                 message: 'Error occured while saving Attachment attachments.'
                                             });
                                         }
-
+                                        var  cdlIdArray= [];
                                         var cdlObj = {
                                             LinkedEntityId: attachmentDetails.id,
                                             ContentDocumentId: cvrecord[0].ContentDocumentId,
@@ -117,6 +119,8 @@ componentRouter.post('/savepopupattachment', function (req, res) {
                                             Visibility:'AllUsers'
                                         };
                                         global.sfdc.sobject('ContentDocumentLink').create(cdlObj, function (cdlerr, cdlret) {
+                                            
+                                            cdlIdArray.push(cdlret.id);
                                             if (cdlerr || !cdlret.success) {
                                                 deleteContentVersion(cvIdArray, cdlIdArray);
                                                 return res.json({
@@ -124,8 +128,8 @@ componentRouter.post('/savepopupattachment', function (req, res) {
                                                     message: 'Error occured while saving Attachment attachments.'
                                                 });
                                             }
-                                            else {
-                                                cdlIdArray.push(cdlret.id);
+                                            else {                                               
+                                               
                                                 if (cvIdArray.length === attachmentDetails.files.length && cdlIdArray.length === attachmentDetails.files.length) {
                                                     return res.json({
                                                         success: true
