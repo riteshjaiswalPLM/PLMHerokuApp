@@ -163,8 +163,8 @@
 								<tbody >
 									<tr ng-repeat="attachment in attachments">
 										<td style="width: 10%;" class="slds-truncate" data-label=""  title="{{attachment.ContentDocument.Title}}" ng-if="type !== 'detail'">
-											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
-											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
+											<label style="text-align: center;" class="col-md-2 "><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
+											<!--<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>-->
 										</td>
 										<td style="width: 40%;max-width: 200px" class="slds-truncate" data-label="Title"  title="{{attachment.ContentDocument.Title}}"><strong>{{ attachment.ContentDocument.Title }}</strong></td>
 										<td style="width: 10%;" class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.ContentDocument.ContentSize/1048576 | number : 2}} MB</td>
