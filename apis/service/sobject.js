@@ -471,6 +471,13 @@ sobjectRouter.post('/save', function(req, res){
                 });
             }
             console.log('daa',queryObject.sObject.data)
+           if(queryObject.sObject.data.hasOwnProperty('Email_Subject__c'))    {
+                if(queryObject.sObject.data.Email_Subject__c == "" || queryObject.sObject.data.Email_Subject__c == null){
+                    queryObject.sObject.data.Email_Subject__c = 'Case Created By Portal User';
+                }
+            }else{
+                queryObject.sObject.data.Email_Subject__c = 'Case Created By Portal User';
+            }
             if(sObjectDetail != null && sObjectDetail != undefined && sObjectDetail[0]!=undefined && sObjectDetail[0].SObjectFields[0] != undefined){
                 // sObjectDetail[0].SObjectFields[0].name
                 var sObjectWithTracker = global.db.SObject.findAll({
