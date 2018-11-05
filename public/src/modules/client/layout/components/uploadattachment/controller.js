@@ -165,7 +165,7 @@ client.controller('UploadAttachmentController',
 			$dialog.confirm({
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
-                message: 'Are you sure to delete file  "'+ attachment.Name +'" ? This action can not be undo.',
+                message: 'Are you sure to delete file  "'+ attachment.ContentDocument.Title +'" ? This action can not be undo.',
                 class:'danger'
             },function(confirm){
                 if(confirm){

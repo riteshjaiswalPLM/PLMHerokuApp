@@ -230,7 +230,7 @@ client.controller('UploadAttachmentController',
 			$dialog.confirm({
                 title: 'Confirm delete ?',
                 yes: 'Yes, Delete', no: 'Cancel',
-                message: 'Are you sure to delete file  "'+ attachment.Name +'" ? This action can not be undo.',
+                message: 'Are you sure to delete file  "'+ attachment.ContentDocument.Title  +'" ? This action can not be undo.',
                 class:'danger'
             },function(confirm){
                 if(confirm){
@@ -247,9 +247,11 @@ client.controller('UploadAttachmentController',
 							var MbToBytes = 0;
 							MbToBytes = ($scope.allowedSize * 1048576);
 							$dialog.alert(response.filename + ' deleted successfully.', '', '')
+							var index = $scope.attachments.indexOf(attachment);
+							$scope.attachments.splice(index, 1);     
 							angular.forEach($scope.attachments, function (errRecord) {
 								if ($scope.attachments.IsDeleted === false) {
-									selectTotalFiles += errRecord.BodyLength;
+									selectTotalFiles += errRecord.ContentDocument.ContentSize;
 								}
 							});
 							if ($scope.recordSize === true && selectTotalFiles - currentDeleteFile > MbToBytes) {

@@ -462,7 +462,7 @@ client.controller('ClientListLayoutController',[
                     }
                 }
             }).error(function(error) {
-
+                $dialog.alert('Error while Approving Case.','Error','');
             });
         };
         $scope.doDefaultAction = function(record){
