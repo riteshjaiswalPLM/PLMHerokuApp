@@ -75,7 +75,7 @@
                                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#refresh"></use>
                                         </svg>
-                                        {{'Reset' | translate}} 
+                                        {{'Reset' | translate}}
                                     </button>
                                     <button class="slds-button slds-button--neutral" ng-click="exportToExcel()" ng-disabled="btnExportDis || searchResultFields.length === 0">
                                         <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
@@ -126,12 +126,26 @@
                             <td class="td-actions">
                                 <div class="slds-truncate slds-align--absolute-center">
                                     <div class="slds-button-group" role="group">
-                                        <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)"
+                                       <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)"
                                             class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
                                             <svg class="slds-button__icon" aria-hidden="true">
                                                 <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#'+action.icon}}"></use>
                                             </svg>
-                                            <span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>
+                                            <!--<span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>-->
+                                        </button>
+                                        <button title="Reject" ng-if="result.Approver_Email__c != null" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
+                                            ng-click="approveAction(result.Id,'Rejected','')">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#error'}}"></use>
+                                            </svg>
+                                            <!--<span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>-->
+                                        </button>
+                                        <button title="Approve" ng-if="result.Approver_Email__c != null" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
+                                            ng-click="approveAction(result.Id,'Approved','')">
+                                            <svg class="slds-button__icon" aria-hidden="true">
+                                                <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#success'}}"></use>
+                                            </svg>
+                                            <!--<span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>-->
                                         </button>
                                     </div>
                                 </div>

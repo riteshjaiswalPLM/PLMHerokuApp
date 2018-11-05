@@ -1,8 +1,8 @@
 'use strict';
 
 client.controller('ClientLayoutController',[
-            '$scope','$rootScope','$state','$stateParams',
-    function($scope , $rootScope , $state , $stateParams){
+            '$scope','$rootScope','$state','$stateParams','ModalService','$clientLookups',
+    function($scope , $rootScope , $state , $stateParams,ModalService,$clientLookups){
         $scope.$on('$stateChangeStart',function(event,toState,toParams,fromState,fromParams,options){
             if($scope.stateParamMetaData !== null && toState.name === $scope.defaultState && $scope.stateParamMetaData.redirectTo && fromState !== $scope.stateParamMetaData.redirectTo ){
                 event.preventDefault();
@@ -23,8 +23,8 @@ client.controller('ClientLayoutController',[
 ]);
 
 client.controller('ClientListLayoutController',[
-            '$scope','$rootScope','$state','$stateParams','$dialog','$timeout','$filter','$appCache','blockUI','clientLayoutService','clientSObjectService','CriteriaHelper',
-    function($scope , $rootScope , $state , $stateParams , $dialog , $timeout , $filter , $appCache , blockUI , clientLayoutService , clientSObjectService,CriteriaHelper){
+            '$scope','$rootScope','$state','$stateParams','$dialog','$timeout','$filter','$appCache','blockUI','clientLayoutService','clientSObjectService','CriteriaHelper','ModalService','Notifications','$clientLookups',
+    function($scope , $rootScope , $state , $stateParams , $dialog , $timeout , $filter , $appCache , blockUI , clientLayoutService , clientSObjectService,CriteriaHelper,ModalService,Notifications,$clientLookups){
         var orderBy = $filter('orderBy');
         $scope.loadLayoutMetadata = function(){
             if($scope.stateCache === undefined){
@@ -447,6 +447,24 @@ client.controller('ClientListLayoutController',[
                 });
             }
         };
+        $scope.approveAction = function(record,action,comment){
+            var data ={
+                id : record,
+                action : action,
+                comment : comment
+            }            
+            clientSObjectService.approveRequest(data).success(function (response){
+                if (response.success) {
+                    if(response.message!=undefined){
+                        //Notifications.success(response.message);
+                        $dialog.alert('Case Approved Successfully.','Success','');
+                        $scope.reset();
+                    }
+                }
+            }).error(function(error) {
+
+            });
+        };
         $scope.doDefaultAction = function(record){
             if($scope.recordActions){
                 var _action = undefined;
@@ -500,7 +518,6 @@ client.controller('ClientListLayoutController',[
         $scope.init();
     }
 ]);
-
 client.controller('ClientCreateLayoutController',[
             '$scope','$rootScope','$state','$stateParams','$dialog','$timeout','$filter','$controller','blockUI','clientLayoutService','clientSObjectService',
     function($scope , $rootScope , $state , $stateParams , $dialog , $timeout , $filter , $controller , blockUI , clientLayoutService , clientSObjectService){

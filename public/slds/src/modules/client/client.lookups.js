@@ -131,6 +131,9 @@ clientLookup.factory('$clientLookups', ['ModalService', function (ModalService) 
                     callback && callback();
                 });
             });
+        },
+        approvecomment: function () {
+            
         }
     };
 }]);

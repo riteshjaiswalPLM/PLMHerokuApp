@@ -175,52 +175,54 @@ client.controller('ClientDashboardController', [
                         blockui.stop();
                         if (response.success) {
                             $scope.searchResult[records] = response.data.records;
-                            console.log($scope.searchResult[records]);
+                            console.log(response.data.namespace);
                             var overDuefilter = [];
                             for (var i = 0; i < $scope.searchResult[records].length; i++) {
-                                if ($scope.searchResult[records][i].OverdueIn__c != "Overdue") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'OverdueIn__c'] != "Overdue") {
                                     overDuefilter.push($scope.searchResult[records][i]);
                                 }
                             }
                             var pendingStatus = [];
                             for (var i = 0; i < $scope.searchResult[records].length; i++) {
-                                if ($scope.searchResult[records][i].Status__c == "Awaiting Email Response") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Status__c'] == "Awaiting Email Response") {
                                     pendingStatus.push($scope.searchResult[records][i]);
                                 }
                             }
                             //This is filtering status dashboard
+
                             var readyforproc = [],pendingforarch = [],startStatus = [],awaitingEmailRes = [],CaseOnHold = [];
                             for (var i = 0; i < $scope.searchResult[records].length; i++) {
-                                if ($scope.searchResult[records][i].Status__c == "Ready For Processing") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Status__c'] == "Ready For Processing") {
                                     readyforproc.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Status__c == "Start") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Status__c'] == "Start") {
                                     startStatus.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Status__c == "Awaiting Email Response") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Status__c'] == "Awaiting Email Response") {
                                     awaitingEmailRes.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Status__c == "Case on Hold") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Status__c'] == "Case on Hold") {
                                     CaseOnHold.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Status__c == "Pending For Archival") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Status__c'] == "Pending For Archival") {
                                     pendingforarch.push($scope.searchResult[records][i]);
                                 }                              
                                 
                             }
                             // This is for Case Priority Dashboard
+                            
                             var lowPriorty = [],highPriority = [],mediumPriorty = [],normalPriority=[];
                             for (var i = 0; i < $scope.searchResult[records].length; i++) {
-                                if ($scope.searchResult[records][i].Priority__c == "Low") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Priority__c'] == "Low") {
                                     lowPriorty.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Priority__c == "High") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Priority__c'] == "High") {
                                     highPriority.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Priority__c == "Medium") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Priority__c'] == "Medium") {
                                     mediumPriorty.push($scope.searchResult[records][i]);
                                 }
-                                if ($scope.searchResult[records][i].Priority__c == "Normal") {
+                                if ($scope.searchResult[records][i][response.data.namespace+'Priority__c'] == "Normal") {
                                     normalPriority.push($scope.searchResult[records][i]);
                                 }                                                           
                                 

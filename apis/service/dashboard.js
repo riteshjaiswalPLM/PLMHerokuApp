@@ -148,6 +148,26 @@ dashboardRouter.post('/loadData', function(req, res){
     var config = req.body.config;
     var componentType = req.body.type;
     var selectFields = [], whereClause = "";
+    global.sfdc
+    .sobject('ApexClass')
+    .select('NamespacePrefix')
+    .where({
+        Name : 'EmailController'
+    })
+    .execute(function(err, records){
+        if(err != null){
+            console.log(err);
+        }else{
+            console.log('namespace' + records[0].NamespacePrefix);
+            if(records[0].NamespacePrefix != null){
+                global.sfdc.Namespace = records[0].NamespacePrefix+'__';
+            }else{
+                global.sfdc.Namespace = '';
+            }
+             
+            //console.log(global.sfdc);
+        }
+    })
     if(componentType.indexOf('MyTaskContainer') > -1){
         selectFields.push('Id');
         config.fields.forEach((field)=>{
@@ -190,11 +210,12 @@ dashboardRouter.post('/loadData', function(req, res){
             //     hasMore = true;
             //     records.pop();
             // }
+            console.log( global.sfdc.Namespace);
             return res.json({
                 success: true,
                 data: {                    
                     records: records,
-                    
+                    namespace : global.sfdc.Namespace
                     // currentPage: (records.length === 0) ? 0 : queryObject.page,
                     // hasMore: hasMore
                 }

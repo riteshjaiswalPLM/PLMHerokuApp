@@ -14,7 +14,7 @@ if(!global.hasOwnProperty('config')){
         },
         sfdc: {
             username: 'moxesh.shah@coraplm.dev',
-            password: 'Shahmox@31200#',
+            password: 'change@123',
             token: '',
             environment: 'PRODUCTION'
         },

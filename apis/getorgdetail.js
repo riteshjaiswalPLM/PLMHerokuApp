@@ -47,6 +47,7 @@ authRouter.post('/getOrgDetail', function (req, res) {
                 });
             } else {
                 console.log('authenticated accessToken :: ', global.sfdc.accessToken);
+                console.log("global sfdc : " + global.sfdc);
                 var userData = JSON.parse(user.userdata);
                 return res.json({
                     data: {
@@ -90,7 +91,7 @@ authRouter.post('/getOrgDetail', function (req, res) {
         console.log("accessToken : " + global.sfdc.accessToken);
         console.log("instanceUrl : " + global.sfdc.instanceUrl);
         console.log("orgId : " + global.sfdc.orgId);
-        
+        console.log("global sfdc : " + global.sfdc);
         var username = credential.username;
         var password = credential.password;
         

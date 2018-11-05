@@ -26,6 +26,9 @@ client.factory('clientSObjectService',['$http','CriteriaHelper',function($http, 
         getFieldType: function (data) {
             return $http.post('/api/service/sobject/getFieldType', data);
         },
+        approveRequest:function(data){
+            return $http.post('/api/service/sobject/approveRequest', data);
+        },
         isRequireValidation: function(queryObject,callback){
             var sObjectData=queryObject.sObjectData;
             var fields =queryObject.fields
