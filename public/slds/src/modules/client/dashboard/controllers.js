@@ -520,7 +520,8 @@ client.controller('ClientDashboardController', [
                     $dialog.alert("Please select at least one record");
                 }
                 if (cnt > 0) {
-                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField, bulkOperationTitle: configuration.bulkOperationTitle }, function () {
+                    $clientLookups.bulk({ data: configuration.multipleFields, model: isField, sObjectName: configuration.name, detailSobjectName: configuration.detailSobjectname, dataModel: isCheckedField, bulkOperationTitle: configuration.bulkOperationTitle },
+                         function () {
                         $scope.loadData(component.Component.ComponentDetail.configuration, component.Component.catagory + 'Component' + component.id, component.Component.catagory + component.id + 'Block', component.label, allowedType, true);
                         $scope.data.InvoiceApproveFieldSelectAll = false;
                     });

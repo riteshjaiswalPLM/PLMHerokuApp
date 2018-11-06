@@ -448,23 +448,34 @@ client.controller('ClientListLayoutController',[
             }
         };
         $scope.approveAction = function(record,action,comment){
-            var data ={
-                id : record,
-                action : action,
-                comment : comment
-            }            
-            clientSObjectService.approveRequest(data).success(function (response){
-                if (response.success) {
-                    if(response.message!=undefined){
-                        //Notifications.success(response.message);
-                        $dialog.alert('Case Approved Successfully.','Success','');
-                        $scope.reset();
-                    }
+            $scope.comment =null;
+            ModalService.showModal({
+                templateUrl: 'slds/views/client/layout/component/ApprovalComment.html',
+                controller: 'ApprovalCommentController',
+                preClose: (modal) => { modal.element.modal('hide'); },
+                inputs: {
+                   comment : "write your comment"              
                 }
-            }).error(function(error) {
-                $dialog.alert('Error while Approving Case.','Error','');
-            });
-        };
+            }).then(function (modal) {
+                modal.element.modal();
+                modal.close.then(function (result) {
+                    var data ={
+                        id : record,
+                        action : action,
+                        comment : result.comment
+                    }
+                    console.log(data);
+                    clientSObjectService.approveRequest(data).success(function (response){
+                        if (response.success) {
+                            $dialog.alert('Case Approved Successfully.','Success','');
+                            $scope.reset();
+                        }
+                    }).error(function(error) {
+                        $dialog.alert('Error while Approving Case.','Error','');
+                    });                             
+                });
+            });               
+        };        
         $scope.doDefaultAction = function(record){
             if($scope.recordActions){
                 var _action = undefined;

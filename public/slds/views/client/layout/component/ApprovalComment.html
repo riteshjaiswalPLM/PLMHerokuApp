@@ -1,0 +1,39 @@
+<div role="dialog" tabindex="-1" aria-labelledby="modalTitle" data-backdrop="static" class="slds-modal"    >
+    <div class="slds-modal__container">
+        <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" ng-click="close()">
+                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="modalTitle" class="slds-text-heading--medium" translate>Comment</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-col slds-size--1-of-1 UploadAttachment"  style="min-height:150px">
+                <div class="slds-grid">
+                    <div class="slds-size--1-of-1">
+                        <form class="slds-p-horizontal--x-small">
+                            <div class="form-group">
+                                <label class="col-sm-4 slds-form-element__label" style="font-weight: 600;float: none;">Comment : </label>
+                                <div class="col-sm-8">                                   
+                                    <textarea class="slds-textarea" rows="5" id="comment" ng-model="comment"></textarea>                                    
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
+            <button class="slds-button slds-button--brand" ng-click="save()" data-dismiss="modal">
+                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                </svg>
+                {{'Approve' | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+<div class="slds-backdrop"></div>

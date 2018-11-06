@@ -131,12 +131,26 @@ clientLookup.factory('$clientLookups', ['ModalService', function (ModalService) 
                     callback && callback();
                 });
             });
-        },
-        approvecomment: function () {
-            
-        }
+        },  
     };
 }]);
+clientLookup.controller('ApprovalCommentController', [
+	'$scope', '$controller', '$element','blockUI', '$dialog', 'close',
+	function ($scope, $controller, $element, blockUI, $dialog, close) {
+        $scope.comment = null;
+        $scope.close = function () {
+			$element.modal('hide');
+		};        
+        $scope.save = function() {
+            close({
+                comment: $scope.comment, 
+              }, 500); 
+       }
+		/*$scope.save = function () { 
+            console.log(comment);            
+		}*/
+	}
+]);
 clientLookup.controller('BulkOperationController', [
     '$scope', '$controller', '$element', 'data', 'blockUI', '$http', '$dialog', 'close', '$timeout', '$rootScope','clientSObjectService',
     function ($scope, $controller, $element, data, blockUI, $http, $dialog, close, $timeout, $rootScope,clientSObjectService) {
