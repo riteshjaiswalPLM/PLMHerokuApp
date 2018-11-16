@@ -146,9 +146,6 @@ clientLookup.controller('ApprovalCommentController', [
                 comment: $scope.comment, 
               }, 500); 
        }
-		/*$scope.save = function () { 
-            console.log(comment);            
-		}*/
 	}
 ]);
 clientLookup.controller('BulkOperationController', [

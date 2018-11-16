@@ -467,11 +467,11 @@ client.controller('ClientListLayoutController',[
                     console.log(data);
                     clientSObjectService.approveRequest(data).success(function (response){
                         if (response.success) {
-                            $dialog.alert('Case Approved Successfully.','Success','');
+                            $dialog.alert('Status has been updated Successfully.','Success','');
                             $scope.reset();
                         }
                     }).error(function(error) {
-                        $dialog.alert('Error while Approving Case.','Error','');
+                        $dialog.alert('Error while updating Case.','Error','');
                     });                             
                 });
             });               
