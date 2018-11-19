@@ -35,6 +35,7 @@ componentRouter.post('/deletefile', function (req, res) {
 });
 
 componentRouter.post('/savepopupattachment', function (req, res) {
+    debugger;
     var attachmentDetails = req.body;
     var attachmentIdArray = [];
     var cvIdArray = [];

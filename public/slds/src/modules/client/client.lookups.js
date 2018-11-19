@@ -13,6 +13,7 @@ clientLookup.controller('UploadAttachmentModalController', [
         };
 
         $scope.save = function () {
+            debugger;
             $scope.data.uploadAttachmentErrors = [];
             var uploadedFiles = 0;
             var notPersistedFileList = "";
@@ -53,6 +54,7 @@ clientLookup.controller('UploadAttachmentModalController', [
                     AttachmentBlock.stop();
                     return false;
                 }
+                $scope.data.attachmentDetails.attachmentSObject = "ContentVersion";
                 $http.post("api/service/component/savepopupattachment", $scope.data.attachmentDetails)
                     .success(function (response) {
                         if (response.success) {
