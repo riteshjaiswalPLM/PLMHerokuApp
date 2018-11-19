@@ -13,7 +13,6 @@ clientLookup.controller('UploadAttachmentModalController', [
         };
 
         $scope.save = function () {
-            debugger;
             $scope.data.uploadAttachmentErrors = [];
             var uploadedFiles = 0;
             var notPersistedFileList = "";

@@ -15,7 +15,6 @@ client.controller('UploadAttachmentArchivalController',
 					dataModel: $scope.ctrl.dataModel
 				}
 				AttachmentBlock.start('Fetching uploaded file list.');
-				debugger;
 				$http.post("/api/service/archivalcomponent/uploadedfilelist", sObjectData)
 					.success(function (response) {
 						if (response.success) {

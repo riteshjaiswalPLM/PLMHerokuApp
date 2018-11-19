@@ -1,6 +1,6 @@
 client.controller('ClientDashboardController', [
-    '$scope', '$rootScope', '$state', '$stateParams', 'DashboardService', '$dialog', 'blockUI', '$filter', '$appCache', 'CriteriaHelper', '$clientLookups',
-    function ($scope, $rootScope, $state, $stateParams, DashboardService, $dialog, blockUI, $filter, $appCache, CriteriaHelper, $clientLookups) {
+    '$scope', '$rootScope', '$state', '$stateParams', 'DashboardService', '$dialog','blockUI', '$filter', '$appCache', 'CriteriaHelper', '$clientLookups','namespace',
+    function ($scope, $rootScope, $state, $stateParams, DashboardService, $dialog, blockUI, $filter, $appCache, CriteriaHelper, $clientLookups,namespace) {
         var orderBy = $filter('orderBy');
         $scope.getDashboardComponentMetadata = function () {
             if (!$scope.blockUI.ClientDashboardBlockUI.state().blocking) {
@@ -176,6 +176,8 @@ client.controller('ClientDashboardController', [
                         if (response.success) {
                             $scope.searchResult[records] = response.data.records;
                             console.log(response.data.namespace);
+                            namespace = response.data.namespace;
+                            console.log(namespace);
                             var overDuefilter = [];
                             for (var i = 0; i < $scope.searchResult[records].length; i++) {
                                 if ($scope.searchResult[records][i][response.data.namespace+'OverdueIn__c'] != "Overdue") {

@@ -14,7 +14,7 @@ var app = angular.module('App',[
     'anguFixedHeaderTable',
     'jsonFormatter','angular-lightning.datepicker'
 ]);
-
+app.value('namespace', '');
 var stateProviderRef = null, _$translateProvider = null;
 
 app.run(function($rootScope,$state,$cookies,$templateCache,$appCache,$translate,$localStorage,loginService){
