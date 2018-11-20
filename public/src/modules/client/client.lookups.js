@@ -83,7 +83,6 @@ clientLookup.controller('ApprovalCommentController', [
 		$scope.close = function () {
 			$element.modal('hide');
 		};
-
 		$scope.save = function () { 
 			
 		}

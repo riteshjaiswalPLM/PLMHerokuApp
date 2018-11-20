@@ -51,7 +51,8 @@ client.controller('ClientListLayoutController',[
                                 $scope.recordActions = response.data.metadata.recordactions;
                                 $scope.navBarActions = response.data.metadata.navbaractions;
                                 $scope.whereClause = response.data.metadata.whereClause;
-
+                                $scope.namespace =  response.data.namespace;       
+                                $scope.approvalEmail = response.data.namespace + 'Approver_Email__c';
                                 angular.forEach($scope.recordActions,function(action){
                                     angular.forEach(response.data.metadata.btnCriteria,function(btncriteria){
                                         if(action.label===btncriteria.keyName){
@@ -465,10 +466,8 @@ client.controller('ClientListLayoutController',[
                         comment : result.comment
                     }
                     console.log(data);
-                    $scope.namespace = '';
                     clientSObjectService.approveRequest(data).success(function (response){
                         if (response.success) {
-                            $scope.namespace = response.namespace;
                             $dialog.alert('Status has been updated Successfully.','Success','');
                             $scope.reset();
                         }

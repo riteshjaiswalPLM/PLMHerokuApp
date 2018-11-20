@@ -140,7 +140,8 @@ sobjectRouter.post('/search', function (req, res) {
                 data: {
                     searchResult: records,
                     currentPage: (records.length === 0) ? 0 : queryObject.page,
-                    hasMore: hasMore
+                    hasMore: hasMore,
+                    namespace:global.sfdc.Namespace
                 }
             });
         });
@@ -776,8 +777,7 @@ sobjectRouter.post('/approveRequest', function (req, res) {
         }
         if (response.statusCode == 200) {
             return res.json({
-                success: true,
-                namespace : global.sfdc.Namespace
+                success: true,                
             });
         }
     });

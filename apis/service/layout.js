@@ -39,14 +39,12 @@ layoutRouter.post('/sobjectDetaildata', function (req, res) {
                 data: {
                     metadata: sObjectLayouts,
                     archivalConfigSetup: global.config.archivalConfig.ObjectSetup
-
                 }
             });
         }
     });
 });
 layoutRouter.post('/metadata', function(req, res){
-    
     var slds = req.body && req.body.slds === true;
     var layout = req.body.layout;
     var sObject = req.body.sobject;
@@ -248,7 +246,7 @@ layoutRouter.post('/metadata', function(req, res){
                     return res.json({
                         success: true,
                         data: {
-                            metadata: resultMetadata,
+                            metadata: resultMetadata,                            
                             archivalConfigSetup: global.config.archivalConfig.ObjectSetup                        }
                     });
                 }
@@ -291,7 +289,8 @@ layoutRouter.post('/metadata', function(req, res){
                         success: true,
                         data: {
                             metadata: resultMetadata,
-                            archivalConfigSetup: global.config.archivalConfig.ObjectSetup
+                            namespace:global.sfdc.Namespace,
+                            archivalConfigSetup: global.config.archivalConfig.ObjectSetup,                            
                         }
                     });
                 });
