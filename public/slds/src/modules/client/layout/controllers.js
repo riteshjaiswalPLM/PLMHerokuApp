@@ -465,8 +465,10 @@ client.controller('ClientListLayoutController',[
                         comment : result.comment
                     }
                     console.log(data);
+                    $scope.namespace = '';
                     clientSObjectService.approveRequest(data).success(function (response){
                         if (response.success) {
+                            $scope.namespace = response.namespace;
                             $dialog.alert('Status has been updated Successfully.','Success','');
                             $scope.reset();
                         }

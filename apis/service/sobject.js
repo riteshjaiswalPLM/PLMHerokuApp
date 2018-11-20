@@ -777,6 +777,7 @@ sobjectRouter.post('/approveRequest', function (req, res) {
         if (response.statusCode == 200) {
             return res.json({
                 success: true,
+                namespace : global.sfdc.Namespace
             });
         }
     });

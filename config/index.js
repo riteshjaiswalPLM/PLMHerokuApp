@@ -16,7 +16,7 @@ if(!global.hasOwnProperty('config')){
             username: 'moxesh.shah@coraplm.dev',
             password: 'change@123',
             token: '',
-            environment: 'PRODUCTION'
+            environment: 'PRODUCTION'            
         },
         demo_sfdc: {
             username: 'admin@esm.demo3',
