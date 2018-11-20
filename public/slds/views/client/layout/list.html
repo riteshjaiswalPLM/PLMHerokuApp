@@ -124,8 +124,7 @@
                     <tbody>
                         <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
                             <td class="td-actions">
-                                <div class="slds-truncate slds-align--absolute-center">
-                                    {{namespace}}
+                                <div class="slds-truncate slds-align--absolute-center">                                   
                                     <div class="slds-button-group" role="group">
                                        <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)"
                                             class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
