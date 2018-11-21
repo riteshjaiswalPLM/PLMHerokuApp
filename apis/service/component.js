@@ -219,7 +219,7 @@ componentRouter.post('/getfiledata', function (req, res) {
 });
 
 componentRouter.post('/uploadedfilelist', function (req, res) {
-    var columnToBeSelected = "ContentDocument.Owner.Name,ContentDocument.LatestPublishedVersion.Flag__c,ContentDocument.Id,ContentDocument.Title,ContentDocument.FileType,ContentDocument.LatestPublishedVersionId, LinkedEntityId, Id,ContentDocument.LastModifiedDate,ContentDocument.FileExtension,ContentDocument.ContentSize";
+    var columnToBeSelected = "ContentDocument.Owner.Name,ContentDocument.LatestPublishedVersion."+global.sfdc.Namespace+"Flag__c,ContentDocument.Id,ContentDocument.Title,ContentDocument.FileType,ContentDocument.LatestPublishedVersionId, LinkedEntityId, Id,ContentDocument.LastModifiedDate,ContentDocument.FileExtension,ContentDocument.ContentSize";
 
     var whereCluse = {
         LinkedEntityId: req.body.parentId
