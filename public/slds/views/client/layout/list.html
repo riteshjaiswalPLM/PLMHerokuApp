@@ -125,7 +125,6 @@
                         <tr ng-repeat="result in searchResult" ng-dblclick="doDefaultAction(result)" class="search-result-tr" style="cursor: {{ (recordActions && recordActions.length > 0) ? 'pointer;' : 'auto;' }}">
                             <td class="td-actions">
                                 <div class="slds-truncate slds-align--absolute-center">
-                                    {{namespace}}
                                     <div class="slds-button-group" role="group">
                                        <button title="{{ action.label | translate}}" ng-repeat="action in recordActions" ng-if="criteriaValidation(action,result)"
                                             class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="doAction(action,result)">
@@ -134,14 +133,14 @@
                                             </svg>
                                             <!--<span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>-->
                                         </button>
-                                        <button title="Reject" ng-if="result[approvalEmail] != null" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
+                                        <button title="Reject" ng-if="result[namespace+'Approver_Email__c'] != null" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
                                             ng-click="approveAction(result.Id,'Rejected','')">
                                             <svg class="slds-button__icon" aria-hidden="true">
                                                 <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#error'}}"></use>
                                             </svg>
                                             <!--<span class="slds-assistive-text">{{action.label=='Details'?'View':action.label}}</span>-->
                                         </button>
-                                        <button title="Approve" ng-if="result[approvalEmail] != null" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
+                                        <button title="Approve" ng-if="result[namespace+'Approver_Email__c'] != null" class="slds-button slds-button--icon-border-filled slds-button--icon-x-small"
                                             ng-click="approveAction(result.Id,'Approved','')">
                                             <svg class="slds-button__icon" aria-hidden="true">
                                                 <use xlink:href="{{'/slds221/assets/icons/utility-sprite/svg/symbols.svg#success'}}"></use>

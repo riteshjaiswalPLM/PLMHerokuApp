@@ -35,6 +35,7 @@ client.controller('ClientListLayoutController',[
                     pageSize: 25,
                     hasMore: false,
                     orderByField: undefined,
+                    namespace : undefined,                    
                 };
             }
             if($scope.stateCache.metadata === undefined){
@@ -52,7 +53,6 @@ client.controller('ClientListLayoutController',[
                                 $scope.navBarActions = response.data.metadata.navbaractions;
                                 $scope.whereClause = response.data.metadata.whereClause;
                                 $scope.namespace =  response.data.namespace;       
-                                $scope.approvalEmail = response.data.namespace + 'Approver_Email__c';
                                 angular.forEach($scope.recordActions,function(action){
                                     angular.forEach(response.data.metadata.btnCriteria,function(btncriteria){
                                         if(action.label===btncriteria.keyName){
@@ -73,7 +73,8 @@ client.controller('ClientListLayoutController',[
                                     searchResultFields: $scope.searchResultFields,
                                     recordActions: $scope.recordActions,
                                     navBarActions: $scope.navBarActions,
-                                    whereClause: $scope.whereClause
+                                    whereClause: $scope.whereClause,
+                                    namespace: $scope.namespace,                                    
                                 }
                                 $appCache.put($state.current.name, $scope.stateCache);
                                 
@@ -96,7 +97,7 @@ client.controller('ClientListLayoutController',[
                 $scope.recordActions = metadata.recordActions;
                 $scope.navBarActions = metadata.navBarActions;
                 $scope.whereClause = metadata.whereClause;
-                
+                $scope.namespace = metadata.namespace;
                 if($scope.stateCache.searchResult === undefined || $scope.stateCache.btnClick === "save"){
                     $timeout(function(){
                         $scope.search(1, $scope.pageSize);
