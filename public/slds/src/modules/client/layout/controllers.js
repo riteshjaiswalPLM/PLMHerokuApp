@@ -456,7 +456,7 @@ client.controller('ClientListLayoutController',[
                 controller: 'ApprovalCommentController',
                 preClose: (modal) => { modal.element.modal('hide'); },
                 inputs: {
-                   comment : "write your comment"              
+                   action: action == 'Approved' ? 'Approve' : 'Reject'
                 }
             }).then(function (modal) {
                 modal.element.modal();
@@ -559,7 +559,7 @@ client.controller('ClientDetailsLayoutController',[
                 var state = $scope.stateParamData.editAction.state;
                 $state.go(state, {data: $scope.stateParamData});
             }
-        };
+        };        
         $scope.init = function(){
             console.info('ClientDetailsLayoutController loaded!');
             angular.extend(this, $controller('ClientSectionLayoutController',{ $scope: $scope}));
@@ -1084,12 +1084,10 @@ client.controller('ClientSectionLayoutController',[
                 $scope.blockUI.layoutBlock.stop();
             });
         }
-
-
         $scope.init = function(){
-            console.log('ClientSectionLayoutController loaded!');
+            console.log('ClientSectionLayoutController loaded!');            
             $scope.files = [];
-            $scope.dataModel = {};
+            $scope.dataModel = {};          
             $scope.stateParamMetaData = $state.current.params.metadata;
             if ($scope.stateParamMetaData != undefined && $scope.stateParamMetaData.sobject != undefined && $scope.stateParamMetaData.sobject.name != undefined) {
                 $scope.dataModel.SObjectName = $scope.stateParamMetaData.sobject.name;

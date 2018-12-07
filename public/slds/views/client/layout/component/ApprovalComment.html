@@ -7,7 +7,7 @@
                 </svg>
                 <span class="slds-assistive-text">Close</span>
             </button>
-            <h2 id="modalTitle" class="slds-text-heading--medium" translate>Comment</h2>
+            <h2 id="modalTitle" class="slds-text-heading--medium" translate>{{action}} Comment</h2>
         </div>
         <div class="slds-modal__content slds-p-around--medium">
             <div class="slds-col slds-size--1-of-1 UploadAttachment"  style="min-height:150px">
@@ -28,10 +28,7 @@
         <div class="slds-modal__footer">
             <button class="slds-button slds-button--neutral" ng-click="close()" translate>Cancel</button>
             <button class="slds-button slds-button--brand" ng-click="save()" data-dismiss="modal">
-                <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/slds221/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
-                </svg>
-                {{'Approve' | translate}}
+                {{action | translate}}
             </button>
         </div>
     </div>

@@ -136,9 +136,10 @@ clientLookup.factory('$clientLookups', ['ModalService', function (ModalService) 
     };
 }]);
 clientLookup.controller('ApprovalCommentController', [
-	'$scope', '$controller', '$element','blockUI', '$dialog', 'close',
-	function ($scope, $controller, $element, blockUI, $dialog, close) {
+	'$scope', '$controller', '$element','blockUI', '$dialog', 'close','action',
+	function ($scope, $controller, $element, blockUI, $dialog, close,action) {
         $scope.comment = null;
+        $scope.action=action;
         $scope.close = function () {
 			$element.modal('hide');
 		};        
