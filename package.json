@@ -1,5 +1,5 @@
 {
-  "name": "NewPLMHerokuNode",
+  "name": "newplmherokunode",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -39,5 +39,14 @@
     "unix-timestamp": "^0.2.0",
     "validator": "^10.8.0",
     "xlsx-populate": "^1.7.0"
-  }
+  },
+  "description": "\"# PLMHerokuApp\"",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "http://git.sftpl.com/sonam.patel/esmdev-node-lightning.git"
+  },
+  "author": "",
+  "license": "ISC"
 }

@@ -79,7 +79,7 @@
 						<div data-ng-model="files" class="col-md-12" data-ng-repeat="file in files">
 							<form class="form-horizontal">
 								<div class="form-group" style="margin-bottom: 0px;">
-									<label style="text-align: center;" class="col-md-2"><a href="" data-ng-click="deleteFile(file)">delete</a></label>
+									<label style="text-align: center;" class="col-md-2"><a href="" data-ng-click="deleteFile(file)">Delete</a></label>
 									<label style="text-align: center;" class="col-md-4">{{file.name}}</label>
 									<label style="text-align: center;" class="col-md-4">{{file.size}}</label>
 									<label style="text-align: center;" class="col-md-2">
@@ -141,7 +141,7 @@
 						<div data-ng-model="attachments" class="col-md-12" data-ng-repeat="attachment in attachments | filter: {IsDeleted: false}">
 							<form class="form-horizontal">
 								<div class="form-group" style="margin-bottom: 0px;">
-									<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
+									<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">Delete</a></label>
 									<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
 									<label style="text-align: center;" class="col-md-1 " ng-if="type == 'detail'"></label>
 									<label style="text-align: center;" class="col-md-2">{{attachment.Name}}</label>

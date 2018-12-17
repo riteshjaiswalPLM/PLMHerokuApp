@@ -215,7 +215,8 @@ dashboardRouter.post('/loadData', function(req, res){
                 success: true,
                 data: {                    
                     records: records,
-                    namespace : global.sfdc.Namespace
+                    namespace : global.sfdc.Namespace,
+                    instanceurl : global.sfdc.instanceUrl
                     // currentPage: (records.length === 0) ? 0 : queryObject.page,
                     // hasMore: hasMore
                 }

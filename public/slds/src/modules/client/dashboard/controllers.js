@@ -176,6 +176,7 @@ client.controller('ClientDashboardController', [
                         if (response.success) {
                             $scope.searchResult[records] = response.data.records;
                             console.log(response.data.namespace);
+                            $rootScope.instanceurl = response.data.instanceurl;
                             var overDuefilter = [];
                             for (var i = 0; i < $scope.searchResult[records].length; i++) {
                                 if ($scope.searchResult[records][i][response.data.namespace+'OverdueIn__c'] != "Overdue") {

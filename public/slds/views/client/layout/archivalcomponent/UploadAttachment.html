@@ -34,7 +34,7 @@
 								<tbody >
 									<tr ng-repeat="attachment in attachments">
 										<td style="width: 10%;" class="slds-truncate" data-label=""  title="{{attachment.Name}}" ng-if="type !== 'detail'">
-											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">delete</a></label>
+											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description === currentUser"><a href="" data-ng-click="deleteAttachment(attachment)">Delete</a></label>
 											<label style="text-align: center;" class="col-md-2 " ng-if="type !== 'detail' && attachment.Description !== currentUser"> - </label>
 										</td>
 										<td style="width: 60%;max-width: 200px" class="slds-truncate" data-label="Title"  title="{{attachment.Key}}"><strong>{{ attachment.Key.substr(attachment.Key.lastIndexOf('/')+1) }}</strong></td>

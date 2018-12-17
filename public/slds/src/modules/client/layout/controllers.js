@@ -52,7 +52,8 @@ client.controller('ClientListLayoutController',[
                                 $scope.recordActions = response.data.metadata.recordactions;
                                 $scope.navBarActions = response.data.metadata.navbaractions;
                                 $scope.whereClause = response.data.metadata.whereClause;
-                                $scope.namespace =  response.data.namespace;       
+                                $scope.namespace =  response.data.namespace; 
+                                console.log($rootScope.instanceurl);      
                                 angular.forEach($scope.recordActions,function(action){
                                     angular.forEach(response.data.metadata.btnCriteria,function(btncriteria){
                                         if(action.label===btncriteria.keyName){

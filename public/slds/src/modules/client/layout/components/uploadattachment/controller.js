@@ -49,8 +49,10 @@ client.controller('UploadAttachmentController',
 				});
 		};
 		
-		$scope.getFileData = function(name, body){
-			var attachmentData = {
+		$scope.getFileData = function(id){
+			console.log(id);
+			window.open($rootScope.instanceurl+'/sfc/servlet.shepherd/document/download/'+id,'_self');
+			/*var attachmentData = {
 				name: name,
 				body: body
 			}
@@ -70,7 +72,7 @@ client.controller('UploadAttachmentController',
 						// window.URL.revokeObjectURL(objectUrl);
 						a.remove();
 					}
-				}).error(function(){AttachmentBlock.stop()});
+				}).error(function(){AttachmentBlock.stop()});*/
 		};
 
 		$scope.selectFile = function(files, errFiles) {
