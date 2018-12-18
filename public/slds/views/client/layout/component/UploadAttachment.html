@@ -157,7 +157,7 @@
 										<th style="font-weight: 600;" title="Title">{{'Title' | translate }}</th>
 										<th style="font-weight: 600;" title="Size">{{'Size' | translate }}</th>
 										<th style="font-weight: 600;" title="ContentType">{{'ContentType' | translate }}</th>
-										<th style="text-align:center;width:100px;"  title="Download">{{'Download' | translate}}</th>
+										<!--<th style="text-align:center;width:100px;"  title="Download">{{'Download' | translate}}</th>-->
 									</tr>
 								</thead>
 								<tbody >
@@ -169,7 +169,7 @@
 										<td style="width: 40%;max-width: 200px" class="slds-truncate" data-label="Title"  title="{{attachment.ContentDocument.Title}}"><strong>{{ attachment.ContentDocument.Title }}</strong></td>
 										<td style="width: 10%;" class="slds-truncate" data-label="Size"   title="{{ sObj.name }}">{{attachment.ContentDocument.ContentSize/1048576 | number : 2}} MB</td>
 										<td style="width: 20%;" class="slds-truncate" data-label="ContentType"   title="{{ sObj.ContentType }}">{{attachment.ContentDocument.FileType}}</td>
-										<td style="width: 20%;" data-label="Download" >
+										<!--<td style="width: 20%;" data-label="Download" >
 											<div class="slds-truncate slds-align--absolute-center" >
 												<div class="slds-button-group" role="group">
 													<button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" ng-click="getFileData(attachment.ContentDocument.Id)" >
@@ -181,7 +181,7 @@
 												</div>
 											</div>
 											<!--<button class="btn btn-xs btn-primary" type="button" ng-click="newSObject(sObj)"><i class="fa fa-plus"></i> Add</button>-->
-										</td>
+										<!--</td>-->
 									</tr>
 								</tbody>
 							</table>
