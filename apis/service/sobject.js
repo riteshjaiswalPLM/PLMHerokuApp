@@ -757,7 +757,7 @@ sobjectRouter.post('/getFieldType', function (req, res) {
 });
 sobjectRouter.post('/approveRequest', function (req, res) {
     console.log(global.sfdc.username);
-    var namespace = global.sfdc.Namespace != null ? gglobal.sfdc.Namespace+'/' : ''; 
+    var namespace = global.sfdc.Namespace != null ? global.sfdc.Namespace+'/' : ''; 
     console.log('namespace@@'+namespace);
     var Request = require("request");
     console.log(Request);
