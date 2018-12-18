@@ -757,7 +757,7 @@ sobjectRouter.post('/getFieldType', function (req, res) {
 });
 sobjectRouter.post('/approveRequest', function (req, res) {
     console.log(global.sfdc.username);
-
+    var namespace = global.sfdc.namespace != null ? global.sfdc.namespace+'/' : ''; 
     var Request = require("request");
     console.log(Request);
     Request.post({
@@ -765,7 +765,7 @@ sobjectRouter.post('/approveRequest', function (req, res) {
             "content-type": "application/json; charset=utf-8",
             "Authorization": "Bearer " + global.sfdc.accessToken
         },
-        "url": global.sfdc.instanceUrl+"/services/apexrest/Cases/ApprovalService/",
+        "url": global.sfdc.instanceUrl+"/services/apexrest/"+namespace+"Cases/ApprovalService/",
         "body": JSON.stringify({
             "approvalDetailId": req.body.id,
             "action": req.body.action,
