@@ -161,6 +161,7 @@ dashboardRouter.post('/loadData', function(req, res){
             console.log('namespace' + records[0].NamespacePrefix);
             if(records[0].NamespacePrefix != null){
                 global.sfdc.Namespace = records[0].NamespacePrefix+'__';
+                global.sfdc.Namespacewithout__ = records[0].NamespacePrefix;
             }else{
                 global.sfdc.Namespace = '';
             }
