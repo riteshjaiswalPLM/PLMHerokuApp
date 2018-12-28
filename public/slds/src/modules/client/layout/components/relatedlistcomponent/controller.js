@@ -79,7 +79,7 @@ client.controller('RelatedListComponentController', [
 			$state.go('client.' + $scope.section.Component.detailSObject.keyPrefix + '.' + 'details', {
 				data: {
 					record: record,
-					editAction: _editAction,
+					//editAction: _editAction,//comment for not showing edit option while redirect to detail page from other page.
 					isFromRelatedList: true,
 					parentStateParamData: $state.params.data,
 					parentState: $state.current.name,
