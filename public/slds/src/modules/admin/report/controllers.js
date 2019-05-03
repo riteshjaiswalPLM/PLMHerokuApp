@@ -112,7 +112,7 @@ admin.controller('AdminReportsEditController', [
                 $scope.report = reportSObject;
             }
             if (!$scope.blockUI.sObjectFields.state().blocking && $scope.report.SObject != null) {
-                $scope.sObjectDisabled = true;
+                $scope.sObjectDisabled = false;
                 $scope.blockUI.sObjectFields.start('Loading ...');
                 sobjectService.loadSObjectFields($scope.report.SObject)
                     .success(function (response) {
